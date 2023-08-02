@@ -1,0 +1,65 @@
+//
+//
+// This is sample file to test the Argon Compiler.
+// It contains a number of enumerations, classes and tuples,
+// as well as a number of methods that actually make use
+// of the data structures defined here.
+//
+//
+
+//
+// Declare the main module
+//
+
+MODULE Weather
+    {
+    ENUMERATION Skill
+        {
+        #prediction
+        #analysis
+        #collection
+        #software
+        #volcanoes
+        #hurricanes
+        #tornados
+        #temperature
+        #clouds
+        }
+     
+    CONSTANT DefaultSkill = Skill::#analysis
+    
+    TYPE SkillSet IS Set<Skill>
+    
+    CLASS Meteorologist::Object
+        {
+        SLOT name::String = ""
+        SLOT dateOfBirth::Date = @(1/1/1900)
+        SLOT isContractor = #false
+        SLOT isSingle = #false
+        SLOT currentStation::WeatherStation = nil
+        SLOT skillSet = MAKE(SkillSet)
+        
+        MADE(self::Meteorologist,name::String,dateOfBirth::Date)
+            {
+            name(self) = name
+            self->dateOfBirth = dateOfBirth
+            }
+            
+        UNMADE(self::Meteorologist)
+            {
+            }
+        }
+        
+    TYPE Meteorologists IS Set<Meteorologist>
+        
+    ENUMERATION WeatherStationType::Integer
+        {
+        #manned(Meteorologists) = 1
+        #unmanned = 2
+        }
+        
+    CLASS WeatherStation::Object
+        {
+        SLOT name::String = ""
+        }
+    }

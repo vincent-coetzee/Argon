@@ -1,0 +1,110 @@
+//
+//  SourceCodeEditingView.swift
+//  Argon
+//
+//  Created by Vincent Coetzee on 23/04/2023.
+//
+
+import Cocoa
+
+public class SourceCodeEditingView: NSView,NSTextViewDelegate
+    {
+    private var textView: SourceView!
+    private var scrollView: NSScrollView!
+    
+    public var string: String
+        {
+        get
+            {
+            self.textView.string
+            }
+        set
+            {
+            self.textView.string = newValue
+            }
+        }
+        
+    public var tokens: Tokens
+        {
+        get
+            {
+            self.textView.tokens
+            }
+        set
+            {
+            self.textView.tokens = newValue
+            }
+        }
+        
+    public var textViewDelegate: NSTextViewDelegate?
+        {
+        get
+            {
+            self._textViewDelegate
+            }
+        set
+            {
+            self.textView.delegate = self
+            self._textViewDelegate = newValue
+            }
+        }
+        
+    public var textFocusDelegate: TextFocusDelegate?
+        {
+        get
+            {
+            self.textView.textFocusDelegate
+            }
+        set
+            {
+            self.textView.textFocusDelegate = newValue
+            }
+        }
+    
+    private var _textViewDelegate: NSTextViewDelegate?
+    
+    public override init(frame: NSRect)
+        {
+        super.init(frame: frame)
+        self.initView()
+        }
+        
+    public required init?(coder: NSCoder)
+        {
+        super.init(coder: coder)
+        self.initView()
+        }
+        
+    private func initView()
+        {
+        let aView = SourceView(frame: .zero)
+        self.textView = aView
+        self.textView.sourceEditorDelegate = self
+        self.scrollView = NSScrollView(frame: .zero)
+        self.scrollView.translatesAutoresizingMaskIntoConstraints = false
+        self.scrollView.borderType = .noBorder
+        self.scrollView.hasVerticalRuler = true
+        self.scrollView.hasVerticalScroller = true
+        self.scrollView.hasHorizontalScroller = false
+        self.scrollView.autohidesScrollers = true
+        self.scrollView.verticalRulerView = self.textView.rulerView
+        self.scrollView.rulersVisible = true
+        self.addSubview(scrollView)
+        self.scrollView.documentView = self.textView
+        self.scrollView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        self.scrollView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        self.scrollView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        self.scrollView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        }
+    }
+
+extension SourceCodeEditingView: SourceEditorDelegate
+    {
+    public func sourceEditorKeyPressed(_ editor: NSTextView)
+        {
+        }
+        
+    public func sourceEditor(_ editor: NSTextView,changedLine: Int,offset: Int)
+        {
+        }
+    }

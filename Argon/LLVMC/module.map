@@ -1,0 +1,25 @@
+
+module LLVMC {
+    header "/opt/homebrew/Cellar/llvm/16.0.1/include/llvm-c/Analysis.h"
+    header "/opt/homebrew/Cellar/llvm/16.0.1/include/llvm-c/BitReader.h"
+    header "/opt/homebrew/Cellar/llvm/16.0.1/include/llvm-c/BitWriter.h"
+    header "/opt/homebrew/Cellar/llvm/16.0.1/include/llvm-c/Core.h"
+    header "/opt/homebrew/Cellar/llvm/16.0.1/include/llvm-c/DebugInfo.h"
+    header "/opt/homebrew/Cellar/llvm/16.0.1/include/llvm-c/Disassembler.h"
+    header "/opt/homebrew/Cellar/llvm/16.0.1/include/llvm-c/ErrorHandling.h"
+    header "/opt/homebrew/Cellar/llvm/16.0.1/include/llvm-c/ExecutionEngine.h"
+    header "/opt/homebrew/Cellar/llvm/16.0.1/include/llvm-c/Initialization.h"
+    header "/opt/homebrew/Cellar/llvm/16.0.1/include/llvm-c/Orc.h"
+    header "/opt/homebrew/Cellar/llvm/16.0.1/include/llvm-c/OrcEE.h"
+    header "/opt/homebrew/Cellar/llvm/16.0.1/include/llvm-c/Object.h"
+    header "/opt/homebrew/Cellar/llvm/16.0.1/include/llvm-c/Remarks.h"
+    header "/opt/homebrew/Cellar/llvm/16.0.1/include/llvm-c/Support.h"
+    header "/opt/homebrew/Cellar/llvm/16.0.1/include/llvm-c/Target.h"
+    header "/opt/homebrew/Cellar/llvm/16.0.1/include/llvm-c/TargetMachine.h"
+    header "/opt/homebrew/Cellar/llvm/16.0.1/include/llvm-c/Types.h"
+    header "/opt/homebrew/Cellar/llvm/16.0.1/include/llvm-c/Transforms/IPO.h"
+    header "/opt/homebrew/Cellar/llvm/16.0.1/include/llvm-c/Transforms/PassManagerBuilder.h"
+    header "/opt/homebrew/Cellar/llvm/16.0.1/include/llvm-c/Transforms/Scalar.h"
+    header "/opt/homebrew/Cellar/llvm/16.0.1/include/llvm-c/Transforms/Vectorize.h"
+    export *
+}
