@@ -35,7 +35,7 @@ public class WhileStatement: Block
         
     public static func parse(into block: Block,using parser: ArgonParser)
         {
-        let location = parser.currentLocation
+        let location = parser.token.location
         parser.nextToken()
         var expression: Expression = Expression()
         parser.parseParentheses

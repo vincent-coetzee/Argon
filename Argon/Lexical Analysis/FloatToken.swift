@@ -14,11 +14,6 @@ public class FloatToken: Token
         true
         }
         
-    public override var operand: Operand
-        {
-        .float(Double(self.matchString)!)
-        }
-        
     public override var isOperand: Bool
         {
         true

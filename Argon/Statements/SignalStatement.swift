@@ -31,14 +31,14 @@ public class SignalStatement: Statement
         
     public static func parse(into block: Block,using parser: ArgonParser)
         {
-        let location = parser.currentLocation
+        let location = parser.token.location
         parser.nextToken()
         var symbol: Argon.Symbol!
         parser.parseParentheses
             {
             if !parser.token.isSymbolValue
                 {
-                parser.lodgeIssue(phase: .declaration, code: .symbolExpected, location: location)
+                parser.lodgeIssue( code: .symbolExpected, location: location)
                 symbol = Argon.nextIndex(named: "SYMBOL")
                 }
             else

@@ -24,16 +24,6 @@ public class OperatorToken: Token
         true
         }
         
-    public var isUnaryOperator: Bool
-        {
-        return(false)
-        }
-        
-    public override var `operator`: Operator
-        {
-        Operator(tokenType: self.tokenType, precedence: self.precedence)
-        }
-        
     public override var tokenType: TokenType
         {
         switch(self.matchString)

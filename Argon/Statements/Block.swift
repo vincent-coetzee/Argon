@@ -12,6 +12,11 @@ public class Block: Statement
     public static override func parse(using parser: ArgonParser)
         {
         let block = Block()
+        parser.pushCurrentScope(block)
+        defer
+            {
+            parser.popCurrentScope()
+            }
         parser.parseBraces
             {
             repeat
@@ -24,6 +29,11 @@ public class Block: Statement
         
     public static func parseBlockInner(block: Block,using parser: ArgonParser)
         {
+        parser.pushCurrentScope(block)
+        defer
+            {
+            parser.popCurrentScope()
+            }
         repeat
             {
             self.parseBlockEntry(block: block,using: parser)
@@ -63,6 +73,11 @@ public class Block: Statement
     public static func parseBlock(using parser: ArgonParser) -> Block
         {
         let block = Block()
+        parser.pushCurrentScope(block)
+        defer
+            {
+            parser.popCurrentScope()
+            }
         parser.parseBraces
             {
             repeat

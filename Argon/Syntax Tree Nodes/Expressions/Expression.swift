@@ -38,4 +38,8 @@ public class Expression: SyntaxTreeNode
         {
         super.encode(with: coder)
         }
+        
+    public override func removeChildNode(_ node: SyntaxTreeNode)
+        {
+        }
     }

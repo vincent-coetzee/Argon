@@ -42,17 +42,14 @@ public class Module: CompositeSyntaxTreeNode
             if let node = parser.lookupNode(atIdentifier: moduleName),node.isModule
                 {
                 parser.pushCurrentScope(node)
-                if parser.isDeclaring
-                    {
-                    parser.addNode(node as! Self)
-                    }
+                parser.addNode(node as! Self)
                 }
             else
                 {
                 let module = Module(identifier: moduleName)
                 if lastToken.identifier.isCompoundIdentifier
                     {
-                    parser.lodgeIssue(phase: .declaration,code: .singleIdentifierExpected,location: location)
+                    parser.lodgeIssue(code: .singleIdentifierExpected,location: location)
                     }
                 else
                     {
@@ -69,11 +66,8 @@ public class Module: CompositeSyntaxTreeNode
         else
             {
             let module = Module(name: "Bad Module")
-            parser.lodgeIssue(phase: .declaration,code: .identifierExpected,location: location)
-            if parser.isDeclaring
-                {
-                parser.addNode(module)
-                }
+            parser.lodgeIssue(code: .identifierExpected,location: location)
+            parser.addNode(module)
             }
         }
         
@@ -99,7 +93,7 @@ public class Module: CompositeSyntaxTreeNode
                     case(.ENUMERATION):
                         EnumerationType.parse(using: parser)
                     default:
-                        parser.lodgeIssue(phase: .declaration,code: .moduleEntryExpected,location: location)
+                        parser.lodgeIssue(code: .moduleEntryExpected,location: location)
                     }
                 }
             }

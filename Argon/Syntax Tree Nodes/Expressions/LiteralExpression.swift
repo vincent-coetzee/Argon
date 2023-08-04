@@ -71,9 +71,9 @@ public class LiteralExpression: Expression
         super.init()
         }
         
-    public init(value enumerationInstance: EnumerationInstance)
+    public init(enumeration: EnumerationType,enumerationCase: EnumerationCase)
         {
-        self.value = .enumerationInstance(enumerationInstance)
+        self.value = .enumerationInstance(enumeration,enumerationCase)
         super.init()
         }
         
@@ -95,9 +95,10 @@ extension NSCoder
             case(.integer(let integer)):
                 self.encode(1,forKey: "\(key)_index")
                 self.encode(integer,forKey: "\(key)_integer")
-            case(.enumerationInstance(let enumeration)):
+            case(.enumerationInstance(let enumeration,let aCase)):
                 self.encode(2,forKey: "\(key)_index")
-                self.encode(enumeration,forKey: "\(key)_enumerationInstance")
+                self.encode(enumeration,forKey: "\(key)_enumerationInstance_enumeration")
+                self.encode(aCase,forKey: "\(key)_enumerationInstance_enumerationCase")
             case(.object(let object)):
                 self.encode(3,forKey: "\(key)_index")
                 self.encode(object,forKey: "\(key)_object")
@@ -133,6 +134,35 @@ extension NSCoder
             case(.enumeration(let enumeration)):
                 self.encode(14,forKey: "\(key)_index")
                 self.encode(enumeration,forKey: "\(key)_enumeration")
+            case(.identifier(let identifier)):
+                self.encode(15,forKey: "\(key)_index")
+                self.encode(identifier,forKey: "\(key)_identifier")
+            case(.variable(let variable)):
+                self.encode(16,forKey: "\(key)_index")
+                self.encode(variable,forKey: "\(key)_variable")
+            case(.constant(let constant)):
+                self.encode(17,forKey: "\(key)_index")
+                self.encode(constant,forKey: "\(key)_constant")
+            case(.date(let date)):
+                self.encode(18,forKey: "\(key)_index")
+                self.encode(date.day,forKey: "\(key)_date_day")
+                self.encode(date.month,forKey: "\(key)_date_month")
+                self.encode(date.year,forKey: "\(key)_date_year")
+            case(.time(let time)):
+                self.encode(19,forKey: "\(key)_index")
+                self.encode(time.hour,forKey: "\(key)_time_hour")
+                self.encode(time.minute,forKey: "\(key)_time_minute")
+                self.encode(time.second,forKey: "\(key)_time_second")
+                self.encode(time.millisecond,forKey: "\(key)_time_millisecond")
+            case(.dateTime(let dateTime)):
+                self.encode(20,forKey: "\(key)_index")
+                self.encode(dateTime.date.day,forKey: "\(key)_dateTime_day")
+                self.encode(dateTime.date.month,forKey: "\(key)_dateTime_month")
+                self.encode(dateTime.date.year,forKey: "\(key)_dateTime_year")
+                self.encode(dateTime.time.hour,forKey: "\(key)_dateTime_hour")
+                self.encode(dateTime.time.minute,forKey: "\(key)_dateTime_minute")
+                self.encode(dateTime.time.second,forKey: "\(key)_dateTime_second")
+                self.encode(dateTime.time.millisecond,forKey: "\(key)_dateTime_millisecond")
             }
         }
 
@@ -146,7 +176,7 @@ extension NSCoder
             case(1):
                 return(.integer(self.decodeInt64(forKey: "\(key)_integer")))
             case(2):
-                return(.enumerationInstance(self.decodeObject(forKey: "\(key)_enumerationInstance") as! EnumerationInstance))
+                return(.enumerationInstance(self.decodeObject(forKey: "\(key)_enumerationInstance_enumeration") as! EnumerationType,self.decodeObject(forKey: "\(key)_enumerationInstance_enumerationCase") as! EnumerationCase))
             case(3):
                 return(.object(self.decodeObject(forKey: "\(key)_object") as! ObjectInstance))
             case(4):
@@ -172,6 +202,32 @@ extension NSCoder
                 return(.method(self.decodeObject(forKey: "\(key)_method") as! Method))
             case(14):
                 return(.enumeration(self.decodeObject(forKey: "\(key)_enumeration") as! EnumerationType))
+            case(15):
+                return(.identifier(self.decodeObject(forKey: "\(key)_identifier") as! Identifier))
+            case(16):
+                return(.variable(self.decodeObject(forKey: "\(key)_variable") as! Variable))
+            case(17):
+                return(.constant(self.decodeObject(forKey: "\(key)_constant") as! Constant))
+            case(18):
+                let day = self.decodeInteger(forKey: "\(key)_date_day")
+                let month = self.decodeInteger(forKey: "\(key)_date_month")
+                let year = self.decodeInteger(forKey: "\(key)_date_year")
+                return(.date(Argon.Date(day: day,month: month,year: year)))
+            case(19):
+                let hour = self.decodeInteger(forKey: "\(key)_time_hour")
+                let minute = self.decodeInteger(forKey: "\(key)_time_minute")
+                let second = self.decodeInteger(forKey: "\(key)_time_second")
+                let millisecond = self.decodeInteger(forKey: "\(key)_time_millisecond")
+                return(.time(Argon.Time(hour: hour,minute: minute,second: second,millisecond: millisecond)))
+            case(20):
+                let day = self.decodeInteger(forKey: "\(key)_dateTime_day")
+                let month = self.decodeInteger(forKey: "\(key)_dateTime_month")
+                let year = self.decodeInteger(forKey: "\(key)_dateTime_year")
+                let hour = self.decodeInteger(forKey: "\(key)_dateTime_hour")
+                let minute = self.decodeInteger(forKey: "\(key)_dateTime_minute")
+                let second = self.decodeInteger(forKey: "\(key)_dateTime_second")
+                let millisecond = self.decodeInteger(forKey: "\(key)_dateTime_millisecond")
+                return(.dateTime(Argon.DateTime(date: Argon.Date(day: day,month: month,year: year),time: Argon.Time(hour: hour,minute: minute,second: second,millisecond: millisecond))))
             default:
                 fatalError()
             }

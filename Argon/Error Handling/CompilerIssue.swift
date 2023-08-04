@@ -21,6 +21,8 @@ public enum ErrorCode: Int
     
     case discreteTypeExpected
     
+    case enumerationCaseExpected
+    
     case fileDataIsCorrupt
     
     case invalidCharacterSequence
@@ -33,6 +35,7 @@ public enum ErrorCode: Int
     case initialModuleDeclarationNotFound
     case invalidFileType
     case invalidLowerBound
+    case invalidEnumerationCase
     
     case lValueExpectedOnLeft
     case leftParenthesisExpected
@@ -44,6 +47,8 @@ public enum ErrorCode: Int
 
     case none
 
+    case pathExpected
+    
     case rangeOperatorExpected
     case rightParenthesisExpected
     case rightBraceExpected

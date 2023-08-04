@@ -62,6 +62,19 @@ public enum Parent
     case none
     case symbol(SyntaxTreeNode)
     case expression(Expression)
+    
+    public func removeNode(_ node: SyntaxTreeNode)
+        {
+        switch(self)
+            {
+            case .none:
+                break
+            case .symbol(let symbol):
+                symbol.removeChildNode(node)
+            case .expression(let expression):
+                expression.removeChildNode(node)
+            }
+        }
     }
 
 public extension NSCoder

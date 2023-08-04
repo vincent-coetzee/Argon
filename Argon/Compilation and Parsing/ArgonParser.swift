@@ -9,64 +9,19 @@ import Foundation
 import LLVMC
 
 public typealias ParseClosure = () -> Void
-
-public enum ParsePhase
-    {
-    case declaration
-    case application
-    
-    public var isDeclarationPhase: Bool
-        {
-        switch(self)
-            {
-            case(.declaration):
-                return(true)
-            default:
-                return(false)
-            }
-        }
-        
-    public var isApplicationPhase: Bool
-        {
-        switch(self)
-            {
-            case(.application):
-                return(true)
-            default:
-                return(false)
-            }
-        }
-    }
     
 public class ArgonParser
     {
-    public var isDeclaring: Bool
-        {
-        self.phase.isDeclarationPhase
-        }
-        
-    public var currentLocation: Location
-        {
-        self.token.location
-        }
-        
-    public var isApplying: Bool
-        {
-        self.phase.isApplicationPhase
-        }
-        
     private var tokens: Tokens = Tokens()
     private var tokenIndex = 0
     public private(set) var token: Token
     private var scopeStack = Stack<Scope>()
     public private(set) var currentScope: Scope
     private var rootModule: RootModule
-    private var operandStack = Stack<Operand>()
-    private var outputQueue: Queue<ParseElement> = Queue()
-    private var operatorStack = Stack<Operator>()
+    private var operandStack = Stack<ValueBox>()
+    private var operatorStack = Stack<TokenType>()
     private var topModule: Module?
     private var symbolIndex = 1
-    public private(set) var phase: ParsePhase = .declaration
     private var prefixParsers = Dictionary<TokenType,PrefixParser>()
     private var infixParsers = Dictionary<TokenType,InfixParser>()
     private var issues = CompilerIssues()
@@ -165,11 +120,6 @@ public class ArgonParser
         self.register(tokenType: tokenType,parser: BinaryOperatorParser(precedence: precedence, isRightAssociative: true))
         }
         
-    public func setPhase(_ phase: ParsePhase)
-        {
-        self.phase = phase
-        }
-        
     public func parse(sourceFileNode: SourceFileNode)
         {
         sourceFileNode.astNode = nil
@@ -217,7 +167,7 @@ public class ArgonParser
             self.nextToken()
             return(temp)
             }
-        self.lodgeIssue(phase: .declaration,code: error,location: location)
+        self.lodgeIssue(code: error,location: location)
         return(nil)
         }
         
@@ -226,7 +176,7 @@ public class ArgonParser
         let location = self.token.location
         guard self.token.isIdentifier else
             {
-            self.lodgeIssue(phase: .declaration,code: errorCode,message: message,location: location)
+            self.lodgeIssue(code: errorCode,message: message,location: location)
             let index = self.symbolIndex
             self.symbolIndex += 1
             return(Identifier(string: "Symbol\(index)"))
@@ -264,13 +214,13 @@ public class ArgonParser
         let location = self.token.location
         guard self.token.isModule else
             {
-            self.lodgeIssue(phase: .declaration,code: .initialModuleDeclarationNotFound,location: location)
+            self.lodgeIssue(code: .initialModuleDeclarationNotFound,location: location)
             return
             }
         self.nextToken()
         guard self.token.isIdentifier else
             {
-            self.lodgeIssue(phase: .declaration,code: .identifierExpected,location: location)
+            self.lodgeIssue(code: .identifierExpected,location: location)
             return
             }
         let initialModule = Module(identifier: self.token.identifier)
@@ -323,15 +273,9 @@ public class ArgonParser
             }
         else
             {
-            if self.isDeclaring
-                {
-                type = ForwardReference(name: typeName)
-                self.currentScope.addNode(type)
-                }
-            else
-                {
-                self.lodgeIssue(phase: .application,code: .undefinedType,message: "'\(identifier.description)' is undefined.",location: location)
-                }
+            type = ForwardReference(name: typeName)
+            self.currentScope.addNode(type)
+            self.lodgeIssue(code: .undefinedType,message: "'\(identifier.description)' is undefined.",location: location)
             }
         return(type)
         }
@@ -340,7 +284,7 @@ public class ArgonParser
         {
         if !self.token.isLeftBrocket
             {
-            self.lodgeIssue(phase: .declaration,code: .leftBrocketExpected,location: location)
+            self.lodgeIssue(code: .leftBrocketExpected,location: location)
             }
         else
             {
@@ -349,7 +293,7 @@ public class ArgonParser
         let elementType = self.parseType()
         if !self.token.isComma
             {
-            self.lodgeIssue(phase: .declaration,code: .commaExpected,location: location)
+            self.lodgeIssue(code: .commaExpected,location: location)
             }
         else
             {
@@ -362,7 +306,7 @@ public class ArgonParser
             }
         if !self.token.isRightBracket
             {
-            self.lodgeIssue(phase: .declaration,code: .rightBracketExpected,location: location)
+            self.lodgeIssue(code: .rightBracketExpected,location: location)
             }
         let arrayTypeInstance = ArrayTypeInstance(originalType: ArgonModule.arrayType,indexType: index)
         arrayTypeInstance.generics.append(elementType)
@@ -411,7 +355,7 @@ public class ArgonParser
                         }
                     else
                         {
-                        self.lodgeIssue(phase: .declaration,code: .rangeOperatorExpected,location: location)
+                        self.lodgeIssue(code: .rangeOperatorExpected,location: location)
                         }
                     upperBound = self.parseSymbolValue(code: .symbolExpected)
                     }
@@ -421,7 +365,7 @@ public class ArgonParser
                     }
                 else
                     {
-                    self.lodgeIssue(phase: .declaration,code: .invalidLowerBound,message: "Invalid lower bound for enumeration index '\(enumeration.name)'.",location: newLocation)
+                    self.lodgeIssue(code: .invalidLowerBound,message: "Invalid lower bound for enumeration index '\(enumeration.name)'.",location: newLocation)
                     }
                 return(Argon.ArrayIndex.enumerationRange(enumeration,lowerBound: EnumerationCase(name: "#LOWER",type: ArgonModule.shared.integerType),upperBound: EnumerationCase(name: "#UPPER",type: ArgonModule.shared.integerType)))
                 }
@@ -434,7 +378,7 @@ public class ArgonParser
                 }
             else
                 {
-                self.lodgeIssue(phase: .declaration,code: .discreteTypeExpected,location: location)
+                self.lodgeIssue(code: .discreteTypeExpected,location: location)
                 }
             }
         return(Argon.ArrayIndex.none)
@@ -449,7 +393,7 @@ public class ArgonParser
             self.nextToken()
             return(integer)
             }
-        self.lodgeIssue(phase: .declaration,code: code,location: location)
+        self.lodgeIssue(code: code,location: location)
         return(Argon.Integer(Argon.nextIndex))
         }
         
@@ -462,7 +406,7 @@ public class ArgonParser
             self.nextToken()
             return(symbol)
             }
-        self.lodgeIssue(phase: .declaration,code: code,location: location)
+        self.lodgeIssue(code: code,location: location)
         return(Argon.Symbol(Argon.nextIndex(named: "#SYM")))
         }
         
@@ -473,7 +417,7 @@ public class ArgonParser
         var upperBound:Argon.Integer = 0
         if self.token.isInteger
             {
-            self.lodgeIssue(phase: .declaration,code: .integerExpected,location: location)
+            self.lodgeIssue(code: .integerExpected,location: location)
             }
         else
             {
@@ -487,14 +431,14 @@ public class ArgonParser
         {
         guard self.token.isLeftBrace else
             {
-            self.lodgeIssue(phase: .declaration,code: .leftBraceExpected,location: self.token.location)
+            self.lodgeIssue(code: .leftBraceExpected,location: self.token.location)
             return
             }
         self.nextToken()
         closure()
         guard self.token.isRightBrace else
             {
-            self.lodgeIssue(phase: .declaration,code: .rightBraceExpected,location: self.token.location)
+            self.lodgeIssue(code: .rightBraceExpected,location: self.token.location)
             return
             }
         self.nextToken()
@@ -504,14 +448,14 @@ public class ArgonParser
         {
         guard self.token.isLeftBracket else
             {
-            self.lodgeIssue(phase: .declaration,code: .leftBracketExpected,location: self.token.location)
+            self.lodgeIssue(code: .leftBracketExpected,location: self.token.location)
             return
             }
         self.nextToken()
         closure()
         guard self.token.isRightBracket else
             {
-            self.lodgeIssue(phase: .declaration,code: .rightBracketExpected,location: self.token.location)
+            self.lodgeIssue(code: .rightBracketExpected,location: self.token.location)
             return
             }
         self.nextToken()
@@ -521,14 +465,14 @@ public class ArgonParser
         {
         guard self.token.isLeftParenthesis else
             {
-            self.lodgeIssue(phase: .declaration,code: .leftParenthesisExpected,location: self.token.location)
+            self.lodgeIssue(code: .leftParenthesisExpected,location: self.token.location)
             return
             }
         self.nextToken()
         closure()
         guard self.token.isRightParenthesis else
             {
-            self.lodgeIssue(phase: .declaration,code: .rightParenthesisExpected,location: self.token.location)
+            self.lodgeIssue(code: .rightParenthesisExpected,location: self.token.location)
             return
             }
         self.nextToken()
@@ -582,28 +526,25 @@ public class ArgonParser
             {
             return
             }
-        let importName = lastToken.identifier
+        let importedModuleName = lastToken.identifier.lastPart
         guard self.expect(tokenType: .leftParenthesis,error: .leftParenthesisExpected).isNotNil else
             {
             return
             }
-        guard let middleToken = self.expect(tokenType: .identifier,error: .identifierExpected) else
+        guard let middleToken = self.expect(tokenType: .path,error: .pathExpected) else
             {
             return
             }
-        let importPath = middleToken.identifier
+        let importPath = middleToken.pathValue
         guard self.expect(tokenType: .rightParenthesis,error: .rightParenthesisExpected).isNil else
             {
             return
             }
         }
         
-    public func lodgeIssue(phase: ParsePhase,code: ErrorCode,message: String? = nil,location: Location)
+    public func lodgeIssue(code: ErrorCode,message: String? = nil,location: Location)
         {
-        if phase == self.phase
-            {
-            self.issues.append(CompilerIssue(code: code, message: message,location: location))
-            }
+        self.issues.append(CompilerIssue(code: code, message: message,location: location))
         }
 
     public func parseExpression(precedence: Int) -> Expression
@@ -613,7 +554,7 @@ public class ArgonParser
         var left = Expression()
         if parser.isNil
             {
-            self.lodgeIssue(phase: .declaration,code: .invalidExpression,location: location)
+            self.lodgeIssue(code: .invalidExpression,location: location)
             }
         else
             {
@@ -640,14 +581,14 @@ public class ArgonParser
             self.nextToken()
             if !self.token.isIdentifier
                 {
-                self.lodgeIssue(phase: .declaration,code: .identifierExpected,location: location)
+                self.lodgeIssue(code: .identifierExpected,location: location)
                 internalName = Argon.nextIndex(named: "IN")
                 }
             else
                 {
                 if self.token.identifier.isCompoundIdentifier
                     {
-                    self.lodgeIssue(phase: .declaration,code: .singleIdentifierExpected,location: location)
+                    self.lodgeIssue(code: .singleIdentifierExpected,location: location)
                     }
                 internalName = self.token.identifier.lastPart
                 }
@@ -657,14 +598,14 @@ public class ArgonParser
             // we have an external name AND an internal name
             if !self.token.isIdentifier
                 {
-                self.lodgeIssue(phase: .declaration,code: .identifierExpected,location: location)
+                self.lodgeIssue(code: .identifierExpected,location: location)
                 externalName = Argon.nextIndex(named: "EN")
                 }
             else
                 {
                 if self.token.identifier.isCompoundIdentifier
                     {
-                    self.lodgeIssue(phase: .declaration,code: .singleIdentifierExpected,location: location)
+                    self.lodgeIssue(code: .singleIdentifierExpected,location: location)
                     externalName = Argon.nextIndex(named: "EN")
                     }
                 else
@@ -679,7 +620,7 @@ public class ArgonParser
             // we just have a single name that is external and internal
             if !self.token.isIdentifier
                 {
-                self.lodgeIssue(phase: .declaration,code: .identifierExpected,location: location)
+                self.lodgeIssue(code: .identifierExpected,location: location)
                 externalName = Argon.nextIndex(named: "EN")
                 internalName = externalName!
                 }
@@ -687,7 +628,7 @@ public class ArgonParser
                 {
                 if self.token.identifier.isCompoundIdentifier
                     {
-                    self.lodgeIssue(phase: .declaration,code: .singleIdentifierExpected,location: location)
+                    self.lodgeIssue(code: .singleIdentifierExpected,location: location)
                     externalName = Argon.nextIndex(named: "EN")
                     }
                 else
@@ -701,7 +642,7 @@ public class ArgonParser
         // now we should have a scope operator followed by a type
         if !self.token.isScope
             {
-            self.lodgeIssue(phase: .declaration,code: .scopeOperatorExpected,location: location)
+            self.lodgeIssue(code: .scopeOperatorExpected,location: location)
             }
         else
             {

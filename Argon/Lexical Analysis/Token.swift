@@ -105,6 +105,7 @@ public enum TokenType: Int
     case orOrAssign
     case orAssign
     
+    case path
     case percent
     case plus
     case plusAssign
@@ -154,6 +155,11 @@ public class Token: NSObject,NSCoding
     public var precedence: Int
         {
         fatalError("Precedence called on Token")
+        }
+        
+    public var pathValue: String
+        {
+        fatalError("This should not be called on Token")
         }
         
     public var range: NSRange
@@ -306,6 +312,21 @@ public class Token: NSObject,NSCoding
         false
         }
         
+    public var isPathValue: Bool
+        {
+        false
+        }
+        
+    public var isKeyed: Bool
+        {
+        false
+        }
+        
+    public var isKey: Bool
+        {
+        false
+        }
+        
     public var symbolValue: Argon.Symbol
         {
         fatalError("This should not have been invoked on Token")
@@ -316,19 +337,14 @@ public class Token: NSObject,NSCoding
         fatalError("valueBox called on Token and should not be.")
         }
         
-    public var operand: Operand
+    public var dateValue: Argon.Date
         {
-        fatalError("operand called on Token")
+        fatalError("dateValue called on Token and should not be")
         }
         
     public var isExpressionRelatedToken: Bool
         {
         false
-        }
-        
-    public var `operator`: Operator
-        {
-        fatalError("Operator called on Token and should not be")
         }
         
     public let location: Location

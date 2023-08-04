@@ -14,11 +14,6 @@ public class CharacterToken: Token
         true
         }
         
-    public override var operand: Operand
-        {
-        .character(Argon.Character(self.matchString)!)
-        }
-        
     public override var styleElement: StyleElement
         {
         .colorCharacter

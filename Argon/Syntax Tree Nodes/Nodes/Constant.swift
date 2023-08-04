@@ -34,14 +34,11 @@ public class Constant: Variable
             }
         else
             {
-            parser.lodgeIssue(phase: .declaration,code: .constantMustBeInitialised,message: "Constants must be initialised at the same time that they are declared.",location: location)
+            parser.lodgeIssue(code: .constantMustBeInitialised,message: "Constants must be initialised at the same time that they are declared.",location: location)
             expression = Expression()
             }
         let constant = Constant(name: name,type: type,expression: expression!)
-        if parser.isDeclaring
-            {
-            parser.addNode(constant)
-            }
+        parser.addNode(constant)
         }
     }
 

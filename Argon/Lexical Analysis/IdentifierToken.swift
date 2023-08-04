@@ -20,11 +20,6 @@ public class IdentifierToken: Token
         true
         }
         
-    public override var operand: Operand
-        {
-        .identifier(self.identifier)
-        }
-        
     private let _identifier: Identifier
     
     public override var styleElement: StyleElement

@@ -31,6 +31,65 @@ public struct Argon
     public typealias Integer = Swift.Int64
     public typealias Symbol = Swift.String
 
+    public struct Date
+        {
+        public let day: Int
+        public let month: Int
+        public let year: Int
+        
+        public init(string: String)
+            {
+            let pieces = string.components(separatedBy: "/")
+            self.day = Int(pieces[0])!
+            self.month = Int(pieces[1])!
+            self.year = Int(pieces[2])!
+            }
+            
+        public init(day: Int,month: Int,year: Int)
+            {
+            self.day = day
+            self.month = month
+            self.year = year
+            }
+        }
+        
+    public struct Time
+        {
+        public let hour: Int
+        public let minute: Int
+        public let second: Int
+        public let millisecond: Int
+        
+        public init(string: String)
+            {
+            let pieces = string.components(separatedBy: ":")
+            self.hour = Int(pieces[0])!
+            self.minute = Int(pieces[1])!
+            self.second = Int(pieces[2])!
+            self.millisecond = pieces.count == 4 ? Int(pieces[3])! : 0
+            }
+            
+        public init(hour: Int,minute: Int,second: Int,millisecond: Int)
+            {
+            self.hour = hour
+            self.minute = minute
+            self.second = second
+            self.millisecond = millisecond
+            }
+        }
+        
+    public struct DateTime
+        {
+        public let date: Date
+        public let time: Time
+        
+        public init(date: Argon.Date,time: Argon.Time)
+            {
+            self.date = date
+            self.time = time
+            }
+        }
+        
     public struct Range
         {
         public var lowerBound: Integer

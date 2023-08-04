@@ -15,6 +15,7 @@ public class CompositeSyntaxTreeNode: SyntaxTreeNode,Scope
         {
         self.containedNodes.append(symbol)
         symbol.setParent(self)
+        NodeChangeSet.currentChangeSet.insert(symbol)
         }
         
     public func lookupNode(atName name: String) -> SyntaxTreeNode?
@@ -37,5 +38,25 @@ public class CompositeSyntaxTreeNode: SyntaxTreeNode,Scope
             {
             node.dump(indent: newIndent)
             }
+        }
+        
+    public func indexOfNode(_ node: SyntaxTreeNode)  -> Int?
+        {
+        if let index = self.containedNodes.firstIndex(of: node)
+            {
+            return(index)
+            }
+        fatalError("Attempt to remove node from containedNodes but it is not present")
+//        return(nil)
+        }
+        
+    public override func removeChildNode(_ node: SyntaxTreeNode)
+        {
+        if let index = self.indexOfNode(node)
+            {
+            self.containedNodes.remove(at: index)
+            return
+            }
+        fatalError("Node to be removed not found in composite node containedNodes")
         }
     }

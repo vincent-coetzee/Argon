@@ -15,7 +15,7 @@ public class LetStatement: Statement
     
     public static func parse(into block: Block,using parser: ArgonParser)
         {
-        let location = parser.currentLocation
+        let location = parser.token.location
         parser.nextToken()
         let identifier = parser.parseIdentifier(errorCode: .identifierExpected,message: "Identifier expected after 'LET'.")
         let name = identifier.lastPart
@@ -23,7 +23,7 @@ public class LetStatement: Statement
         if parser.currentScope.lookupNode(atName: name).isNotNil
             {
             alreadyDefined = true
-            parser.lodgeIssue(phase: .declaration,code: .nodeAlreadyDefined,message: "A symbol with identifier '\(name)' is already defined.",location: location)
+            parser.lodgeIssue(code: .nodeAlreadyDefined,message: "A symbol with identifier '\(name)' is already defined.",location: location)
             }
         var variableType: TypeNode?
         if parser.token.isScope
@@ -34,7 +34,7 @@ public class LetStatement: Statement
         var expression: Expression?
         if !parser.token.isEquals && variableType.isNil
             {
-            parser.lodgeIssue(phase: .declaration,code: .typeOrAssignmentExpected,message: "If there is no type defined for the variable then an assignment must follow the identifier.",location: location)
+            parser.lodgeIssue(code: .typeOrAssignmentExpected,message: "If there is no type defined for the variable then an assignment must follow the identifier.",location: location)
             }
         else if parser.token.isEquals
             {

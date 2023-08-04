@@ -7,7 +7,7 @@
 
 import Foundation
 
-fileprivate let _Keywords = ["CLASS","CONSTANT","DYNAMIC","ELSE","ENUMERATION",
+fileprivate let _Keywords = ["CLASS","CONSTANT","KEY","KEYED","ELSE","ENUMERATION",
                             "FOR","FROM","FUNCTION","IF","HANDLE","IMPORT","INTO","IS","LET","LOOP","MADE","MAKE","METHOD","MODULE","OTHERWISE","READ","REPEAT",
                             "RETURN","SELECT","SLOT","SIGNAL","THEN","TIMES","TYPE","UNMADE","USES",
                             "VIRTUAL","WHEN","WHILE","WRAPPER","WRITE"]
@@ -22,6 +22,16 @@ public class KeywordToken: Token
     public override var isWhen: Bool
         {
         self.matchString == "WHEN"
+        }
+        
+    public override var isKeyed: Bool
+        {
+        self.matchString == "KEYED"
+        }
+        
+    public override var isKey: Bool
+        {
+        self.matchString == "KEY"
         }
         
     public override var isRead: Bool

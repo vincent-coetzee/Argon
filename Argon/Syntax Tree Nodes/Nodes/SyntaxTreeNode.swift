@@ -74,7 +74,7 @@ public class SyntaxTreeNode: NSObject,NSCoding
     public private(set) var parent: Parent?
     public var isSystemNode: Bool = false
     private var _module: Module!
-    public var assignedType: TypeNode = NullType()
+    public var assignedType: TypeNode?
     public private(set) var issues = CompilerIssues()
     
     init(index: Int? = nil,name: String)
@@ -108,6 +108,16 @@ public class SyntaxTreeNode: NSObject,NSCoding
     public func addIssue(code: ErrorCode,message: String? = nil,location: Location)
         {
         self.issues.append(CompilerIssue(code: code,message: message,location: location))
+        }
+        
+    public func removeChildNode(_ node: SyntaxTreeNode)
+        {
+        fatalError("removeChildNode called on SyntaxTreeNode and should not be")
+        }
+        
+    public func removeFromParent()
+        {
+        self.parent?.removeNode(self)
         }
         
     public func encode(with coder: NSCoder)

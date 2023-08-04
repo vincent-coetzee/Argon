@@ -70,11 +70,6 @@ public class ArgonModule: Module
         return(self.lookupNode(atName: "Class") as! TypeNode)
         }
         
-    public var discreteType: TypeNode
-        {
-        return(self.lookupNode(atName: "DiscreteType") as! TypeNode)
-        }
-        
     public var integerType: TypeNode
         {
         return(self.lookupNode(atName: "Integer") as! TypeNode)
@@ -162,7 +157,7 @@ public class ArgonModule: Module
         self.addSystemClass(named: "Slot",superclassesNamed: ["Object"]).slot("name",self.stringType)
         self.addSystemClass(named: "Class",superclassesNamed: ["Object"]).slot("name",self.stringType)
         self.addSystemClass(named: "EnumerationCase",superclassesNamed: ["Object"]).slot("name",self.stringType)
-        self.addSystemClass(named: "Enumeration",superclassesNamed: ["Object"]).slot("name",self.stringType).slot("rawType",self.discreteType)
+        self.addSystemClass(named: "Enumeration",superclassesNamed: ["Object"]).slot("name",self.stringType).slot("rawType",self.integer64Type)
         self.addSystemClass(named: "Collection",superclassesNamed: ["Object"],generics: []).slot("count",self.integer64Type)
         self.addSystemClass(named: "IndexedCollection",superclassesNamed: ["Collection"],generics: [])
         self.addSystemClass(named: "Array",superclassesNamed: ["IndexedCollection"],generics: [.newTypeVariable(name: "Element"),.newTypeVariable(name: "Index")])

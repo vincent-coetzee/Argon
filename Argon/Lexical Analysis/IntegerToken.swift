@@ -18,12 +18,7 @@ public class IntegerToken: Token
         {
         Argon.Integer(self.matchString)!
         }
-        
-    public override var operand: Operand
-        {
-        .integer(Argon.Integer(self.matchString)!)
-        }
-        
+
     public override var isOperand: Bool
         {
         true

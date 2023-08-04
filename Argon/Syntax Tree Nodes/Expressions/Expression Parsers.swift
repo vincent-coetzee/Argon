@@ -24,22 +24,56 @@ public class IdentifierParser: PrefixParser
         {
         let location = parser.token.location
         var value = ValueBox.none
-        let identifier = token.identifier
-        if parser.isApplying
+        if parser.token.isKey
             {
+            parser.nextToken()
+            var symbols = Symbols()
+            parser.parseParentheses
+                {
+                while parser.token.isSymbolValue
+                    {
+                    symbols.append(parser.token.symbolValue)
+                    parser.nextToken()
+                    }
+                }
+            return(LiteralExpression(value: .key(symbols)))
+            }
+        else
+            {
+            let identifier = token.identifier
+            parser.nextToken()
             if let object = parser.currentScope.lookupNode(atIdentifier: identifier)
                 {
                 value = object.valueBox
+                if object.isEnumerationType
+                    {
+                    let enumeration = object as! EnumerationType
+                    if parser.token.isSymbolValue
+                        {
+                        let symbolValue = parser.token.symbolValue
+                        if let aCase = enumeration.case(atSymbol: symbolValue)
+                            {
+                            return(LiteralExpression(enumeration: enumeration,enumerationCase: aCase))
+                            }
+                        else
+                            {
+                            parser.lodgeIssue(code: .invalidEnumerationCase,message: "The case '\(symbolValue)' is not valid for the enumeration '\(enumeration.name)'.",location: location)
+                            }
+                        }
+                    else
+                        {
+                        parser.lodgeIssue(code: .enumerationCaseExpected,message: "A case for the enumeration '\(enumeration.name)' was expected.",location: location)
+                        }
+                    }
                 }
             else
                 {
-                parser.lodgeIssue(phase: .application,code: .undefinedSymbol,message: "Undefined symbol '\(identifier.description)'",location: location)
+                parser.lodgeIssue(code: .undefinedSymbol,message: "Undefined symbol '\(identifier.description)'",location: location)
                 }
+            let expression = IdentifierExpression(identifier: identifier)
+            expression.setIdentifierValue(value)
+            return(expression)
             }
-        parser.nextToken()
-        let expression = IdentifierExpression(identifier: identifier)
-        expression.setIdentifierValue(value)
-        return(expression)
         }
     }
 
@@ -95,7 +129,7 @@ public class AssignmentParser: InfixParser
         let right = parser.parseExpression(precedence: Precedence.assignment - 1)
         if !left.isRValue
             {
-            parser.lodgeIssue(phase: .declaration, code: .lValueExpectedOnLeft,location: location)
+            parser.lodgeIssue( code: .lValueExpectedOnLeft,location: location)
             }
         return(AssignmentExpression(left: left, right: right))
         }
@@ -132,7 +166,7 @@ public class GroupParser: PrefixParser
             }
         else
             {
-            parser.lodgeIssue(phase: .declaration, code: .rightParenthesisExpected,location: location)
+            parser.lodgeIssue( code: .rightParenthesisExpected,location: location)
             }
         return(expression)
         }
@@ -148,7 +182,7 @@ public class TernaryParser: InfixParser
         let then = parser.parseExpression(precedence: 0)
         if !parser.token.isColon
             {
-            parser.lodgeIssue(phase: .declaration, code: .colonExpected,location: location)
+            parser.lodgeIssue( code: .colonExpected,location: location)
             }
         else
             {
@@ -169,8 +203,8 @@ public class MethodInvocationParser: InfixParser
         var methodName = ""
         if !token.isIdentifier
             {
-            parser.lodgeIssue(phase: .declaration,code: .identifierExpected,location: location)
-            methodName = Argon.nextIndex(named: "METH")
+            parser.lodgeIssue(code: .identifierExpected,location: location)
+            methodName = Argon.nextIndex(named: "METHOD")
             }
         else
             {
@@ -196,7 +230,7 @@ public class MethodInvocationParser: InfixParser
             }
         else
             {
-            parser.lodgeIssue(phase: .declaration,code: .rightParenthesisExpected,location: location)
+            parser.lodgeIssue(code: .rightParenthesisExpected,location: location)
             }
         return(MethodInvocationExpression(methodName: methodName,arguments: arguments))
         }
@@ -213,7 +247,7 @@ public struct ArrayReferenceParser: InfixParser
         let index = parser.parseExpression(precedence: 0)
         if !parser.token.isRightBracket
             {
-            parser.lodgeIssue(phase: .declaration,code: .rightBracketExpected,location: location)
+            parser.lodgeIssue(code: .rightBracketExpected,location: location)
             }
         else
             {
@@ -238,7 +272,7 @@ public struct ClosureParser: PrefixParser
         parser.nextToken()
         if !parser.token.isInto
             {
-            parser.lodgeIssue(phase: .declaration, code: .intoExpected, location: location)
+            parser.lodgeIssue( code: .intoExpected, location: location)
             }
         else
             {
@@ -253,7 +287,7 @@ public struct ClosureParser: PrefixParser
                 parser.parseComma()
                 if !parser.token.isIdentifier
                     {
-                    parser.lodgeIssue(phase: .declaration, code: .identifierExpected, location: location)
+                    parser.lodgeIssue( code: .identifierExpected, location: location)
                     name = Argon.nextIndex(named: "ID")
                     }
                 else
@@ -267,7 +301,7 @@ public struct ClosureParser: PrefixParser
                     }
                 else
                     {
-                    parser.lodgeIssue(phase: .declaration, code: .scopeOperatorExpected, location: location)
+                    parser.lodgeIssue( code: .scopeOperatorExpected, location: location)
                     }
                 let type = parser.parseType()
                 parameters.append(Parameter(externalName: name, internalName: name, type: type))

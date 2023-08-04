@@ -62,7 +62,7 @@ public class SelectStatement: Statement
         let location = parser.token.location
         if !parser.token.isWhen
             {
-            parser.lodgeIssue(phase: .declaration, code: .whenExpected, location: location)
+            parser.lodgeIssue( code: .whenExpected, location: location)
             }
         else
             {

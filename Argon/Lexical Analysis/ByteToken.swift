@@ -14,11 +14,6 @@ public class ByteToken: Token
         true
         }
         
-    public override var operand: Operand
-        {
-        .byte(Argon.Byte(self.matchString)!)
-        }
-        
     public override var styleElement: StyleElement
         {
         .colorByte

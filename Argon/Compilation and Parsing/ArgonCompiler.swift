@@ -64,16 +64,9 @@ public struct ArgonCompiler
     public mutating func parse() // STEP 4
         {
         let parser = ArgonParser(rootModule: self.rootModule)
-        parser.setPhase(.declaration)
         for node in self.sourceFileNodes
             {
             node.compilerIssues = CompilerIssues()
-            parser.parse(sourceFileNode: node)
-            self.wereIssues = node.compilerIssues.count > 0 || self.wereIssues
-            }
-        parser.setPhase(.application)
-        for node in self.sourceFileNodes
-            {
             parser.parse(sourceFileNode: node)
             self.wereIssues = node.compilerIssues.count > 0 || self.wereIssues
             }

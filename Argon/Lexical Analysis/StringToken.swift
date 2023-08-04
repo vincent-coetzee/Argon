@@ -19,11 +19,6 @@ public class StringToken: Token
         true
         }
         
-    public override var operand: Operand
-        {
-        .string(self.matchString)
-        }
-        
     public override var styleElement: StyleElement
         {
         .colorString

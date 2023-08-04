@@ -14,7 +14,7 @@ public enum ValueBox
     case uInteger(UInt64)
     case string(String)
     case object(ObjectInstance)
-    case enumerationInstance(EnumerationInstance)
+    case enumerationInstance(EnumerationType,EnumerationCase)
     case boolean(Bool)
     case void
     case character(UInt16)
@@ -24,4 +24,11 @@ public enum ValueBox
     case method(Method)
     case `class`(ClassType)
     case enumeration(EnumerationType)
+    case identifier(Identifier)
+    case variable(Variable)
+    case constant(Constant)
+    case date(Argon.Date)
+    case time(Argon.Time)
+    case dateTime(Argon.DateTime)
+    case key(Symbols)
     }

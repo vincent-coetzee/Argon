@@ -49,6 +49,9 @@ public enum StyleElement
     case colorSystemEnumeration
     case colorSystemAliasedType
     case colorSeparator
+    case colorDate
+    case colorTime
+    case colorDateTime
     case metricLineNumberRulerWidth
     case metricLineNumberIndent
     }

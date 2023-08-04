@@ -54,7 +54,7 @@ public class HandleStatement: Statement
                     }
                 else
                     {
-                    parser.lodgeIssue(phase: .declaration, code: .symbolExpected, location: location)
+                    parser.lodgeIssue( code: .symbolExpected, location: location)
                     }
                 }
             while parser.token.isComma && !parser.token.isEnd
@@ -66,7 +66,7 @@ public class HandleStatement: Statement
             {
             if !parser.token.isInto
                 {
-                parser.lodgeIssue(phase: .declaration, code: .intoExpected, location: location)
+                parser.lodgeIssue( code: .intoExpected, location: location)
                 }
             else
                 {
@@ -76,7 +76,7 @@ public class HandleStatement: Statement
                 {
                 if !parser.token.isIdentifier
                     {
-                    parser.lodgeIssue(phase: .declaration, code: .identifierExpected, location: location)
+                    parser.lodgeIssue( code: .identifierExpected, location: location)
                     identifier = Argon.nextIndex(named: "symbolValue")
                     }
                 else

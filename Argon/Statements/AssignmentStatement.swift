@@ -40,7 +40,7 @@ public class AssignmentStatement: Statement
         parser.nextToken()
         if !parser.token.isAssign
             {
-            parser.lodgeIssue(phase: .declaration, code: .assignExpected, location: location)
+            parser.lodgeIssue( code: .assignExpected, location: location)
             }
         else
             {
