@@ -47,9 +47,9 @@ public class HandleStatement: Statement
             repeat
                 {
                 parser.parseComma()
-                if parser.token.isSymbol
+                if parser.token.isSymbolValue
                     {
-                    symbols.append(parser.token.symbol)
+                    symbols.append(parser.token.symbolValue)
                     parser.nextToken()
                     }
                 else

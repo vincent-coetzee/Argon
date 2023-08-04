@@ -29,6 +29,11 @@ public class KeywordToken: Token
         self.matchString == "READ"
         }
         
+    public override var isInteger: Bool
+        {
+        self.matchString == "Integer"
+        }
+        
     public override var isWrite: Bool
         {
         self.matchString == "WRITE"

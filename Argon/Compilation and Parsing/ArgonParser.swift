@@ -298,6 +298,10 @@ public class ArgonParser
         let identifier = self.parseIdentifier(errorCode: .identifierExpected)
         let typeName = identifier.lastPart
         var typeVariables = TypeNodes()
+        if typeName == "Array"
+            {
+            return(self.parseArrayType(location: location))
+            }
         if self.token.isLeftBrocket
             {
             self.nextToken()
@@ -321,7 +325,7 @@ public class ArgonParser
             {
             if self.isDeclaring
                 {
-                type = TypeHolder(name: typeName)
+                type = ForwardReference(name: typeName)
                 self.currentScope.addNode(type)
                 }
             else
@@ -330,6 +334,153 @@ public class ArgonParser
                 }
             }
         return(type)
+        }
+        
+    public func parseArrayType(location: Location) -> TypeNode
+        {
+        if !self.token.isLeftBrocket
+            {
+            self.lodgeIssue(phase: .declaration,code: .leftBrocketExpected,location: location)
+            }
+        else
+            {
+            self.nextToken()
+            }
+        let elementType = self.parseType()
+        if !self.token.isComma
+            {
+            self.lodgeIssue(phase: .declaration,code: .commaExpected,location: location)
+            }
+        else
+            {
+            self.nextToken()
+            }
+        var index: Argon.ArrayIndex = .none
+        if self.token.isIdentifier
+            {
+            index = self.parseDiscreteTypeIndex(location: location)
+            }
+        if !self.token.isRightBracket
+            {
+            self.lodgeIssue(phase: .declaration,code: .rightBracketExpected,location: location)
+            }
+        let arrayTypeInstance = ArrayTypeInstance(originalType: ArgonModule.arrayType,indexType: index)
+        arrayTypeInstance.generics.append(elementType)
+        return(arrayTypeInstance)
+        }
+        
+    private func parseDiscreteTypeIndex(location: Location) -> Argon.ArrayIndex
+        {
+        let identifier = self.token.identifier
+        self.nextToken()
+        if identifier.lastPart == "Integer"
+            {
+            if self.token.isLeftBracket
+                {
+                var lowerBound: Argon.Integer = 0
+                var upperBound: Argon.Integer = 0
+                self.parseBrackets
+                    {
+                    lowerBound = self.parseIntegerValue(code: .integerValueExpected)
+                    if self.token.isRangeOperator
+                        {
+                        self.nextToken()
+                        }
+                    upperBound = self.parseIntegerValue(code: .integerValueExpected)
+                    }
+                return(Argon.ArrayIndex.integerRange(lowerBound: lowerBound,upperBound: upperBound))
+                }
+            else
+                {
+                return(Argon.ArrayIndex.integer)
+                }
+            }
+        else if let enumeration = self.currentScope.lookupNode(atIdentifier: identifier) as? EnumerationType
+            {
+            let newLocation = self.token.location
+            if self.token.isLeftBracket
+                {
+                var lowerBound: Argon.Symbol = Argon.Symbol("")
+                var upperBound: Argon.Symbol = Argon.Symbol("")
+                self.parseBrackets
+                    {
+                    lowerBound = self.parseSymbolValue(code: .symbolExpected)
+                    if self.token.isRangeOperator
+                        {
+                        self.nextToken()
+                        }
+                    else
+                        {
+                        self.lodgeIssue(phase: .declaration,code: .rangeOperatorExpected,location: location)
+                        }
+                    upperBound = self.parseSymbolValue(code: .symbolExpected)
+                    }
+                if let lowerCase = enumeration.case(atSymbol: lowerBound),let upperCase = enumeration.case(atSymbol: upperBound)
+                    {
+                    return(Argon.ArrayIndex.enumerationRange(enumeration,lowerBound: lowerCase,upperBound: upperCase))
+                    }
+                else
+                    {
+                    self.lodgeIssue(phase: .declaration,code: .invalidLowerBound,message: "Invalid lower bound for enumeration index '\(enumeration.name)'.",location: newLocation)
+                    }
+                return(Argon.ArrayIndex.enumerationRange(enumeration,lowerBound: EnumerationCase(name: "#LOWER",type: ArgonModule.shared.integerType),upperBound: EnumerationCase(name: "#UPPER",type: ArgonModule.shared.integerType)))
+                }
+            }
+        else
+            {
+            if let type = self.currentScope.lookupNode(atIdentifier: identifier) as? TypeNode,type.isDiscreteType
+                {
+                return(Argon.ArrayIndex.discreteType(type))
+                }
+            else
+                {
+                self.lodgeIssue(phase: .declaration,code: .discreteTypeExpected,location: location)
+                }
+            }
+        return(Argon.ArrayIndex.none)
+        }
+        
+    private func parseIntegerValue(code: ErrorCode) -> Argon.Integer
+        {
+        let location = self.token.location
+        if self.token.isIntegerValue
+            {
+            let integer = self.token.integerValue
+            self.nextToken()
+            return(integer)
+            }
+        self.lodgeIssue(phase: .declaration,code: code,location: location)
+        return(Argon.Integer(Argon.nextIndex))
+        }
+        
+    private func parseSymbolValue(code: ErrorCode) -> Argon.Symbol
+        {
+        let location = self.token.location
+        if self.token.isSymbolValue
+            {
+            let symbol = self.token.symbolValue
+            self.nextToken()
+            return(symbol)
+            }
+        self.lodgeIssue(phase: .declaration,code: code,location: location)
+        return(Argon.Symbol(Argon.nextIndex(named: "#SYM")))
+        }
+        
+    private func parseRange(location: Location) -> Argon.Range
+        {
+        let lowerBound = self.token.integerValue
+        self.parseComma()
+        var upperBound:Argon.Integer = 0
+        if self.token.isInteger
+            {
+            self.lodgeIssue(phase: .declaration,code: .integerExpected,location: location)
+            }
+        else
+            {
+            upperBound = self.token.integerValue
+            self.nextToken()
+            }
+        return(Argon.Range(lowerBound: lowerBound,upperBound: upperBound))
         }
         
     public func parseBraces(closure: ParseClosure)
@@ -344,6 +495,23 @@ public class ArgonParser
         guard self.token.isRightBrace else
             {
             self.lodgeIssue(phase: .declaration,code: .rightBraceExpected,location: self.token.location)
+            return
+            }
+        self.nextToken()
+        }
+        
+    public func parseBrackets(closure: ParseClosure)
+        {
+        guard self.token.isLeftBracket else
+            {
+            self.lodgeIssue(phase: .declaration,code: .leftBracketExpected,location: self.token.location)
+            return
+            }
+        self.nextToken()
+        closure()
+        guard self.token.isRightBracket else
+            {
+            self.lodgeIssue(phase: .declaration,code: .rightBracketExpected,location: self.token.location)
             return
             }
         self.nextToken()

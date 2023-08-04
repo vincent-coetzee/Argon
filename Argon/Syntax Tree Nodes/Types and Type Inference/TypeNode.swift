@@ -14,6 +14,11 @@ public class TypeNode: SyntaxTreeNode
         false
         }
 
+    public var isDiscreteType: Bool
+        {
+        false
+        }
+        
     public override var isType: Bool
         {
         true
@@ -30,7 +35,7 @@ public class TypeNode: SyntaxTreeNode
         return(TypeVariable(name: theName!,index: index))
         }
         
-    public let generics: Array<TypeNode>
+    public var generics: Array<TypeNode>
     
     public init(index: Int? = nil,name: String,generics: TypeNodes = [])
         {

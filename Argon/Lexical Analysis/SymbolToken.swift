@@ -9,12 +9,12 @@ import Foundation
 
 public class SymbolToken: Token
     {
-    public override var symbol: Argon.Symbol
+    public override var symbolValue: Argon.Symbol
         {
         self.matchString
         }
         
-    public override var isSymbol: Bool
+    public override var isSymbolValue: Bool
         {
         true
         }

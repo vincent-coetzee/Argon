@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class Method: SyntaxTreeNode
+public class Method: ExecutableTypeNode
     {
     public var parameters = Parameters()
     public var returnType = ArgonModule.voidType

@@ -157,6 +157,11 @@ public class SyntaxTreeNode: NSObject,NSCoding
         print("\(indent)Symbol(\(self.name))")
         }
         
+    public var isEnumerationType: Bool
+        {
+        false
+        }
+        
     public var isModule: Bool
         {
         false

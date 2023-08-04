@@ -24,6 +24,7 @@ public class ArgonModule: Module
     public static var floatType: TypeNode { ArgonModule.shared.lookupNode(atName: "Float") as! TypeNode}
     public static var integerType: TypeNode { ArgonModule.shared.lookupNode(atName: "Integer") as! TypeNode}
     public static var booleanType: TypeNode { ArgonModule.shared.lookupNode(atName: "Boolean") as! TypeNode}
+    public static var arrayType: TypeNode { ArgonModule.shared.lookupNode(atName: "Array") as! TypeNode}
     
     private static func systemClass(named name: String,superclassesNamed: Array<String> = [],slots: Slots = Slots(),generics: TypeNodes = TypeNodes()) -> ClassType
         {

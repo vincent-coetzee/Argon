@@ -23,7 +23,7 @@ public class LetStatement: Statement
         if parser.currentScope.lookupNode(atName: name).isNotNil
             {
             alreadyDefined = true
-            parser.lodgeIssue(phase: .declaration,code: .symbolAlreadyDefined,message: "A symbol with identifier '\(name)' is already defined.",location: location)
+            parser.lodgeIssue(phase: .declaration,code: .nodeAlreadyDefined,message: "A symbol with identifier '\(name)' is already defined.",location: location)
             }
         var variableType: TypeNode?
         if parser.token.isScope

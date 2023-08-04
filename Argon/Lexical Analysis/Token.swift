@@ -226,6 +226,26 @@ public class Token: NSObject,NSCoding
         false
         }
         
+    public var isRangeOperator: Bool
+        {
+        false
+        }
+        
+    public var isInteger: Bool
+        {
+        false
+        }
+        
+    public var integerValue: Argon.Integer
+        {
+        fatalError()
+        }
+        
+    public var isIntegerValue: Bool
+        {
+        false
+        }
+        
     public var isWrite: Bool
         {
         false
@@ -251,7 +271,7 @@ public class Token: NSObject,NSCoding
         false
         }
         
-    public var isSymbol: Bool
+    public var isSymbolValue: Bool
         {
         false
         }
@@ -286,7 +306,7 @@ public class Token: NSObject,NSCoding
         false
         }
         
-    public var symbol: Argon.Symbol
+    public var symbolValue: Argon.Symbol
         {
         fatalError("This should not have been invoked on Token")
         }
@@ -347,6 +367,11 @@ public class Token: NSObject,NSCoding
         }
         
     public var isLeftBrace: Bool
+        {
+        return(false)
+        }
+        
+    public var isLeftBracket: Bool
         {
         return(false)
         }

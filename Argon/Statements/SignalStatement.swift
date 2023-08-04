@@ -36,14 +36,14 @@ public class SignalStatement: Statement
         var symbol: Argon.Symbol!
         parser.parseParentheses
             {
-            if !parser.token.isSymbol
+            if !parser.token.isSymbolValue
                 {
                 parser.lodgeIssue(phase: .declaration, code: .symbolExpected, location: location)
                 symbol = Argon.nextIndex(named: "SYMBOL")
                 }
             else
                 {
-                symbol = parser.token.symbol
+                symbol = parser.token.symbolValue
                 parser.nextToken()
                 }
             }

@@ -257,7 +257,7 @@ public class ClassType: StructuredType,Scope
             else
                 {
                 let name = identifier.lastPart
-                let type = TypeHolder(name: name)
+                let type = ForwardReference(name: name)
                 parser.addNode(type,atIdentifier: identifier)
                 superclasses.append(type)
                 }

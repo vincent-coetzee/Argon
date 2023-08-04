@@ -47,6 +47,23 @@ public class EnumerationType: StructuredType
         super.encode(with: coder)
         }
         
+    public override var isEnumerationType: Bool
+        {
+        true
+        }
+        
+    public func `case`(atSymbol symbol: Argon.Symbol) -> EnumerationCase?
+        {
+        for aCase in self.cases
+            {
+            if aCase.name == symbol
+                {
+                return(aCase)
+                }
+            }
+        return(nil)
+        }
+        
     public override func dump(indent: String)
         {
         print("\(indent)Enumeration(\(self.name))")

@@ -14,12 +14,22 @@ public class IntegerToken: Token
         true
         }
         
+    public override var integerValue: Argon.Integer
+        {
+        Argon.Integer(self.matchString)!
+        }
+        
     public override var operand: Operand
         {
         .integer(Argon.Integer(self.matchString)!)
         }
         
     public override var isOperand: Bool
+        {
+        true
+        }
+        
+    public override var isIntegerValue: Bool
         {
         true
         }
@@ -41,6 +51,6 @@ public class IntegerToken: Token
         
     public override var valueBox: ValueBox
         {
-        ValueBox.integer(Argon.Integer(matchString)!)
+        ValueBox.integer(Argon.Integer(self.matchString)!)
         }
     }

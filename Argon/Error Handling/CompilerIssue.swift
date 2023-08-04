@@ -15,8 +15,11 @@ public enum ErrorCode: Int
     case classNameExpected
     case classExpectedButOtherSymbolFound
     case colonExpected
+    case commaExpected
     case couldNotReadFile
     case couldNotWriteFile
+    
+    case discreteTypeExpected
     
     case fileDataIsCorrupt
     
@@ -24,19 +27,24 @@ public enum ErrorCode: Int
     case intoExpected
     case identifierExpected
     case invalidExpression
+    case integerExpected
+    case integerValueExpected
     case internalParameterNameExpected
     case initialModuleDeclarationNotFound
     case invalidFileType
+    case invalidLowerBound
     
     case lValueExpectedOnLeft
     case leftParenthesisExpected
     case leftBraceExpected
-    
+    case leftBrocketExpected
+    case leftBracketExpected
     case moduleEntryExpected
     case moduleExpected
 
     case none
 
+    case rangeOperatorExpected
     case rightParenthesisExpected
     case rightBraceExpected
     case rightBracketExpected

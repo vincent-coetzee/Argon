@@ -7,6 +7,6 @@
 
 import Foundation
 
-public class Function: SyntaxTreeNode
+public class Function: ExecutableTypeNode
     {
     }
