@@ -83,19 +83,12 @@ public class SyntaxTreeNode: NSObject,NSCoding
         self.index = _NextSymbol
         _NextSymbol += 1
         }
-        
+    
     public init(name: String)
         {
         self.name = name
         self.index = _NextSymbol
         _NextSymbol += 1
-        }
-        
-    public init(identifier: Identifier)
-        {
-        self.index = _NextSymbol
-        _NextSymbol += 1
-        self.name = identifier.description
         }
         
     public required init(coder: NSCoder)
@@ -127,9 +120,11 @@ public class SyntaxTreeNode: NSObject,NSCoding
         coder.encode(self.parent,forKey: "parent")
         }
         
-    public func addDeclaration(_ location: Location)
+    @discardableResult
+    public func addDeclaration(_ location: Location) -> Self
         {
         self.references.append(.declaration(location))
+        return(self)
         }
         
     public func addReference(_ location: Location)
@@ -172,6 +167,21 @@ public class SyntaxTreeNode: NSObject,NSCoding
         false
         }
         
+    public var isFunction: Bool
+        {
+        false
+        }
+        
+    public var isMethod: Bool
+        {
+        false
+        }
+        
+    public var isTypeNode: Bool
+        {
+        false
+        }
+        
     public var isModule: Bool
         {
         false
@@ -190,14 +200,20 @@ public class SyntaxTreeNode: NSObject,NSCoding
             }
         return(self as! T)
         }
-        
+
     public class func parse(using: ArgonParser)
         {
-        fatalError("parse(usingParser:) called on SyntaxTreeNode and should not be")
+        fatalError("This should not be called on SyntaxTreeNode")
         }
         
-    public func replaceType(atIndex: Int,with: TypeNode)
+    public func lookupNode(atName: String) -> SyntaxTreeNode?
         {
+        nil
+        }
+        
+    public func lookupMethods(atName: String) -> Methods
+        {
+        Methods()
         }
     }
 

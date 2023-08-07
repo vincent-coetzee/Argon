@@ -9,12 +9,57 @@ import Foundation
 
 public class TypeNode: SyntaxTreeNode
     {
-    public var isPlaceholderType: Bool
+    public static var integerType: TypeNode
         {
-        false
+        ArgonModule.shared.integerType
         }
-
-    public var isDiscreteType: Bool
+        
+    public static var stringType: TypeNode
+        {
+        ArgonModule.shared.stringType
+        }
+        
+    public static var uIntegerType: TypeNode
+        {
+        ArgonModule.shared.uIntegerType
+        }
+        
+    public static var booleanType: TypeNode
+        {
+        ArgonModule.shared.booleanType
+        }
+        
+    public static var characterType: TypeNode
+        {
+        ArgonModule.shared.characterType
+        }
+        
+    public static var symbolType: TypeNode
+        {
+        ArgonModule.shared.symbolType
+        }
+        
+    public static var byteType: TypeNode
+        {
+        ArgonModule.shared.byteType
+        }
+        
+    public static var dateType: TypeNode
+        {
+        ArgonModule.shared.dateType
+        }
+        
+    public static var timeType: TypeNode
+        {
+        ArgonModule.shared.timeType
+        }
+        
+    public static var dateTimeType: TypeNode
+        {
+        ArgonModule.shared.dateTimeType
+        }
+        
+    public override var isTypeNode: Bool
         {
         false
         }
@@ -66,7 +111,11 @@ public class TypeNode: SyntaxTreeNode
         coder.encode(self.generics,forKey: "generics")
         super.encode(with: coder)
         }
-    
+        
+    public func inherits(from someClass: ClassType) -> Bool
+        {
+        false
+        }
     }
 
 public typealias TypeNodes = Array<TypeNode>

@@ -87,6 +87,12 @@
                                                 </items>
                                             </menu>
                                         </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="qTQ-Hi-Yrc"/>
+                                        <menuItem title="Compile" keyEquivalent="k" id="O6I-vO-1Fz">
+                                            <connections>
+                                                <action selector="onCompileClicked:" target="Ady-hI-5gd" id="PbU-bK-up7"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
                                         <menuItem title="Close" keyEquivalent="w" id="DVo-aG-piG">
                                             <connections>
@@ -103,7 +109,7 @@
                                                 <action selector="saveDocumentAs:" target="Ady-hI-5gd" id="mDf-zr-I0C"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Revert to Saved" keyEquivalent="r" id="KaW-ft-85H">
+                                        <menuItem title="Revert to Saved" keyEquivalent="R" id="KaW-ft-85H">
                                             <connections>
                                                 <action selector="revertDocumentToSaved:" target="Ady-hI-5gd" id="iJ3-Pv-kwq"/>
                                             </connections>
@@ -338,6 +344,35 @@
                                                     </menuItem>
                                                 </items>
                                             </menu>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Project" id="lME-3G-idW">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Project" id="Ulm-a1-mbF">
+                                    <items>
+                                        <menuItem title="Build" keyEquivalent="b" id="yBa-f5-zxa">
+                                            <connections>
+                                                <action selector="onBuildClicked:" target="Ady-hI-5gd" id="eqD-5W-50B"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="jzi-A4-ikW"/>
+                                        <menuItem title="Run" keyEquivalent="r" id="dXN-oi-Tw7">
+                                            <connections>
+                                                <action selector="onRunClicked:" target="Ady-hI-5gd" id="Qan-WE-6wB"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Debug" keyEquivalent="d" id="yr8-6G-OHv">
+                                            <connections>
+                                                <action selector="onDebugClicked:" target="Ady-hI-5gd" id="gbV-Et-6Y8"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="TZe-H6-6tH"/>
+                                        <menuItem title="Clean" keyEquivalent="l" id="ise-Gj-tI0">
+                                            <connections>
+                                                <action selector="onCleanClicked:" target="Ady-hI-5gd" id="u4j-H2-7ng"/>
+                                            </connections>
                                         </menuItem>
                                     </items>
                                 </menu>

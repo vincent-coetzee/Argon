@@ -9,8 +9,8 @@ import Foundation
 
 public class Variable: SyntaxTreeNode
     {
-    private let type: TypeNode?
-    private let expression: Expression?
+    public let type: TypeNode?
+    public let expression: Expression?
     
     public init(name: String,type: TypeNode?,expression: Expression?)
         {

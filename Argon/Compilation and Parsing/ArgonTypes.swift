@@ -33,6 +33,8 @@ public struct Argon
 
     public struct Date
         {
+        public static let nullDate = Date(day: 0,month: 0,year: 0)
+        
         public let day: Int
         public let month: Int
         public let year: Int
@@ -55,6 +57,8 @@ public struct Argon
         
     public struct Time
         {
+        public static let nullTime = Time(hour: 0,minute: 0,second: 0,millisecond: 0)
+        
         public let hour: Int
         public let minute: Int
         public let second: Int

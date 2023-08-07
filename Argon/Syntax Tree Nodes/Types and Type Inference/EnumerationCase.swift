@@ -10,25 +10,28 @@ import Foundation
 public class EnumerationCase: NSObject,NSCoding
     {
     public let name: String
-    public let type: TypeNode
+    public let instanceValue: ValueBox
     public var associatedTypes = TypeNodes()
     
-    public init(name: String,type: TypeNode,associatedTypes: TypeNodes = [])
+    public init(name: String,associatedTypes: TypeNodes,instanceValue: ValueBox)
         {
+        self.associatedTypes = associatedTypes
         self.name = name
-        self.type = type
+        self.instanceValue = instanceValue
         }
         
     required public init(coder: NSCoder)
         {
         self.name = coder.decodeObject(forKey: "name") as! String
-        self.type = coder.decodeObject(forKey: "type") as! TypeNode
+        self.associatedTypes = coder.decodeObject(forKey: "associatedTypes") as! TypeNodes
+        self.instanceValue = coder.decodeValueBox(forKey: "instanceValue")
         }
         
     public func encode(with coder: NSCoder)
         {
+        coder.encode(self.instanceValue,forKey: "instanceValue")
         coder.encode(self.name,forKey: "name")
-        coder.encode(self.type,forKey: "type")
+        coder.encode(self.associatedTypes,forKey: "associatedTypes")
         }
     }
 

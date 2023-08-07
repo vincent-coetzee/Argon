@@ -13,7 +13,9 @@ public protocol Scope: AnyObject
     {
     var rootModule: RootModule { get }
     func addNode(_ symbol: SyntaxTreeNode)
+    func lookupMethods(atName: String) -> Methods
     func lookupNode(atName: String) -> SyntaxTreeNode?
+    func lookupMethods(atIdentifier: Identifier) -> Methods
     func lookupNode(atIdentifier: Identifier) -> SyntaxTreeNode?
     }
     
@@ -70,5 +72,25 @@ public extension Scope
             return(symbol)
             }
         return((symbol as? Scope)?.lookupNode(atIdentifier: remainder))
+        }
+        
+    func lookupMethods(atIdentifier identifier: Identifier) -> Methods
+        {
+        guard !identifier.isEmpty else
+            {
+            return(Methods())
+            }
+        if identifier.isRooted
+            {
+            return(self.rootModule.lookupMethods(atIdentifier: identifier.remainingPart))
+            }
+        let part = identifier.firstPart
+        let remainder = identifier.remainingPart
+        let methods = self.lookupMethods(atName: part)
+        if remainder.isEmpty
+            {
+            return(methods)
+            }
+        return(Methods())
         }
     }

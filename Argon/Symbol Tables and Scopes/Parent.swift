@@ -75,6 +75,32 @@ public enum Parent
                 expression.removeChildNode(node)
             }
         }
+        
+    public func lookupNode(atName: String) -> SyntaxTreeNode?
+        {
+        switch(self)
+            {
+            case .none:
+                return(nil)
+            case .symbol(let symbol):
+                return(symbol.lookupNode(atName: atName))
+            case .expression(let expression):
+                return(expression.lookupNode(atName: atName))
+            }
+        }
+        
+    public func lookupMethods(atName: String) -> Methods
+        {
+        switch(self)
+            {
+            case .none:
+                return(Methods())
+            case .symbol(let symbol):
+                return(symbol.lookupMethods(atName: atName))
+            case .expression(let expression):
+                return(expression.lookupMethods(atName: atName))
+            }
+        }
     }
 
 public extension NSCoder

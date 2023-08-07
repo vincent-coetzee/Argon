@@ -23,57 +23,11 @@ public class IdentifierParser: PrefixParser
     public func parse(parser: ArgonParser, token: Token) -> Expression
         {
         let location = parser.token.location
-        var value = ValueBox.none
-        if parser.token.isKey
-            {
-            parser.nextToken()
-            var symbols = Symbols()
-            parser.parseParentheses
-                {
-                while parser.token.isSymbolValue
-                    {
-                    symbols.append(parser.token.symbolValue)
-                    parser.nextToken()
-                    }
-                }
-            return(LiteralExpression(value: .key(symbols)))
-            }
-        else
-            {
-            let identifier = token.identifier
-            parser.nextToken()
-            if let object = parser.currentScope.lookupNode(atIdentifier: identifier)
-                {
-                value = object.valueBox
-                if object.isEnumerationType
-                    {
-                    let enumeration = object as! EnumerationType
-                    if parser.token.isSymbolValue
-                        {
-                        let symbolValue = parser.token.symbolValue
-                        if let aCase = enumeration.case(atSymbol: symbolValue)
-                            {
-                            return(LiteralExpression(enumeration: enumeration,enumerationCase: aCase))
-                            }
-                        else
-                            {
-                            parser.lodgeIssue(code: .invalidEnumerationCase,message: "The case '\(symbolValue)' is not valid for the enumeration '\(enumeration.name)'.",location: location)
-                            }
-                        }
-                    else
-                        {
-                        parser.lodgeIssue(code: .enumerationCaseExpected,message: "A case for the enumeration '\(enumeration.name)' was expected.",location: location)
-                        }
-                    }
-                }
-            else
-                {
-                parser.lodgeIssue(code: .undefinedSymbol,message: "Undefined symbol '\(identifier.description)'",location: location)
-                }
-            let expression = IdentifierExpression(identifier: identifier)
-            expression.setIdentifierValue(value)
-            return(expression)
-            }
+        let identifier = token.identifier
+        parser.nextToken()
+        let expression = IdentifierExpression(identifier: identifier)
+        expression.addDeclaration(location)
+        return(expression)
         }
     }
 
@@ -88,8 +42,9 @@ public class PrefixOperatorParser: PrefixParser
         
     public func parse(parser: ArgonParser, token: Token) -> Expression
         {
+        let location = parser.token.location
         parser.nextToken()
-        return(PrefixExpression(operator: token.tokenType,right: parser.parseExpression(precedence: self.precedence)))
+        return(PrefixExpression(operator: token.tokenType,right: parser.parseExpression(precedence: self.precedence)).addDeclaration(location))
         }
     }
     
@@ -97,9 +52,10 @@ public class LiteralParser: PrefixParser
     {
     public func parse(parser: ArgonParser,token: Token) -> Expression
         {
+        let location = parser.token.location
         let valueBox = token.valueBox
         parser.nextToken()
-        return(LiteralExpression(value: valueBox))
+        return(LiteralExpression(value: valueBox).addDeclaration(location))
         }
     }
 
@@ -114,8 +70,9 @@ public class PostfixOperatorParser: InfixParser
         
     public func parse(parser: ArgonParser,left: Expression,token: Token) -> Expression
         {
+        let location = parser.token.location
         parser.nextToken()
-        return(PostfixExpression(left: left,operator: token.tokenType))
+        return(PostfixExpression(left: left,operator: token.tokenType).addDeclaration(location))
         }
     }
 
@@ -131,7 +88,7 @@ public class AssignmentParser: InfixParser
             {
             parser.lodgeIssue( code: .lValueExpectedOnLeft,location: location)
             }
-        return(AssignmentExpression(left: left, right: right))
+        return(AssignmentExpression(left: left, right: right).addDeclaration(location))
         }
     }
 
@@ -148,8 +105,9 @@ public class BinaryOperatorParser: InfixParser
         
     public func parse(parser: ArgonParser,left: Expression,token: Token) -> Expression
         {
+        let location = parser.token.location
         let right = parser.parseExpression(precedence: Precedence.assignment - (self.isRightAssociative ? 1 : 0))
-        return(BinaryExpression(left: left, operator: token.tokenType, right: right))
+        return(BinaryExpression(left: left, operator: token.tokenType, right: right).addDeclaration(location))
         }
     }
     
@@ -168,7 +126,7 @@ public class GroupParser: PrefixParser
             {
             parser.lodgeIssue( code: .rightParenthesisExpected,location: location)
             }
-        return(expression)
+        return(expression.addDeclaration(location))
         }
     }
     
@@ -189,7 +147,7 @@ public class TernaryParser: InfixParser
             parser.nextToken()
             }
         let `else` = parser.parseExpression(precedence: Precedence.ternary - 1)
-        return(TernaryExpression(operator: .ternary, then: then, else:  `else`))
+        return(TernaryExpression(operator: .ternary, then: then, else:  `else`).addDeclaration(location))
         }
     }
 
@@ -232,7 +190,11 @@ public class MethodInvocationParser: InfixParser
             {
             parser.lodgeIssue(code: .rightParenthesisExpected,location: location)
             }
-        return(MethodInvocationExpression(methodName: methodName,arguments: arguments))
+        if methodName == "MAKE"
+            {
+            return(MakeInvocationExpression(arguments: arguments).addDeclaration(location))
+            }
+        return(MethodInvocationExpression(methodName: methodName,arguments: arguments).addDeclaration(location))
         }
     }
 
@@ -253,7 +215,21 @@ public struct ArrayReferenceParser: InfixParser
             {
             parser.nextToken()
             }
-        return(ArrayAccessExpression(array: left,memberIndex: index))
+        return(ArrayAccessExpression(array: left,memberIndex: index).addDeclaration(location))
+        }
+    }
+    
+public struct MemberAccessParser: InfixParser
+    {
+    public let precedence = Precedence.memberAccess
+    
+    public func parse(parser: ArgonParser,left: Expression,token: Token) -> Expression
+        {
+        let location = parser.token.location
+        let `operator` = token.tokenType
+        parser.nextToken()
+        let member = parser.parseExpression(precedence: 0)
+        return(MemberAccessExpression(left: left,operator: `operator`,right: member).addDeclaration(location))
         }
     }
 
@@ -304,12 +280,12 @@ public struct ClosureParser: PrefixParser
                     parser.lodgeIssue( code: .scopeOperatorExpected, location: location)
                     }
                 let type = parser.parseType()
-                parameters.append(Parameter(externalName: name, internalName: name, type: type))
+                parameters.append(Parameter(definedByPosition: true,externalName: name, internalName: name, type: type))
                 }
             while !parser.token.isEnd && !parser.token.isRightParenthesis
             }
         let block = Block()
         Block.parseBlockInner(block: block,using: parser)
-        return(ClosureExpression(block: block,parameters: parameters))
+        return(ClosureExpression(block: block,parameters: parameters).addDeclaration(location))
         }
     }

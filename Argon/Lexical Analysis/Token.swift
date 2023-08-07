@@ -40,8 +40,10 @@ public enum TokenType: Int
     case ELSE
     case ENUMERATION
     case end
+    case ENTRY
     case error
     case equals
+    case EXIT
     
     case Float
     case FOR
@@ -62,6 +64,7 @@ public enum TokenType: Int
     case increment
     
     case keyword
+    case KEY
     
     case lessThan
     case lessThanEquals
@@ -73,10 +76,13 @@ public enum TokenType: Int
     case literalByte
     case literalBoolean
     case literalCharacter
+    case literalDate
+    case literalDateTime
     case literalFloat
     case literalInteger
     case literalString
     case literalSymbol
+    case literalTime
     case literalEnumerationCase
     case LOOP
     case logicalEquals
@@ -91,14 +97,17 @@ public enum TokenType: Int
     
     case MACRO
     case MAKE
-    case MAKER
+    case MADE
     case METHOD
     case MODULE
     case minus
     case minusAssign
+    case modulus
+    case modulusAssign
     
     case none
     case notAssign
+    case notEquals
     
     case `operator`
     case OTHERWISE
@@ -111,14 +120,14 @@ public enum TokenType: Int
     case plusAssign
     case power
     
-    case READ
-    case REPEAT
-    case RETURN
+    case rightArrow
     case rightBrace
     case rightBracket
     case rightBrocket
     case rightParenthesis
-    case rightArrow
+    case READ
+    case REPEAT
+    case RETURN
     
     case SELECT
     case separator
@@ -141,6 +150,7 @@ public enum TokenType: Int
     case timesTimes
     
     case USES
+    case UNMADE
     
     case VIRTUAL
     
@@ -187,12 +197,32 @@ public class Token: NSObject,NSCoding
         false
         }
         
+    public var isDefault: Bool
+        {
+        false
+        }
+        
+    public var isRightArrow: Bool
+        {
+        false
+        }
+        
     public var isFork: Bool
         {
         false
         }
         
     public var isLeftParenthesis: Bool
+        {
+        false
+        }
+        
+    public var isMade: Bool
+        {
+        false
+        }
+        
+    public var isUnmade: Bool
         {
         false
         }
@@ -327,6 +357,16 @@ public class Token: NSObject,NSCoding
         false
         }
         
+    public var dateTimeValue: Argon.DateTime
+        {
+        fatalError("This should have been invoked on Token")
+        }
+        
+    public var timeValue: Argon.Time
+        {
+        fatalError("This should have been invoked on Token")
+        }
+        
     public var symbolValue: Argon.Symbol
         {
         fatalError("This should not have been invoked on Token")
@@ -430,6 +470,16 @@ public class Token: NSObject,NSCoding
     public var isComma: Bool
         {
         false
+        }
+        
+    public var isStringValue: Bool
+        {
+        false
+        }
+        
+    public var isInstanceOfEnumerationBase: Bool
+        {
+        self.isSymbolValue || self.isStringValue || self.isIntegerValue
         }
         
     public var isKeyword: Bool

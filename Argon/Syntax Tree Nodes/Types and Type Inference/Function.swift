@@ -7,6 +7,15 @@
 
 import Foundation
 
-public class Function: ExecutableTypeNode
+public class Function: CallableTypeNode
     {
+    public var signature: MethodSignature
+        {
+        MethodSignature(name: self.name,parameterTypes: [])
+        }
+        
+    public override var isFunction: Bool
+        {
+        return(true)
+        }
     }

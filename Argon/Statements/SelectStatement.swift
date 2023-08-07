@@ -54,6 +54,7 @@ public class SelectStatement: Statement
             }
         let statement = SelectStatement(expression: expression)
         statement.selectBlocks = selectBlocks
+        statement.addDeclaration(location)
         block.addStatement(statement)
         }
         

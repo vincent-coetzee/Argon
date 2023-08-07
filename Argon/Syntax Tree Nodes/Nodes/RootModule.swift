@@ -40,14 +40,12 @@ public class RootModule: Module
     
     public override func lookupNode(atName name: String) -> SyntaxTreeNode?
         {
-        for node in self.containedNodes
-            {
-            if node.name == name
-                {
-                return(node)
-                }
-            }
         return(self._argonModule.lookupNode(atName: name))
+        }
+        
+    public override func lookupMethods(atName name: String) -> Methods
+        {
+        return(self._argonModule.lookupMethods(atName: name))
         }
         
     public static func resetRootModule()

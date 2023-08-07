@@ -65,6 +65,8 @@ public class Block: Statement
                 SignalStatement.parse(into: block,using: parser)
             case(.FORK):
                 ForkStatement.parse(into: block,using: parser)
+            case(.RETURN):
+                ReturnStatement.parse(into: block,using: parser)
             default:
                 break
             }
@@ -87,6 +89,18 @@ public class Block: Statement
             while !parser.token.isRightBrace && !parser.token.isEnd
             }
         return(block)
+        }
+        
+    public override var containsReturnStatement: Bool
+        {
+        for statement in self.statements
+            {
+            if statement.containsReturnStatement
+                {
+                return(true)
+                }
+            }
+        return(false)
         }
         
     private var statements = Statements()

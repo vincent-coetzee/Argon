@@ -7,7 +7,7 @@
 
 import Foundation
 
-fileprivate let _Keywords = ["CLASS","CONSTANT","KEY","KEYED","ELSE","ENUMERATION",
+fileprivate let _Keywords = ["CLASS","CONSTANT","KEY","DYNAMIC","ELSE","ENTRY","ENUMERATION","EXIT",
                             "FOR","FROM","FUNCTION","IF","HANDLE","IMPORT","INTO","IS","LET","LOOP","MADE","MAKE","METHOD","MODULE","OTHERWISE","READ","REPEAT",
                             "RETURN","SELECT","SLOT","SIGNAL","THEN","TIMES","TYPE","UNMADE","USES",
                             "VIRTUAL","WHEN","WHILE","WRAPPER","WRITE"]
@@ -79,6 +79,21 @@ public class KeywordToken: Token
         self.matchString == "WHILE"
         }
         
+    public override var isMade: Bool
+        {
+        self.matchString == "MADE"
+        }
+        
+    public override var isUnmade: Bool
+        {
+        self.matchString == "UNMADE"
+        }
+        
+    public override var isDefault: Bool
+        {
+        self.matchString == "DEFAULT"
+        }
+        
     public override var isVirtual: Bool
         {
         self.matchString == "VIRTUAL"
@@ -95,10 +110,16 @@ public class KeywordToken: Token
         {
         switch(self.matchString)
             {
+            case "ENTRY":
+                return(.ENTRY)
+            case "EXIT":
+                return(.EXIT)
             case "CLASS":
                 return(.CLASS)
             case "CONSTANT":
                 return(.CONSTANT)
+            case "KEY":
+                return(.KEY)
             case "DYNAMIC":
                 return(.DYNAMIC)
             case "ELSE":
@@ -127,8 +148,8 @@ public class KeywordToken: Token
                 return(.LOOP)
             case "MAKE":
                 return(.MAKE)
-            case "MAKER":
-                return(.MAKER)
+            case "MADE":
+                return(.MADE)
             case "METHOD":
                 return(.METHOD)
             case "MODULE":

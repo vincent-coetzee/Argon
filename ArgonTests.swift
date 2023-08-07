@@ -41,15 +41,15 @@ public struct ArgonTests
         //
         // Define cases for an enumeration
         //
-        let freezing = EnumerationCase(name: "#freezing", type: ArgonModule.stringType,associatedTypes: [])
-        let sunny = EnumerationCase(name: "#sunny", type: ArgonModule.stringType,associatedTypes: [])
-        let rainy = EnumerationCase(name: "#rainy", type: ArgonModule.stringType,associatedTypes: [])
-        let windy = EnumerationCase(name: "#windy", type: ArgonModule.stringType,associatedTypes: [])
-        let cloudy = EnumerationCase(name: "#cloudy", type: ArgonModule.stringType,associatedTypes: [])
+        let freezing = EnumerationCase(name: "#freezing", associatedTypes: [],instanceValue: .none)
+        let sunny = EnumerationCase(name: "#sunny", associatedTypes: [],instanceValue: .none)
+        let rainy = EnumerationCase(name: "#rainy", associatedTypes: [],instanceValue: .none)
+        let windy = EnumerationCase(name: "#windy", associatedTypes: [],instanceValue: .none)
+        let cloudy = EnumerationCase(name: "#cloudy", associatedTypes: [],instanceValue: .none)
         //
         // Define an enumeration with cases
         //
-        let enumeration = EnumerationType(name: "NodeType",cases: [freezing,sunny,rainy,windy,cloudy],defaultCase: sunny,rawType: ArgonModule.stringType)
+        let enumeration = EnumerationType(name: "NodeType",cases: [freezing,sunny,rainy,windy,cloudy],rawType: ArgonModule.stringType)
         thirdInnerModule.addNode(enumeration)
         let lookupEnumeration = outerModule.lookupNode(atIdentifier: Identifier(string: "//OuterModule/FirstInnerModule/SecondInnerModule/ThirdInnerModule/NodeType"))
         assert(lookupEnumeration == enumeration,"Looked up enumeration should be the same as the original enumeration and it is not")
@@ -69,15 +69,15 @@ public struct ArgonTests
         //
         // Define cases for an enumeration
         //
-        let freezing = EnumerationCase(name: "#freezing", type: ArgonModule.stringType,associatedTypes: [])
-        let sunny = EnumerationCase(name: "#sunny", type: ArgonModule.stringType,associatedTypes: [])
-        let rainy = EnumerationCase(name: "#rainy", type: ArgonModule.stringType,associatedTypes: [])
-        let windy = EnumerationCase(name: "#windy", type: ArgonModule.stringType,associatedTypes: [])
-        let cloudy = EnumerationCase(name: "#cloudy", type: ArgonModule.stringType,associatedTypes: [])
+        let freezing = EnumerationCase(name: "#freezing",associatedTypes: [],instanceValue: .none)
+        let sunny = EnumerationCase(name: "#sunny",associatedTypes: [],instanceValue: .none)
+        let rainy = EnumerationCase(name: "#rainy",associatedTypes: [],instanceValue: .none)
+        let windy = EnumerationCase(name: "#windy",associatedTypes: [],instanceValue: .none)
+        let cloudy = EnumerationCase(name: "#cloudy",associatedTypes: [],instanceValue: .none)
         //
         // Define an enumeration with cases
         //
-        let enumeration = EnumerationType(name: "NodeType",cases: [freezing,sunny,rainy,windy,cloudy],defaultCase: sunny,rawType: ArgonModule.stringType)
+        let enumeration = EnumerationType(name: "NodeType",cases: [freezing,sunny,rainy,windy,cloudy],rawType: ArgonModule.stringType)
         //
         // Add enumeration to inner module and inner module to base module
         //
@@ -96,12 +96,12 @@ public struct ArgonTests
         //
         // Define cases for WeatherStationType
         //
-        let manned = EnumerationCase(name: "#manned", type: ArgonModule.integerType,associatedTypes: [])
-        let unmanned = EnumerationCase(name: "#unmanned", type: ArgonModule.integerType,associatedTypes: [])
+        let manned = EnumerationCase(name: "#manned",associatedTypes: [],instanceValue: .none)
+        let unmanned = EnumerationCase(name: "#unmanned",associatedTypes: [],instanceValue: .none)
         //
         // Define WeatherStationType enumeration
         //
-        let weatherStationType = EnumerationType(name: "WeatherStationType",cases: [manned,unmanned],defaultCase: manned,rawType: ArgonModule.integerType)
+        let weatherStationType = EnumerationType(name: "WeatherStationType",cases: [manned,unmanned],rawType: ArgonModule.integerType)
         innerModule.addNode(weatherStationType)
         //
         // Define slots for WeatherStation class

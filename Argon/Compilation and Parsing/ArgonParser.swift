@@ -56,11 +56,13 @@ public class ArgonParser
         self.infixLeft(tokenType: .shiftRight,precedence: Precedence.addition)
         self.infixLeft(tokenType: .times,precedence: Precedence.multiplication)
         self.infixLeft(tokenType: .divide,precedence: Precedence.multiplication)
+        self.infixLeft(tokenType: .modulus,precedence: Precedence.multiplication)
         self.infixLeft(tokenType: .rightArrow,precedence: Precedence.memberAccess)
-        self.infixLeft(tokenType: .plusAssign,precedence: Precedence.operatorAssign)
-        self.infixLeft(tokenType: .minusAssign,precedence: Precedence.operatorAssign)
-        self.infixLeft(tokenType: .timesAssign,precedence: Precedence.operatorAssign)
-        self.infixLeft(tokenType: .divideAssign,precedence: Precedence.operatorAssign)
+        self.infixLeft(tokenType: .plusAssign,precedence: Precedence.assignment)
+        self.infixLeft(tokenType: .minusAssign,precedence: Precedence.assignment)
+        self.infixLeft(tokenType: .timesAssign,precedence: Precedence.assignment)
+        self.infixLeft(tokenType: .modulusAssign,precedence: Precedence.assignment)
+        self.infixLeft(tokenType: .divideAssign,precedence: Precedence.assignment)
         self.infixLeft(tokenType: .notAssign,precedence: Precedence.operatorAssign)
         self.infixLeft(tokenType: .booleanOrAssign,precedence: Precedence.operatorAssign)
         self.infixLeft(tokenType: .booleanAndAssign,precedence: Precedence.operatorAssign)
@@ -196,6 +198,11 @@ public class ArgonParser
         self.scopeStack.lookupSymbol(atIdentifier: atIdentifier)
         }
         
+    public func lookupNode(atName: String) -> SyntaxTreeNode?
+        {
+        self.scopeStack.lookupSymbol(atName: atName)
+        }
+        
     public func pushCurrentScope(_ node: SyntaxTreeNode)
         {
         self.scopeStack.push(self.currentScope)
@@ -223,7 +230,7 @@ public class ArgonParser
             self.lodgeIssue(code: .identifierExpected,location: location)
             return
             }
-        let initialModule = Module(identifier: self.token.identifier)
+        let initialModule = Module(name: self.token.identifier.lastPart)
         self.pushCurrentScope(initialModule)
         self.parseBraces
             {
@@ -367,12 +374,12 @@ public class ArgonParser
                     {
                     self.lodgeIssue(code: .invalidLowerBound,message: "Invalid lower bound for enumeration index '\(enumeration.name)'.",location: newLocation)
                     }
-                return(Argon.ArrayIndex.enumerationRange(enumeration,lowerBound: EnumerationCase(name: "#LOWER",type: ArgonModule.shared.integerType),upperBound: EnumerationCase(name: "#UPPER",type: ArgonModule.shared.integerType)))
+                return(Argon.ArrayIndex.enumerationRange(enumeration,lowerBound: EnumerationCase(name: "#LOWER",associatedTypes: [],instanceValue: .none),upperBound: EnumerationCase(name: "#UPPER",associatedTypes: [],instanceValue: .none)))
                 }
             }
         else
             {
-            if let type = self.currentScope.lookupNode(atIdentifier: identifier) as? TypeNode,type.isDiscreteType
+            if let type = self.currentScope.lookupNode(atIdentifier: identifier) as? TypeNode,type.inherits(from: ArgonModule.shared.enumerationBaseType)
                 {
                 return(Argon.ArrayIndex.discreteType(type))
                 }
@@ -547,6 +554,11 @@ public class ArgonParser
         self.issues.append(CompilerIssue(code: code, message: message,location: location))
         }
 
+    public func parseExpression() -> Expression
+        {
+        self.parseExpression(precedence: 0)
+        }
+        
     public func parseExpression(precedence: Int) -> Expression
         {
         let location = self.token.location
@@ -573,73 +585,16 @@ public class ArgonParser
         {
         let location = self.token.location
         var value = Expression()
-        var externalName:String?
-        var internalName = ""
-        if self.token.isMinus
+        var argumentName: String!
+        if self.token.isIdentifier
             {
-            // we only have an internal name
+            argumentName = self.token.identifier.lastPart
             self.nextToken()
-            if !self.token.isIdentifier
-                {
-                self.lodgeIssue(code: .identifierExpected,location: location)
-                internalName = Argon.nextIndex(named: "IN")
-                }
-            else
-                {
-                if self.token.identifier.isCompoundIdentifier
-                    {
-                    self.lodgeIssue(code: .singleIdentifierExpected,location: location)
-                    }
-                internalName = self.token.identifier.lastPart
-                }
-            }
-        else if self.nextToken(offset: 1).isScope
-            {
-            // we have an external name AND an internal name
-            if !self.token.isIdentifier
-                {
-                self.lodgeIssue(code: .identifierExpected,location: location)
-                externalName = Argon.nextIndex(named: "EN")
-                }
-            else
-                {
-                if self.token.identifier.isCompoundIdentifier
-                    {
-                    self.lodgeIssue(code: .singleIdentifierExpected,location: location)
-                    externalName = Argon.nextIndex(named: "EN")
-                    }
-                else
-                    {
-                    externalName = self.token.identifier.lastPart
-                    self.nextToken()
-                    }
-                }
             }
         else
             {
-            // we just have a single name that is external and internal
-            if !self.token.isIdentifier
-                {
-                self.lodgeIssue(code: .identifierExpected,location: location)
-                externalName = Argon.nextIndex(named: "EN")
-                internalName = externalName!
-                }
-            else
-                {
-                if self.token.identifier.isCompoundIdentifier
-                    {
-                    self.lodgeIssue(code: .singleIdentifierExpected,location: location)
-                    externalName = Argon.nextIndex(named: "EN")
-                    }
-                else
-                    {
-                    externalName = self.token.identifier.lastPart
-                    self.nextToken()
-                    }
-                internalName = externalName!
-                }
+            self.lodgeIssue(code: .argumentNameExpected,location: location)
             }
-        // now we should have a scope operator followed by a type
         if !self.token.isScope
             {
             self.lodgeIssue(code: .scopeOperatorExpected,location: location)
@@ -648,8 +603,46 @@ public class ArgonParser
             {
             self.nextToken()
             }
-        value = self.parseExpression(precedence: 0)
-        return(Argument(externalName: externalName!,internalName: internalName, value: value))
+        value = self.parseExpression()
+        return(Argument(name: argumentName, value: value))
+        }
+        
+    public func parseParameter() -> Parameter
+        {
+        let location = self.token.location
+        var value = Expression()
+        var externalName:String?
+        var internalName = ""
+        var parameterDefinedByPosition = false
+        if self.token.isMinus
+            {
+            // we only have an internal name
+            self.nextToken()
+            internalName = self.parseIdentifier(errorCode: .identifierExpected).lastPart
+            parameterDefinedByPosition = true
+            }
+        else if self.nextToken(offset: 2).isScope
+            {
+            // we have an external name AND an internal name
+            externalName = self.parseIdentifier(errorCode: .identifierExpected).lastPart
+            internalName = self.parseIdentifier(errorCode: .identifierExpected).lastPart
+            }
+        else
+            {
+            // we just have a single name that is external and internal
+            internalName = self.parseIdentifier(errorCode: .identifierExpected).lastPart
+            }
+        // now we should have a scope operator followed by a type
+        if self.token.isScope
+            {
+            self.nextToken()
+            }
+        else
+            {
+            self.lodgeIssue(code: .scopeOperatorExpected,location: location)
+            }
+        let type = self.parseType()
+        return(Parameter(definedByPosition: parameterDefinedByPosition,externalName: externalName!,internalName: internalName, type: type))
         }
         
     private func precedence(of token: Token) -> Int
@@ -659,5 +652,19 @@ public class ArgonParser
             return(parser.precedence)
             }
         return(0)
+        }
+        
+    public func parseParameters() -> Parameters
+        {
+        var parameters = Parameters()
+        self.parseParentheses
+            {
+            while !self.token.isRightParenthesis && !self.token.isEnd
+                {
+                parameters.append(self.parseParameter())
+                self.parseComma()
+                }
+            }
+        return(parameters)
         }
     }

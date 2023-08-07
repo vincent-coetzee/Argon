@@ -49,6 +49,7 @@ public class AssignmentStatement: Statement
         let left = IdentifierExpression(identifier: identifier)
         let right = parser.parseExpression(precedence: 0)
         let statement = AssignmentStatement(left: left,right: right)
+        statement.addDeclaration(location)
         block.addStatement(statement)
         }
     }

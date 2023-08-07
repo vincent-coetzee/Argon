@@ -10,6 +10,7 @@ import Foundation
 public enum ErrorCode: Int
     {
     case assignExpected
+    case argumentNameExpected
     
     case constantMustBeInitialised
     case classNameExpected
@@ -28,7 +29,9 @@ public enum ErrorCode: Int
     case invalidCharacterSequence
     case intoExpected
     case identifierExpected
+    case identifierAlreadyDefined
     case invalidExpression
+    case instanceOfEnumerationBaseExpected
     case integerExpected
     case integerValueExpected
     case internalParameterNameExpected
@@ -42,14 +45,18 @@ public enum ErrorCode: Int
     case leftBraceExpected
     case leftBrocketExpected
     case leftBracketExpected
+    
     case moduleEntryExpected
     case moduleExpected
-
+    case moduleNameExpected
+    case mustInheritFromEnumerationBase
+    
     case none
 
     case pathExpected
     
     case rangeOperatorExpected
+    case returnExpectedInReadBlock
     case rightParenthesisExpected
     case rightBraceExpected
     case rightBracketExpected
@@ -68,6 +75,7 @@ public enum ErrorCode: Int
 
     case undefinedSymbol
     case undefinedType
+    case unmadeAlreadyDefined
     
     case vitualSlotMustSpecifyType
     case virtualSlotNotAllowedInitialExpression

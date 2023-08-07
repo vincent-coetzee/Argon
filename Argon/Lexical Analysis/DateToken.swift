@@ -18,12 +18,7 @@ public class DateToken: Token
         {
         Argon.Date(string: self.matchString)
         }
-        
-    public override var isOperand: Bool
-        {
-        true
-        }
-        
+
     public override var styleElement: StyleElement
         {
         .colorDate
@@ -31,16 +26,16 @@ public class DateToken: Token
         
     public override var tokenType: TokenType
         {
-        .literalInteger
+        .literalDate
         }
         
     public override var tokenName: String
         {
-        "IntegerToken"
+        "DateToken"
         }
         
     public override var valueBox: ValueBox
         {
-        ValueBox.integer(Argon.Integer(self.matchString)!)
+        ValueBox.date(Argon.Date(string: self.matchString))
         }
     }

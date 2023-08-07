@@ -30,5 +30,4 @@ public enum ValueBox
     case date(Argon.Date)
     case time(Argon.Time)
     case dateTime(Argon.DateTime)
-    case key(Symbols)
     }

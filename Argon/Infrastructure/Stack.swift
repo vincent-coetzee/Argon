@@ -167,4 +167,13 @@ extension Stack where T == Scope
             }
         return(self.top?.lookupNode(atIdentifier: identifier))
         }
+        
+    public func lookupSymbol(atName name: String) -> SyntaxTreeNode?
+        {
+        if self.count == 0
+            {
+            return(nil)
+            }
+        return(self.top?.lookupNode(atName: name))
+        }
     }

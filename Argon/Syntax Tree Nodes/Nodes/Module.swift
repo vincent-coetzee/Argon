@@ -36,38 +36,46 @@ public class Module: CompositeSyntaxTreeNode
         {
         let location = parser.token.location
         parser.nextToken()
-        if let lastToken = parser.expect(tokenType: .identifier,error: .identifierExpected)
+        let module = self.parseForModule(using: parser,location: location)
+        parser.pushCurrentScope(module)
+        defer
             {
-            let moduleName = lastToken.identifier
-            if let node = parser.lookupNode(atIdentifier: moduleName),node.isModule
+            parser.popCurrentScope()
+            }
+        self.parseModuleContents(using: parser,into: module)
+        }
+        
+    private class func parseForModule(using parser: ArgonParser,location: Location) -> Module
+        {
+        if let lastToken = parser.expect(tokenType: .identifier,error: .moduleNameExpected)
+            {
+            let moduleName = lastToken.identifier.lastPart
+            if let node = parser.lookupNode(atName: moduleName)
                 {
-                parser.pushCurrentScope(node)
-                parser.addNode(node as! Self)
-                }
-            else
-                {
-                let module = Module(identifier: moduleName)
-                if lastToken.identifier.isCompoundIdentifier
+                if node.isModule
                     {
-                    parser.lodgeIssue(code: .singleIdentifierExpected,location: location)
+                    return(node as! Module)
                     }
                 else
                     {
-                    parser.pushCurrentScope(module)
-                    defer
-                        {
-                        parser.popCurrentScope()
-                        }
-                    self.parseModuleContents(using: parser,into: module)
+                    parser.lodgeIssue(code: .identifierAlreadyDefined,location: location)
+                    return(Module(name: Argon.nextIndex(named: "MODULE_")))
                     }
+                }
+            else
+                {
+                let module = Module(name: moduleName)
                 parser.addNode(module)
+                if lastToken.identifier.isCompoundIdentifier
+                    {
+                    parser.lodgeIssue(code: .moduleNameExpected,location: location)
+                    }
+                return(module)
                 }
             }
         else
             {
-            let module = Module(name: "Bad Module")
-            parser.lodgeIssue(code: .identifierExpected,location: location)
-            parser.addNode(module)
+            return(Module(name: Argon.nextIndex(named: "MODULE_")))
             }
         }
         
@@ -80,6 +88,10 @@ public class Module: CompositeSyntaxTreeNode
                 {
                 switch(parser.token.tokenType)
                     {
+                    case(.LET):
+                        LetStatement.parse(using: parser)
+                    case(.CONSTANT):
+                        Constant.parse(using: parser)
                     case(.CLASS):
                         ClassType.parse(using: parser)
                     case(.METHOD):
@@ -97,13 +109,6 @@ public class Module: CompositeSyntaxTreeNode
                     }
                 }
             }
-        }
-        
-    public override func addNode(_ symbol: SyntaxTreeNode)
-        {
-        self.containedNodes.append(symbol)
-        symbol.setParent(self)
-        symbol.setModule(self)
         }
     }
 

@@ -19,6 +19,11 @@ public class StringToken: Token
         true
         }
         
+    public override var isStringValue: Bool
+        {
+        true
+        }
+        
     public override var styleElement: StyleElement
         {
         .colorString

@@ -26,6 +26,8 @@ public class ClassType: StructuredType,Scope
         
     public private(set) var superclasses: TypeNodes = []
     public private(set) var slots: Slots = []
+    public private(set) var mades = Methods()
+    public private(set) var unmade: Method?
     
     public init(name: String,slots: Slots = [],superclasses: TypeNodes = [],generics: TypeNodes = TypeNodes())
         {
@@ -51,7 +53,18 @@ public class ClassType: StructuredType,Scope
         super.encode(with: coder)
         }
         
-    public func lookupNode(atName: String) -> SyntaxTreeNode?
+        
+    public func addMade(_ method: Method)
+        {
+        self.mades.append(method)
+        }
+        
+    public func setUnmade(_ method: Method)
+        {
+        self.unmade = method
+        }
+        
+    public override func lookupNode(atName: String) -> SyntaxTreeNode?
         {
         for slot in self.slots
             {
@@ -116,12 +129,61 @@ public class ClassType: StructuredType,Scope
         var slots = Slots()
         parser.parseBraces
             {
+            var unmadeAdded = false
             while parser.token.isSlotRelatedKeyword
                 {
                 slots.append(self.parseSlotDeclaration(using: parser))
                 }
+            while !parser.token.isRightBrace
+                {
+                if parser.token.isMade
+                    {
+                    let made = self.parseMade(using: parser)
+                    scope.addMade(made)
+                    }
+                else if parser.token.isUnmade
+                    {
+                    if unmadeAdded
+                        {
+                        parser.lodgeIssue(code: .unmadeAlreadyDefined,location: parser.token.location)
+                        self.parseUnmade(using: parser)
+                        }
+                    else
+                        {
+                        scope.setUnmade(self.parseUnmade(using: parser))
+                        unmadeAdded = true
+                        }
+                    }
+                }
             }
         scope.setSlots(slots)
+        }
+        
+    private class func parseMade(using parser: ArgonParser) -> Method
+        {
+        parser.nextToken()
+        let parameters = parser.parseParameters()
+        let block = Block()
+        for parameter in parameters
+            {
+            block.addLocal(parameter)
+            }
+        Block.parseBlockInner(block: block,using: parser)
+        let method = Method(name: "MADE")
+        method.setParameters(parameters)
+        method.setBlock(block)
+        return(method)
+        }
+        
+    @discardableResult
+    private class func parseUnmade(using parser: ArgonParser) -> Method
+        {
+        parser.nextToken()
+        let block = Block()
+        Block.parseBlockInner(block: block,using: parser)
+        let method = Method(name: "UNMADE")
+        method.setBlock(block)
+        return(method)
         }
         
     private class func parseSlotDeclaration(using parser: ArgonParser) -> Slot
@@ -205,7 +267,7 @@ public class ClassType: StructuredType,Scope
                 if parser.token.isWrite
                     {
                     parser.nextToken()
-                    writeBlock = self.parseWriteBlock(using: parser)
+                    writeBlock = self.parseWriteBlock(slotType: type,using: parser)
                     }
                 else
                     {
@@ -223,12 +285,21 @@ public class ClassType: StructuredType,Scope
         
     private class func parseReadBlock(using parser: ArgonParser) -> Block
         {
-        fatalError()
+        let location = parser.token.location
+        let block = Block.parseBlock(using: parser)
+        if !block.containsReturnStatement
+            {
+            parser.lodgeIssue(code: .returnExpectedInReadBlock,location: location)
+            }
+        return(block)
         }
         
-    private class func parseWriteBlock(using parser: ArgonParser) -> Block
+    private class func parseWriteBlock(slotType: TypeNode,using parser: ArgonParser) -> Block
         {
-        fatalError()
+        let block = Block()
+        block.addLocal(Variable(name: "newValue",type: slotType,expression: nil))
+        Block.parseBlockInner(block: block, using: parser)
+        return(block)
         }
         
     private class func parseSuperclasses(using parser: ArgonParser) -> TypeNodes
@@ -274,6 +345,22 @@ public class ClassType: StructuredType,Scope
     public func setSlots(_ slots: Slots)
         {
         self.slots = slots
+        }
+        
+    public override func inherits(from someClass: ClassType) -> Bool
+        {
+        for superclass in self.superclasses
+            {
+            if superclass == someClass
+                {
+                return(true)
+                }
+            if superclass.inherits(from: someClass)
+                {
+                return(true)
+                }
+            }
+        return(false)
         }
     }
 

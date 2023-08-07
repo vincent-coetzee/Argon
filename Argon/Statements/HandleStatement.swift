@@ -91,6 +91,7 @@ public class HandleStatement: Statement
             Block.parseBlockInner(block: handleBlock,using: parser)
             }
         let statement = HandleStatement(signals: symbols, handlerBlock: handleBlock,inductionVariable: variable)
+        statement.addDeclaration(location)
         statement.inductionVariable = variable
         block.addStatement(statement)
         }

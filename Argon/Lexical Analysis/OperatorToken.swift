@@ -124,6 +124,12 @@ public class OperatorToken: Token
                 return(.assign)
             case("=="):
                 return(.equals)
+            case("!="):
+                return(.notEquals)
+            case("%"):
+                return(.modulus)
+            case("%="):
+                return(.modulusAssign)
             default:
                 fatalError("Operator for \(self.matchString) is not defined.")
             }
@@ -132,6 +138,11 @@ public class OperatorToken: Token
     public override var isMinus: Bool
         {
         self.matchString == "-"
+        }
+        
+    public override var isRightArrow: Bool
+        {
+        self.matchString == "->"
         }
         
     public override var isLeftBrocket: Bool

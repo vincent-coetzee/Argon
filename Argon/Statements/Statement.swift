@@ -8,7 +8,12 @@
 import Foundation
 
 public class Statement: SyntaxTreeNode
-    {   
+    {
+    public var containsReturnStatement: Bool
+        {
+        false
+        }
+        
     public init()
         {
         super.init(name: "")
