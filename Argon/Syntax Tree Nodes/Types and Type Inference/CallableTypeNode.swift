@@ -7,6 +7,6 @@
 
 import Foundation
 
-public class ExecutableTypeNode: TypeNode
+public class CallableTypeNode: TypeNode
     {
     }
