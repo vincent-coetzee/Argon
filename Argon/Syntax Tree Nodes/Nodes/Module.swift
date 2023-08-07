@@ -93,7 +93,7 @@ public class Module: CompositeSyntaxTreeNode
                     case(.CONSTANT):
                         Constant.parse(using: parser)
                     case(.CLASS):
-                        ClassType.parse(using: parser)
+                        Class.parse(using: parser)
                     case(.METHOD):
                         Method.parse(using: parser)
                     case(.TYPE):
@@ -103,7 +103,7 @@ public class Module: CompositeSyntaxTreeNode
                     case(.FUNCTION):
                         Function.parse(using: parser)
                     case(.ENUMERATION):
-                        EnumerationType.parse(using: parser)
+                        Enumeration.parse(using: parser)
                     default:
                         parser.lodgeIssue(code: .moduleEntryExpected,location: location)
                     }

@@ -9,11 +9,11 @@ import Foundation
 
 public class ObjectInstance: NSObject,NSCoding
     {
-    public private(set) var `class`: ClassType
+    public private(set) var `class`: Class
     
     public required init(coder: NSCoder)
         {
-        self.class = coder.decodeObject(forKey: "class") as! ClassType
+        self.class = coder.decodeObject(forKey: "class") as! Class
         }
         
     public func encode(with coder: NSCoder)

@@ -255,36 +255,44 @@ public class ArgonParser
         let identifier = self.parseIdentifier(errorCode: .identifierExpected)
         let typeName = identifier.lastPart
         var typeVariables = TypeNodes()
+        var type: TypeNode = TypeNode(name: "")
         if typeName == "Array"
             {
             return(self.parseArrayType(location: location))
             }
-        if self.token.isLeftBrocket
+        else
             {
-            self.nextToken()
-            repeat
+            if self.token.isLeftBrocket
                 {
-                self.parseComma()
-                typeVariables.append(self.parseType())
-                }
-            while self.token.isComma && !self.token.isRightBrocket
-            if self.token.isRightBrocket
-                {
-                self.nextToken()
+                return(self.parseGenericTypeInstance(location: location))
+
                 }
             }
-        var type: TypeNode = TypeNode(name: "")
         if let node = self.currentScope.lookupNode(atIdentifier: identifier) as? TypeNode
             {
             type = node
             }
         else
             {
-            type = ForwardReference(name: typeName)
-            self.currentScope.addNode(type)
             self.lodgeIssue(code: .undefinedType,message: "'\(identifier.description)' is undefined.",location: location)
             }
         return(type)
+        }
+        
+    private func parseGenericTypeInstance(location: Location) -> TypeNode
+        {
+        var typeVariables
+        self.nextToken()
+        repeat
+            {
+            self.parseComma()
+            typeVariables.append(self.parseType())
+            }
+        while self.token.isComma && !self.token.isRightBrocket
+        if self.token.isRightBrocket
+            {
+            self.nextToken()
+            }
         }
         
     public func parseArrayType(location: Location) -> TypeNode
@@ -346,7 +354,7 @@ public class ArgonParser
                 return(Argon.ArrayIndex.integer)
                 }
             }
-        else if let enumeration = self.currentScope.lookupNode(atIdentifier: identifier) as? EnumerationType
+        else if let enumeration = self.currentScope.lookupNode(atIdentifier: identifier) as? Enumeration
             {
             let newLocation = self.token.location
             if self.token.isLeftBracket
@@ -504,9 +512,9 @@ public class ArgonParser
             case(.FUNCTION):
                 Function.parse(using: self)
             case(.CLASS):
-                ClassType.parse(using: self)
+                Class.parse(using: self)
             case(.ENUMERATION):
-                EnumerationType.parse(using: self)
+                Enumeration.parse(using: self)
             case(.LET):
                 LetStatement.parse(using: self)
             case(.SELECT):

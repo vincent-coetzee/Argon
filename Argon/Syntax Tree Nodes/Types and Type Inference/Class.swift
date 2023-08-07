@@ -7,9 +7,18 @@
 
 import Foundation
 
-public class ClassType: StructuredType,Scope
+public class Class: StructuredType,Scope
     {
-    public override var isClassType: Bool
+    public override var type: TypeNode
+        {
+        if self._type.isNil
+            {
+            self._type = Metaclass(class: self)
+            }
+        return(self._type)
+        }
+        
+    public override var isClass: Bool
         {
         true
         }
@@ -24,12 +33,12 @@ public class ClassType: StructuredType,Scope
         return(.class)
         }
         
-    public private(set) var superclasses: TypeNodes = []
+    public private(set) var superclasses: ClassTypes = []
     public private(set) var slots: Slots = []
     public private(set) var mades = Methods()
     public private(set) var unmade: Method?
     
-    public init(name: String,slots: Slots = [],superclasses: TypeNodes = [],generics: TypeNodes = TypeNodes())
+    public init(name: String,slots: Slots = [],superclasses: ClassTypes = [],generics: TypeNodes = TypeNodes())
         {
         self.slots = slots
         self.superclasses = superclasses
@@ -77,7 +86,7 @@ public class ClassType: StructuredType,Scope
         }
     
     @discardableResult
-    public func slot(_ name: String,_ type: TypeNode) -> ClassType
+    public func slot(_ name: String,_ type: TypeNode) -> Class
         {
         let slot = Slot(name: name,type: type)
         self.slots.append(slot)
@@ -119,8 +128,8 @@ public class ClassType: StructuredType,Scope
             name = parser.token.identifier.description
             parser.nextToken()
             }
-        let scope = ClassType(name: name)
-        var superclasses = TypeNodes()
+        let scope = Class(name: name)
+        var superclasses = ClassTypes()
         if parser.token.isScope
             {
             superclasses = self.parseSuperclasses(using: parser)
@@ -302,11 +311,11 @@ public class ClassType: StructuredType,Scope
         return(block)
         }
         
-    private class func parseSuperclasses(using parser: ArgonParser) -> TypeNodes
+    private class func parseSuperclasses(using parser: ArgonParser) -> ClassTypes
         {
         let location = parser.token.location
         parser.nextToken()
-        var superclasses = TypeNodes()
+        var superclasses = ClassTypes()
         repeat
             {
             if parser.token.isComma
@@ -316,7 +325,7 @@ public class ClassType: StructuredType,Scope
             let identifier = parser.parseIdentifier(errorCode: .superclassIdentifierExpected)
             if let node = parser.lookupNode(atIdentifier: identifier)
                 {
-                if let classType = node as? ClassType
+                if let classType = node as? Class
                     {
                     superclasses.append(classType)
                     }
@@ -327,17 +336,14 @@ public class ClassType: StructuredType,Scope
                 }
             else
                 {
-                let name = identifier.lastPart
-                let type = ForwardReference(name: name)
-                parser.addNode(type,atIdentifier: identifier)
-                superclasses.append(type)
+                parser.lodgeIssue(code: .undefinedClass,location: location)
                 }
             }
         while parser.token.isComma && !parser.token.isEnd
         return(superclasses)
         }
         
-    public func setSuperclasses(_ superclasses: TypeNodes)
+    public func setSuperclasses(_ superclasses: ClassTypes)
         {
         self.superclasses = superclasses
         }
@@ -347,7 +353,7 @@ public class ClassType: StructuredType,Scope
         self.slots = slots
         }
         
-    public override func inherits(from someClass: ClassType) -> Bool
+    public override func inherits(from someClass: Class) -> Bool
         {
         for superclass in self.superclasses
             {
@@ -364,4 +370,4 @@ public class ClassType: StructuredType,Scope
         }
     }
 
-public typealias ClassTypes = Array<ClassType>
+public typealias ClassTypes = Array<Class>

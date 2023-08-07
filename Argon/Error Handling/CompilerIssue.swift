@@ -39,6 +39,7 @@ public enum ErrorCode: Int
     case invalidFileType
     case invalidLowerBound
     case invalidEnumerationCase
+    case invalidTypeVariables
     
     case lValueExpectedOnLeft
     case leftParenthesisExpected
@@ -75,7 +76,9 @@ public enum ErrorCode: Int
 
     case undefinedSymbol
     case undefinedType
+    case undefinedClass
     case unmadeAlreadyDefined
+    case usingGenericTypesOnNonGenericType
     
     case vitualSlotMustSpecifyType
     case virtualSlotNotAllowedInitialExpression

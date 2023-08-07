@@ -47,13 +47,13 @@ public class LiteralExpression: Expression
         super.init()
         }
         
-    public init(value: ClassType)
+    public init(value: Class)
         {
         self.value = .class(value)
         super.init()
         }
         
-    public init(value: EnumerationType)
+    public init(value: Enumeration)
         {
         self.value = .enumeration(value)
         super.init()
@@ -71,7 +71,7 @@ public class LiteralExpression: Expression
         super.init()
         }
         
-    public init(enumeration: EnumerationType,enumerationCase: EnumerationCase)
+    public init(enumeration: Enumeration,enumerationCase: EnumerationCase)
         {
         self.value = .enumerationInstance(enumeration,enumerationCase)
         super.init()
@@ -176,7 +176,7 @@ extension NSCoder
             case(1):
                 return(.integer(self.decodeInt64(forKey: "\(key)_integer")))
             case(2):
-                return(.enumerationInstance(self.decodeObject(forKey: "\(key)_enumerationInstance_enumeration") as! EnumerationType,self.decodeObject(forKey: "\(key)_enumerationInstance_enumerationCase") as! EnumerationCase))
+                return(.enumerationInstance(self.decodeObject(forKey: "\(key)_enumerationInstance_enumeration") as! Enumeration,self.decodeObject(forKey: "\(key)_enumerationInstance_enumerationCase") as! EnumerationCase))
             case(3):
                 return(.object(self.decodeObject(forKey: "\(key)_object") as! ObjectInstance))
             case(4):
@@ -197,11 +197,11 @@ extension NSCoder
             case(11):
                 return(.byte(UInt8(self.decodeInteger(forKey: "\(key)_byte"))))
             case(12):
-                return(.class(self.decodeObject(forKey: "\(key)_class") as! ClassType))
+                return(.class(self.decodeObject(forKey: "\(key)_class") as! Class))
             case(13):
                 return(.method(self.decodeObject(forKey: "\(key)_method") as! Method))
             case(14):
-                return(.enumeration(self.decodeObject(forKey: "\(key)_enumeration") as! EnumerationType))
+                return(.enumeration(self.decodeObject(forKey: "\(key)_enumeration") as! Enumeration))
             case(15):
                 return(.identifier(self.decodeObject(forKey: "\(key)_identifier") as! Identifier))
             case(16):

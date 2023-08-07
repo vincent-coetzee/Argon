@@ -19,7 +19,7 @@ public class ArgonModule: Module
     public static var classType: TypeNode { ArgonModule.shared.lookupNode(atName: "Class") as! TypeNode}
     public static var voidType: TypeNode { ArgonModule.shared.lookupNode(atName: "Void") as! TypeNode}
     public static var objectType: TypeNode { ArgonModule.shared.lookupNode(atName: "Object") as! TypeNode}
-    public static var objectClass: ClassType { ArgonModule.shared.lookupNode(atName: "Object") as! ClassType}
+    public static var objectClass: Class { ArgonModule.shared.lookupNode(atName: "Object") as! Class}
     public static var stringType: TypeNode { ArgonModule.shared.lookupNode(atName: "String") as! TypeNode}
     public static var floatType: TypeNode { ArgonModule.shared.lookupNode(atName: "Float") as! TypeNode}
     public static var integerType: TypeNode { ArgonModule.shared.lookupNode(atName: "Integer") as! TypeNode}
@@ -30,16 +30,16 @@ public class ArgonModule: Module
     public static var symbolType: TypeNode { ArgonModule.shared.lookupNode(atName: "Symbol") as! TypeNode}
     public static var uIntegerType: TypeNode { ArgonModule.shared.lookupNode(atName: "UInteger") as! TypeNode}
     
-    private static func systemClass(named name: String,superclassesNamed: Array<String> = [],slots: Slots = Slots(),generics: TypeNodes = TypeNodes()) -> ClassType
+    private static func systemClass(named name: String,superclassesNamed: Array<String> = [],slots: Slots = Slots(),generics: TypeNodes = TypeNodes()) -> Class
         {
         guard let aClass = self.lookupNode(atName: name) else
             {
-            let classes = superclassesNamed.map{self.lookupNode(atName: $0) as! ClassType}
-            let aClass = ClassType(name: name,superclasses: classes)
+            let classes = superclassesNamed.map{self.lookupNode(atName: $0) as! Class}
+            let aClass = Class(name: name,superclasses: classes)
             self._systemTypes[name] = aClass
             return(aClass)
             }
-        return(aClass as! ClassType)
+        return(aClass as! Class)
         }
         
     private static func systemAliasedType(named name: String,toTypeNamed typeName: String) -> AliasedType
@@ -64,9 +64,9 @@ public class ArgonModule: Module
         self._systemTypes[atName]
         }
         
-    public var enumerationBaseType: ClassType
+    public var enumerationBaseType: Class
         {
-        return(self.lookupNode(atName: "EnumerationBase") as! ClassType)
+        return(self.lookupNode(atName: "EnumerationBase") as! Class)
         }
         
     public var symbolType: TypeNode
@@ -196,6 +196,7 @@ public class ArgonModule: Module
         self.addSystemClass(named: "DateTime",superclassesNamed:["Date","Time"])
         self.addSystemClass(named: "Slot",superclassesNamed: ["Object"]).slot("name",self.stringType)
         self.addSystemClass(named: "Class",superclassesNamed: ["Object"]).slot("name",self.stringType)
+        self.addSystemClass(named: "Metaclass",superclassesNamed: ["Class"]).slot("name",self.stringType)
         self.addSystemClass(named: "EnumerationCase",superclassesNamed: ["Object"]).slot("name",self.stringType)
         self.addSystemClass(named: "Enumeration",superclassesNamed: ["Object"]).slot("name",self.stringType).slot("rawType",self.integer64Type)
         self.addSystemClass(named: "Collection",superclassesNamed: ["Object"],generics: []).slot("count",self.integer64Type)
@@ -271,20 +272,20 @@ public class ArgonModule: Module
         fatalError()
         }
         
-    @discardableResult
-    private func addBasicSystemType(named name: String,rawType: RawType) -> BasicType
-        {
-        let aType = BasicType(name: name,rawType: rawType)
-        self.addNode(aType)
-        aType.isSystemNode = true
-        return(aType)
-        }
+//    @discardableResult
+//    private func addBasicSystemType(named name: String,rawType: RawType) -> BasicType
+//        {
+//        let aType = BasicType(name: name,rawType: rawType)
+//        self.addNode(aType)
+//        aType.isSystemNode = true
+//        return(aType)
+//        }
         
     @discardableResult
-    private func addSystemClass(named name: String,superclassesNamed: Array<String>,generics: TypeNodes = []) -> ClassType
+    private func addSystemClass(named name: String,superclassesNamed: Array<String>,generics: TypeNodes = []) -> Class
         {
-        let classes = superclassesNamed.map{self.lookupNode(atName: $0) as! ClassType}
-        let aClass = ClassType(name: name,superclasses: classes,generics: generics)
+        let classes = superclassesNamed.map{self.lookupNode(atName: $0) as! Class}
+        let aClass = Class(name: name,superclasses: classes,generics: generics)
         self.addNode(aClass)
         aClass.isSystemNode = true
         return(aClass)
@@ -293,8 +294,8 @@ public class ArgonModule: Module
     private func addGenericSystemClass(named name: String,superclassesNamed: Array<String>,generics: Array<String>)
         {
         let generics = generics.map{self.lookupNode(atName: $0) as! TypeNode}
-        let classes = superclassesNamed.map{self.lookupNode(atName: $0) as! ClassType}
-        let aClass = ClassType(name: name,superclasses: classes,generics: generics)
+        let classes = superclassesNamed.map{self.lookupNode(atName: $0) as! Class}
+        let aClass = Class(name: name,superclasses: classes,generics: generics)
         aClass.isSystemNode = true
         self.addNode(aClass)
         }
@@ -334,7 +335,7 @@ public class ArgonModule: Module
         {
         if let aClass = self.lookupNode(atName: named)
             {
-            if aClass.isSystemNode,aClass is ClassType
+            if aClass.isSystemNode,aClass is Class
                 {
                 return(true)
                 }
@@ -346,7 +347,7 @@ public class ArgonModule: Module
         {
         if let enumeration = self.lookupNode(atName: named)
             {
-            if enumeration.isSystemNode,enumeration is EnumerationType
+            if enumeration.isSystemNode,enumeration is Enumeration
                 {
                 return(true)
                 }

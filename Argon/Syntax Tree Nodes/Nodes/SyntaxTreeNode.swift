@@ -68,6 +68,11 @@ public class SyntaxTreeNode: NSObject,NSCoding
         self._module
         }
         
+    public var type: TypeNode
+        {
+        self._type
+        }
+        
     public private(set) var references = NodeReferences()
     public private(set) var name: String
     public private(set) var index: Int?
@@ -75,6 +80,7 @@ public class SyntaxTreeNode: NSObject,NSCoding
     public var isSystemNode: Bool = false
     private var _module: Module!
     public var assignedType: TypeNode?
+    internal var _type: TypeNode!
     public private(set) var issues = CompilerIssues()
     
     init(index: Int? = nil,name: String)
@@ -162,7 +168,7 @@ public class SyntaxTreeNode: NSObject,NSCoding
         print("\(indent)Symbol(\(self.name))")
         }
         
-    public var isEnumerationType: Bool
+    public var isEnumeration: Bool
         {
         false
         }
@@ -182,12 +188,17 @@ public class SyntaxTreeNode: NSObject,NSCoding
         false
         }
         
+    public var isGenericType: Bool
+        {
+        false
+        }
+        
     public var isModule: Bool
         {
         false
         }
         
-    public var isClassType: Bool
+    public var isClass: Bool
         {
         false
         }

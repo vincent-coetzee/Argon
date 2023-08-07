@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class EnumerationType: StructuredType
+public class Enumeration: StructuredType
     {
     public override var valueBox: ValueBox
         {
@@ -25,7 +25,7 @@ public class EnumerationType: StructuredType
         parser.nextToken()
         var baseType: TypeNode?
         let name = parser.parseIdentifier(errorCode: .identifierExpected).lastPart
-        let enumeration = EnumerationType(name: name)
+        let enumeration = Enumeration(name: name)
         if parser.token.isScope
             {
             parser.nextToken()
@@ -132,7 +132,7 @@ public class EnumerationType: StructuredType
         self.defaultCase = someCase
         }
         
-    public override var isEnumerationType: Bool
+    public override var isEnumeration: Bool
         {
         true
         }
@@ -155,4 +155,4 @@ public class EnumerationType: StructuredType
         }
     }
 
-public typealias EnumerationTypes = Array<EnumerationType>
+public typealias EnumerationTypes = Array<Enumeration>

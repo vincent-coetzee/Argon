@@ -9,7 +9,6 @@ import Foundation
 
 public class Slot: SyntaxTreeNode
     {
-    public private(set) var type: TypeNode!
     public var isReadWriteSlot = false
     public var isDynamicSlot = false
     public private(set) var initialExpression: Expression?
@@ -19,13 +18,12 @@ public class Slot: SyntaxTreeNode
     
     public init(name: String,type: TypeNode? = nil)
         {
-        self.type = type
         super.init(name: name)
+        self.assignedType = type
         }
         
     required public init(coder: NSCoder)
         {
-        self.type = coder.decodeObject(forKey: "type") as? TypeNode
         self.isReadWriteSlot = coder.decodeBool(forKey: "isReadWriteSlot")
         self.isDynamicSlot = coder.decodeBool(forKey: "isDynamicSlot")
         self.isVirtualSlot = coder.decodeBool(forKey: "isVirtualSlot")
@@ -37,7 +35,6 @@ public class Slot: SyntaxTreeNode
         
     public override func encode(with coder: NSCoder)
         {
-        coder.encode(self.type,forKey: "type")
         coder.encode(self.isReadWriteSlot,forKey: "isReadWriteSlot")
         coder.encode(self.isDynamicSlot,forKey: "isDynamicSlot")
         coder.encode(self.isVirtualSlot,forKey: "isVirtualSlot")
@@ -49,7 +46,7 @@ public class Slot: SyntaxTreeNode
         
     public func setType(_ type: TypeNode)
         {
-        self.type = type
+        self.assignedType = type
         }
         
     public func setInitialExpression(_ expression: Expression?)

@@ -116,8 +116,8 @@ public struct Argon
         {
         case none
         case discreteType(TypeNode)
-        case enumeration(EnumerationType)
-        case enumerationRange(EnumerationType,lowerBound: EnumerationCase,upperBound: EnumerationCase)
+        case enumeration(Enumeration)
+        case enumerationRange(Enumeration,lowerBound: EnumerationCase,upperBound: EnumerationCase)
         case integerRange(lowerBound: Argon.Integer,upperBound: Argon.Integer)
         case integer
         }
@@ -137,11 +137,11 @@ extension NSCoder
             case(1):
                 return(.discreteType(self.decodeObject(forKey: key + "discreteType") as! TypeNode))
             case(2):
-                return(.enumeration(self.decodeObject(forKey: key + "enumeration") as! EnumerationType))
+                return(.enumeration(self.decodeObject(forKey: key + "enumeration") as! Enumeration))
             case(3):
                 let lower = self.decodeObject(forKey: key + "enumerationRange.lower") as! EnumerationCase
                 let upper = self.decodeObject(forKey: key + "enumerationRange.upper") as! EnumerationCase
-                let enumeration = self.decodeObject(forKey: key + "enumerationRange.enumeration") as! EnumerationType
+                let enumeration = self.decodeObject(forKey: key + "enumerationRange.enumeration") as! Enumeration
                 return(.enumerationRange(enumeration,lowerBound: lower,upperBound: upper))
             case(4):
                 let lower = Argon.Integer(self.decodeInteger(forKey: key + "integerRange.lower"))

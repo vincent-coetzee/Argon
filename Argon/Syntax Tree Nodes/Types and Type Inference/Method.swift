@@ -11,7 +11,7 @@ public class Method: CallableTypeNode
     {
     public var signature: MethodSignature
         {
-        MethodSignature(name: self.name,parameterTypes: parameters.map{$0.type!},returnType: returnType)
+        MethodSignature(name: self.name,parameterTypes: parameters.map{$0.type},returnType: returnType)
         }
         
     public override class func parse(using parser: ArgonParser)

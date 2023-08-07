@@ -59,6 +59,11 @@ public class TypeNode: SyntaxTreeNode
         ArgonModule.shared.dateTimeType
         }
         
+    public override var isGenericType: Bool
+        {
+        !self.generics.isEmpty
+        }
+        
     public override var isTypeNode: Bool
         {
         false
@@ -112,7 +117,7 @@ public class TypeNode: SyntaxTreeNode
         super.encode(with: coder)
         }
         
-    public func inherits(from someClass: ClassType) -> Bool
+    public func inherits(from someClass: Class) -> Bool
         {
         false
         }

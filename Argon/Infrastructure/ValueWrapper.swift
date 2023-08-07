@@ -16,6 +16,6 @@ public indirect enum ValueWrapper
     case boolean(Argon.Boolean)
     case character(Argon.Character)
     case byte(Argon.Byte)
-    case object(ClassType,AnyObject)
+    case object(Class,AnyObject)
     case enumeration(Any)
     }

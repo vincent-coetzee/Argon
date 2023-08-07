@@ -49,11 +49,11 @@ public struct ArgonTests
         //
         // Define an enumeration with cases
         //
-        let enumeration = EnumerationType(name: "NodeType",cases: [freezing,sunny,rainy,windy,cloudy],rawType: ArgonModule.stringType)
+        let enumeration = Enumeration(name: "NodeType",cases: [freezing,sunny,rainy,windy,cloudy],rawType: ArgonModule.stringType)
         thirdInnerModule.addNode(enumeration)
         let lookupEnumeration = outerModule.lookupNode(atIdentifier: Identifier(string: "//OuterModule/FirstInnerModule/SecondInnerModule/ThirdInnerModule/NodeType"))
         assert(lookupEnumeration == enumeration,"Looked up enumeration should be the same as the original enumeration and it is not")
-        let newClass = ClassType(name: "NewClass")
+        let newClass = Class(name: "NewClass")
         let identifier = Identifier(string: "//OuterModule/FirstInnerModule/SecondInnerModule/NewClass")
         secondInnerModule.addNode(newClass, atIdentifier: identifier)
         let lookupClass = secondInnerModule.lookupNode(atIdentifier: identifier)
@@ -77,7 +77,7 @@ public struct ArgonTests
         //
         // Define an enumeration with cases
         //
-        let enumeration = EnumerationType(name: "NodeType",cases: [freezing,sunny,rainy,windy,cloudy],rawType: ArgonModule.stringType)
+        let enumeration = Enumeration(name: "NodeType",cases: [freezing,sunny,rainy,windy,cloudy],rawType: ArgonModule.stringType)
         //
         // Add enumeration to inner module and inner module to base module
         //
@@ -91,7 +91,7 @@ public struct ArgonTests
         //
         // Define Location class
         //
-        let locationClass = ClassType(name: "Location",slots: [latitude,longitude])
+        let locationClass = Class(name: "Location",slots: [latitude,longitude])
         innerModule.addNode(locationClass)
         //
         // Define cases for WeatherStationType
@@ -101,7 +101,7 @@ public struct ArgonTests
         //
         // Define WeatherStationType enumeration
         //
-        let weatherStationType = EnumerationType(name: "WeatherStationType",cases: [manned,unmanned],rawType: ArgonModule.integerType)
+        let weatherStationType = Enumeration(name: "WeatherStationType",cases: [manned,unmanned],rawType: ArgonModule.integerType)
         innerModule.addNode(weatherStationType)
         //
         // Define slots for WeatherStation class
@@ -110,7 +110,7 @@ public struct ArgonTests
         let typeSlot = Slot(name: "stationType",type: weatherStationType)
         let onlineSlot = Slot(name: "isOnline",type: ArgonModule.booleanType)
         let temperatureSlot = Slot(name: "temperature",type: ArgonModule.floatType)
-        let weatherStationClass = ClassType(name: "WeatherStation",slots: [nameSlot,typeSlot,onlineSlot,temperatureSlot],superclasses: [ArgonModule.objectClass])
+        let weatherStationClass = Class(name: "WeatherStation",slots: [nameSlot,typeSlot,onlineSlot,temperatureSlot],superclasses: [ArgonModule.objectClass])
         module.addNode(weatherStationClass)
         print("Identifier for enumeration = \(enumeration.identifier)")
         let integerType = innerModule.lookupNode(atName: "Integer")
