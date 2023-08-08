@@ -254,7 +254,6 @@ public class ArgonParser
         let location = self.token.location
         let identifier = self.parseIdentifier(errorCode: .identifierExpected)
         let typeName = identifier.lastPart
-        var typeVariables = TypeNodes()
         var type: TypeNode = TypeNode(name: "")
         if typeName == "Array"
             {
@@ -264,8 +263,7 @@ public class ArgonParser
             {
             if self.token.isLeftBrocket
                 {
-                return(self.parseGenericTypeInstance(location: location))
-
+                return(self.parseGenericTypeInstance(typeName: typeName,location: location))
                 }
             }
         if let node = self.currentScope.lookupNode(atIdentifier: identifier) as? TypeNode
@@ -274,24 +272,45 @@ public class ArgonParser
             }
         else
             {
-            self.lodgeIssue(code: .undefinedType,message: "'\(identifier.description)' is undefined.",location: location)
+            self.lodgeIssue(code: .undefinedType,message: "Type '\(identifier.description)' is undefined.",location: location)
             }
         return(type)
         }
         
-    private func parseGenericTypeInstance(location: Location) -> TypeNode
+    private func parseGenericTypeInstance(typeName: String,location: Location) -> TypeNode
         {
-        var typeVariables
+        var typeValues = TypeNodes()
         self.nextToken()
         repeat
             {
             self.parseComma()
-            typeVariables.append(self.parseType())
+            typeValues.append(self.parseType())
             }
-        while self.token.isComma && !self.token.isRightBrocket
+        while self.token.isComma && !self.token.isRightBrocket && !self.token.isEnd
         if self.token.isRightBrocket
             {
             self.nextToken()
+            }
+        if let type = self.currentScope.lookupNode(atName: typeName) as? TypeNode
+            {
+            if type.isGenericType
+                {
+                if type.genericTypes.count != typeValues.count
+                    {
+                    self.lodgeIssue(code: .invalidGenericArguments,message: "Type '\(typeName)' expects \(type.genericTypes.count) types but \(typeValues.count) were found.",location:location)
+                    }
+                return(GenericTypeInstance(originalType: type,types: typeValues))
+                }
+            else
+                {
+                self.lodgeIssue(code: .usingGenericTypesOnNonGenericType,message: "The type '\(typeName)' does not have generic parameters so it can't be instantiated.",location: location)
+                }
+            return(type)
+            }
+        else
+            {
+            self.lodgeIssue(code: .undefinedType,message: "The type '\(typeName)' is not defined.",location: location)
+            return(TypeNode(name: typeName))
             }
         }
         
@@ -324,7 +343,7 @@ public class ArgonParser
             self.lodgeIssue(code: .rightBracketExpected,location: location)
             }
         let arrayTypeInstance = ArrayTypeInstance(originalType: ArgonModule.arrayType,indexType: index)
-        arrayTypeInstance.generics.append(elementType)
+        arrayTypeInstance.addGenericType(elementType)
         return(arrayTypeInstance)
         }
         

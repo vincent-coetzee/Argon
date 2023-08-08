@@ -62,6 +62,7 @@ public enum TokenType: Int
     case integer
     case INTO
     case increment
+    case IS
     
     case keyword
     case KEY
@@ -198,6 +199,11 @@ public class Token: NSObject,NSCoding
         }
         
     public var isDefault: Bool
+        {
+        false
+        }
+        
+    public var isIs: Bool
         {
         false
         }

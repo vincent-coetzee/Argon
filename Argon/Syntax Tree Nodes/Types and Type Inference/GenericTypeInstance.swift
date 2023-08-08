@@ -30,10 +30,11 @@ internal typealias TypePairs = Array<TypePair>
 public class GenericTypeInstance: TypeNode
     {
     private let originalType: TypeNode
-    internal var typePairs = TypePairs()
+    private let types: TypeNodes
     
-    public init(originalType: TypeNode)
+    public init(originalType: TypeNode,types: TypeNodes)
         {
+        self.types = types
         self.originalType = originalType
         super.init()
         }
@@ -41,14 +42,14 @@ public class GenericTypeInstance: TypeNode
     public required init(coder: NSCoder)
         {
         self.originalType = coder.decodeObject(forKey: "orginalType") as! TypeNode
-        self.typePairs = coder.decodeObject(forKey: "typePairs") as! TypePairs
+        self.types = coder.decodeObject(forKey: "types") as! TypeNodes
         super.init(coder: coder)
         }
         
     public override func encode(with coder: NSCoder)
         {
         coder.encode(self.originalType,forKey: "originalType")
-        coder.encode(self.typePairs,forKey: "typePairs")
+        coder.encode(self.types,forKey: "types")
         super.encode(with: coder)
         }
     }

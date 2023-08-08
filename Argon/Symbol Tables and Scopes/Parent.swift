@@ -35,6 +35,19 @@ public enum Parent
             }
         }
         
+    public var identifier: Identifier
+        {
+        switch(self)
+            {
+            case(.none):
+                return(Identifier(string: "//"))
+            case(.symbol(let symbol)):
+                return(symbol.identifier)
+            case(.expression):
+                fatalError("This should not occur")
+            }
+        }
+        
     public var module: Module
         {
         switch(self)

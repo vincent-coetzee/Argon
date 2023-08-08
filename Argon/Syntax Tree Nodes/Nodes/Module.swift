@@ -8,7 +8,12 @@
 import Foundation
 
 public class Module: CompositeSyntaxTreeNode
-    {
+    {        
+    public override var module: Module
+        {
+        self
+        }
+        
     public override var isModule: Bool
         {
         true

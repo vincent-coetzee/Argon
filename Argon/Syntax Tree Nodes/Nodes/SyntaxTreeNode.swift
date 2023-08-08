@@ -40,7 +40,7 @@ public class SyntaxTreeNode: NSObject,NSCoding
         
     public var rootModule: RootModule
         {
-        self.module.rootModule
+        self.parent!.rootModule
         }
         
     public var argonModule: ArgonModule
@@ -60,12 +60,7 @@ public class SyntaxTreeNode: NSObject,NSCoding
         
     public var identifier: Identifier
         {
-        return(self.module.identifier + self.name)
-        }
-
-    public var module: Module
-        {
-        self._module
+        self.parent.isNil ? Identifier(string: self.name) : self.parent!.identifier + name
         }
         
     public var type: TypeNode
@@ -78,7 +73,6 @@ public class SyntaxTreeNode: NSObject,NSCoding
     public private(set) var index: Int?
     public private(set) var parent: Parent?
     public var isSystemNode: Bool = false
-    private var _module: Module!
     public var assignedType: TypeNode?
     internal var _type: TypeNode!
     public private(set) var issues = CompilerIssues()
@@ -143,11 +137,6 @@ public class SyntaxTreeNode: NSObject,NSCoding
         self.name = name
         }
         
-    public func setModule(_ module: Module)
-        {
-        self._module = module
-        }
-        
     public func setParent(_ symbol: SyntaxTreeNode?)
         {
         if symbol.isNil
@@ -178,6 +167,11 @@ public class SyntaxTreeNode: NSObject,NSCoding
         false
         }
         
+    public var baseType: TypeNode
+        {
+        fatalError("baseType invoked on SyntaxTreeNode which is not allowed.")
+        }
+        
     public var isMethod: Bool
         {
         false
@@ -201,6 +195,11 @@ public class SyntaxTreeNode: NSObject,NSCoding
     public var isClass: Bool
         {
         false
+        }
+        
+    public var module: Module
+        {
+        self.parent!.module
         }
         
     public func become<T>(_ newKind: T.Type) -> T?

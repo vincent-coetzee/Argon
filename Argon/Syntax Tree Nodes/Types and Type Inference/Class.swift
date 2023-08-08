@@ -17,7 +17,7 @@ public class Class: StructuredType,Scope
             }
         return(self._type)
         }
-        
+                
     public override var isClass: Bool
         {
         true

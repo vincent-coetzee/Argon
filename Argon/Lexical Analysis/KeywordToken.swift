@@ -136,6 +136,8 @@ public class KeywordToken: Token
                 return(.FUNCTION)
             case "IF":
                 return(.IF)
+            case "IS":
+                return(.IS)
             case "HANDLE":
                 return(.HANDLE)
             case "IMPORT":
@@ -189,6 +191,11 @@ public class KeywordToken: Token
             default:
                 fatalError()
             }
+        }
+        
+    public override var isIs: Bool
+        {
+        self.matchString == "IS"
         }
         
     public override var tokenName: String

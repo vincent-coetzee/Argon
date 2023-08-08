@@ -63,6 +63,7 @@ public class RootModule: Module
             rootModule._argonModule = module
             rootModule.addNode(module)
             self._rootModule = rootModule
+            module.initializeSystemMethods()
             return(rootModule)
             }
         else

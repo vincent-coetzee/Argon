@@ -211,7 +211,10 @@ public class ArgonModule: Module
         self.addSystemAliasedType(named: "Integer",toTypeNamed: "Integer64")
         self.addSystemAliasedType(named: "UInteger",toTypeNamed: "UInteger64")
         self.addSystemAliasedType(named: "Float",toTypeNamed: "Float64")
+        }
         
+    public func initializeSystemMethods()
+        {
         self.addSystemMethod(named: "string").parameter(.integerType).returnType(.stringType)
         self.addSystemMethod(named: "string").parameter(.uIntegerType).returnType(.stringType)
         self.addSystemMethod(named: "string").parameter(.characterType).returnType(.stringType)

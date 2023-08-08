@@ -74,18 +74,38 @@ public class TypeNode: SyntaxTreeNode
         true
         }
         
-    public static func newTypeVariable(name: String? = nil) -> TypeNode
+    public override var baseType: TypeNode
         {
-        let index = SyntaxTreeNode.nextIndex
-        var theName: String? = name
-        if theName.isNil
-            {
-            theName = "TypeVariable(\(index)"
-            }
-        return(TypeVariable(name: theName!,index: index))
+        self
         }
-        
-    public var generics: Array<TypeNode>
+    //
+    //
+    // This instance variable should always be used to access the generics
+    // of any type nodes to ensure that the correct values are returned.
+    // The generics var may not always be correct.
+    //
+    //
+    public var genericTypes: TypeNodes
+        {
+        self.generics
+        }
+    //
+    //
+    // The generics instance variable should never be accessed directly. We have
+    // several classes in the TypeNode hierarchy that return their genericTypes and
+    // in this case the genericTypes are just the generics. The problem is that there
+    // are some classes in the TypeNode hirarchy the proxy for other classes - such
+    // as the AliasedType class - this means that all type specific queries sent to
+    // classes such as AliasedType have to be rerouted to the underlying class. This
+    // means that any attemopt to access details from a type must be done through
+    // the "baseType" instance var ( which will produce the most basic type that
+    // can answer the questions ) and accessing of genericTypes must be done through
+    // the "genericTypes" instance variable rather than accessing the generics variable
+    // directly.
+    //
+    //
+    //
+    private var generics: Array<TypeNode>
     
     public init(index: Int? = nil,name: String,generics: TypeNodes = [])
         {
@@ -115,6 +135,22 @@ public class TypeNode: SyntaxTreeNode
         {
         coder.encode(self.generics,forKey: "generics")
         super.encode(with: coder)
+        }
+        
+    public func addGenericType(_ type: TypeNode)
+        {
+        self.generics.append(type)
+        }
+        
+    public static func newTypeVariable(name: String? = nil) -> TypeNode
+        {
+        let index = SyntaxTreeNode.nextIndex
+        var theName: String? = name
+        if theName.isNil
+            {
+            theName = "TypeVariable(\(index)"
+            }
+        return(TypeVariable(name: theName!,index: index))
         }
         
     public func inherits(from someClass: Class) -> Bool

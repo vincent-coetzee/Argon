@@ -40,6 +40,8 @@ public enum ErrorCode: Int
     case invalidLowerBound
     case invalidEnumerationCase
     case invalidTypeVariables
+    case invalidGenericArguments
+    case isExpected
     
     case lValueExpectedOnLeft
     case leftParenthesisExpected
