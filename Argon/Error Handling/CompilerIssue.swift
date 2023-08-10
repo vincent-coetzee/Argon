@@ -63,6 +63,7 @@ public enum ErrorCode: Int
     case rightParenthesisExpected
     case rightBraceExpected
     case rightBracketExpected
+    case rightBrocketExpected
     case readBlockExpectedForVirtualSlot
     case readOrWriteExpected
     

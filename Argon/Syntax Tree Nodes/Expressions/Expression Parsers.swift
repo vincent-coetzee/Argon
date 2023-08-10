@@ -27,6 +27,11 @@ public class IdentifierParser: PrefixParser
         parser.nextToken()
         let expression = IdentifierExpression(identifier: identifier)
         expression.addDeclaration(location)
+        guard let symbol = parser.currentScope.lookupNode(atName: identifier.lastPart) else
+            {
+            parser.lodgeIssue(code: .undefinedSymbol,location: location)
+            return(expression)
+            }
         return(expression)
         }
     }
@@ -84,7 +89,7 @@ public class AssignmentParser: InfixParser
         {
         let location = parser.token.location
         let right = parser.parseExpression(precedence: Precedence.assignment - 1)
-        if !left.isRValue
+        if !left.isLValue
             {
             parser.lodgeIssue( code: .lValueExpectedOnLeft,location: location)
             }

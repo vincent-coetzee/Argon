@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class Class: StructuredType,Scope
+public class Class: StructuredType
     {
     public override var type: TypeNode
         {
@@ -98,7 +98,7 @@ public class Class: StructuredType,Scope
         print("\(indent)Class(\(self.name))")
         }
         
-    public func addNode(_ node: SyntaxTreeNode)
+    public override func addNode(_ node: SyntaxTreeNode)
         {
         let slot = node as! Slot
         self.slots.append(slot)
@@ -116,7 +116,7 @@ public class Class: StructuredType,Scope
         var name = ""
         if !parser.token.isIdentifier
             {
-            name = "UntitledClass"
+            name = Argon.nextIndex(named: "CLASS")
             parser.lodgeIssue(code: .identifierExpected,location: location)
             }
         else
@@ -130,6 +130,24 @@ public class Class: StructuredType,Scope
             }
         let scope = Class(name: name)
         var superclasses = ClassTypes()
+        var typeVariables = TypeVariables()
+        if parser.token.isLeftBrocket
+            {
+            parser.parseBrockets
+                {
+                repeat
+                    {
+                    parser.parseComma()
+                    if parser.token.isIdentifier
+                        {
+                        typeVariables.append(TypeNode.newTypeVariable(name: parser.token.identifier.lastPart))
+                        }
+                    parser.nextToken()
+                    }
+                while parser.token.isComma && !parser.token.isRightBrocket && !parser.token.isEnd
+                }
+            }
+        scope.setGenericTypes(typeVariables)
         if parser.token.isScope
             {
             superclasses = self.parseSuperclasses(using: parser)

@@ -236,9 +236,10 @@ public class ArgonParser
             {
             while !self.token.isRightBrace && !self.token.isEnd
                 {
-                self.parseBlockEntry(into: self.currentScope)
+                self.parseModuleEntries()
                 }
             }
+        self.popCurrentScope()
         }
         
     internal func parseComma()
@@ -478,6 +479,23 @@ public class ArgonParser
         self.nextToken()
         }
         
+    public func parseBrockets(closure: ParseClosure)
+        {
+        guard self.token.isLeftBrocket else
+            {
+            self.lodgeIssue(code: .leftBrocketExpected,location: self.token.location)
+            return
+            }
+        self.nextToken()
+        closure()
+        guard self.token.isRightBrocket else
+            {
+            self.lodgeIssue(code: .rightBrocketExpected,location: self.token.location)
+            return
+            }
+        self.nextToken()
+        }
+        
     public func parseBrackets(closure: ParseClosure)
         {
         guard self.token.isLeftBracket else
@@ -522,7 +540,30 @@ public class ArgonParser
         self.currentScope.addNode(node)
         }
         
-    private func parseBlockEntry(into scope: Scope)
+    private func parseModuleEntries()
+        {
+        switch(self.token.tokenType)
+            {
+            case(.METHOD):
+                Method.parse(using: self)
+            case(.FUNCTION):
+                Function.parse(using: self)
+            case(.CLASS):
+                Class.parse(using: self)
+            case(.ENUMERATION):
+                Enumeration.parse(using: self)
+            case(.LET):
+                LetStatement.parse(using: self)
+            case(.CONSTANT):
+                Constant.parse(using: self)
+            case(.TYPE):
+                AliasedType.parse(using: self)
+            default:
+                fatalError()
+            }
+        }
+        
+    private func parseBlockEntry()
         {
         switch(self.token.tokenType)
             {

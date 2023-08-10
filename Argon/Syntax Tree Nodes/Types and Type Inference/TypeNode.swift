@@ -137,12 +137,17 @@ public class TypeNode: SyntaxTreeNode
         super.encode(with: coder)
         }
         
+    public func setGenericTypes(_ types: TypeNodes)
+        {
+        self.generics = types
+        }
+        
     public func addGenericType(_ type: TypeNode)
         {
         self.generics.append(type)
         }
         
-    public static func newTypeVariable(name: String? = nil) -> TypeNode
+    public static func newTypeVariable(name: String? = nil) -> TypeVariable
         {
         let index = SyntaxTreeNode.nextIndex
         var theName: String? = name

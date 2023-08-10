@@ -60,6 +60,13 @@ public class SourceNode: NSObject,NSCoding,Comparable
         fatalError()
         }
 
+    public var pathToProject: Array<SourceNode>
+        {
+        var someNodes: Array<SourceNode> = [self]
+        someNodes.append(contentsOf: self.parent?.pathToProject ?? [])
+        return(someNodes)
+        }
+        
     public var allNodes: Array<SourceNode>
         {
         []
@@ -73,6 +80,7 @@ public class SourceNode: NSObject,NSCoding,Comparable
     public private(set) var name: String
     public private(set) var path: Path
     public private(set) var nodeKey: Int = 0
+    public private(set) weak var parent: SourceNode?
         
     public init(name: String,path: Path)
         {
@@ -83,7 +91,7 @@ public class SourceNode: NSObject,NSCoding,Comparable
         
     public required init?(coder: NSCoder)
         {
-        print("SourceNode.init")
+        self.parent = coder.decodeObject(forKey: "parent") as? SourceNode
         self.name = coder.decodeObject(forKey: "name") as! String
         self.path = coder.decodePath(forKey: "path")!
         self.nodeKey = coder.decodeInteger(forKey: "nodeKey")
@@ -91,9 +99,15 @@ public class SourceNode: NSObject,NSCoding,Comparable
         
     public func encode(with coder: NSCoder)
         {
+        coder.encode(self.parent,forKey: "parent")
         coder.encode(self.name,forKey: "name")
         coder.encode(self.path,forKey: "path")
         coder.encode(self.nodeKey,forKey: "nodeKey")
+        }
+        
+    public func setParent(_ parent: SourceNode)
+        {
+        self.parent = parent
         }
         
     public func setName(_ name: String)

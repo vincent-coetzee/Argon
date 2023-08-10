@@ -51,6 +51,11 @@ public class SymbolTable: NSObject,NSCoding
         coder.encode(self.symbolEntries,forKey: "symbolEntries")
         }
         
+    public func flush()
+        {
+        self.symbolEntries = SymbolEntries()
+        }
+        
     public func addNode(_ node: SyntaxTreeNode)
         {
         var entry = self.symbolEntries[node.name]

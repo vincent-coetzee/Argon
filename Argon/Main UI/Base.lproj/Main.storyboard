@@ -354,7 +354,12 @@
                                     <items>
                                         <menuItem title="Build" keyEquivalent="b" id="yBa-f5-zxa">
                                             <connections>
-                                                <action selector="onBuildClicked:" target="Ady-hI-5gd" id="eqD-5W-50B"/>
+                                                <action selector="onBuildClicked:" target="Ady-hI-5gd" id="Yj2-a1-TAx"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Parse" keyEquivalent="e" id="MzC-Us-xzh">
+                                            <connections>
+                                                <action selector="onParseClicked:" target="Ady-hI-5gd" id="9Ys-iN-F8M"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="jzi-A4-ikW"/>
@@ -741,9 +746,9 @@
                                         <action selector="onBuildClicked:" target="6f7-a7-6o1" id="w6K-g1-Jco"/>
                                     </connections>
                                 </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="F5639CAB-FC95-4E84-9BDE-4CD9270740B7" explicitItemIdentifier="compile" label="Compile" paletteLabel="Compile" tag="-1" image="screwdriver.fill" catalog="system" bordered="YES" sizingBehavior="auto" id="2xL-mB-pcx">
+                                <toolbarItem implicitItemIdentifier="F5639CAB-FC95-4E84-9BDE-4CD9270740B7" explicitItemIdentifier="parse" label="Parse" paletteLabel="Parse" tag="-1" image="screwdriver.fill" catalog="system" bordered="YES" sizingBehavior="auto" id="2xL-mB-pcx">
                                     <connections>
-                                        <action selector="onCompileClicked:" target="6f7-a7-6o1" id="lMQ-Da-UAp"/>
+                                        <action selector="onParseClicked:" target="6f7-a7-6o1" id="yNu-E6-I89"/>
                                     </connections>
                                 </toolbarItem>
                                 <toolbarItem implicitItemIdentifier="7FBE07B2-D151-4A40-AA67-FD6A561D0283" explicitItemIdentifier="clean" label="Clean" paletteLabel="Clean" tag="-1" image="paintbrush.fill" catalog="system" bordered="YES" sizingBehavior="auto" id="Lrd-q3-y5k">
@@ -770,10 +775,6 @@
                                 <toolbarItem reference="SaC-TI-ewb"/>
                                 <toolbarItem reference="ddT-8V-mUh"/>
                                 <toolbarItem reference="163-Ag-rli"/>
-                                <toolbarItem reference="SaC-TI-ewb"/>
-                                <toolbarItem reference="utb-K8-p3g"/>
-                                <toolbarItem reference="K1U-xd-f4F"/>
-                                <toolbarItem reference="0Pz-rP-lCt"/>
                             </defaultToolbarItems>
                         </toolbar>
                         <connections>

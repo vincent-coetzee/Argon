@@ -47,14 +47,24 @@ public class MacroExpander
         return(source)
         }
         
-    public func extractMacros(from nodes: SourceFileNodes)
+    public func processMacros(in node: SourceFileNode)
+        {
+        self.extractMacros(from: node)
+        node.expandedSource = self.expandMacros(in: node.source)
+        }
+        
+    public func processMacros(in nodes: SourceFileNodes)
         {
         for node in nodes
             {
             self.extractMacros(from: node)
             }
+        for node in nodes
+            {
+            node.expandedSource = self.expandMacros(in: node.source)
+            }
         }
-        
+                
     private func extractMacros(from node: SourceFileNode)
         {
         var source = node.source

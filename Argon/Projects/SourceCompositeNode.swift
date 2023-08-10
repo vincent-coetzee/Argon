@@ -68,6 +68,7 @@ public class SourceCompositeNode: SourceNode
     public override func addNode( _ element: SourceNode)
         {
         self.nodes.append(element)
+        element.setParent(self)
         }
         
     public override func sortNodes()

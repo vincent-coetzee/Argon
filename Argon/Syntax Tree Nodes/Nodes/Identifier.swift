@@ -43,6 +43,24 @@ public class Identifier: NSObject,NSCoding
         return(true)
         }
         
+    public var car: String?
+        {
+        if self.parts.count > 0
+            {
+            return(self.parts.first!.stringPart)
+            }
+        return(nil)
+        }
+        
+    public var cdr: Identifier
+        {
+        if self.parts.count > 0
+            {
+            return(Identifier(parts: Array(self.parts.dropFirst(1))))
+            }
+        return(Identifier())
+        }
+        
     public override var hash: Int
         {
         var hashValue = 0

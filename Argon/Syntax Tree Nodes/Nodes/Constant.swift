@@ -38,7 +38,7 @@ public class Constant: Variable
             expression = Expression()
             }
         let constant = Constant(name: name,type: type,expression: expression!)
-        parser.addNode(constant)
+        parser.currentScope.addNode(constant)
         }
     }
 

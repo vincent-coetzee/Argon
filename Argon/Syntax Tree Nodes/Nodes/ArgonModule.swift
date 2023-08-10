@@ -330,8 +330,7 @@ public class ArgonModule: Module
         
     public override func lookupMethods(atName name: String) -> Methods
         {
-        let methods = self.symbolTable.lookupMethods(atName: name)
-        return(methods)
+        return(self.symbolTable.lookupMethods(atName: name))
         }
         
     public func isSystemClass(named: String) -> Bool

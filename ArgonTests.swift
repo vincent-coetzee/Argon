@@ -10,16 +10,36 @@ import Path
 
 public struct ArgonTests
     {
+    private static var rootModule: RootModule!
+    
     public static func runTests()
         {
+        self.testRootModule()
+        self.testSymbolTables()
         self.testIdentifiers()
         self.testAddingNodes()
         self.testInitialization()
         self.testMacroExpansion()
         self.testTokens()
         self.testProjectEntries()
-        self.testRootModule()
         self.makeTestParseTree()
+        }
+        
+    public static func testSymbolTables()
+        {
+        let symbolTable = SymbolTable()
+        let module =  Module(name: "OuterModule")
+        symbolTable.addNode(module)
+        assert(module == symbolTable.lookupNode(atName: "OuterModule") as? Module,"module should be same as OuterModule but is not.")
+        let method = Method(name: "someMethod")
+        symbolTable.addNode(method)
+        assert(method == symbolTable.lookupMethods(atName: "someMethod")[0],"Method should be equal to looked up method but is not.")
+        assert(symbolTable.lookupMethods(atName: "someMethodOrOther").count == 0,"Looked up methods should be empty but is not.")
+        self.rootModule.addNode(module)
+        let integer = module.lookupNode(atName: "Integer") as? TypeNode
+        assert(integer == ArgonModule.shared.integerType,"Integer should be the same as the looked up one but is not.")
+        let string = module.lookupNode(atName: "String") as? TypeNode
+        assert(string == ArgonModule.shared.stringType,"String should be the same as the looked up one but is not.")
         }
         
     public static func testInitialization()
@@ -60,6 +80,7 @@ public struct ArgonTests
         assert(lookupClass == newClass,"NewClass and Looked Up Class should be the same but are not")
         }
         
+    @discardableResult
     private static func makeTestParseTree() -> Module
         {
         let rootModule = RootModule.newRootModule()
@@ -269,8 +290,8 @@ public struct ArgonTests
         
     public static func testRootModule()
         {
-//        RootModule.initializeModule()
-//        RootModule.rootModule.dump(indent:"")
-//        RootModule.rootModule.argonModule.dump(indent: "")
+        self.rootModule = RootModule.newRootModule()
+        let methods = self.rootModule.lookupMethods(atName: "string")
+        assert(methods.count == 6,"count(string methods) should be 6 but is not.")
         }
     }

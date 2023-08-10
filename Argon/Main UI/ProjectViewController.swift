@@ -15,6 +15,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
     @IBOutlet weak var outliner: NSOutlineView!
     @IBOutlet weak var sourceView:SourceCodeEditingView!
     private var _project = SourceProjectNode(name: "Project",path: Path(Path.root))
+    private var pathControlController: TitlebarPathControlAccessoryViewControler!
     
     public var project: SourceProjectNode
         {
@@ -37,6 +38,20 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         self.initSourceView()
         self.initOutliner()
         self.representedObject = self.project
+        }
+        
+    public func windowWasCreated(window: NSWindow)
+        {
+        let controller = TitlebarPathControlAccessoryViewControler()
+        window.addTitlebarAccessoryViewController(controller)
+        controller.pathControl.wantsLayer = true
+        controller.pathControl.layer!.backgroundColor = NSColor.red.cgColor
+        self.pathControlController = controller
+        controller.pathControl.font = SourceTheme.default.font(for: .fontDefault)
+        controller.pathControl.backgroundColor = SourceTheme.default.color(for: .colorBarBackground)
+        controller.pathControl.pathItems = []
+        controller.rightOffset = 20
+        self.updatePathControl(from: self.project)
         }
         
     private func initSourceView()
@@ -64,6 +79,24 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         self.outliner.indentationMarkerFollowsCell = true
         self.outliner.intercellSpacing = NSSize(width: 5,height: 0)
         NotificationCenter.default.addObserver(self, selector: #selector(self.outlinerSelectionChanged), name: NSOutlineView.selectionDidChangeNotification, object: self.outliner)
+        }
+        
+    private func updatePathControl(from node: SourceNode?)
+        {
+        guard node.isNotNil else
+            {
+            self.pathControlController.pathControl.pathItems = []
+            return
+            }
+        var items = Array<NSPathControlItem>()
+        for anItem in node!.pathToProject.reversed()
+            {
+            let pathControlItem = NSPathControlItem()
+            pathControlItem.attributedTitle = NSAttributedString(string: anItem.name,attributes: [.font: SourceTheme.default.font(for: .fontDefault),.foregroundColor: SourceTheme.default.color(for: .colorDefault)])
+            pathControlItem.image = anItem.projectViewImage.image(withTintColor: SourceTheme.default.color(for: .colorTint))
+            items.append(pathControlItem)
+            }
+        self.pathControlController.pathControl.pathItems = items
         }
         
     @IBAction public func textDidGainFocus(_ textView: NSTextView)
@@ -139,6 +172,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         
     @IBAction public func onDeleteElement(_ sender: Any?)
         {
+        // use an nsalert to warn user then delete element
         }
         
     private func setSelected(sourceNode: SourceNode)
@@ -159,23 +193,7 @@ extension ProjectViewController: NSToolbarItemValidation
     {
     func validateToolbarItem(_ item: NSToolbarItem) -> Bool
         {
-        let row = self.outliner.selectedRow
-        switch(item.itemIdentifier.rawValue)
-            {
-            case("compile"):
-                guard row != -1 else
-                    {
-                    return(false)
-                    }
-                let selectedItem = self.outliner.item(atRow: row) as! SourceNode
-                if selectedItem.isSourceFileNode
-                    {
-                    return(true)
-                    }
-                return(false)
-            default:
-                return(true)
-            }
+        return(true)
         }
     }
 
@@ -218,6 +236,7 @@ extension ProjectViewController
             self.sourceView.string = node.source
             self.sourceView.tokens = node.tokens
             }
+        self.updatePathControl(from: item)
         }
     }
     
@@ -360,11 +379,12 @@ extension ProjectViewController
         
     @IBAction public func onBuildClicked(_ sender: Any?)
         {
+        ArgonCompiler.build(nodes: self._project.allSourceFiles)
         }
         
-    @IBAction public func onCompileClicked(_ sender: Any?)
+    @IBAction public func onParseClicked(_ sender: Any?)
         {
-        print("halt")
+        ArgonCompiler.parse(nodes: self._project.allSourceFiles)
         }
         
     @IBAction public func onRunClicked(_ sender: Any?)

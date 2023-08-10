@@ -40,7 +40,18 @@ public class RootModule: Module
     
     public override func lookupNode(atName name: String) -> SyntaxTreeNode?
         {
+        if let node = self.symbolTable.lookupNode(atName: name)
+            {
+            return(node)
+            }
         return(self._argonModule.lookupNode(atName: name))
+        }
+        
+    public func flush()
+        {
+        self.symbolTable.flush()
+        self.symbolTable = SymbolTable()
+        self.symbolTable.addNode(self.argonModule)
         }
         
     public override func lookupMethods(atName name: String) -> Methods
@@ -53,6 +64,7 @@ public class RootModule: Module
         self._rootModule = nil
         }
         
+    @discardableResult
     public static func newRootModule() -> RootModule
         {
         if self._rootModule.isNil

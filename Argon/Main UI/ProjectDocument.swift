@@ -26,9 +26,13 @@ class ProjectDocument: NSDocument
         {
         let storyboard = NSStoryboard(name: NSStoryboard.Name("Main"), bundle: nil)
         let windowController = storyboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("ProjectWindowController")) as! NSWindowController
-        if let contentViewController = windowController.contentViewController as? ProjectViewController,let node = self.project
+        if let contentViewController = windowController.contentViewController as? ProjectViewController
             {
-            contentViewController.project = node
+            if let node = self.project
+                {
+                contentViewController.project = node
+                }
+            contentViewController.windowWasCreated(window: windowController.window!)
             }
         self.addWindowController(windowController)
         }

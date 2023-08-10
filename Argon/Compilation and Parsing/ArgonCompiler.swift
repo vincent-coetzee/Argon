@@ -22,38 +22,47 @@ public struct ArgonCompiler
             }
         }
         
+    public static func parse(nodes: SourceFileNodes)
+        {
+        var compiler = Self.init(nodes: nodes)
+        compiler.initialize()
+        compiler.scan()
+        compiler.parse()
+        }
+        
+    public static func build(nodes: SourceFileNodes)
+        {
+        var compiler = Self.init(nodes: nodes)
+        compiler.initialize()
+        compiler.scan()
+        compiler.parse()
+        compiler.emitCode()
+        }
+        
     private var rootModule: RootModule
     private var macroExpander: MacroExpander!
-    private var sourceFileNodes = SourceFileNodes()
+    private var sourceFileNodes: SourceFileNodes
     private var compilerIssues: CompilerIssues?
     private var abstractSyntaxTree: SyntaxTreeNode?
     private var wereIssues = false
     
-    public init(rootModule: RootModule = RootModule.newRootModule(),sourceFileNodes: SourceFileNodes)
+    public init(nodes: SourceFileNodes)
         {
-        self.rootModule = rootModule
-        self.sourceFileNodes = sourceFileNodes
+        self.sourceFileNodes = nodes
+        self.rootModule = RootModule.newRootModule()
+        self.rootModule.flush()
         }
         
-    public mutating func initializeCompiler( ) // STEP 1
+    public mutating func initialize() // STEP 1
         {
         self.wereIssues = false
         self.compilerIssues = CompilerIssues()
         self.abstractSyntaxTree = nil
         self.macroExpander = MacroExpander()
+        self.macroExpander.processMacros(in: self.sourceFileNodes)
         }
         
-    public func expandMacros() // STEP 2
-        {
-        self.macroExpander.extractMacros(from: self.sourceFileNodes)
-        for node in self.sourceFileNodes
-            {
-            node.expandedSource = node.source
-            node.expandedSource = self.macroExpander.expandMacros(in: node.source)
-            }
-        }
-        
-    public func scan() // STEP 3
+    public func scan() // STEP 2
         {
         for node in self.sourceFileNodes
             {
@@ -61,7 +70,7 @@ public struct ArgonCompiler
             }
         }
         
-    public mutating func parse() // STEP 4
+    public mutating func parse() // STEP 3
         {
         let parser = ArgonParser(rootModule: self.rootModule)
         for node in self.sourceFileNodes
@@ -72,19 +81,19 @@ public struct ArgonCompiler
             }
         }
         
-    public func emitCode() // STEP 5
+    public func emitCode() // STEP 4
         {
         }
         
-    public func link() // STEP 6
+    public func link() // STEP 5
         {
         }
         
-    public func run() // STEP 7/A
+    public func run() // STEP 6/A
         {
         }
         
-    public func debug() // 7/B
+    public func debug() // STEP 6/B
         {
         }
     }

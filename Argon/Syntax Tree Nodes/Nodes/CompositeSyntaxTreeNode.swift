@@ -7,11 +7,11 @@
 
 import Foundation
     
-public class CompositeSyntaxTreeNode: SyntaxTreeNode,Scope
+public class CompositeSyntaxTreeNode: SyntaxTreeNode
     {
-    internal let symbolTable = SymbolTable()
+    internal var symbolTable = SymbolTable()
     
-    public func addNode(_ symbol: SyntaxTreeNode)
+    public override func addNode(_ symbol: SyntaxTreeNode)
         {
         self.symbolTable.addNode(symbol)
         symbol.setParent(self)
@@ -29,16 +29,13 @@ public class CompositeSyntaxTreeNode: SyntaxTreeNode,Scope
         
     public override func lookupMethods(atName name: String) -> Methods
         {
-        let methods = self.symbolTable.lookupMethods(atName: name)
+        var methods = self.parent!.lookupMethods(atName: name)
+        methods.append(contentsOf: self.symbolTable.lookupMethods(atName: name))
         if !methods.isEmpty
             {
             return(methods)
             }
-        if self.parent.isNil
-            {
-            return(Methods())
-            }
-        return(self.parent!.lookupMethods(atName: name))
+        return(Methods())
         }
         
     public override func dump(indent: String)

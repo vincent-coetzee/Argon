@@ -52,6 +52,8 @@ public enum StyleElement
     case colorDate
     case colorTime
     case colorDateTime
+    case colorBarBackground
+    case colorTint
     case metricLineNumberRulerWidth
     case metricLineNumberIndent
     }
@@ -67,6 +69,7 @@ public class SourceTheme
         self.styles = [:]
         self.styles[.fontDefault] = NSFont(name: "SunSans-Demi",size: 11)!
         self.styles[.colorDefault] = NSColor.controlAccentColor
+        self.styles[.colorTint] = NSColor.controlAccentColor
         self.styles[.colorOutlineBackground] = NSColor.black
         self.styles[.fontEditor] = NSFont(name: "Menlo-Regular",size: 11)
         self.styles[.fontLineNumber] = self.styles[.fontEditor]
@@ -103,6 +106,7 @@ public class SourceTheme
         self.styles[.colorSystemEnumeration] = NSColor.argonDeepOrange
         self.styles[.colorSystemAliasedType] = NSColor.argonPomelo
         self.styles[.colorSeparator] = NSColor.argonAnnotationOrange
+        self.styles[.colorBarBackground] = NSColor.argonDarkestGray
         }
         
     public func set(font: NSFont,for: StyleElement)

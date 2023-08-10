@@ -9,7 +9,7 @@ import Foundation
 
 fileprivate var _NextSymbol = 1
 
-public class SyntaxTreeNode: NSObject,NSCoding
+public class SyntaxTreeNode: NSObject,NSCoding,Scope
     {
     public static func ==(lhs: SyntaxTreeNode,rhs: SyntaxTreeNode) -> Bool
         {
@@ -214,6 +214,59 @@ public class SyntaxTreeNode: NSObject,NSCoding
     public class func parse(using: ArgonParser)
         {
         fatalError("This should not be called on SyntaxTreeNode")
+        }
+        
+    public func lookupNode(atIdentifier identifier: Identifier) -> SyntaxTreeNode?
+        {
+        if identifier.isEmpty
+            {
+            return(nil)
+            }
+        if identifier.isRooted
+            {
+            return(self.rootModule.lookupNode(atIdentifier: identifier.cdr))
+            }
+        if let node = self.lookupNode(atName: identifier.car!)
+            {
+            if identifier.cdr.isEmpty
+                {
+                return(node)
+                }
+            else
+                {
+                return(node.lookupNode(atIdentifier: identifier.cdr))
+                }
+            }
+        return(nil)
+        }
+        
+    public func addNode(_ node: SyntaxTreeNode)
+        {
+        fatalError("Attempt to add node to a SyntaxTreeNode whihc is not permissable.")
+        }
+        
+    public func lookupMethods(atIdentifier identifier: Identifier) -> Methods
+        {
+        if identifier.isEmpty
+            {
+            return(Methods())
+            }
+        if identifier.isRooted
+            {
+            return(self.rootModule.lookupMethods(atIdentifier: identifier.cdr))
+            }
+        if let node = self.lookupNode(atName: identifier.car!)
+            {
+            if identifier.cdr.count == 1
+                {
+                return(node.lookupMethods(atName: identifier.lastPart))
+                }
+            else
+                {
+                return(node.lookupMethods(atIdentifier: identifier.cdr))
+                }
+            }
+        return(Methods())
         }
         
     public func lookupNode(atName: String) -> SyntaxTreeNode?

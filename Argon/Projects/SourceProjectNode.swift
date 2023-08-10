@@ -10,6 +10,11 @@ import Path
 
 public class SourceProjectNode: SourceCompositeNode
     {
+    public override var pathToProject: Array<SourceNode>
+        {
+        [self]
+        }
+        
     public var moduleSearchPaths = Paths()
     public var buildPath:Path?
     
