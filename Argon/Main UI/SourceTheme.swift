@@ -10,52 +10,74 @@ import Cocoa
 
 public enum StyleElement
     {
+    case colorBarBackground
+    case colorBackground
+    case colorBoolean
+    case colorByte
+    
+    case colorClass
+    case colorComment
+    case colorConstant
+    case colorCharacter
+    
+    case colorDate
+    case colorDateTime
+    case colorDefault
+    
+    case colorEditorBackground
+    case colorEditorText
+    case colorEnumeration
+
+    case colorFloat
+    case colorForeground
+    case colorFunction
+    
+    case colorIdentifier
+    case colorInteger
+    case colorIssue
+
+    case colorKeyword
+
+    case colorLineNumber
+    case colorLowlight
+    case colorMethod
+    
+    case colorName
+    case colorNumber
+    
+    case colorOperator
+    case colorOutlineBackground
+    
+    case colorPath
+    case colorProjectControls
+    
+    case colorSeparator
+    case colorSlot
+    case colorString
+    case colorSymbol
+    case colorSystemEnumeration
+    case colorSystemAliasedType
+    case colorSystemClass
+
+    case colorText
+    case colorTime
+    case colorTint
+    case colorToolbarImage
+    case colorToolbarBackground
+    case colorToolbarText
+    case colorType
+    
+    case colorWarning
+    
     case fontDefault
     case fontLineNumber
     case fontEditor
-    case colorEditorBackground
-    case colorEditorText
-    case colorDefault
+    case fontToolbarText
+    
     case metric
-    case colorForeground
-    case colorBackground
-    case colorOutlineBackground
-    case colorKeyword
-    case colorString
-    case colorNumber
-    case colorIdentifier
-    case colorComment
-    case colorEnumeration
-    case colorPath
-    case colorSymbol
-    case colorClass
-    case colorInteger
-    case colorMethod
-    case colorSlot
-    case colorSystemClass
-    case colorOperator
-    case colorFunction
-    case colorType
-    case colorConstant
-    case colorCharacter
-    case colorLineNumber
-    case colorBoolean
-    case colorByte
-    case colorName
-    case colorFloat
-    case colorText
-    case colorWarning
-    case colorError
-    case colorSystemEnumeration
-    case colorSystemAliasedType
-    case colorSeparator
-    case colorDate
-    case colorTime
-    case colorDateTime
-    case colorBarBackground
-    case colorTint
     case metricLineNumberRulerWidth
     case metricLineNumberIndent
+    case metricControlCornerRadius
     }
     
 public class SourceTheme
@@ -68,6 +90,12 @@ public class SourceTheme
         {
         self.styles = [:]
         self.styles[.fontDefault] = NSFont(name: "SunSans-Demi",size: 11)!
+        self.styles[.fontToolbarText] = NSFont(name: "SunSans-Regular",size: 10)!
+        self.styles[.colorToolbarImage] = NSColor.controlAccentColor
+        self.styles[.colorToolbarBackground] = NSColor.argonWhite30
+        self.styles[.colorProjectControls] = NSColor.argonWhite40
+        self.styles[.colorLowlight] = NSColor.argonWhite50
+        self.styles[.colorToolbarText] = NSColor.argonWhite50
         self.styles[.colorDefault] = NSColor.controlAccentColor
         self.styles[.colorTint] = NSColor.controlAccentColor
         self.styles[.colorOutlineBackground] = NSColor.black
@@ -101,8 +129,9 @@ public class SourceTheme
         self.styles[.colorWarning] = NSColor.argonBrightYellowCrayola
         self.styles[.metricLineNumberRulerWidth] = CGFloat(40 + 10)
         self.styles[.metricLineNumberIndent] = CGFloat(10)
+        self.styles[.metricControlCornerRadius] = CGFloat(8)
         self.styles[.colorWarning] = NSColor.argonSunglow
-        self.styles[.colorError] = NSColor.argonSizzlingRed
+        self.styles[.colorIssue] = NSColor.argonSizzlingRed
         self.styles[.colorSystemEnumeration] = NSColor.argonDeepOrange
         self.styles[.colorSystemAliasedType] = NSColor.argonPomelo
         self.styles[.colorSeparator] = NSColor.argonAnnotationOrange

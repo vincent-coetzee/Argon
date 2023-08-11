@@ -112,6 +112,8 @@
 		BFA9DA96292D5C1A00C6859D /* IdentifierToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA9DA95292D5C1A00C6859D /* IdentifierToken.swift */; };
 		BFA9DA98292D5C3900C6859D /* SyntaxTreeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA9DA97292D5C3900C6859D /* SyntaxTreeNode.swift */; };
 		BFA9DA9A292D60A800C6859D /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA9DA99292D60A800C6859D /* Location.swift */; };
+		BFAB87722A8671B30048B20E /* ToggleState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAB87712A8671B30048B20E /* ToggleState.swift */; };
+		BFAB87742A86A18E0048B20E /* Toolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAB87732A86A18E0048B20E /* Toolbar.swift */; };
 		BFAD0C142A7FCEA800FB45B9 /* MemberAccessExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAD0C132A7FCEA800FB45B9 /* MemberAccessExpression.swift */; };
 		BFAD0C162A8001AD00FB45B9 /* MethodSignature.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAD0C152A8001AD00FB45B9 /* MethodSignature.swift */; };
 		BFAD2C2B2A75509000565B6B /* Parameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAD2C2A2A75509000565B6B /* Parameter.swift */; };
@@ -134,7 +136,7 @@
 		BFCB43902984613A001D1CFD /* Module.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCB438F2984613A001D1CFD /* Module.swift */; };
 		BFCD396F2A3442FF00E84B5F /* AttributeScopes+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCD396E2A3442FF00E84B5F /* AttributeScopes+Extensions.swift */; };
 		BFCD39712A3444EB00E84B5F /* CustomTextStyleAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCD39702A3444EB00E84B5F /* CustomTextStyleAttributes.swift */; };
-		BFCDC3EE2A8559E000C20746 /* TitlebarPathControlAccessoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCDC3ED2A8559E000C20746 /* TitlebarPathControlAccessoryViewController.swift */; };
+		BFCDC3EE2A8559E000C20746 /* AccessoryViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCDC3ED2A8559E000C20746 /* AccessoryViewControllers.swift */; };
 		BFCDC3F22A8579FE00C20746 /* NSImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCDC3F12A8579FE00C20746 /* NSImage+Extensions.swift */; };
 		BFD0B50D2968758B00E9ABBD /* SourceProjectNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD0B50C2968758B00E9ABBD /* SourceProjectNode.swift */; };
 		BFD87E982954A3D200298094 /* CompilerIssue.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD87E972954A3D200298094 /* CompilerIssue.swift */; };
@@ -301,6 +303,8 @@
 		BFA9DA95292D5C1A00C6859D /* IdentifierToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifierToken.swift; sourceTree = "<group>"; };
 		BFA9DA97292D5C3900C6859D /* SyntaxTreeNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyntaxTreeNode.swift; sourceTree = "<group>"; };
 		BFA9DA99292D60A800C6859D /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		BFAB87712A8671B30048B20E /* ToggleState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleState.swift; sourceTree = "<group>"; };
+		BFAB87732A86A18E0048B20E /* Toolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toolbar.swift; sourceTree = "<group>"; };
 		BFAD0C132A7FCEA800FB45B9 /* MemberAccessExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberAccessExpression.swift; sourceTree = "<group>"; };
 		BFAD0C152A8001AD00FB45B9 /* MethodSignature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MethodSignature.swift; sourceTree = "<group>"; };
 		BFAD2C2A2A75509000565B6B /* Parameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parameter.swift; sourceTree = "<group>"; };
@@ -321,7 +325,7 @@
 		BFCB438F2984613A001D1CFD /* Module.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Module.swift; sourceTree = "<group>"; };
 		BFCD396E2A3442FF00E84B5F /* AttributeScopes+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttributeScopes+Extensions.swift"; sourceTree = "<group>"; };
 		BFCD39702A3444EB00E84B5F /* CustomTextStyleAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextStyleAttributes.swift; sourceTree = "<group>"; };
-		BFCDC3ED2A8559E000C20746 /* TitlebarPathControlAccessoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitlebarPathControlAccessoryViewController.swift; sourceTree = "<group>"; };
+		BFCDC3ED2A8559E000C20746 /* AccessoryViewControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessoryViewControllers.swift; sourceTree = "<group>"; };
 		BFCDC3F12A8579FE00C20746 /* NSImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage+Extensions.swift"; sourceTree = "<group>"; };
 		BFD0B50C2968758B00E9ABBD /* SourceProjectNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceProjectNode.swift; sourceTree = "<group>"; };
 		BFD87E972954A3D200298094 /* CompilerIssue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompilerIssue.swift; sourceTree = "<group>"; };
@@ -540,7 +544,9 @@
 				BF47CD612A68729B00C63D1E /* ModuleBundleDocument.swift */,
 				BF47CD632A68749700C63D1E /* ModuleBundleViewController.swift */,
 				BFC6C0712A69990600BC424D /* ModuleBundle.swift */,
-				BFCDC3ED2A8559E000C20746 /* TitlebarPathControlAccessoryViewController.swift */,
+				BFCDC3ED2A8559E000C20746 /* AccessoryViewControllers.swift */,
+				BFAB87712A8671B30048B20E /* ToggleState.swift */,
+				BFAB87732A86A18E0048B20E /* Toolbar.swift */,
 			);
 			path = "Main UI";
 			sourceTree = "<group>";
@@ -857,6 +863,7 @@
 				BF47CD642A68749700C63D1E /* ModuleBundleViewController.swift in Sources */,
 				BFE99B432A711A3B0056E700 /* PrefixExpression.swift in Sources */,
 				BF3676D0297329F800E1A5B9 /* NSCoder+Extensions.swift in Sources */,
+				BFAB87742A86A18E0048B20E /* Toolbar.swift in Sources */,
 				BF1F4B032A5616B000C1F977 /* StructuredType.swift in Sources */,
 				BFD87E982954A3D200298094 /* CompilerIssue.swift in Sources */,
 				BF6B052E296209F20097C9A9 /* Optional+Extensions.swift in Sources */,
@@ -872,7 +879,7 @@
 				BF47CD622A68729B00C63D1E /* ModuleBundleDocument.swift in Sources */,
 				BF67602B295B428500299F54 /* ArgonScanner.swift in Sources */,
 				BF54B9A429F5C7C600A755DC /* DependentSet.swift in Sources */,
-				BFCDC3EE2A8559E000C20746 /* TitlebarPathControlAccessoryViewController.swift in Sources */,
+				BFCDC3EE2A8559E000C20746 /* AccessoryViewControllers.swift in Sources */,
 				BF71EECC29F06E33009356E0 /* BrowserActionSet.swift in Sources */,
 				BFA93E41291678AF0001F05D /* ProjectViewController.swift in Sources */,
 				BF174B59294CC7E70094A6D4 /* IntegerToken.swift in Sources */,
@@ -904,6 +911,7 @@
 				BFCB438429845D07001D1CFD /* Slot.swift in Sources */,
 				BFAD0C162A8001AD00FB45B9 /* MethodSignature.swift in Sources */,
 				BFA9DA94292D5BF900C6859D /* Token.swift in Sources */,
+				BFAB87722A8671B30048B20E /* ToggleState.swift in Sources */,
 				BF53D1392A72DEE700C2777D /* AssignmentExpression.swift in Sources */,
 				BF0D320F2A642EC4002A2D8D /* ModuleNode.swift in Sources */,
 				BFF0CD442A1E9EBD00F99EC3 /* ArgonTypes.swift in Sources */,

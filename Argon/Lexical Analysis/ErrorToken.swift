@@ -11,7 +11,7 @@ public class ErrorToken: Token
     {
     public override var styleElement: StyleElement
         {
-        .colorError
+        .colorIssue
         }
         
     public override var tokenType: TokenType

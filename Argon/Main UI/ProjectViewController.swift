@@ -14,8 +14,18 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
     {
     @IBOutlet weak var outliner: NSOutlineView!
     @IBOutlet weak var sourceView:SourceCodeEditingView!
+    @IBOutlet weak var toolbar: NSToolbar!
+    @IBOutlet weak var splitView: NSSplitView!
+    @IBOutlet weak var leftView: NSView!
+    @IBOutlet weak var centreView: NSView!
+    @IBOutlet weak var rightView: NSView!
+    
     private var _project = SourceProjectNode(name: "Project",path: Path(Path.root))
-    private var pathControlController: TitlebarPathControlAccessoryViewControler!
+    private var leftSidebarState = ToggleState.expanded
+    private var rightSidebarState = ToggleState.expanded
+    private var pathControl: NSPathControl!
+    private var leftSidebarController: LeftSidebarButtonController!
+    private var rightSidebarController: RightSidebarButtonController!
     
     public var project: SourceProjectNode
         {
@@ -42,16 +52,66 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         
     public func windowWasCreated(window: NSWindow)
         {
-        let controller = TitlebarPathControlAccessoryViewControler()
-        window.addTitlebarAccessoryViewController(controller)
-        controller.pathControl.wantsLayer = true
-        controller.pathControl.layer!.backgroundColor = NSColor.red.cgColor
-        self.pathControlController = controller
-        controller.pathControl.font = SourceTheme.default.font(for: .fontDefault)
-        controller.pathControl.backgroundColor = SourceTheme.default.color(for: .colorBarBackground)
-        controller.pathControl.pathItems = []
-        controller.rightOffset = 20
+//        let controller = TitlebarPathControlAccessoryViewControler()
+//        window.addTitlebarAccessoryViewController(controller)
+//        controller.pathControl.wantsLayer = true
+//        controller.pathControl.layer!.backgroundColor = NSColor.red.cgColor
+//        self.pathControlController = controller
+//        controller.pathControl.font = SourceTheme.default.font(for: .fontDefault)
+//        controller.pathControl.backgroundColor = SourceTheme.default.color(for: .colorBarBackground)
+//        controller.pathControl.pathItems = []
+//        controller.rightOffset = 20
+//        self.updatePathControl(from: self.project)
+        self.toolbar = window.toolbar
+        self.toolbar.delegate = self
+        self.toolbar.insertItem(withItemIdentifier: NSToolbarItem.Identifier("pathControl"), at: 0)
+
+        self.leftSidebarController = LeftSidebarButtonController()
+        self.leftSidebarController.target = self
+        window.addTitlebarAccessoryViewController(self.leftSidebarController)
+        self.rightSidebarController = RightSidebarButtonController()
+        self.rightSidebarController.target = self
+        window.addTitlebarAccessoryViewController(self.rightSidebarController)
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.rightViewFrameDidChange), name: NSView.frameDidChangeNotification, object: self.rightView)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.leftViewFrameDidChange), name: NSView.frameDidChangeNotification, object: self.leftView)
+        window.titleVisibility = .hidden
+        }
+        
+    @objc public func leftViewFrameDidChange(_ notification: Notification)
+        {
+        let frame = self.leftView.frame
+        self.leftSidebarController.rightOffset = frame.maxX
+        }
+        
+    public func toolbar(_ toolbar: NSToolbar,itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem?
+        {
+        let toolbarItem = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: "pathControl"))
+        toolbarItem.label = ""
+        toolbarItem.paletteLabel = ""
+        toolbarItem.target = self
+        // Set the right attribute, depending on if we were given an image or a view.
+        let view = NSPathControl()
+        toolbarItem.view = view
+        view.wantsLayer = true
+        view.layer!.borderWidth = 1
+        view.layer!.borderColor = SourceTheme.default.color(for: .colorProjectControls).cgColor
+        view.layer!.cornerRadius = SourceTheme.default.metric(for: .metricControlCornerRadius)
+        self.pathControl = view
+        toolbarItem.view?.translatesAutoresizingMaskIntoConstraints = false
+        let heightConstraint = NSLayoutConstraint(item: view, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 30)
+        view.addConstraint(heightConstraint)
+        heightConstraint.isActive = true
+        let widthConstraint = NSLayoutConstraint(item: view, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 400)
+        view.addConstraint(widthConstraint)
+        widthConstraint.isActive = true
         self.updatePathControl(from: self.project)
+        toolbarItem.isNavigational = true
+        self.toolbar.centeredItemIdentifiers = [NSToolbarItem.Identifier("build")]
+        self.toolbar.centeredItemIdentifiers = [NSToolbarItem.Identifier("parse")]
+        self.toolbar.centeredItemIdentifiers = [NSToolbarItem.Identifier("run")]
+        self.toolbar.centeredItemIdentifiers = [NSToolbarItem.Identifier("debug")]
+        self.toolbar.centeredItemIdentifiers = [NSToolbarItem.Identifier("clean")]
+        return(toolbarItem)
         }
         
     private func initSourceView()
@@ -85,7 +145,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         {
         guard node.isNotNil else
             {
-            self.pathControlController.pathControl.pathItems = []
+            self.pathControl.pathItems = []
             return
             }
         var items = Array<NSPathControlItem>()
@@ -96,7 +156,32 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
             pathControlItem.image = anItem.projectViewImage.image(withTintColor: SourceTheme.default.color(for: .colorTint))
             items.append(pathControlItem)
             }
-        self.pathControlController.pathControl.pathItems = items
+        self.pathControl.pathItems = items
+        }
+        
+    @objc public func onToggleLeftSidebar(_ sender: Any?)
+        {
+        NSAnimationContext.runAnimationGroup
+            {
+            context in
+            context.allowsImplicitAnimation = true
+            context.duration = 0.75
+            if self.leftSidebarState.isExpanded
+                {
+                let amount = self.leftView.frame.width
+                self.leftSidebarState = self.leftSidebarState.toggledState(amount)
+                self.splitView.setPosition(0, ofDividerAt: 0)
+                }
+            else
+                {
+                self.splitView.setPosition(self.leftSidebarState.amount,ofDividerAt: 0)
+                self.leftSidebarState = self.leftSidebarState.toggledState()
+                }
+            }
+        }
+        
+    @objc public func onToggleRightSidebar(_ sender: Any?)
+        {
         }
         
     @IBAction public func textDidGainFocus(_ textView: NSTextView)
@@ -189,6 +274,10 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         }
     }
     
+extension ProjectViewController: NSToolbarDelegate
+    {
+    }
+
 extension ProjectViewController: NSToolbarItemValidation
     {
     func validateToolbarItem(_ item: NSToolbarItem) -> Bool
