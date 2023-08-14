@@ -214,7 +214,7 @@ public struct ArgonTests
             """
         KeywordToken.initKeywords()
         let sourceFile = SourceFileNode(name: "",path: Path(Path.root))
-        sourceFile.source = source
+        sourceFile.setSource(source)
         let scanner = ArgonScanner(source: source,sourceKey: 0)
         let tokens = scanner.allTokens()
         for token in tokens

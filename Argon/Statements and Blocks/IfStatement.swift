@@ -53,4 +53,11 @@ public class IfStatement: Block
         statement.addDeclaration(location)
         block.addStatement(statement)
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        self.trueBlock.accept(visitor: visitor)
+        self.elseBlock?.accept(visitor: visitor)
+        visitor.visit(ifStatement: self)
+        }
     }

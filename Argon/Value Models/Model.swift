@@ -11,6 +11,8 @@ public protocol Model: AnyObject
     {
     var dependentKey: Int { get }
     var dependents: DependentSet { get }
+    func addDependent(_ dependent: Dependent)
+    func removeDependent(_ dependent: Dependent)
     }
 
 extension Model

@@ -1,5 +1,5 @@
 //
-//  RepeatStatement.swift
+//  WhileStatement.swift
 //  Argon
 //
 //  Created by Vincent Coetzee on 05/07/2023.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class RepeatStatement: Block
+public class WhileStatement: Block
     {
     private let expression: Expression
     private let block: Block
@@ -35,25 +35,23 @@ public class RepeatStatement: Block
         
     public static func parse(into block: Block,using parser: ArgonParser)
         {
-        let firstLocation = parser.token.location
-        parser.nextToken()
-        let repeatBlock = Block.parseBlock(using: parser)
         let location = parser.token.location
-        if !parser.token.isWhile
-            {
-            parser.lodgeIssue(code: .whileExpectedAfterRepeatBlock,location: location)
-            }
-        else
-            {
-            parser.nextToken()
-            }
-        var expression: Expression!
+        parser.nextToken()
+        var expression: Expression = Expression()
         parser.parseParentheses
             {
             expression = parser.parseExpression(precedence: 0)
             }
-        let statement = RepeatStatement(expression: expression,block: repeatBlock)
-        statement.addDeclaration(firstLocation)
+        let whileBlock = Block.parseBlock(using: parser)
+        let statement = WhileStatement(expression: expression,block: whileBlock)
+        statement.addDeclaration(location)
         block.addStatement(statement)
+        }
+    
+    public override func accept(visitor: Visitor)
+        {
+        self.expression.accept(visitor: visitor)
+        self.block.accept(visitor: visitor)
+        visitor.visit(whileStatement: self)
         }
     }

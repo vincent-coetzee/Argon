@@ -32,7 +32,7 @@ class LeftSidebarButtonController: NSTitlebarAccessoryViewController
         {
         self.layoutAttribute = .left
         self.automaticallyAdjustsSize = false
-        let button = TitlebarButton(image: NSImage(named: "IconLeftSidebar")!.image(withTintColor: SourceTheme.default.color(for: .colorLowlight)),target: self.target!, action: #selector(ProjectViewController.onToggleLeftSidebar),layoutAttribute: .left)
+        let button = TitlebarButton(imageName: "sidebar.left",target: self.target!, action: #selector(ProjectViewController.onToggleLeftSidebar),layoutAttribute: .left)
         button.frame = NSRect(x: 0,y: 0,width: 20,height: 20)
         self.view = button
         self.view.needsLayout = true
@@ -67,7 +67,7 @@ class RightSidebarButtonController: NSTitlebarAccessoryViewController
         {
         self.layoutAttribute = .right
         self.automaticallyAdjustsSize = false
-        let button = TitlebarButton(image: NSImage(named: "IconRightSidebar")!.image(withTintColor: SourceTheme.default.color(for: .colorLowlight)),target: self.target!, action: #selector(ProjectViewController.onToggleRightSidebar),layoutAttribute: .right)
+        let button = TitlebarButton(imageName: "sidebar.right",target: self.target!, action: #selector(ProjectViewController.onToggleRightSidebar),layoutAttribute: .right)
         button.frame = NSRect(x: 0,y: 0,width: 60,height: 30)
         self.view = button
         self.view.needsLayout = true
@@ -79,10 +79,10 @@ fileprivate class TitlebarButton: NSView
     private let button: NSButton
     private let attribute: NSLayoutConstraint.Attribute
     
-    public init(image: NSImage,target: Any,action: Selector,layoutAttribute: NSLayoutConstraint.Attribute)
+    public init(imageName: String,target: Any,action: Selector,layoutAttribute: NSLayoutConstraint.Attribute)
         {
         self.attribute = layoutAttribute
-        self.button = NSButton(image: image, target: target, action: action)
+        self.button = NSButton(image: NSImage(systemSymbolName: imageName, accessibilityDescription: "")!, target: target, action: action)
         super.init(frame: .zero)
         self.addSubview(button)
         self.button.isBordered = false

@@ -7,7 +7,7 @@
 
 import Cocoa
 
-public class SourceCodeEditingView: NSView,NSTextViewDelegate
+public class SourceCodeEditingView: NSView,NSTextViewDelegate,Model
     {
     private var textView: SourceView!
     private var scrollView: NSScrollView!
@@ -62,7 +62,8 @@ public class SourceCodeEditingView: NSView,NSTextViewDelegate
         }
     
     private var _textViewDelegate: NSTextViewDelegate?
-    
+    public var dependentKey = DependentSet.nextDependentKey
+    public var dependents = DependentSet()
     public override init(frame: NSRect)
         {
         super.init(frame: frame)
@@ -100,6 +101,11 @@ public class SourceCodeEditingView: NSView,NSTextViewDelegate
 
 extension SourceCodeEditingView: SourceEditorDelegate
     {
+    public func sourceEditor(_ editor: NSTextView, changedSource: String)
+        {
+        self.changed(aspect: "source",with: changedSource,from: self)
+        }
+        
     public func sourceEditorKeyPressed(_ editor: NSTextView)
         {
         }

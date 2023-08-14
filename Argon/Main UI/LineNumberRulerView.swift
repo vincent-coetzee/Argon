@@ -27,7 +27,7 @@ public class LineNumberRulerView: NSRulerView
             }
         }
         
-    public var font: NSFont = SourceTheme.default.font(for: .fontLineNumber)
+    public var font: NSFont = SourceTheme.shared.font(for: .fontLineNumber)
         {
         didSet
             {
@@ -76,7 +76,7 @@ public class LineNumberRulerView: NSRulerView
         // Set the rulers clientView to the supplied textview.
         self.clientView = textView
         // Define the ruler's width.
-        self.ruleThickness = SourceTheme.default.metric(for: .metricLineNumberRulerWidth)
+        self.ruleThickness = SourceTheme.shared.metric(for: .metricLineNumberRulerWidth)
 //        self.reservedThicknessForMarkers = 18
         }
 
@@ -91,7 +91,7 @@ public class LineNumberRulerView: NSRulerView
         {
         self.lineNumberOffsets = []
         // Set the current background color...
-        SourceTheme.default.color(for: self.backgroundColorStyleElement).set()
+        SourceTheme.shared.color(for: self.backgroundColorStyleElement).set()
         // ...and fill the given rect.
         rect.fill()
         // Unwrap the clientView, the layoutManager and the textContainer, since we'll
@@ -247,15 +247,15 @@ public class LineNumberRulerView: NSRulerView
             return
             }
         // Define attributes for the attributed string.
-        let attrs = [NSAttributedString.Key.font: font, NSAttributedString.Key.foregroundColor: SourceTheme.default.color(for: self.foregroundColorStyleElement)]
+        let attrs = [NSAttributedString.Key.font: font, NSAttributedString.Key.foregroundColor: SourceTheme.shared.color(for: self.foregroundColorStyleElement)]
         // Define the attributed string.
         let attributedString = NSAttributedString(string: "\(number)", attributes: attrs)
         // Get the NSZeroPoint from the text view.
         let relativePoint    = self.convert(NSZeroPoint, from: textView)
         // Calculate the x position, within the gutter.
-        let xPosition = SourceTheme.default.metric(for: .metricLineNumberRulerWidth) - (attributedString.size().width)
+        let xPosition = SourceTheme.shared.metric(for: .metricLineNumberRulerWidth) - (attributedString.size().width)
         // Draw the attributed string to the calculated point.
-        attributedString.draw(at: NSPoint(x: xPosition - SourceTheme.default.metric(for: .metricLineNumberIndent), y: relativePoint.y + yPos))
+        attributedString.draw(at: NSPoint(x: xPosition - SourceTheme.shared.metric(for: .metricLineNumberIndent), y: relativePoint.y + yPos))
         }
         
     public func offset(forLine line: Int) -> CGFloat?

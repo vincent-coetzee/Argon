@@ -63,6 +63,15 @@ public class Slot: SyntaxTreeNode
         {
         self.writeBlock = block
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        self.initialExpression?.accept(visitor: visitor)
+        self.assignedType?.accept(visitor: visitor)
+        self.readBlock?.accept(visitor: visitor)
+        self.writeBlock?.accept(visitor: visitor)
+        visitor.visit(slot: self)
+        }
     }
 
 public typealias Slots = Array<Slot>

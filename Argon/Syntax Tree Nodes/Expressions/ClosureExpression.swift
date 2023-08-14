@@ -32,4 +32,10 @@ public class ClosureExpression: Expression
         coder.encode(self.block,forKey: "block")
         super.encode(with: coder)
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        self.block.accept(visitor: visitor)
+        visitor.visit(expression: self)
+        }
     }

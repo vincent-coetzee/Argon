@@ -45,4 +45,10 @@ public class ForkStatement: Statement
         statement.addDeclaration(location)
         block.addStatement(statement)
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        self.block.accept(visitor: visitor)
+        visitor.visit(forkStatement: self)
+        }
     }

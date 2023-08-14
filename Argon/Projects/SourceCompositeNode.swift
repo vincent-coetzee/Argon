@@ -17,8 +17,10 @@ public class SourceCompositeNode: SourceNode
         var someElements = Array<SourceNode>()
         for element in self.nodes
             {
+            someElements.append(element)
             someElements.append(contentsOf: element.allNodes)
             }
+        someElements.append(self)
         return(someElements)
         }
         

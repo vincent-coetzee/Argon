@@ -8,7 +8,7 @@
 import Cocoa
 import Path
 
-public class SourceNode: NSObject,NSCoding,Comparable
+public class SourceNode: NSObject,NSCoding,Comparable,Dependent
     {
     public static func < (lhs: SourceNode, rhs: SourceNode) -> Bool
         {
@@ -71,17 +71,20 @@ public class SourceNode: NSObject,NSCoding,Comparable
         {
         []
         }
-        
+
     public var title: String
         {
         self.name
         }
         
+    public var dependentKey = DependentSet.nextDependentKey
+    
     public private(set) var name: String
     public private(set) var path: Path
     public private(set) var nodeKey: Int = 0
     public private(set) weak var parent: SourceNode?
-        
+    public private(set) var isNewFile = false
+    
     public init(name: String,path: Path)
         {
         self.name = name
@@ -104,6 +107,11 @@ public class SourceNode: NSObject,NSCoding,Comparable
         coder.encode(self.path,forKey: "path")
         coder.encode(self.nodeKey,forKey: "nodeKey")
         }
+    
+    public func setIsNewFile(_ boolean: Bool)
+        {
+        self.isNewFile = boolean
+        }
         
     public func setParent(_ parent: SourceNode)
         {
@@ -113,6 +121,19 @@ public class SourceNode: NSObject,NSCoding,Comparable
     public func setName(_ name: String)
         {
         self.name = name
+        }
+        
+    public func update(aspect: String,with: Any?,from: Model)
+        {
+        if aspect == "source"
+            {
+            self.setSource(with as! String)
+            }
+        }
+        
+    public func setSource(_ string: String)
+        {
+        fatalError("setSource called on SourceNode and should not be.")
         }
         
     public func child(atIndex: Int) -> SourceNode?

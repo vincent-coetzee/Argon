@@ -94,7 +94,7 @@ public class TypeNode: SyntaxTreeNode
     // The generics instance variable should never be accessed directly. We have
     // several classes in the TypeNode hierarchy that return their genericTypes and
     // in this case the genericTypes are just the generics. The problem is that there
-    // are some classes in the TypeNode hirarchy the proxy for other classes - such
+    // are some classes in the TypeNode hirarchy that proxy for other classes - such
     // as the AliasedType class - this means that all type specific queries sent to
     // classes such as AliasedType have to be rerouted to the underlying class. This
     // means that any attemopt to access details from a type must be done through

@@ -95,4 +95,11 @@ public class HandleStatement: Statement
         statement.inductionVariable = variable
         block.addStatement(statement)
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        self.inductionVariable.accept(visitor: visitor)
+        self.handlerBlock.accept(visitor: visitor)
+        visitor.visit(handleStatement: self)
+        }
     }

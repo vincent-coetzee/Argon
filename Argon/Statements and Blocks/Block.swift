@@ -132,4 +132,13 @@ public class Block: Statement
         {
         self.locals.append(variable)
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        for statement in self.statements
+            {
+            statement.accept(visitor: visitor)
+            }
+        visitor.visit(block: self)
+        }
     }

@@ -52,4 +52,11 @@ public class AssignmentStatement: Statement
         statement.addDeclaration(location)
         block.addStatement(statement)
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        self.left.accept(visitor: visitor)
+        self.right.accept(visitor: visitor)
+        visitor.visit(assignmentStatement: self)
+        }
     }

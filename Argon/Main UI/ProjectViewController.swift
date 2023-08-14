@@ -26,6 +26,8 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
     private var pathControl: NSPathControl!
     private var leftSidebarController: LeftSidebarButtonController!
     private var rightSidebarController: RightSidebarButtonController!
+    private var pathControlWidthConstraint: NSLayoutConstraint!
+    private var selectedSourceNode: SourceNode!
     
     public var project: SourceProjectNode
         {
@@ -40,8 +42,6 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
             }
         }
         
-    private var selectedSourceNode: SourceNode?
-    
     override func viewDidLoad()
         {
         super.viewDidLoad()
@@ -52,20 +52,10 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         
     public func windowWasCreated(window: NSWindow)
         {
-//        let controller = TitlebarPathControlAccessoryViewControler()
-//        window.addTitlebarAccessoryViewController(controller)
-//        controller.pathControl.wantsLayer = true
-//        controller.pathControl.layer!.backgroundColor = NSColor.red.cgColor
-//        self.pathControlController = controller
-//        controller.pathControl.font = SourceTheme.default.font(for: .fontDefault)
-//        controller.pathControl.backgroundColor = SourceTheme.default.color(for: .colorBarBackground)
-//        controller.pathControl.pathItems = []
-//        controller.rightOffset = 20
-//        self.updatePathControl(from: self.project)
         self.toolbar = window.toolbar
         self.toolbar.delegate = self
+        self.toolbar.insertItem(withItemIdentifier: NSToolbarItem.Identifier("issueControl"), at: 0)
         self.toolbar.insertItem(withItemIdentifier: NSToolbarItem.Identifier("pathControl"), at: 0)
-
         self.leftSidebarController = LeftSidebarButtonController()
         self.leftSidebarController.target = self
         window.addTitlebarAccessoryViewController(self.leftSidebarController)
@@ -74,7 +64,34 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         window.addTitlebarAccessoryViewController(self.rightSidebarController)
 //        NotificationCenter.default.addObserver(self, selector: #selector(self.rightViewFrameDidChange), name: NSView.frameDidChangeNotification, object: self.rightView)
         NotificationCenter.default.addObserver(self, selector: #selector(self.leftViewFrameDidChange), name: NSView.frameDidChangeNotification, object: self.leftView)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.windowFrameDidChange), name: NSWindow.didResizeNotification, object: window)
         window.titleVisibility = .hidden
+        }
+        
+    @objc public func windowFrameDidChange(_ notification: Notification)
+        {
+        let window = notification.object as! NSWindow
+        let frame = window.frame
+        let toolbar = window.toolbar!
+        var toolbarWidth = CGFloat(0)
+        for item in toolbar.items
+            {
+            if item.itemIdentifier == NSToolbarItem.Identifier("issueControl")
+                {
+                toolbarWidth += item.view!.frame.size.width + CGFloat(8)
+                }
+            else if item.itemIdentifier != NSToolbarItem.Identifier("pathControl")
+                {
+                toolbarWidth += CGFloat(20 + 8)
+                }
+            }            // TRAFFIC LiGHTS & ICON   RIGHT ICON
+//        let width = toolbarWidth + CGFloat(120) + CGFloat(80)
+//        let remainder = frame.size.width - width
+//        self.pathControl.removeConstraint(self.pathControlWidthConstraint)
+//        let widthConstraint = NSLayoutConstraint(item: self.pathControl!, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: remainder)
+//        self.pathControl.addConstraint(widthConstraint)
+//        self.pathControlWidthConstraint = widthConstraint
+//        widthConstraint.isActive = true
         }
         
     @objc public func leftViewFrameDidChange(_ notification: Notification)
@@ -85,33 +102,53 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         
     public func toolbar(_ toolbar: NSToolbar,itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem?
         {
-        let toolbarItem = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: "pathControl"))
-        toolbarItem.label = ""
-        toolbarItem.paletteLabel = ""
-        toolbarItem.target = self
-        // Set the right attribute, depending on if we were given an image or a view.
-        let view = NSPathControl()
-        toolbarItem.view = view
-        view.wantsLayer = true
-        view.layer!.borderWidth = 1
-        view.layer!.borderColor = SourceTheme.default.color(for: .colorProjectControls).cgColor
-        view.layer!.cornerRadius = SourceTheme.default.metric(for: .metricControlCornerRadius)
-        self.pathControl = view
-        toolbarItem.view?.translatesAutoresizingMaskIntoConstraints = false
-        let heightConstraint = NSLayoutConstraint(item: view, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 30)
-        view.addConstraint(heightConstraint)
-        heightConstraint.isActive = true
-        let widthConstraint = NSLayoutConstraint(item: view, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 400)
-        view.addConstraint(widthConstraint)
-        widthConstraint.isActive = true
-        self.updatePathControl(from: self.project)
-        toolbarItem.isNavigational = true
-        self.toolbar.centeredItemIdentifiers = [NSToolbarItem.Identifier("build")]
-        self.toolbar.centeredItemIdentifiers = [NSToolbarItem.Identifier("parse")]
-        self.toolbar.centeredItemIdentifiers = [NSToolbarItem.Identifier("run")]
-        self.toolbar.centeredItemIdentifiers = [NSToolbarItem.Identifier("debug")]
-        self.toolbar.centeredItemIdentifiers = [NSToolbarItem.Identifier("clean")]
-        return(toolbarItem)
+        if itemIdentifier == NSToolbarItem.Identifier("pathControl")
+            {
+            let toolbarItem = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: "pathControl"))
+            toolbarItem.label = ""
+            toolbarItem.paletteLabel = ""
+            toolbarItem.target = self
+            let view = NSPathControl()
+            toolbarItem.view = view
+            view.wantsLayer = true
+//            view.layer!.borderWidth = 1
+//            view.layer!.borderColor = SourceTheme.shared.color(for: .colorProjectControls).cgColor
+            view.layer!.cornerRadius = SourceTheme.shared.metric(for: .metricControlCornerRadius)
+            view.layer!.backgroundColor = SourceTheme.shared.color(for: .colorToolbarBackground).cgColor
+            self.pathControl = view
+            toolbarItem.view?.translatesAutoresizingMaskIntoConstraints = false
+            let heightConstraint = NSLayoutConstraint(item: view, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 20)
+            view.addConstraint(heightConstraint)
+            heightConstraint.isActive = true
+            let widthConstraint = NSLayoutConstraint(item: view, attribute: .width, relatedBy: .greaterThanOrEqual, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 360)
+            view.addConstraint(widthConstraint)
+            self.pathControlWidthConstraint = widthConstraint
+            widthConstraint.isActive = true
+            self.updatePathControl(from: self.project)
+            toolbarItem.isNavigational = true
+            return(toolbarItem)
+            }
+        else if itemIdentifier == NSToolbarItem.Identifier("issueControl")
+            {
+            let toolbarItem = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier(rawValue: "issueControl"))
+            toolbarItem.label = ""
+            toolbarItem.paletteLabel = ""
+            toolbarItem.target = self
+            let view = IconLabelView(image: NSImage(systemSymbolName: "exclamationmark.triangle", accessibilityDescription: "")!, imageEdge: .left, text: "0 issues",padding: NSSize(width:2,height: 2))
+            view.imageTintElement = .colorWarning
+            view.textColorElement = .colorToolbarText
+            toolbarItem.view = view
+            toolbarItem.view?.translatesAutoresizingMaskIntoConstraints = false
+            let heightConstraint = NSLayoutConstraint(item: view, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 20)
+            view.addConstraint(heightConstraint)
+            heightConstraint.isActive = true
+            let widthConstraint = NSLayoutConstraint(item: view, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 60)
+            view.addConstraint(widthConstraint)
+            self.pathControlWidthConstraint = widthConstraint
+            widthConstraint.isActive = true
+            return(toolbarItem)
+            }
+        return(nil)
         }
         
     private func initSourceView()
@@ -123,7 +160,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         
     private func initOutliner()
         {
-        self.outliner.backgroundColor = SourceTheme.default.color(for: .colorOutlineBackground)
+        self.outliner.backgroundColor = SourceTheme.shared.color(for: .colorOutlineBackground)
         self.outliner.rowSizeStyle = .custom
         self.outliner.intercellSpacing = NSSize(width: 0, height: 4)
         self.outliner.doubleAction = #selector(self.onOutlinerClicked)
@@ -134,7 +171,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         self.outliner.delegate = self
         self.outliner.dataSource = self
         self.outliner.reloadData()
-        self.outliner.font = SourceTheme.default.font(for: .fontDefault)
+        self.outliner.font = SourceTheme.shared.font(for: .fontDefault)
         self.outliner.indentationPerLevel = 15
         self.outliner.indentationMarkerFollowsCell = true
         self.outliner.intercellSpacing = NSSize(width: 5,height: 0)
@@ -152,8 +189,8 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         for anItem in node!.pathToProject.reversed()
             {
             let pathControlItem = NSPathControlItem()
-            pathControlItem.attributedTitle = NSAttributedString(string: anItem.name,attributes: [.font: SourceTheme.default.font(for: .fontDefault),.foregroundColor: SourceTheme.default.color(for: .colorDefault)])
-            pathControlItem.image = anItem.projectViewImage.image(withTintColor: SourceTheme.default.color(for: .colorTint))
+            pathControlItem.attributedTitle = NSAttributedString(string: anItem.name,attributes: [.font: SourceTheme.shared.font(for: .fontDefault),.foregroundColor: SourceTheme.shared.color(for: .colorDefault)])
+            pathControlItem.image = anItem.projectViewImage.image(withTintColor: SourceTheme.shared.color(for: .colorDefault))
             items.append(pathControlItem)
             }
         self.pathControl.pathItems = items
@@ -168,7 +205,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
             context.duration = 0.75
             if self.leftSidebarState.isExpanded
                 {
-                let amount = self.leftView.frame.width
+                let amount = self.leftView.bounds.width
                 self.leftSidebarState = self.leftSidebarState.toggledState(amount)
                 self.splitView.setPosition(0, ofDividerAt: 0)
                 }
@@ -214,9 +251,11 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         let node = self.outliner.item(atRow: row) as! SourceNode
         if node.isCompositeNode
             {
-            let path = node.path.join("Untitled.argon")
-            let file = SourceFileNode(name: "Untitled.argon",path: path)
-            file.source = Repository.initialSource
+            let name = Argon.nextIndex(named: "Untitled") + ".argon"
+            let path = node.path.join(name)
+            let file = SourceFileNode(name: name,path: path)
+            file.setIsNewFile(true)
+            file.setSource(Repository.initialSource)
             self.sourceView.string = file.source
             node.addNode(file)
             self.outliner.reloadItem(node,reloadChildren: true)
@@ -262,7 +301,12 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         
     private func setSelected(sourceNode: SourceNode)
         {
+        if self.selectedSourceNode.isNotNil
+            {
+            self.sourceView.removeDependent(self.selectedSourceNode)
+            }
         self.selectedSourceNode = sourceNode
+        self.sourceView.addDependent(sourceNode)
         if sourceNode.isSourceFileNode
             {
             let sourceFileNode = sourceNode as! SourceFileNode
@@ -457,6 +501,7 @@ extension ProjectViewController
                     {
                     let name = path.lastPathComponentSansExtension
                     let newNode = SourceFileNode(name: name, path: path,source: source)
+                    newNode.setIsNewFile(false)
                     newNode.expandedSource = newNode.source
                     selectedNode.addNode(newNode)
                     }

@@ -17,6 +17,7 @@ public protocol SourceEditorDelegate
     {
     func sourceEditorKeyPressed(_ editor: NSTextView)
     func sourceEditor(_ editor: NSTextView,changedLine: Int,offset: Int)
+    func sourceEditor(_ editor: NSTextView,changedSource: String)
     }
     
 class SourceView: NSTextView
@@ -34,11 +35,10 @@ class SourceView: NSTextView
             }
         }
         
-    public private(set) var theme = SourceTheme.default
+    public private(set) var theme = SourceTheme.shared
     
     private var _tokens = Tokens()
     public private(set) var rulerView: LineNumberRulerView!
-    
     public var textFocusDelegate: TextFocusDelegate?
     public var sourceEditorDelegate: SourceEditorDelegate?
     
@@ -62,9 +62,9 @@ class SourceView: NSTextView
         
     private func initSourceView()
         {
-        self.backgroundColor = SourceTheme.default.color(for: .colorEditorBackground)
-        self.font = SourceTheme.default.font(for: .fontEditor)
-        self.textColor = SourceTheme.default.color(for: .colorEditorText)
+        self.backgroundColor = SourceTheme.shared.color(for: .colorEditorBackground)
+        self.font = SourceTheme.shared.font(for: .fontEditor)
+        self.textColor = SourceTheme.shared.color(for: .colorEditorText)
         self.isAutomaticTextCompletionEnabled = false
         self.isAutomaticLinkDetectionEnabled = false
         self.isGrammarCheckingEnabled = false
@@ -74,8 +74,8 @@ class SourceView: NSTextView
         self.isAutomaticDashSubstitutionEnabled = false
         self.isAutomaticDataDetectionEnabled = false
         self.isAutomaticTextReplacementEnabled = false
-        self.font = SourceTheme.default.font(for: .fontEditor)
-        self.backgroundColor = SourceTheme.default.color(for: .colorEditorBackground)
+        self.font = SourceTheme.shared.font(for: .fontEditor)
+        self.backgroundColor = SourceTheme.shared.color(for: .colorEditorBackground)
         self.isEditable = true
         self.wantsLayer = true
         self.isVerticallyResizable = true
@@ -88,6 +88,12 @@ class SourceView: NSTextView
         self.rulerView.clientView = self
         NotificationCenter.default.addObserver(self, selector: #selector(self.textDidEndEditing), name: NSText.didEndEditingNotification, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(self.textDidBeginEditing), name: NSText.didBeginEditingNotification, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.textDidChange), name: NSText.didChangeNotification, object: self)
+        }
+        
+    @objc func textDidChange(_ sender: Any?)
+        {
+        self.sourceEditorDelegate?.sourceEditor(self, changedSource: self.string)
         }
         
     @objc func textDidEndEditing(_ sender: Any?)
@@ -103,8 +109,8 @@ class SourceView: NSTextView
         self.textStorage?.beginEditing()
         for token in self._tokens
             {
-            let color = SourceTheme.default.color(for: token.styleElement)
-            let font = SourceTheme.default.font(for: .fontEditor)
+            let color = SourceTheme.shared.color(for: token.styleElement)
+            let font = SourceTheme.shared.font(for: .fontEditor)
             var attributes = Dictionary<NSAttributedString.Key,Any>()
             attributes[.foregroundColor] = color
             attributes[.font] = font

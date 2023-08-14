@@ -9,7 +9,7 @@ import Foundation
 
 fileprivate var _NextSymbol = 1
 
-public class SyntaxTreeNode: NSObject,NSCoding,Scope
+public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visited
     {
     public static func ==(lhs: SyntaxTreeNode,rhs: SyntaxTreeNode) -> Bool
         {
@@ -202,6 +202,12 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope
         self.parent!.module
         }
         
+    public func accept(visitor: Visitor)
+        {
+        fatalError("This should have been overriden but it wasn't.")
+        }
+        
+        
     public func become<T>(_ newKind: T.Type) -> T?
         {
         guard self is T else
@@ -278,6 +284,7 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope
         {
         Methods()
         }
+    
     }
 
 public typealias SyntaxTreeNodes = Array<SyntaxTreeNode>

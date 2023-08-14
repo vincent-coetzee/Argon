@@ -47,4 +47,11 @@ public class TimesStatement: Block
         statement.addDeclaration(location)
         block.addStatement(statement)
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        self.expression.accept(visitor: visitor)
+        self.block.accept(visitor: visitor)
+        visitor.visit(timesStatement: self)
+        }
     }

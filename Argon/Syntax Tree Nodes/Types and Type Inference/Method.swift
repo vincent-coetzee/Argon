@@ -102,3 +102,14 @@ public class Method: CallableTypeNode
     }
 
 public typealias Methods = Array<Method>
+
+extension Methods
+    {
+    public func accept(visitor: Visitor)
+        {
+        for method in self
+            {
+            method.accept(visitor: visitor)
+            }
+        }
+    }

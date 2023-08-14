@@ -38,6 +38,11 @@ public class CompositeSyntaxTreeNode: SyntaxTreeNode
         return(Methods())
         }
         
+    public override func accept(visitor: Visitor)
+        {
+        self.symbolTable.accept(visitor: visitor)
+        }
+        
     public override func dump(indent: String)
         {
         fatalError()

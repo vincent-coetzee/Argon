@@ -98,7 +98,7 @@ public class ToolbarItem
         {
         self.label = label
         self.image = NSImage(systemSymbolName: imageName, accessibilityDescription: "")!
-        self.tintedImage = self.image.image(withTintColor: SourceTheme.default.color(for: .colorTint))
+        self.tintedImage = self.image.image(withTintColor: SourceTheme.shared.color(for: .colorTint))
         }
         
     public func draw(showLabel: Bool)
@@ -115,7 +115,7 @@ public class ToolbarItem
         
     private func drawWithLabel()
         {
-        let labelString = NSAttributedString(string: self.label,attributes: [.font: SourceTheme.default.font(for: .fontToolbarText),.foregroundColor: SourceTheme.default.color(for: .colorToolbarText)])
+        let labelString = NSAttributedString(string: self.label,attributes: [.font: SourceTheme.shared.font(for: .fontToolbarText),.foregroundColor: SourceTheme.shared.color(for: .colorToolbarText)])
         let labelSize = labelString.size()
         let xPadding = (self.frame.size.width - labelSize.width) / 2.0
         let bottom = self.frame.size.height

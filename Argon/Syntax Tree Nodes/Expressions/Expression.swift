@@ -19,6 +19,11 @@ public class Expression: SyntaxTreeNode
         false
         }
         
+    public var isIdentifierExpression: Bool
+        {
+        false
+        }
+        
     public required init(coder: NSCoder)
         {
         super.init(coder: coder)
@@ -41,5 +46,10 @@ public class Expression: SyntaxTreeNode
         
     public override func removeChildNode(_ node: SyntaxTreeNode)
         {
+        }
+        
+    public override func accept(visitor: Visitor)
+        {
+        visitor.visit(expression: self)
         }
     }

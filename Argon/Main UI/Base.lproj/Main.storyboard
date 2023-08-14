@@ -741,47 +741,47 @@
                                 <toolbarItem implicitItemIdentifier="NSToolbarPrintItem" id="0Pz-rP-lCt"/>
                                 <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="MeC-M0-CzF"/>
                                 <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="SaC-TI-ewb"/>
-                                <toolbarItem implicitItemIdentifier="ED19AF81-0292-4596-A42C-3B379458DF77" explicitItemIdentifier="build" label="Build" paletteLabel="Build" tag="-1" image="hammer.fill" catalog="system" bordered="YES" sizingBehavior="auto" id="hcm-BS-cn1">
+                                <toolbarItem implicitItemIdentifier="ED19AF81-0292-4596-A42C-3B379458DF77" explicitItemIdentifier="build" label="Build" paletteLabel="Build" toolTip="Build this project" tag="-1" image="hammer.fill" catalog="system" bordered="YES" sizingBehavior="auto" id="hcm-BS-cn1">
                                     <connections>
                                         <action selector="onBuildClicked:" target="6f7-a7-6o1" id="w6K-g1-Jco"/>
                                     </connections>
                                 </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="F5639CAB-FC95-4E84-9BDE-4CD9270740B7" explicitItemIdentifier="parse" label="Parse" paletteLabel="Parse" tag="-1" image="screwdriver.fill" catalog="system" bordered="YES" sizingBehavior="auto" id="2xL-mB-pcx">
+                                <toolbarItem implicitItemIdentifier="F5639CAB-FC95-4E84-9BDE-4CD9270740B7" explicitItemIdentifier="parse" label="Parse" paletteLabel="Parse" toolTip="Parse all source files" tag="-1" image="screwdriver.fill" catalog="system" bordered="YES" sizingBehavior="auto" id="2xL-mB-pcx">
                                     <connections>
                                         <action selector="onParseClicked:" target="6f7-a7-6o1" id="yNu-E6-I89"/>
                                     </connections>
                                 </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="7FBE07B2-D151-4A40-AA67-FD6A561D0283" explicitItemIdentifier="clean" label="Clean" paletteLabel="Clean" tag="-1" image="paintbrush.fill" catalog="system" bordered="YES" sizingBehavior="auto" id="Lrd-q3-y5k">
+                                <toolbarItem implicitItemIdentifier="7FBE07B2-D151-4A40-AA67-FD6A561D0283" explicitItemIdentifier="clean" label="Clean" paletteLabel="Clean" toolTip="Clean this project" tag="-1" image="paintbrush.fill" catalog="system" bordered="YES" sizingBehavior="auto" id="Lrd-q3-y5k">
                                     <connections>
                                         <action selector="onCleanClicked:" target="6f7-a7-6o1" id="XzY-5O-vWw"/>
                                     </connections>
                                 </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="29BBAC62-081E-40D7-945A-684956232C46" explicitItemIdentifier="run" label="Run" paletteLabel="Run" tag="-1" image="bolt.fill" catalog="system" bordered="YES" sizingBehavior="auto" id="ddT-8V-mUh">
+                                <toolbarItem implicitItemIdentifier="29BBAC62-081E-40D7-945A-684956232C46" explicitItemIdentifier="run" label="Run" paletteLabel="Run" toolTip="Run this project" tag="-1" image="bolt.fill" catalog="system" bordered="YES" sizingBehavior="auto" id="ddT-8V-mUh">
                                     <connections>
                                         <action selector="onRunClicked:" target="6f7-a7-6o1" id="0py-M5-Bt2"/>
                                     </connections>
                                 </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="B29D00D5-1878-48CF-8C7B-667B851504C0" explicitItemIdentifier="debug" label="Debug" paletteLabel="Debug" tag="-1" image="ladybug.fill" catalog="system" bordered="YES" sizingBehavior="auto" id="163-Ag-rli">
+                                <toolbarItem implicitItemIdentifier="B29D00D5-1878-48CF-8C7B-667B851504C0" explicitItemIdentifier="debug" label="Debug" paletteLabel="Debug" toolTip="Debug this project" tag="-1" image="ladybug.fill" catalog="system" bordered="YES" sizingBehavior="auto" id="163-Ag-rli">
                                     <connections>
                                         <action selector="onDebugClicked:" target="6f7-a7-6o1" id="JR1-lT-sPF"/>
                                     </connections>
                                 </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="19AE564D-CFCA-42C4-9580-E37DCB1749C2" explicitItemIdentifier="read" label="Load" paletteLabel="Load" tag="-1" image="square.and.arrow.up" catalog="system" bordered="YES" id="nHW-jx-wnX">
+                                <toolbarItem implicitItemIdentifier="19AE564D-CFCA-42C4-9580-E37DCB1749C2" explicitItemIdentifier="read" label="Load" paletteLabel="Load" toolTip="Load a project" tag="-1" image="square.and.arrow.up" catalog="system" bordered="YES" id="nHW-jx-wnX">
                                     <size key="minSize" width="27" height="25"/>
                                     <size key="maxSize" width="27" height="25"/>
                                 </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="741EEB11-2C0B-4D65-94EB-47D7B04E80CC" explicitItemIdentifier="save" label="Save" paletteLabel="Save" tag="-1" image="square.and.arrow.down" catalog="system" bordered="YES" id="S8k-dN-PQs">
+                                <toolbarItem implicitItemIdentifier="741EEB11-2C0B-4D65-94EB-47D7B04E80CC" explicitItemIdentifier="save" label="Save" paletteLabel="Save" toolTip="Save this project" tag="-1" image="square.and.arrow.down" catalog="system" bordered="YES" id="S8k-dN-PQs">
                                     <size key="minSize" width="27" height="25"/>
                                     <size key="maxSize" width="27" height="25"/>
                                 </toolbarItem>
                             </allowedToolbarItems>
                             <defaultToolbarItems>
+                                <toolbarItem reference="SaC-TI-ewb"/>
                                 <toolbarItem reference="hcm-BS-cn1"/>
                                 <toolbarItem reference="2xL-mB-pcx"/>
                                 <toolbarItem reference="Lrd-q3-y5k"/>
                                 <toolbarItem reference="ddT-8V-mUh"/>
                                 <toolbarItem reference="163-Ag-rli"/>
-                                <toolbarItem reference="SaC-TI-ewb"/>
                                 <toolbarItem reference="nHW-jx-wnX"/>
                                 <toolbarItem reference="S8k-dN-PQs"/>
                             </defaultToolbarItems>
@@ -814,9 +814,9 @@
                                         <autoresizingMask key="autoresizingMask"/>
                                         <subviews>
                                             <scrollView autohidesScrollers="YES" horizontalLineScroll="17" horizontalPageScroll="10" verticalLineScroll="17" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rph-e3-F7q">
-                                                <rect key="frame" x="0.0" y="0.0" width="419" height="519"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="267" height="519"/>
                                                 <clipView key="contentView" id="70y-Yz-d4H">
-                                                    <rect key="frame" x="1" y="1" width="417" height="517"/>
+                                                    <rect key="frame" x="1" y="1" width="265" height="517"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="20" outlineTableColumn="kup-4O-3vK" id="rZq-DJ-3Zi">
@@ -847,8 +847,8 @@
                                                         </outlineView>
                                                     </subviews>
                                                 </clipView>
-                                                <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="jl8-Z8-xCz">
-                                                    <rect key="frame" x="1" y="502" width="417" height="16"/>
+                                                <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="jl8-Z8-xCz">
+                                                    <rect key="frame" x="1" y="502" width="265" height="16"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                                 <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="sXU-W1-xvo">
@@ -889,6 +889,7 @@
                         <outlet property="leftView" destination="rZq-DJ-3Zi" id="oB8-ZF-9z6"/>
                         <outlet property="outliner" destination="rZq-DJ-3Zi" id="gaB-ZQ-cEN"/>
                         <outlet property="sourceView" destination="xkw-C3-JcQ" id="rEL-8i-Vll"/>
+                        <outlet property="splitView" destination="lUV-zS-M0X" id="rcl-Xn-YTY"/>
                     </connections>
                 </viewController>
                 <customObject id="2Tp-Fl-jBw" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

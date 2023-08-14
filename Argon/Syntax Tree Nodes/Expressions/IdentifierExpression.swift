@@ -16,6 +16,11 @@ public class IdentifierExpression: Expression
         self._identifier
         }
     
+    public override var isIdentifierExpression: Bool
+        {
+        true
+        }
+        
     private let _identifier:Identifier
     
     public required init(coder: NSCoder)

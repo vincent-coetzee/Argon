@@ -51,4 +51,9 @@ public class SignalStatement: Statement
         statement.addDeclaration(location)
         block.addStatement(statement)
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        visitor.visit(signalStatement: self)
+        }
     }

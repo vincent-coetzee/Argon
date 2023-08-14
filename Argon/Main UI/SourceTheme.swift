@@ -36,6 +36,8 @@ public enum StyleElement
     case colorInteger
     case colorIssue
 
+    case colorLine
+    
     case colorKeyword
 
     case colorLineNumber
@@ -70,6 +72,7 @@ public enum StyleElement
     case colorWarning
     
     case fontDefault
+    case fontText
     case fontLineNumber
     case fontEditor
     case fontToolbarText
@@ -82,7 +85,7 @@ public enum StyleElement
     
 public class SourceTheme
     {
-    public static let `default` = SourceTheme()
+    public static let shared = SourceTheme()
     
     public private(set) var styles: Dictionary<StyleElement,Any>
     
@@ -91,16 +94,19 @@ public class SourceTheme
         self.styles = [:]
         self.styles[.fontDefault] = NSFont(name: "SunSans-Demi",size: 11)!
         self.styles[.fontToolbarText] = NSFont(name: "SunSans-Regular",size: 10)!
-        self.styles[.colorToolbarImage] = NSColor.controlAccentColor
-        self.styles[.colorToolbarBackground] = NSColor.argonWhite30
-        self.styles[.colorProjectControls] = NSColor.argonWhite40
-        self.styles[.colorLowlight] = NSColor.argonWhite50
-        self.styles[.colorToolbarText] = NSColor.argonWhite50
-        self.styles[.colorDefault] = NSColor.controlAccentColor
-        self.styles[.colorTint] = NSColor.controlAccentColor
-        self.styles[.colorOutlineBackground] = NSColor.black
+        self.styles[.fontText] = NSFont(name: "SunSans-Regular",size: 10)!
         self.styles[.fontEditor] = NSFont(name: "Menlo-Regular",size: 11)
         self.styles[.fontLineNumber] = self.styles[.fontEditor]
+        
+        self.styles[.colorProjectControls] = NSColor.argonWhite40
+        self.styles[.colorLowlight] = NSColor.argonWhite50
+        self.styles[.colorLine] = NSColor.argonWhite50
+        self.styles[.colorToolbarText] = NSColor.argonWhite50
+        self.styles[.colorToolbarImage] = NSColor.controlAccentColor
+        self.styles[.colorToolbarBackground] = NSColor.argonWhite25
+        self.styles[.colorDefault] = NSColor.argonWhite50
+        self.styles[.colorTint] = NSColor.controlAccentColor
+        self.styles[.colorOutlineBackground] = NSColor.black
         self.styles[.colorEditorBackground] = NSColor.argonBlack20
         self.styles[.colorEditorText] = NSColor.argonStandardPink
         self.styles[.colorEnumeration] = NSColor.argonThemeCyan
@@ -126,16 +132,18 @@ public class SourceTheme
         self.styles[.colorSlot] = NSColor.argonCoral
         self.styles[.colorConstant] = NSColor.argonCheese
         self.styles[.colorBackground] = NSColor.black
-        self.styles[.colorWarning] = NSColor.argonBrightYellowCrayola
-        self.styles[.metricLineNumberRulerWidth] = CGFloat(40 + 10)
-        self.styles[.metricLineNumberIndent] = CGFloat(10)
-        self.styles[.metricControlCornerRadius] = CGFloat(8)
-        self.styles[.colorWarning] = NSColor.argonSunglow
+//        self.styles[.colorWarning] = NSColor.argonBrightYellowCrayola
+//        self.styles[.colorWarning] = NSColor.argonSunglow
+        self.styles[.colorWarning] = NSColor.argonDeepOrange
         self.styles[.colorIssue] = NSColor.argonSizzlingRed
         self.styles[.colorSystemEnumeration] = NSColor.argonDeepOrange
         self.styles[.colorSystemAliasedType] = NSColor.argonPomelo
         self.styles[.colorSeparator] = NSColor.argonAnnotationOrange
         self.styles[.colorBarBackground] = NSColor.argonDarkestGray
+        
+        self.styles[.metricLineNumberRulerWidth] = CGFloat(40 + 10)
+        self.styles[.metricLineNumberIndent] = CGFloat(10)
+        self.styles[.metricControlCornerRadius] = CGFloat(4)
         }
         
     public func set(font: NSFont,for: StyleElement)

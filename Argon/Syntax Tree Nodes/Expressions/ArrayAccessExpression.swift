@@ -33,4 +33,11 @@ public class ArrayAccessExpression: BinaryExpression
         {
         super.encode(with: coder)
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        self.left.accept(visitor: visitor)
+        self.right.accept(visitor: visitor)
+        visitor.visit(arrayAccessExpression: self)
+        }
     }

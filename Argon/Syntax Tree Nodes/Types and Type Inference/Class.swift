@@ -43,6 +43,7 @@ public class Class: StructuredType
         self.slots = slots
         self.superclasses = superclasses
         super.init(name: name)
+        self.setGenericTypes(generics)
         }
         
     public init(name: String)
@@ -385,6 +386,14 @@ public class Class: StructuredType
                 }
             }
         return(false)
+        }
+        
+    public override func accept(visitor: Visitor)
+        {
+        for slot in self.slots
+            {
+            slot.accept(visitor: visitor)
+            }
         }
     }
 

@@ -48,8 +48,12 @@ public class ArgonParser
         self.register(tokenType: .leftParenthesis,parser: GroupParser())
         self.register(tokenType: .leftParenthesis,parser: MethodInvocationParser())
         self.register(tokenType: .leftBracket,parser: ArrayReferenceParser())
+        self.register(tokenType: .leftBrace,parser: ClosureParser(precedence: Precedence.prefix))
+        self.register(tokenType: .rightArrow,parser: MemberAccessParser())
+        
         self.postfix(tokenType: .increment,precedence: Precedence.postfix)
         self.postfix(tokenType: .decrement,precedence: Precedence.postfix)
+        
         self.infixLeft(tokenType: .plus,precedence: Precedence.addition)
         self.infixLeft(tokenType: .minus,precedence: Precedence.addition)
         self.infixLeft(tokenType: .shiftLeft,precedence: Precedence.addition)
@@ -57,12 +61,11 @@ public class ArgonParser
         self.infixLeft(tokenType: .times,precedence: Precedence.multiplication)
         self.infixLeft(tokenType: .divide,precedence: Precedence.multiplication)
         self.infixLeft(tokenType: .modulus,precedence: Precedence.multiplication)
-        self.infixLeft(tokenType: .rightArrow,precedence: Precedence.memberAccess)
         self.infixLeft(tokenType: .plusAssign,precedence: Precedence.assignment)
         self.infixLeft(tokenType: .minusAssign,precedence: Precedence.assignment)
         self.infixLeft(tokenType: .timesAssign,precedence: Precedence.assignment)
         self.infixLeft(tokenType: .modulusAssign,precedence: Precedence.assignment)
-        self.infixLeft(tokenType: .divideAssign,precedence: Precedence.assignment)
+        self.infixLeft(tokenType: .divideAssign,precedence: Precedence.assignment)                           
         self.infixLeft(tokenType: .notAssign,precedence: Precedence.operatorAssign)
         self.infixLeft(tokenType: .booleanOrAssign,precedence: Precedence.operatorAssign)
         self.infixLeft(tokenType: .booleanAndAssign,precedence: Precedence.operatorAssign)
@@ -84,11 +87,12 @@ public class ArgonParser
         self.infixLeft(tokenType: .logicalAnd,precedence: Precedence.logical)
         self.infixLeft(tokenType: .logicalOr,precedence: Precedence.logical)
         self.infixLeft(tokenType: .logicalXor,precedence: Precedence.logical)
+        
         self.prefix(tokenType: .booleanNot,precedence: Precedence.prefix)
         self.prefix(tokenType: .logicalNot,precedence: Precedence.prefix)
         self.prefix(tokenType: .plus,precedence: Precedence.prefix)
         self.prefix(tokenType: .minus,precedence: Precedence.prefix)
-        self.register(tokenType: .leftBrace,parser: ClosureParser(precedence: Precedence.prefix))
+
         }
         
     private func register(tokenType: TokenType,parser: InfixParser)
@@ -128,10 +132,9 @@ public class ArgonParser
         sourceFileNode.compilerIssues = CompilerIssues()
         self.scopeStack = Stack<Scope>()
         self.currentScope = self.rootModule
-        self.tokens = sourceFileNode.tokens
+        self.tokens = sourceFileNode.tokens.filter{!$0.isCommentToken}
         self.tokenIndex = 0
         self.token = self.tokens[self.tokenIndex]
-        self.tokenIndex += 1
         self.parseInitialModule()
         sourceFileNode.compilerIssues = self.tokens.reduce(CompilerIssues()) { $0 + $1.issues }
         sourceFileNode.astNode = self.topModule
@@ -231,6 +234,8 @@ public class ArgonParser
             return
             }
         let initialModule = Module(name: self.token.identifier.lastPart)
+        self.nextToken()
+        self.currentScope.addNode(initialModule)
         self.pushCurrentScope(initialModule)
         self.parseBraces
             {
@@ -292,7 +297,7 @@ public class ArgonParser
             {
             self.nextToken()
             }
-        if let type = self.currentScope.lookupNode(atName: typeName) as? TypeNode
+        if let type = (self.currentScope.lookupNode(atName: typeName) as? TypeNode)?.baseType
             {
             if type.isGenericType
                 {
@@ -641,9 +646,10 @@ public class ArgonParser
             left = parser!.parse(parser: self,token: self.token)
             while precedence < self.precedence(of: self.token) && token.isExpressionRelatedToken
                 {
+                let lastToken = self.token
                 self.nextToken()
-                let infixParser = self.infixParsers[self.token.tokenType]
-                left = infixParser!.parse(parser: self, left: left, token: self.token)
+                let infixParser = self.infixParsers[lastToken.tokenType]
+                left = infixParser!.parse(parser: self, left: left, token: lastToken)
                 }
             }
         return(left)

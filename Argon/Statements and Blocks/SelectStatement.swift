@@ -7,7 +7,7 @@
 
 import Foundation
 
-fileprivate class SelectBlock: Block
+public class SelectBlock: Block
     {
     private let expression: Expression
     
@@ -28,9 +28,26 @@ fileprivate class SelectBlock: Block
         coder.encode(self.expression,forKey: "expression")
         super.encode(with: coder)
         }
+
+    public override func accept(visitor: Visitor)
+        {
+        self.expression.accept(visitor: visitor)
+        visitor.visit(selectBlock: self)
+        }
     }
     
 fileprivate typealias SelectBlocks = Array<SelectBlock>
+
+extension SelectBlocks
+    {
+    public func accept(visitor: Visitor)
+        {
+        for block in self
+            {
+            block.accept(visitor: visitor)
+            }
+        }
+    }
 
 public class SelectStatement: Statement
     {
@@ -101,5 +118,12 @@ public class SelectStatement: Statement
         coder.encode(self.expression,forKey: "expression")
         coder.encode(self.selectBlocks,forKey: "selectBlocks")
         super.encode(with: coder)
+        }
+        
+    public override func accept(visitor: Visitor)
+        {
+        self.expression.accept(visitor: visitor)
+        self.selectBlocks.accept(visitor: visitor)
+        visitor.visit(selectStatement: self)
         }
     }

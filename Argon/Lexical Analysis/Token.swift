@@ -193,6 +193,11 @@ public class Token: NSObject,NSCoding
         fatalError()
         }
         
+    public var isCommentToken: Bool
+        {
+        false
+        }
+        
     public var isElse: Bool
         {
         false

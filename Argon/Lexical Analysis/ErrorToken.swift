@@ -43,4 +43,10 @@ public class ErrorToken: Token
         self.issue = coder.decodeObject(forKey: "issue") as! CompilerIssue
         super.init(coder: coder)
         }
+        
+    public override func encode(with coder: NSCoder)
+        {
+        coder.encode(self.issue,forKey: "issue")
+        super.encode(with: coder)
+        }
     }

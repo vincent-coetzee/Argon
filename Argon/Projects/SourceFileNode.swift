@@ -30,7 +30,7 @@ public class SourceFileNode: SourceNode
         self.name + ".argon"
         }
         
-    public var source: String
+    public private(set) var source: String
     public var expandedSource: String
     public var compilerIssues = CompilerIssues()
     public var tokens = Tokens()
@@ -65,6 +65,11 @@ public class SourceFileNode: SourceNode
     public override var projectViewImage: NSImage
         {
         NSImage(named: "IconSourceFile")!
+        }
+        
+    public override func setSource(_ string: String)
+        {
+        self.source = string
         }
     }
     

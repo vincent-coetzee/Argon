@@ -28,6 +28,12 @@ internal class SymbolEntry: NSObject,NSCoding
         coder.encode(self.node,forKey: "node")
         coder.encode(self.methods,forKey: "methods")
         }
+        
+    public func accept(visitor: Visitor)
+        {
+        self.node?.accept(visitor: visitor)
+        self.methods?.accept(visitor: visitor)
+        }
     }
     
 fileprivate typealias SymbolEntries = Dictionary<String,SymbolEntry>
@@ -99,5 +105,13 @@ public class SymbolTable: NSObject,NSCoding
             return(nil)
             }
         return(entry.node)
+        }
+        
+    public func accept(visitor: Visitor)
+        {
+        for entry in self.symbolEntries.values
+            {
+            entry.accept(visitor: visitor)
+            }
         }
     }

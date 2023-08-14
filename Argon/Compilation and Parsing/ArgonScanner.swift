@@ -161,7 +161,7 @@ public class ArgonScanner
         {
         self.rules.append(TokenRule(tag: "separator",pattern: ",", tokenType: SeparatorToken.self,startSet: CharacterSet(charactersIn: ",")))
 //        self.rules.append(TokenRule(tag: "path",pattern: "\\A(/)?[a-zA-Z0-9]+[/a-zA-Z0-9_\\-]*", tokenType: PathToken.self,startSet: .letters.union(CharacterSet(charactersIn: "/"))))
-        self.rules.append(TokenRule(tag: "identifier",pattern: "\\A[a-zA-Z\\\\]+[a-zA-Z0-9_\\-!\\?\\\\]*", tokenType: IdentifierToken.self,startSet: .letters.union(CharacterSet(charactersIn: "\\"))))
+        self.rules.append(TokenRule(tag: "identifier",pattern: "\\A[a-zA-Z\\\\]+[a-zA-Z0-9_\\!\\?\\\\]*", tokenType: IdentifierToken.self,startSet: .letters.union(CharacterSet(charactersIn: "\\"))))
 //        self.rules.append(TokenRule(tag: "identifier",pattern: "\\A[a-zA-Z//]+[a-zA-Z0-9_\\-!\\?/]*", tokenType: IdentifierToken.self,startSet: .letters.union(CharacterSet(charactersIn: "/"))))
         self.rules.append(TokenRule(tag: "character",pattern: "\\A§.", tokenType: CharacterToken.self,startSet: CharacterSet(charactersIn: "§")))
         self.rules.append(TokenRule(tag: "byte",pattern: "\\A_[0-9]{1,3}", tokenType: ByteToken.self,startSet: CharacterSet(charactersIn: "_")))

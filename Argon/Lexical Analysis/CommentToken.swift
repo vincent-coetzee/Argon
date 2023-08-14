@@ -23,4 +23,9 @@ public class CommentToken: Token
         {
         "CommentToken"
         }
+        
+    public override var isCommentToken: Bool
+        {
+        true
+        }
     }

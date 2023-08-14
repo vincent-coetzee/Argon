@@ -20,7 +20,9 @@ public struct Precedence
     public static let relational        = 900
     public static let prefix            = 1000
     public static let postfix           = 1100
-    public static let invocation        = 1200
-    public static let arrayAccess       = 1300
-    public static let memberAccess      = 1400
+    public static let closure           = 1200
+    public static let invocation        = 1300
+    public static let arrayAccess       = 1400
+    public static let memberAccess      = 1500
     }
+

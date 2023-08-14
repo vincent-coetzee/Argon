@@ -230,9 +230,8 @@ public struct MemberAccessParser: InfixParser
     
     public func parse(parser: ArgonParser,left: Expression,token: Token) -> Expression
         {
-        let location = parser.token.location
+        let location = token.location
         let `operator` = token.tokenType
-        parser.nextToken()
         let member = parser.parseExpression(precedence: 0)
         return(MemberAccessExpression(left: left,operator: `operator`,right: member).addDeclaration(location))
         }

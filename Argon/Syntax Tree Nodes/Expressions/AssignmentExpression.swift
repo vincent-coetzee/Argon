@@ -32,4 +32,11 @@ public class AssignmentExpression: Expression
         coder.encode(self.right,forKey: "right")
         super.encode(with: coder)
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        self.left.accept(visitor: visitor)
+        self.right.accept(visitor: visitor)
+        visitor.visit(assignmentExpression: self)
+        }
     }

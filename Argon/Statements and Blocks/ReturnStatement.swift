@@ -47,4 +47,10 @@ public class ReturnStatement: Statement
         coder.encode(self.expression,forKey: "expression")
         super.encode(with: coder)
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        self.expression.accept(visitor: visitor)
+        visitor.visit(returnStatement: self)
+        }
     }
