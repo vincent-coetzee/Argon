@@ -305,6 +305,10 @@ public class ArgonParser
                     {
                     self.lodgeIssue(code: .invalidGenericArguments,message: "Type '\(typeName)' expects \(type.genericTypes.count) types but \(typeValues.count) were found.",location:location)
                     }
+                if type.instanceType.isNotNil
+                    {
+                    return(type.instanceType!.init(originalType: type,types: typeValues))
+                    }
                 return(GenericTypeInstance(originalType: type,types: typeValues))
                 }
             else

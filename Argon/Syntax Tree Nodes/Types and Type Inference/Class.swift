@@ -33,6 +33,15 @@ public class Class: StructuredType
         return(.class)
         }
         
+    public override var encoding: String
+        {
+        if self.instanceType.isNil
+            {
+            return("b\(self.name)_")
+            }
+        return(self.instanceType!.encoding)
+        }
+        
     public private(set) var superclasses: ClassTypes = []
     public private(set) var slots: Slots = []
     public private(set) var mades = Methods()
@@ -63,7 +72,7 @@ public class Class: StructuredType
         super.encode(with: coder)
         }
         
-        
+    
     public func addMade(_ method: Method)
         {
         self.mades.append(method)
@@ -73,6 +82,7 @@ public class Class: StructuredType
         {
         self.unmade = method
         }
+
         
     public override func lookupNode(atName: String) -> SyntaxTreeNode?
         {
@@ -325,6 +335,7 @@ public class Class: StructuredType
     private class func parseWriteBlock(slotType: TypeNode,using parser: ArgonParser) -> Block
         {
         let block = Block()
+        block.addLocal(PseudoVariable(name: "self"))
         block.addLocal(Variable(name: "newValue",type: slotType,expression: nil))
         Block.parseBlockInner(block: block, using: parser)
         return(block)

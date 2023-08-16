@@ -140,6 +140,11 @@ public class OperatorToken: Token
         self.matchString == "-"
         }
         
+    public override var isRangeOperator: Bool
+        {
+        self.matchString == ".."
+        }
+        
     public override var isRightArrow: Bool
         {
         self.matchString == "->"

@@ -11,6 +11,12 @@ public class Variable: SyntaxTreeNode
     {
     public let expression: Expression?
     
+    public override init(name: String)
+        {
+        self.expression = nil
+        super.init(name: name)
+        }
+        
     public init(name: String,type: TypeNode?,expression: Expression?)
         {
         self.expression = expression

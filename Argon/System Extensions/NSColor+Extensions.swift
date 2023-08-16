@@ -9,9 +9,6 @@ import Cocoa
 
 extension NSColor
     {
-    public static let argonTransairOrange = NSColor(red: 177, green: 64,blue: 28)
-    public static let argonTransairGreen = NSColor(red: 46,green: 107,blue: 102)
-    
     public static let argonLawnGreen:NSColor = NSColor(hex: 0x7cfc00)
     public static let argonChinesePurple:NSColor = NSColor(hex: 0x720B98)
     public static var argonYellow:NSColor = NSColor(red:247,green:194,blue:66)
@@ -92,37 +89,87 @@ extension NSColor
     public static let argonSunglow = NSColor(hex: 0xFFCA3A)
     public static let argonYellowGreen2 = NSColor(hex: 0x8AC926)
     public static let argonGreenBlueCrayola = NSColor(hex: 0x1982C4)
-    public static let argonRoyalPurple = NSColor(hex: 0x6A4C93)
     
     public static let argonLivingCoral = NSColor(hex: 0xFF6F61)
     public static let argonFusionCoral = NSColor(red: 240,green: 137,blue: 120)
+    public static let argonBurntCoral = NSColor(red: 224,green: 144,blue: 133)
+    public static let argonDustyCoral = NSColor(red: 201,green: 157,blue: 133)
+    public static let argonSugarCoral = NSColor(red: 220,green: 119,blue: 125)
     public static let argonCalypsoCoral = NSColor(red: 220,green: 102,blue: 117)
     public static let argonCoralHaze = NSColor(red: 213,green: 147,blue: 130)
     public static let argonFieryCoral = NSColor(red: 227,green: 91,blue: 93)
     public static let argonCoralReef = NSColor(red: 238,green: 165,blue: 135)
+    public static let argonSunkistCoral = NSColor(red: 215,green: 111,blue: 125)
+    
     public static let argonPeachNectar = NSColor(red: 244,green: 184,blue: 160)
     public static let argonTropicalPeach = NSColor(red: 246,green: 198,blue: 181)
-    public static let argonBlueCoral = NSColor(red: 44,green: 87,blue: 103)         // Goes VERY well with Coral
-    public static let argonSunkistCoral = NSColor(red: 215,green: 111,blue: 125)
-    public static let argonTurtleGreen = NSColor(red: 132,green: 138,blue: 88)      // Goes well with Coral
-    public static let argonUltraViolet = NSColor(red: 97,green: 81,blue: 139)       // Think it might go well with Coral
-    public static let argonVivaMagenta = NSColor(red: 176,green: 59,blue: 81)       // Colour of the Year 2023
-    public static let argonVeriPeri = NSColor(red: 105,green: 104,blue: 175)        // Colour of the Year 2022
-    public static let argonGreenery = NSColor(red: 141,green: 172,blue: 86)         // Colour of the Year 2017
-    public static let argonRadiantOrchid = NSColor(red: 173,green: 109,blue: 166)   // Colour of the Year 2014
+    
     public static let argonPetrolBlue = NSColor(red: 36,green: 71,blue: 89)         // Might go well with Coral
+    public static let argonBlueCoral = NSColor(red: 44,green: 87,blue: 103)         // Goes VERY well with Coral
+    public static let argonCambridgeBlue = NSColor(red: 169,green: 192,blue: 174)
+    public static let argonPlayfulBlue = NSColor(red: 1,green: 158,blue: 186)
+    public static let argonGreenTurquoise = NSColor(red: 1,green: 151,blue: 158)
+    public static let argonTribalTurquoise = NSColor(red: 0,green: 141,blue: 159)
+    public static let argonVenerableBlue = NSColor(red: 32,green: 80,blue: 116)
+    public static let argonPowderBlue = NSColor(red: 91,green: 184,blue: 202)
+    public static let argonCadetBlue = NSColor(red: 109,green: 156,blue: 159)       // Think it might go well with Coral
+    public static let argonVeriPeri = NSColor(red: 105,green: 104,blue: 175)        // Colour of the Year 2022
+
+    public static let argonUltraViolet = NSColor(red: 97,green: 81,blue: 139)       // Think it might go well with Coral
+    public static let argonRoyalPurple = NSColor(hex: 0x6A4C93)
+    public static let argonPulsatingPurple = NSColor(red: 102,green: 3,blue: 109)
+    public static let argonRichPurple = NSColor(red: 125,green: 12,blue: 110)
+    public static let argonTribalPlum = NSColor(red: 171,green: 0,blue: 96)
+    public static let argonCapstonePurple = NSColor(red: 53,green: 27,blue: 74)
+    public static let argonSolidPlum = NSColor(red: 130,green: 20,blue: 102)
+    public static let argonVenerablePlum = NSColor(red: 94,green: 39,blue: 78)
+    public static let argonRadiantOrchid = NSColor(red: 173,green: 109,blue: 166)   // Colour of the Year 2014
+
+    public static let argonTransAirGreen = NSColor(red: 52,green: 117,blue: 105)
+    public static let argonLiteBeigeGreen = NSColor(red: 209,green: 209,blue: 95)
+    public static let argonTealGreen = NSColor(red: 42,green: 92,blue: 90)
+    public static let argonTurtleGreen = NSColor(red: 132,green: 138,blue: 88)      // Goes well with Coral
     public static let argonGreenSea = NSColor(red: 64,green: 109,blue: 108)
-    public static let argonSand = NSColor(red: 198,green: 165,blue: 133)            // Goes well with Coral
-    public static let argonRubineRed = NSColor(red: 194,green: 60,blue: 109)        // Truly gorgeous colour
-    public static let argonBrazilianSand = NSColor(red: 218,green: 204,blue: 186)
     public static let argonMattGreen = NSColor(red: 129,green: 136,blue: 120)
+    public static let argonPlayfulGreen = NSColor(red: 20,green: 172,blue: 95)
+    public static let argonRacingGreen = NSColor(red: 31,green: 66,blue: 67)
+    public static let argonDarkOliveGreen = NSColor(red: 79,green: 74,blue: 46)
+    public static let argonLovelyLime = NSColor(red: 151,green: 182,blue: 64)
+    public static let argonDarkSeaGreen = NSColor(red: 28,green: 73,blue: 66)
+    public static let argonActiveSeaGreen = NSColor(red: 51,green: 218,blue: 195)
+    public static let argonTribalSeaGreen = NSColor(red: 117,green: 135,blue: 119)
+    public static let argonActiveGreen = NSColor(red: 126,green: 198,blue: 36)
+    public static let argonGreenery = NSColor(red: 141,green: 172,blue: 86)         // Colour of the Year 2017
+    
+    public static let argonVivaMagenta = NSColor(red: 176,green: 59,blue: 81)       // Colour of the Year 2023
+    public static let argonRubineRed = NSColor(red: 194,green: 60,blue: 109)        // Truly gorgeous colour
+    public static let argonDeliciousRed = NSColor(red: 197,green: 12,blue: 71)      // Also a lovely colour
+    public static let argonPlayfulPink = NSColor(red: 235,green: 111,blue: 137)
+    public static let argonCoralRed = NSColor(red: 224,green: 82,blue: 94)
+    public static let argonRichRed = NSColor(red: 209,green: 18,blue: 67)
+    public static let argonTribalRed = NSColor(red: 192,green: 0,blue: 75)
+    public static let argonPiquantRed = NSColor(red: 221,green: 0,blue: 71)
+    public static let argonIceCreamRose = NSColor(red: 232,green: 144,blue: 158)
+    public static let argonMaquillePink = NSColor(red: 242,green: 104,blue: 127)
+    
+    public static let argonSand = NSColor(red: 198,green: 165,blue: 133)            // Goes well with Coral
+    public static let argonBrazilianSand = NSColor(red: 218,green: 204,blue: 186)
     public static let argonLondonFog = NSColor(red: 162,green: 160,blue: 148)
     public static let argonAffogato = NSColor(red: 165,green: 141,blue: 116)
-    public static let argonCambridgeBlue = NSColor(red: 169,green: 192,blue: 174)
-    public static let argonCadetBlue = NSColor(red: 109,green: 156,blue: 159)       // Think it might go well with Coral
-    public static let argonTealGreen = NSColor(red: 42,green: 92,blue: 90)
-    public static let argonRacingGreen = NSColor(red: 31,green: 66,blue: 67)
+    public static let argonPlayfulSands = NSColor(red: 242,green: 188,blue: 125)
+    public static let argonAutumnBrown = NSColor(red: 178,green: 93,blue: 64)
+    public static let argonLightLeafBrown = NSColor(red: 202,green: 114,blue: 105)
+
     public static let argonRadiantYellow = NSColor(red: 239,green: 165,blue: 73)
+    public static let argonRichTribalYellow = NSColor(red: 223,green: 135,blue: 9)
+    public static let argonPowerfulYellow = NSColor(red: 254,green: 194,blue: 35)
+    public static let argonBrightMarigold = NSColor(red: 239,green: 150,blue: 59)
+    public static let argonMustardYellow = NSColor(red: 252,green: 180,blue: 21)
+    public static let argonPiquantYellow = NSColor(red: 231,green: 1471,blue: 36)
+    
+    public static let argonTransAirOrange = NSColor(red: 197,green: 76,blue: 33)
+    public static let argonActiveOrange = NSColor(red: 254,green: 144,blue: 22)
+    public static let argonAwesomeOrange = NSColor(red: 242,green: 101,blue: 96)
     public static let argonFallFantasy = NSColor(red: 240,green: 149,blue: 66)
     public static let argonTangerine = NSColor(red: 235,green: 151,blue: 104)
     public static let argonLuganoSunsetOrange = NSColor(red: 220,green: 128,blue: 53)
@@ -130,17 +177,14 @@ extension NSColor
     public static let argonBuffOrange = NSColor(red: 245,green: 192,blue: 137)
     public static let argonFloridaOrange = NSColor(red: 237,green: 99,blue: 55)
     public static let argonBrightOrangeC = NSColor(red: 237,green: 109,blue: 51)
-    public static let argonBrightMarigold = NSColor(red: 239,green: 150,blue: 59)
+
     public static let argonPinkGlo = NSColor(red: 235,green: 57,blue: 139)          // Fluorescent Pink
     public static let argonGreenGecko = NSColor(red: 115,green: 236,blue: 82)       // Fluorescent Green
     public static let argonSafetyYellow = NSColor(red: 241,green: 254,blue: 88)     // Fluorescent Yellow
     public static let argonOrange21C = NSColor(red: 236,green: 99,blue: 62)         // Fluorescent Orange
     public static let argonFluorescentGreen = NSColor(red: 131,green: 251,blue: 85) // Fluorescent Green
     public static let argonNeonPurple = NSColor(red: 173,green: 51,blue: 239)       // Fluorescent Purple
-    public static let argonAtomicBlue = NSColor(red: 213,green: 147,blue: 130)      // Fluorescent Blue
-    
-    public static let argonTransAirOrange = NSColor(red: 197,green: 76,blue: 33)
-    public static let argonTransAirGreen = NSColor(red: 52,green: 117,blue: 105)
+    public static let argonAtomicBlue = NSColor(red: 0,green: 151,blue: 195)        // Fluorescent Blue
     
     public static let argonWhite95 = NSColor(hex: 0xF2F2F2)
     public static let argonWhite90 = NSColor(hex: 0xE5E5E5)
@@ -179,6 +223,11 @@ extension NSColor
     
     public static let argonWindowFrameGray = NSColor(red: 47, green: 47, blue: 47)
     
+    public static func addLivingColor(_ color: NSColor,named: ColorName)
+        {
+        ColorSet.addColor(color,named: named)
+        }
+        
     public func lighten(by amount: CGFloat) -> Self
         {
         var colors = Array<CGFloat>(repeating: 0, count: 4)

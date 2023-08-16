@@ -198,6 +198,11 @@ public class Token: NSObject,NSCoding
         false
         }
         
+    public var isRangeOperator: Bool
+        {
+        false
+        }
+        
     public var isElse: Bool
         {
         false
@@ -272,12 +277,7 @@ public class Token: NSObject,NSCoding
         {
         false
         }
-        
-    public var isRangeOperator: Bool
-        {
-        false
-        }
-        
+
     public var isInteger: Bool
         {
         false

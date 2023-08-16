@@ -19,6 +19,11 @@ public class Enumeration: StructuredType
         return(.enumeration)
         }
         
+    public override var encoding: String
+        {
+        "d\(self.name)_"
+        }
+        
     public override class func parse(using parser: ArgonParser)
         {
         let location = parser.token.location

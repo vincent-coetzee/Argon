@@ -58,6 +58,67 @@ public class AliasedType: StructuredType
             parser.nextToken()
             }
         let type = parser.parseType()
+        if parser.token.isLeftParenthesis
+            {
+            var lowerBound: ValueBox = .none
+            var upperBound: ValueBox = .none
+            parser.parseParentheses
+                {
+                if parser.token.isIntegerValue
+                    {
+                    lowerBound = .integer(parser.token.integerValue)
+                    parser.nextToken()
+                    }
+                else if parser.token.isIdentifier
+                    {
+                    lowerBound = .identifier(parser.token.identifier)
+                    parser.nextToken()
+                    }
+                else
+                    {
+                    parser.lodgeIssue(code: .integerOrIdentifierExpected,location: location)
+                    }
+                }
+            if !parser.token.isRangeOperator
+                {
+                parser.lodgeIssue(code: .rangeOperatorExpected,location: location)
+                }
+            else
+                {
+                parser.nextToken()
+                }
+            if lowerBound.isInteger
+                {
+                if !parser.token.isIntegerValue
+                    {
+                    parser.lodgeIssue(code: .integerUpperBoundExpectedAfterIntegerLowerBound,location: location)
+                    }
+                else
+                    {
+                    upperBound = .integer(parser.token.integerValue)
+                    parser.nextToken()
+                    }
+                }
+            else if lowerBound.isIdentifier
+                {
+                if !parser.token.isIdentifier
+                    {
+                    parser.lodgeIssue(code: .identifierUpperBoundExpectedAfterIdentifierLowerBound,location: location)
+                    }
+                else
+                    {
+                    upperBound = .identifier(parser.token.identifier)
+                    parser.nextToken()
+                    }
+                }
+            else
+                {
+                parser.lodgeIssue(code: .integerOrIdentifierExpected,location: location)
+                }
+            let subType = SubType(name: name.lastPart,baseType: type,lowerBound: lowerBound,upperBound: upperBound)
+            parser.currentScope.addNode(subType)
+            return
+            }
         let alias = AliasedType(name: name.lastPart, baseType: type)
         parser.currentScope.addNode(alias)
         }

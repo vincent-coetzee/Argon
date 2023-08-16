@@ -69,6 +69,16 @@ public class ArgonModule: Module
         return(self.lookupNode(atName: "EnumerationBase") as! Class)
         }
         
+    public var objectType: Class
+        {
+        return(self.lookupNode(atName: "Object") as! Class)
+        }
+        
+    public var floatType: TypeNode
+        {
+        return(self.lookupNode(atName: "Float") as! TypeNode)
+        }
+        
     public var symbolType: TypeNode
         {
         return(self.lookupNode(atName: "Symbol") as! TypeNode)
@@ -164,11 +174,21 @@ public class ArgonModule: Module
         return(self.lookupNode(atName: "UInteger64") as! TypeNode)
         }
         
+    public var monthType: TypeNode
+        {
+        return(self.lookupNode(atName: "Month") as! TypeNode)
+        }
+        
+    public var voidType: Class
+        {
+        return(self.lookupNode(atName: "Void") as! Class)
+        }
+        
     public func initializeModule()
         {
         self.addSystemClass(named: "Object",superclassesNamed: [])
         self.addSystemClass(named: "EnumerationBase",superclassesNamed: ["Object"])
-        self.addSystemClass(named: "String",superclassesNamed: ["Object","EnumerationBase"])
+        self.addSystemClass(named: "String",superclassesNamed: ["Object","EnumerationBase"],encoding: "S")
         self.addSystemClass(named: "Symbol",superclassesNamed: ["String"])
         self.addSystemClass(named: "Boolean",superclassesNamed:["Object"])
         self.addSystemClass(named: "Void",superclassesNamed:["Object"])
@@ -180,21 +200,21 @@ public class ArgonModule: Module
         self.addSystemClass(named: "Number",superclassesNamed:["Magnitude"])
         self.addSystemClass(named: "FixedPointNumber",superclassesNamed:["Number","EnumerationBase"])
         self.addSystemClass(named: "FloatingPointNumber",superclassesNamed:["Number"])
-        self.addSystemClass(named: "Integer8",superclassesNamed:["FixedPointNumber"])
-        self.addSystemClass(named: "Integer16",superclassesNamed:["FixedPointNumber"])
-        self.addSystemClass(named: "Integer32",superclassesNamed:["FixedPointNumber"])
-        self.addSystemClass(named: "Integer64",superclassesNamed:["FixedPointNumber"])
-        self.addSystemClass(named: "UInteger8",superclassesNamed:["FixedPointNumber"])
-        self.addSystemClass(named: "UInteger16",superclassesNamed:["FixedPointNumber"])
-        self.addSystemClass(named: "UInteger32",superclassesNamed:["FixedPointNumber"])
-        self.addSystemClass(named: "UInteger64",superclassesNamed:["FixedPointNumber"])
-        self.addSystemClass(named: "Float16",superclassesNamed:["FloatingPointNumber"])
-        self.addSystemClass(named: "Float32",superclassesNamed:["FloatingPointNumber"])
-        self.addSystemClass(named: "Float64",superclassesNamed:["FloatingPointNumber"])
-        self.addSystemClass(named: "Date",superclassesNamed:["Magnitude"])
-        self.addSystemClass(named: "Time",superclassesNamed:["Magnitude"])
-        self.addSystemClass(named: "DateTime",superclassesNamed:["Date","Time"])
-        self.addSystemClass(named: "Slot",superclassesNamed: ["Object"]).slot("name",self.stringType)
+        self.addSystemClass(named: "Integer8",superclassesNamed:["FixedPointNumber"],encoding: "A")
+        self.addSystemClass(named: "Integer16",superclassesNamed:["FixedPointNumber"],encoding: "B")
+        self.addSystemClass(named: "Integer32",superclassesNamed:["FixedPointNumber"],encoding: "C")
+        self.addSystemClass(named: "Integer64",superclassesNamed:["FixedPointNumber"],encoding: "D")
+        self.addSystemClass(named: "UInteger8",superclassesNamed:["FixedPointNumber"],encoding: "E")
+        self.addSystemClass(named: "UInteger16",superclassesNamed:["FixedPointNumber"],encoding: "F")
+        self.addSystemClass(named: "UInteger32",superclassesNamed:["FixedPointNumber"],encoding: "G")
+        self.addSystemClass(named: "UInteger64",superclassesNamed:["FixedPointNumber"],encoding: "H")
+        self.addSystemClass(named: "Float16",superclassesNamed:["FloatingPointNumber"],encoding: "I")
+        self.addSystemClass(named: "Float32",superclassesNamed:["FloatingPointNumber"],encoding: "J")
+        self.addSystemClass(named: "Float64",superclassesNamed:["FloatingPointNumber"],encoding: "K")
+        self.addSystemClass(named: "Date",superclassesNamed:["Magnitude"],encoding: "L")
+        self.addSystemClass(named: "Time",superclassesNamed:["Magnitude"],encoding: "M")
+        self.addSystemClass(named: "DateTime",superclassesNamed:["Date","Time"],encoding: "N")
+        self.addSystemClass(named: "Slot",superclassesNamed: ["Object"],encoding: "O").slot("name",self.stringType)
         self.addSystemClass(named: "Class",superclassesNamed: ["Object"]).slot("name",self.stringType)
         self.addSystemClass(named: "Metaclass",superclassesNamed: ["Class"]).slot("name",self.stringType)
         self.addSystemClass(named: "EnumerationCase",superclassesNamed: ["Object"]).slot("name",self.stringType)
@@ -202,15 +222,23 @@ public class ArgonModule: Module
         self.addSystemClass(named: "Collection",superclassesNamed: ["Object"],generics: []).slot("count",self.integer64Type)
         self.addSystemClass(named: "IndexedCollection",superclassesNamed: ["Collection"],generics: [])
         self.addSystemClass(named: "Array",superclassesNamed: ["IndexedCollection"],generics: [.newTypeVariable(name: "Element"),.newTypeVariable(name: "Index")])
-        self.addSystemClass(named: "Set",superclassesNamed: ["Collection"],generics: [.newTypeVariable(name: "Element")])
-        self.addSystemClass(named: "List",superclassesNamed: ["Collection"],generics: [.newTypeVariable(name: "Element")])
-        self.addSystemClass(named: "Dictionary",superclassesNamed: ["Collection"],generics: [.newTypeVariable(name: "Element"),.newTypeVariable(name: "Key")])
-        self.addSystemClass(named: "Pointer",superclassesNamed: ["Object"],generics: [.newTypeVariable(name: "Element")])
-        self.addSystemAliasedType(named: "Byte",toTypeNamed: "UInteger8")
-        self.addSystemAliasedType(named: "Character",toTypeNamed: "UInteger16")
-        self.addSystemAliasedType(named: "Integer",toTypeNamed: "Integer64")
-        self.addSystemAliasedType(named: "UInteger",toTypeNamed: "UInteger64")
-        self.addSystemAliasedType(named: "Float",toTypeNamed: "Float64")
+        self.addSystemClass(named: "Set",superclassesNamed: ["Collection"],generics: [.newTypeVariable(name: "Element")],instanceType: SetInstance.self)
+        self.addSystemClass(named: "List",superclassesNamed: ["Collection"],generics: [.newTypeVariable(name: "Element")],instanceType: ListInstance.self)
+        self.addSystemClass(named: "Dictionary",superclassesNamed: ["Collection"],generics: [.newTypeVariable(name: "Element"),.newTypeVariable(name: "Key")],instanceType: DictionaryInstance.self)
+        self.addSystemClass(named: "Pointer",superclassesNamed: ["Object"],generics: [.newTypeVariable(name: "Element")],instanceType: PointerInstance.self)
+        self.addSystemAliasedType(named: "Byte",toTypeNamed: "UInteger8",encoding: "P")
+        self.addSystemAliasedType(named: "Character",toTypeNamed: "UInteger16",encoding: "Q")
+        self.addSystemAliasedType(named: "Integer",toTypeNamed: "Integer64",encoding: "R")
+        self.addSystemAliasedType(named: "UInteger",toTypeNamed: "UInteger64",encoding: "T")
+        self.addSystemAliasedType(named: "Float",toTypeNamed: "Float64",encoding: "U")
+        
+        self.addSystemEnumeration(named: "Month", cases: ["#January","#February","#March","#April","#May","#June","#July","#August","#September","#October","#November","#December"])
+        
+        self.addSystemConstant(named: "$TODAY",ofTypeNamed: "Date")
+        self.addSystemConstant(named: "$NOW",ofTypeNamed: "Time")
+        self.addSystemConstant(named: "$PI",ofTypeNamed: "Float")
+        
+        self.addNode(VoidType(name: "Void",superclasses: [self.objectType]))
         }
         
     public func initializeSystemMethods()
@@ -267,6 +295,69 @@ public class ArgonModule: Module
         self.addSystemMethod(named: "symbol").parameter(.characterType).returnType(.symbolType)
         self.addSystemMethod(named: "symbol").parameter(.booleanType).returnType(.symbolType)
         self.addSystemMethod(named: "symbol").parameter(.byteType).returnType(.symbolType)
+        
+        self.addSystemMethod(named: "year").parameter(.dateType).returnType(.integerType)
+        self.addSystemMethod(named: "month").parameter(.dateType).returnType(.integerType)
+        self.addSystemMethod(named: "day").parameter(.dateType).returnType(.integerType)
+        self.addSystemMethod(named: "monthElement").parameter(.dateType).returnType(.monthType)
+        
+        self.addSystemMethod(named: "hour").parameter(.timeType).returnType(.integerType)
+        self.addSystemMethod(named: "minute").parameter(.timeType).returnType(.integerType)
+        self.addSystemMethod(named: "second").parameter(.timeType).returnType(.integerType)
+        self.addSystemMethod(named: "millisecond").parameter(.timeType).returnType(.integerType)
+        
+        self.addSystemMethod(named: "year?").parameter(.dateTimeType).returnType(.integerType)
+        self.addSystemMethod(named: "month?").parameter(.dateTimeType).returnType(.integerType)
+        self.addSystemMethod(named: "day?").parameter(.dateTimeType).returnType(.integerType)
+        self.addSystemMethod(named: "monthElement?").parameter(.dateTimeType).returnType(.monthType)
+        
+        self.addSystemMethod(named: "hour?").parameter(.dateTimeType).returnType(.integerType)
+        self.addSystemMethod(named: "minute?").parameter(.dateTimeType).returnType(.integerType)
+        self.addSystemMethod(named: "second?").parameter(.dateTimeType).returnType(.integerType)
+        self.addSystemMethod(named: "millisecond?").parameter(.dateTimeType).returnType(.integerType)
+        
+        self.addSystemMethod(named: "sin?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "cos?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "tan?").parameter(.floatType).returnType(.floatType)
+        
+        self.addSystemMethod(named: "asin?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "acos?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "atan?").parameter(.floatType).returnType(.floatType)
+        
+        self.addSystemMethod(named: "log?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "ln?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "exp?").parameter(.floatType).returnType(.floatType)
+        
+        self.addSystemMethod(named: "log2?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "ln2?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "exp2?").parameter(.floatType).returnType(.floatType)
+        
+        self.addSystemMethod(named: "log10?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "ln10?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "exp10?").parameter(.floatType).returnType(.floatType)
+        
+        self.addSystemMethod(named: "mantissa?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "exponent?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "isFinite?").parameter(.floatType).returnType(.booleanType)
+        self.addSystemMethod(named: "isInfinite?").parameter(.floatType).returnType(.booleanType)
+        self.addSystemMethod(named: "isNan?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "signBit?").parameter(.floatType).returnType(.integerType)
+        self.addSystemMethod(named: "isNormal?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "ceiling?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "floor?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "fmod?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "remainder?").parameter(.floatType).returnType(.floatType)
+        
+        self.addSystemMethod(named: "maximum?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "minimum?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "maximum?").parameter(.integerType).returnType(.integerType)
+        self.addSystemMethod(named: "minimum?").parameter(.integerType).returnType(.integerType)
+        
+        self.addSystemMethod(named: "squareRoot?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "absoluteValue?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "squareRoot?").parameter(.integerType).returnType(.integerType)
+        self.addSystemMethod(named: "absoluteValue?").parameter(.integerType).returnType(.integerType)
+        
         }
         
     @discardableResult
@@ -285,10 +376,28 @@ public class ArgonModule: Module
 //        }
         
     @discardableResult
-    private func addSystemClass(named name: String,superclassesNamed: Array<String>,generics: TypeNodes = []) -> Class
+    private func addSystemClass(named name: String,superclassesNamed: Array<String>,generics: TypeNodes = [],encoding: String? = nil,instanceType: GenericTypeInstance.Type? = nil) -> Class
         {
         let classes = superclassesNamed.map{self.lookupNode(atName: $0) as! Class}
         let aClass = Class(name: name,superclasses: classes,generics: generics)
+        self.addNode(aClass)
+        aClass.isSystemNode = true
+        aClass.setEncoding(encoding)
+        aClass.setInstanceType(instanceType)
+        return(aClass)
+        }
+        
+    @discardableResult
+    private func addSystemEnumeration(named name: String,cases: Symbols,generics: TypeNodes = []) -> Enumeration
+        {
+        var actualCases = EnumerationCases()
+        var index = 0
+        for aCase in cases
+            {
+            actualCases.append(EnumerationCase(name: aCase, instanceValue: .integer(Argon.Integer(index))))
+            index += 1
+            }
+        let aClass = Enumeration(name: name,cases: actualCases)
         self.addNode(aClass)
         aClass.isSystemNode = true
         return(aClass)
@@ -303,12 +412,21 @@ public class ArgonModule: Module
         self.addNode(aClass)
         }
         
-    private func addSystemAliasedType(named name: String,toTypeNamed typeName: String)
+    private func addSystemAliasedType(named name: String,toTypeNamed typeName: String,encoding: String? = nil)
         {
         let baseType = self.lookupNode(atName: typeName) as! TypeNode
         let typeAlias = AliasedType(name: name,baseType: baseType)
         typeAlias.isSystemNode = true
+        typeAlias.setEncoding(encoding)
         self.addNode(typeAlias)
+        }
+        
+    private func addSystemConstant(named name: String,ofTypeNamed typeName: String)
+        {
+        let baseType = self.lookupNode(atName: typeName) as! TypeNode
+        let constant = Constant(name: name,type: baseType,expression: nil)
+        constant.isSystemNode = true
+        self.addNode(constant)
         }
         
         

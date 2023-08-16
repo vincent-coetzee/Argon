@@ -45,8 +45,7 @@ public class Method: CallableTypeNode
         parser.currentScope.addNode(method)
         }
         
-    public private(set) var parameters = Parameters()
-    public private(set) var returnType: TypeNode?
+
     public private(set) var block = Block()
     
     public override var isMethod: Bool
@@ -59,45 +58,26 @@ public class Method: CallableTypeNode
         .method(self)
         }
         
-    public init(name: String)
+    public override init(name: String)
         {
         super.init(name: name)
         }
         
     public required init(coder: NSCoder)
         {
-        self.parameters = coder.decodeObject(forKey: "parameters") as! Parameters
-        self.returnType = coder.decodeObject(forKey: "returnType") as? TypeNode
         self.block = coder.decodeObject(forKey: "block") as! Block
         super.init(coder: coder)
         }
         
     public override func encode(with coder: NSCoder)
         {
-        coder.encode(self.parameters,forKey: "parameters")
-        coder.encode(self.returnType,forKey: "returnType")
         coder.encode(self.block,forKey: "block")
         super.encode(with: coder)
         }
-        
-    public func setParameters(_ parameters: Parameters)
-        {
-        self.parameters = parameters
-        }
-        
+
     public func setBlock(_ block: Block)
         {
         self.block = block
-        }
-        
-    public func setReturnType(_ returnType: TypeNode?)
-        {
-        self.returnType = returnType
-        }
-        
-    public func addParameter(_ parameter: Parameter)
-        {
-        self.parameters.append(parameter)
         }
     }
 

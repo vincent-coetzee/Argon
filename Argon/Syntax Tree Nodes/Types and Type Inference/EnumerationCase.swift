@@ -9,11 +9,16 @@ import Foundation
 
 public class EnumerationCase: NSObject,NSCoding
     {
+    public var encoding: String
+        {
+        "p\(self.name.symbolString)_"
+        }
+        
     public let name: String
     public let instanceValue: ValueBox
     public var associatedTypes = TypeNodes()
     
-    public init(name: String,associatedTypes: TypeNodes,instanceValue: ValueBox)
+    public init(name: String,associatedTypes: TypeNodes = [],instanceValue: ValueBox)
         {
         self.associatedTypes = associatedTypes
         self.name = name

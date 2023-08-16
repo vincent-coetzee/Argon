@@ -117,9 +117,26 @@ public struct Argon
         case none
         case discreteType(TypeNode)
         case enumeration(Enumeration)
-        case enumerationRange(Enumeration,lowerBound: EnumerationCase,upperBound: EnumerationCase)
-        case integerRange(lowerBound: Argon.Integer,upperBound: Argon.Integer)
+        case subType(SubType)
         case integer
+        
+        public var encoding: String
+            {
+            switch(self)
+                {
+                case(.none):
+                    fatalError()
+                case(.discreteType(let node)):
+                    return("m\(node.encoding)")
+                case(.enumeration(let enumeration)):
+                    return("n\(enumeration.encoding)")
+                case(.integer):
+                    return("q")
+                case(.subType(let subType)):
+                    return("q\(subType.encoding)")
+                    
+                }
+            }
         }
     }
 

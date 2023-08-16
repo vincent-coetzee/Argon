@@ -18,4 +18,10 @@ public class Function: CallableTypeNode
         {
         return(true)
         }
+        
+    public override var encoding: String
+        {
+        let inners = self.parameters.map{$0.type.encoding}
+        return("f\(self.name).")
+        }
     }

@@ -42,6 +42,9 @@ public enum ErrorCode: Int
     case invalidTypeVariables
     case invalidGenericArguments
     case isExpected
+    case integerUpperBoundExpectedAfterIntegerLowerBound
+    case identifierUpperBoundExpectedAfterIdentifierLowerBound
+    case integerOrIdentifierExpected
     
     case lValueExpectedOnLeft
     case leftParenthesisExpected

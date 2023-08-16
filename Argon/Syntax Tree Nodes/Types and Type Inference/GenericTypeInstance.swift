@@ -29,10 +29,15 @@ internal typealias TypePairs = Array<TypePair>
 
 public class GenericTypeInstance: TypeNode
     {
+    public override var encoding: String
+        {
+        "e\(self.name)."
+        }
+        
     private let originalType: TypeNode
     private let types: TypeNodes
     
-    public init(originalType: TypeNode,types: TypeNodes)
+    public required init(originalType: TypeNode,types: TypeNodes)
         {
         self.types = types
         self.originalType = originalType
