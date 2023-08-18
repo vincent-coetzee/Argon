@@ -45,8 +45,12 @@ public class ArgonParser
         self.register(tokenType: .literalSymbol,parser: LiteralParser())
         self.register(tokenType: .literalBoolean,parser: LiteralParser())
         self.register(tokenType: .literalCharacter,parser: LiteralParser())
+        self.register(tokenType: .literalDate,parser: LiteralParser())
+        self.register(tokenType: .literalTime,parser: LiteralParser())
+        self.register(tokenType: .literalDateTime,parser: LiteralParser())
         self.register(tokenType: .leftParenthesis,parser: GroupParser())
         self.register(tokenType: .leftParenthesis,parser: MethodInvocationParser())
+        self.register(tokenType: .MAKE,parser: MakeParser())
         self.register(tokenType: .leftBracket,parser: ArrayReferenceParser())
         self.register(tokenType: .leftBrace,parser: ClosureParser(precedence: Precedence.prefix))
         self.register(tokenType: .rightArrow,parser: MemberAccessParser())
@@ -92,7 +96,6 @@ public class ArgonParser
         self.prefix(tokenType: .logicalNot,precedence: Precedence.prefix)
         self.prefix(tokenType: .plus,precedence: Precedence.prefix)
         self.prefix(tokenType: .minus,precedence: Precedence.prefix)
-
         }
         
     private func register(tokenType: TokenType,parser: InfixParser)
@@ -376,7 +379,8 @@ public class ArgonParser
                         }
                     upperBound = self.parseIntegerValue(code: .integerValueExpected)
                     }
-                return(Argon.ArrayIndex.integerRange(lowerBound: lowerBound,upperBound: upperBound))
+                let subType = SubType(name: Argon.nextIndex(named: "subType"), baseType: ArgonModule.shared.integerType, lowerBound: .integer(lowerBound), upperBound: .integer(upperBound))
+                return(Argon.ArrayIndex.subType(subType))
                 }
             else
                 {
@@ -405,13 +409,17 @@ public class ArgonParser
                     }
                 if let lowerCase = enumeration.case(atSymbol: lowerBound),let upperCase = enumeration.case(atSymbol: upperBound)
                     {
-                    return(Argon.ArrayIndex.enumerationRange(enumeration,lowerBound: lowerCase,upperBound: upperCase))
+                    let subType = SubType(name: Argon.nextIndex(named: "enumerationSubType"), baseType: enumeration, lowerBound: .enumerationCase(lowerCase), upperBound: .enumerationCase(upperCase))
+                    return(Argon.ArrayIndex.subType(subType))
                     }
                 else
                     {
                     self.lodgeIssue(code: .invalidLowerBound,message: "Invalid lower bound for enumeration index '\(enumeration.name)'.",location: newLocation)
                     }
-                return(Argon.ArrayIndex.enumerationRange(enumeration,lowerBound: EnumerationCase(name: "#LOWER",associatedTypes: [],instanceValue: .none),upperBound: EnumerationCase(name: "#UPPER",associatedTypes: [],instanceValue: .none)))
+                let lowerCase = EnumerationCase(name: "#LOWER",associatedTypes: [],instanceValue: .none)
+                let upperCase = EnumerationCase(name: "#UPPER",associatedTypes: [],instanceValue: .none)
+                let subType = SubType(name: Argon.nextIndex(named: "enumerationSubType"), baseType: enumeration, lowerBound: .enumerationCase(lowerCase), upperBound: .enumerationCase(upperCase))
+                return(Argon.ArrayIndex.subType(subType))
                 }
             }
         else
@@ -553,6 +561,8 @@ public class ArgonParser
         {
         switch(self.token.tokenType)
             {
+            case(.STATIC):
+                StaticStatement.parse(using: self)
             case(.METHOD):
                 Method.parse(using: self)
             case(.FUNCTION):
@@ -567,6 +577,8 @@ public class ArgonParser
                 Constant.parse(using: self)
             case(.TYPE):
                 AliasedType.parse(using: self)
+            case(.identifier):
+                AssignmentExpression.parse(using: self)
             default:
                 fatalError()
             }
@@ -576,6 +588,8 @@ public class ArgonParser
         {
         switch(self.token.tokenType)
             {
+            case(.STATIC):
+                StaticStatement.parse(using: self)
             case(.METHOD):
                 Method.parse(using: self)
             case(.FUNCTION):
@@ -598,6 +612,12 @@ public class ArgonParser
                 IfStatement.parse(using: self)
             case(.CONSTANT):
                 Constant.parse(using: self)
+            case(.SIGNAL):
+                SignalStatement.parse(using: self)
+            case(.HANDLE):
+                HandleStatement.parse(using: self)
+            case(.FORK):
+                ForkStatement.parse(using: self)
             default:
                 fatalError()
             }

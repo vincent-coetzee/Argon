@@ -108,7 +108,7 @@ public class ArgonScanner
     private var tokenStart: Int = 0
     private var tokenStop: Int = 0
     private var sourceCount: Int
-    private var tokens: Tokens?
+    public private(set) var tokens: Tokens?
     
     init(source: String,sourceKey: Int)
         {
@@ -166,9 +166,9 @@ public class ArgonScanner
 //        self.rules.append(TokenRule(tag: "character",pattern: "\\A§.", tokenType: CharacterToken.self,startSet: CharacterSet(charactersIn: "§")))
 //        self.rules.append(TokenRule(tag: "byte",pattern: "\\A_[0-9]{1,3}", tokenType: ByteToken.self,startSet: CharacterSet(charactersIn: "_")))
         self.rules.append(TokenRule(tag: "symbol",pattern: "\\A#[a-zA-Z]+[a-zA-Z0-9_\\-!\\?]*", tokenType: SymbolToken.self,startSet: CharacterSet(charactersIn: "#")))
-        self.rules.append(TokenRule(tag: "date",pattern: "\\A@\\([0-9]{1,2}/[0-1][0-9]/[0-9]{4}\\)", tokenType: DateToken.self,startSet: CharacterSet(charactersIn: "@")))
+        self.rules.append(TokenRule(tag: "date",pattern: "\\A(?:@\\()[0-9]{1,2}\\/[0-1]?[0-9]\\/[0-9]{4}(?:\\))", tokenType: DateToken.self,startSet: CharacterSet(charactersIn: "@")))
         self.rules.append(TokenRule(tag: "time",pattern: "\\A@\\([0-9]{1,2}\\:[0-9]{1,2}\\:[0-9]{1,2}(:[0-9]{1,4})?\\)", tokenType: TimeToken.self,startSet: CharacterSet(charactersIn: "@")))
-        self.rules.append(TokenRule(tag: "dateTime",pattern: "\\A@\\([0-9]{1,2}/[0-1][0-9]/[0-9]{4}[:blank:][0-9]{1,2}\\:[0-9]{1,2}\\:[0-9]{1,2}(:[0-9]{1,4})?\\)", tokenType: DateTimeToken.self,startSet: CharacterSet(charactersIn: "@")))
+        self.rules.append(TokenRule(tag: "dateTime",pattern: "\\A@\\([0-9]{1,2}\\/[0-1]?[0-9]\\/[0-9]{4}[:space:][0-9]{1,2}\\:[0-9]{1,2}\\:[0-9]{1,2}(\\:[0-9]{1,4})?\\)", tokenType: DateTimeToken.self,startSet: CharacterSet(charactersIn: "@")))
         self.rules.append(WhitespaceRule(tag: "whitespace", pattern: "\\A(\\s|\n|\r|\t)+", tokenType: nil,startSet: CharacterSet(charactersIn: "\t\r\n ")))
         self.rules.append(TokenRule(tag: "comment1", pattern: "\\A\\/\\*(.|\n)*?\\*\\/", tokenType: CommentToken.self,startSet: CharacterSet(charactersIn: "/")))
         self.rules.append(TokenRule(tag: "comment2",pattern: "\\A\\/\\/(.)*?\n", tokenType: CommentToken.self,startSet: CharacterSet(charactersIn: "/")))

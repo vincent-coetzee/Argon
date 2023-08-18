@@ -135,6 +135,28 @@ public class GroupParser: PrefixParser
         }
     }
     
+public class MakeParser: PrefixParser
+    {
+    public func parse(parser: ArgonParser, token: Token) -> Expression
+        {
+        let location = parser.token.location
+        parser.nextToken()
+        var mainExpression: Expression!
+        var arguments = Expressions()
+        parser.parseParentheses
+            {
+            mainExpression = parser.parseExpression(precedence: 0)
+            while parser.token.isComma && !parser.token.isEnd
+                {
+                parser.parseComma()
+                arguments.append(parser.parseExpression())
+                }
+            }
+        let expression = MakeExpression(classExpression: mainExpression,arguments: arguments)
+        return(expression.addDeclaration(location))
+        }
+    }
+    
 public class TernaryParser: InfixParser
     {
     public let precedence = Precedence.ternary
@@ -194,10 +216,6 @@ public class MethodInvocationParser: InfixParser
         else
             {
             parser.lodgeIssue(code: .rightParenthesisExpected,location: location)
-            }
-        if methodName == "MAKE"
-            {
-            return(MakeInvocationExpression(arguments: arguments).addDeclaration(location))
             }
         return(MethodInvocationExpression(methodName: methodName,arguments: arguments).addDeclaration(location))
         }

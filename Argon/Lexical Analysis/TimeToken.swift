@@ -16,9 +16,14 @@ public class TimeToken: Token
         
     public override var timeValue: Argon.Time
         {
-        Argon.Time(string: self.matchString)
+        Argon.Time(matchString: self.matchString)
         }
 
+    public override var isTimeValue: Bool
+        {
+        true
+        }
+        
     public override var styleElement: StyleElement
         {
         .colorDate
@@ -36,6 +41,6 @@ public class TimeToken: Token
         
     public override var valueBox: ValueBox
         {
-        ValueBox.time(Argon.Time(string: self.matchString))
+        ValueBox.time(Argon.Time(matchString: self.matchString))
         }
     }

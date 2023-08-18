@@ -33,6 +33,16 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visited
         false
         }
         
+    public var parentModules: Modules
+        {
+        self.parent?.parentModules ?? Modules()
+        }
+        
+    public var encoding: String
+        {
+        fatalError("Encoding called on SyntaxTreeNode and should not be.")
+        }
+        
     public override var hash: Int
         {
         self.identifier.hashValue

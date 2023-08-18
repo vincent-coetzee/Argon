@@ -13,18 +13,40 @@ public class LetStatement: Statement
     
     public static func parse(into block: Block,using parser: ArgonParser)
         {
+        let location = parser.token.location
         parser.nextToken()
         let expression = parser.parseExpression()
         let statement = LetStatement(expression: expression)
         block.addStatement(statement)
+        if let lValue = expression.lValue,let rValue = expression.rValue
+            {
+            if lValue.isIdentifierExpression
+                {
+                let identifier = (lValue as! IdentifierExpression).identifier
+                parser.currentScope.addNode(Variable(name: identifier.lastPart, type: nil, expression: rValue))
+                return
+                }
+            }
+        parser.lodgeIssue(code: .invalidAssignmentExpression,location: location)
         }
         
     public class override func parse(using parser: ArgonParser)
         {
+        let location = parser.token.location
         parser.nextToken()
         let expression = parser.parseExpression()
         let statement = LetStatement(expression: expression)
         parser.currentScope.addNode(statement)
+        if let lValue = expression.lValue,let rValue = expression.rValue
+            {
+            if lValue.isIdentifierExpression
+                {
+                let identifier = (lValue as! IdentifierExpression).identifier
+                parser.currentScope.addNode(Variable(name: identifier.lastPart, type: nil, expression: rValue))
+                return
+                }
+            }
+        parser.lodgeIssue(code: .invalidAssignmentExpression,location: location)
         }
         
     public init(expression: Expression)

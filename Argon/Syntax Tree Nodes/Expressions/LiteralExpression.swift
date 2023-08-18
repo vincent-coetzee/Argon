@@ -163,6 +163,9 @@ extension NSCoder
                 self.encode(dateTime.time.minute,forKey: "\(key)_dateTime_minute")
                 self.encode(dateTime.time.second,forKey: "\(key)_dateTime_second")
                 self.encode(dateTime.time.millisecond,forKey: "\(key)_dateTime_millisecond")
+            case(.enumerationCase(let aCase)):
+                self.encode(21,forKey: "\(key)_index")
+                self.encode(aCase,forKey: "\(key)_enumerationCase")
             }
         }
 
@@ -228,6 +231,8 @@ extension NSCoder
                 let second = self.decodeInteger(forKey: "\(key)_dateTime_second")
                 let millisecond = self.decodeInteger(forKey: "\(key)_dateTime_millisecond")
                 return(.dateTime(Argon.DateTime(date: Argon.Date(day: day,month: month,year: year),time: Argon.Time(hour: hour,minute: minute,second: second,millisecond: millisecond))))
+            case(21):
+                return(.enumerationCase(self.decodeObject(forKey: "_enumerationCase") as! EnumerationCase))
             default:
                 fatalError()
             }

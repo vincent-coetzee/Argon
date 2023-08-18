@@ -21,6 +21,11 @@ public class IdentifierExpression: Expression
         true
         }
         
+    public override var lValue: Expression
+        {
+        self
+        }
+        
     private let _identifier:Identifier
     
     public required init(coder: NSCoder)

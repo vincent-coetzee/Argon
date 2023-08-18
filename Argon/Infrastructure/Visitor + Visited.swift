@@ -32,7 +32,7 @@ public protocol Visitor
     func visit(functionInvocationExpression: FunctionInvocationExpression)
     func visit(identifierExpression: IdentifierExpression)
     func visit(literalExpression: LiteralExpression)
-    func visit(makeInvocationExpression: MakeInvocationExpression)
+    func visit(makeExpression: MakeExpression)
     func visit(memberAccessExpression: MemberAccessExpression)
     func visit(methodInvocationExpression: MethodInvocationExpression)
     func visit(postfixExpression: PostfixExpression)
@@ -53,6 +53,7 @@ public protocol Visitor
     func visit(timesStatement: TimesStatement)
     func visit(whileStatement: WhileStatement)
     func visit(selectBlock: SelectBlock)
+    func visit(staticStatement: StaticStatement)
     }
 
 public protocol Visited

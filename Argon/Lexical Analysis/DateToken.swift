@@ -16,7 +16,7 @@ public class DateToken: Token
         
     public override var dateValue: Argon.Date
         {
-        Argon.Date(string: self.matchString)
+        Argon.Date(matchString: self.matchString)
         }
 
     public override var styleElement: StyleElement
@@ -34,8 +34,13 @@ public class DateToken: Token
         "DateToken"
         }
         
+    public override var isDateValue: Bool
+        {
+        true
+        }
+        
     public override var valueBox: ValueBox
         {
-        ValueBox.date(Argon.Date(string: self.matchString))
+        ValueBox.date(Argon.Date(matchString: self.matchString))
         }
     }

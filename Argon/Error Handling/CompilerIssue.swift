@@ -41,6 +41,7 @@ public enum ErrorCode: Int
     case invalidEnumerationCase
     case invalidTypeVariables
     case invalidGenericArguments
+    case invalidAssignmentExpression
     case isExpected
     case integerUpperBoundExpectedAfterIntegerLowerBound
     case identifierUpperBoundExpectedAfterIdentifierLowerBound

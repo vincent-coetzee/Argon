@@ -21,8 +21,8 @@ public class DateTimeToken: Token
             {
             return(Argon.DateTime(date: Argon.Date.nullDate,time: Argon.Time.nullTime))
             }
-        let date = Argon.Date(string: pieces[0])
-        let time = Argon.Time(string: pieces[1])
+        let date = Argon.Date(matchString: pieces[0])
+        let time = Argon.Time(matchString: pieces[1])
         return(Argon.DateTime(date: date,time: time))
         }
 

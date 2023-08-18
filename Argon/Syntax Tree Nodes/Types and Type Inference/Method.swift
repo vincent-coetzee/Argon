@@ -45,7 +45,13 @@ public class Method: CallableTypeNode
         parser.currentScope.addNode(method)
         }
         
-
+    public override var encoding: String
+        {
+        let inners = self.parameters.map{$0.type.encoding}.joined(separator: "_")
+        let returnTypeString = self.returnType.isNil ? ArgonModule.shared.voidType.encoding : self.returnType!.encoding
+        return("c\(self.name)_\(inners)_\(returnTypeString)_")
+        }
+        
     public private(set) var block = Block()
     
     public override var isMethod: Bool

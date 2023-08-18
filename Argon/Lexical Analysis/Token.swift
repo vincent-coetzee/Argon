@@ -140,6 +140,7 @@ public enum TokenType: Int
     case shiftRight
     case shiftLeftAssign
     case shiftRightAssign
+    case STATIC
     
     case text
     case ternary
@@ -199,6 +200,16 @@ public class Token: NSObject,NSCoding
         }
         
     public var isRangeOperator: Bool
+        {
+        false
+        }
+
+    public var isTimeValue: Bool
+        {
+        false
+        }
+        
+    public var isDateValue: Bool
         {
         false
         }
@@ -294,6 +305,11 @@ public class Token: NSObject,NSCoding
         }
         
     public var isWrite: Bool
+        {
+        false
+        }
+        
+    public var isStatic: Bool
         {
         false
         }

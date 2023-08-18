@@ -69,3 +69,21 @@ public enum ValueBox
             }
         }
     }
+
+//extension NSCoder
+//    {
+//    public func encode(_ valueBox: ValueBox,forKey key: String)
+//        {
+//        switch(valueBox)
+//            {
+//            case(.integer(let integer)):
+//                self.encode(0,forKey: key + "index")
+//                self.encode(integer,forKey: key + "integer")
+//            case(.enumerationCase(let aCase)):
+//                self.encode(1,forKey: key + "index")
+//                self.encode(aCase,forKey: key + "enumerationCase")
+//            default:
+//                fatalError("Attempt to encode ValueBox for a case that is not supported.")
+//            }
+//        }
+//    }

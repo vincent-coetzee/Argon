@@ -11,7 +11,7 @@ public class PointerInstance: GenericTypeInstance
     {
     public override var encoding: String
         {
-        return("Z\(self.elementType.encoding).")
+        return("t\(self.elementType.encoding)_")
         }
         
     public var elementType: TypeNode

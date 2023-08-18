@@ -11,11 +11,13 @@ public class AssignmentStatement: Statement
     {
     private let left: Expression
     private let right: Expression
+    private var variable: Variable?
     
-    public init(left: Expression,right: Expression)
+    public init(left: Expression,right: Expression,variable: Variable? = nil)
         {
         self.left = left
         self.right = right
+        self.variable = variable
         super.init()
         }
         

@@ -22,6 +22,8 @@ public class Function: CallableTypeNode
     public override var encoding: String
         {
         let inners = self.parameters.map{$0.type.encoding}
-        return("f\(self.name).")
+        let string = inners.joined(separator: "_")
+        let returnTypeString = self.returnType.isNil ? ArgonModule.shared.voidType.encoding : self.returnType!.encoding
+        return("a\(self.name)_\(string)_\(returnTypeString)_")
         }
     }

@@ -175,11 +175,6 @@ public class OperatorToken: Token
         self.matchString == "["
         }
         
-    public override var isRangeOperator: Bool
-        {
-        self.matchString == ".."
-        }
-        
     public override var isRightParenthesis: Bool
         {
         self.matchString == ")"

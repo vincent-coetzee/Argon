@@ -113,6 +113,9 @@ public class SourceTheme
         self.styles[.colorEnumeration] = NSColor.argonThemeCyan
         self.styles[.colorKeyword] = NSColor(red: 63,green: 149,blue: 116)
         self.styles[.colorText] = NSColor.argonLime
+        self.styles[.colorDate] = NSColor.argonAtomicBlue
+        self.styles[.colorTime] = NSColor.argonAtomicBlue
+        self.styles[.colorDateTime] = NSColor.argonAtomicBlue
         self.styles[.colorName] = NSColor.argonXIvory
         self.styles[.colorString] = NSColor.argonXBlue
         self.styles[.colorComment] = NSColor.argonSolidPlum
@@ -162,18 +165,18 @@ public class SourceTheme
         self.styles[`for`] = metric
         }
         
-    public func font(for: StyleElement) -> NSFont
+    public func font(`for` element: StyleElement) -> NSFont
         {
-        self.styles[`for`] as! NSFont
+        self.styles[element] as! NSFont
         }
         
-    public func color(for: StyleElement) -> NSColor
+    public func color(`for` element: StyleElement) -> NSColor
         {
-        self.styles[`for`] as! NSColor
+        self.styles[element] as! NSColor
         }
         
-    public func metric(for: StyleElement) -> CGFloat
+    public func metric(`for` element: StyleElement) -> CGFloat
         {
-        self.styles[`for`] as! CGFloat
+        self.styles[element] as! CGFloat
         }
     }

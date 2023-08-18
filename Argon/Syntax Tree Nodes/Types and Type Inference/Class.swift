@@ -35,11 +35,7 @@ public class Class: StructuredType
         
     public override var encoding: String
         {
-        if self.instanceType.isNil
-            {
-            return("b\(self.name)_")
-            }
-        return(self.instanceType!.encoding)
+        return("b\(self.name)_")
         }
         
     public private(set) var superclasses: ClassTypes = []
@@ -263,7 +259,6 @@ public class Class: StructuredType
             parser.lodgeIssue(code: .singleIdentifierExpected,message: "An identifier path is not allowed here.",location: location)
             }
         let name = identifier.lastPart
-        parser.nextToken()
         var type: TypeNode = TypeNode.newTypeVariable()
         if parser.token.isScope
             {

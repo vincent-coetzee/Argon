@@ -10,6 +10,7 @@ import Cocoa
 class ProjectDocument: NSDocument
     {
     private var project: SourceProjectNode? = nil
+    private var outlinerWidth: CGFloat = 0
     
     override init()
         {
@@ -31,6 +32,7 @@ class ProjectDocument: NSDocument
             if let node = self.project
                 {
                 contentViewController.project = node
+                contentViewController.outlinerWidth = self.outlinerWidth
                 }
             contentViewController.windowWasCreated(window: windowController.window!)
             }
@@ -46,8 +48,8 @@ class ProjectDocument: NSDocument
             }
         let aURL = URL(fileURLWithPath: path)
         let viewController = self.windowControllers[0].contentViewController as! ProjectViewController
-        let project = viewController.project
-        if let data = try? NSKeyedArchiver.archivedData(withRootObject: project, requiringSecureCoding: false)
+        var state = ProjectState(project: viewController.project,outlinerWidth: viewController.outlinerWidth)
+        if let data = try? NSKeyedArchiver.archivedData(withRootObject: state, requiringSecureCoding: false)
             {
             if (try? data.write(to: url)).isNil
                 {
@@ -73,12 +75,13 @@ class ProjectDocument: NSDocument
                 throw(CompilerIssue(code: .fileDataIsCorrupt, message: "The file at \(url.path) is corrupt."))
                 }
             unarchiver.requiresSecureCoding = false
-            let node = unarchiver.decodeObject(of: SourceProjectNode.self, forKey: NSKeyedArchiveRootObjectKey)
-            guard let node = node else
+            let state = unarchiver.decodeObject(of: ProjectState.self, forKey: NSKeyedArchiveRootObjectKey)
+            guard let state = state else
                 {
                 throw(CompilerIssue(code: .fileDataIsCorrupt, message: "The file at \(url.path) is corrupt."))
                 }
-            self.project = node
+            self.project = state.project
+            self.outlinerWidth = state.outlinerWidth
             }
         catch let error
             {

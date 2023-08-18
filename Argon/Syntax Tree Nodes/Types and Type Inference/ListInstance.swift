@@ -11,6 +11,6 @@ public class ListInstance: GenericTypeInstance
     {
     public override var encoding: String
         {
-        return("Z\(self.elementType.encoding).")
+        return("Y\(self.genericTypes[0].encoding)_")
         }
     }

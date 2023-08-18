@@ -14,6 +14,13 @@ extension String
         return(String(self.dropFirst(0)))
         }
         
+    public var base64Hash: String
+        {
+        var value = self.polynomialRollingHash
+        let data = Data(bytes: &value,count: MemoryLayout<Int>.size)
+        return(data.base64EncodedString())
+        }
+        
     public var polynomialRollingHash:Int
         {
         let p:Int64 = 53   // Use 3 instead of 31 because strings contains uppercase and lowercase characters

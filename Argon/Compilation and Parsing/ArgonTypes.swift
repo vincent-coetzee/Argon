@@ -33,15 +33,20 @@ public struct Argon
 
     public struct Date
         {
+        public static func ==(lhs: Date,rhs: Date) -> Bool
+            {
+            lhs.day == rhs.day && lhs.month == rhs.month && lhs.year == rhs.year
+            }
+            
         public static let nullDate = Date(day: 0,month: 0,year: 0)
         
         public let day: Int
         public let month: Int
         public let year: Int
         
-        public init(string: String)
+        public init(matchString: String)
             {
-            let pieces = string.components(separatedBy: "/")
+            let pieces = matchString.components(separatedBy: CharacterSet.decimalDigits.inverted).filter{!$0.isEmpty}
             self.day = Int(pieces[0])!
             self.month = Int(pieces[1])!
             self.year = Int(pieces[2])!
@@ -57,6 +62,11 @@ public struct Argon
         
     public struct Time
         {
+        public static func ==(lhs: Time,rhs: Time) -> Bool
+            {
+            lhs.hour == rhs.hour && lhs.minute == rhs.minute && lhs.second == rhs.second && lhs.millisecond == rhs.millisecond
+            }
+            
         public static let nullTime = Time(hour: 0,minute: 0,second: 0,millisecond: 0)
         
         public let hour: Int
@@ -64,16 +74,16 @@ public struct Argon
         public let second: Int
         public let millisecond: Int
         
-        public init(string: String)
+        public init(matchString: String)
             {
-            let pieces = string.components(separatedBy: ":")
+            let pieces = matchString.components(separatedBy: CharacterSet.decimalDigits.inverted).filter{!$0.isEmpty}
             self.hour = Int(pieces[0])!
             self.minute = Int(pieces[1])!
             self.second = Int(pieces[2])!
             self.millisecond = pieces.count == 4 ? Int(pieces[3])! : 0
             }
             
-        public init(hour: Int,minute: Int,second: Int,millisecond: Int)
+        public init(hour: Int,minute: Int,second: Int,millisecond: Int = 0)
             {
             self.hour = hour
             self.minute = minute
@@ -156,15 +166,9 @@ extension NSCoder
             case(2):
                 return(.enumeration(self.decodeObject(forKey: key + "enumeration") as! Enumeration))
             case(3):
-                let lower = self.decodeObject(forKey: key + "enumerationRange.lower") as! EnumerationCase
-                let upper = self.decodeObject(forKey: key + "enumerationRange.upper") as! EnumerationCase
-                let enumeration = self.decodeObject(forKey: key + "enumerationRange.enumeration") as! Enumeration
-                return(.enumerationRange(enumeration,lowerBound: lower,upperBound: upper))
+                let type = self.decodeObject(forKey: key + "subType") as! SubType
+                return(.subType(type))
             case(4):
-                let lower = Argon.Integer(self.decodeInteger(forKey: key + "integerRange.lower"))
-                let upper = Argon.Integer(self.decodeInteger(forKey: key + "integerRange.upper"))
-                return(.integerRange(lowerBound: lower,upperBound: upper))
-            case(5):
                 return(.integer)
             default:
                 fatalError("this should not happen")
@@ -183,17 +187,11 @@ extension NSCoder
             case(.enumeration(let enumeration)):
                 self.encode(2,forKey: key + "_index")
                 self.encode(enumeration,forKey: key + "enumeration")
-            case(.enumerationRange(let enumeration,let lower,let upper)):
+            case(.subType(let type)):
                 self.encode(3,forKey: key + "_index")
-                self.encode(enumeration,forKey: key + "enumerationRange.enumeration")
-                self.encode(lower,forKey: key + "enumerationRange.lower")
-                self.encode(upper,forKey: key + "enumerationRange.upper")
-            case(.integerRange(let lower,let upper)):
-                self.encode(4,forKey: key + "_index")
-                self.encode(lower,forKey: key + "integerRange.lower")
-                self.encode(upper,forKey: key + "integerRange.upper")
+                self.encode(type,forKey: key + "subType")
             case(.integer):
-                self.encode(5,forKey: key + "_index")
+                self.encode(4,forKey: key + "_index")
             }
         }
     }

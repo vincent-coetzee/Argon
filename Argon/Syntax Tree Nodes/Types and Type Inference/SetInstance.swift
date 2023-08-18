@@ -9,4 +9,8 @@ import Foundation
 
 public class SetInstance: GenericTypeInstance
     {
+    public override var encoding: String
+        {
+        return("W\(self.genericTypes[0].encoding)_")
+        }
     }

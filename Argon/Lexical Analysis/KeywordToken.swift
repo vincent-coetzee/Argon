@@ -99,6 +99,11 @@ public class KeywordToken: Token
         self.matchString == "VIRTUAL"
         }
         
+    public override var isStatic: Bool
+        {
+        self.matchString == "STATIC"
+        }
+        
     public override var isSlotRelatedKeyword: Bool
         {
         self.matchString == "SLOT" || self.matchString == "READ" || self.matchString == "WRITE" || self.matchString == "DYNAMIC" || self.matchString == "VIRTUAL"
@@ -110,6 +115,8 @@ public class KeywordToken: Token
         {
         switch(self.matchString)
             {
+            case "STATIC":
+                return(.STATIC)
             case "ENTRY":
                 return(.ENTRY)
             case "EXIT":

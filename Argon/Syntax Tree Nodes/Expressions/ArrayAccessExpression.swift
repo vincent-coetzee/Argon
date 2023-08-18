@@ -19,6 +19,11 @@ public class ArrayAccessExpression: BinaryExpression
         self.right
         }
         
+    public override var lValue: Expression?
+        {
+        self.left.lValue
+        }
+        
     public init(array: Expression,memberIndex: Expression)
         {
         super.init(left: array,right: memberIndex)

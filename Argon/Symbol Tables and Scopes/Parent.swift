@@ -9,6 +9,19 @@ import Foundation
 
 public enum Parent
     {
+    public var parentModules: Modules
+        {
+        switch(self)
+            {
+            case(.none):
+                return([])
+            case(.symbol(let symbol)):
+                return(symbol.parentModules)
+            case(.expression(let expression)):
+                return(expression.parentModules)
+            }
+        }
+        
     public var rootModule: RootModule
         {
         switch(self)

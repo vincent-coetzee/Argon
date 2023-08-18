@@ -9,4 +9,8 @@ import Foundation
 
 public class DictionaryInstance: GenericTypeInstance
     {
+    public override var encoding: String
+        {
+        return("X\(self.genericTypes[0].encoding)_")
+        }
     }

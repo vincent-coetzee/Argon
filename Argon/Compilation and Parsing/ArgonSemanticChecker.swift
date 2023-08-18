@@ -173,7 +173,7 @@ public class ArgonSemanticChecker: Visitor
         
         }
     
-    public func visit(makeInvocationExpression: MakeInvocationExpression)
+    public func visit(makeExpression: MakeExpression)
         {
         }
     
@@ -197,6 +197,10 @@ public class ArgonSemanticChecker: Visitor
         }
     
     public func visit(ternaryExpression: TernaryExpression)
+        {
+        }
+        
+    public func visit(staticStatement: StaticStatement)
         {
         }
     }

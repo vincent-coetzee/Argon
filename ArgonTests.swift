@@ -14,6 +14,7 @@ public struct ArgonTests
     
     public static func runTests()
         {
+        self.testDateTimeScanning()
         self.testRootModule()
         self.testSymbolTables()
         self.testIdentifiers()
@@ -23,6 +24,22 @@ public struct ArgonTests
         self.testTokens()
         self.testProjectEntries()
         self.makeTestParseTree()
+        }
+        
+    public static func testDateTimeScanning()
+        {
+        var string = "@(2/12/2009)"
+        var scanner = ArgonScanner(source: string,sourceKey: 0)
+        assert(scanner.tokens.isNotNil,"Tokens is nil and should not be.")
+        assert(scanner.tokens!.count == 2,"There should be two tokens and there is not.")
+        assert(scanner.tokens![0].isDateValue,"Token should be date token but is not")
+        assert(scanner.tokens![0].dateValue == Argon.Date(day: 2,month: 12,year: 2009),"Date should be 02/12/2009 but is not.")
+        string = "@(02:10:43:0000)"
+        scanner = ArgonScanner(source: string,sourceKey: 0)
+        assert(scanner.tokens.isNotNil,"Tokens is nil and should not be.")
+        assert(scanner.tokens!.count == 2,"There should be two tokens and there is not.")
+        assert(scanner.tokens![0].isTimeValue,"Token should be date token but is not")
+        assert(scanner.tokens![0].timeValue == Argon.Time(hour: 2,minute: 10,second: 43),"Time should be 02:12:43 but is not.")
         }
         
     public static func testSymbolTables()

@@ -11,21 +11,26 @@ public class ArrayTypeInstance: GenericTypeInstance
     {
     public override var encoding: String
         {
-        let indexEncoding = self.indexType.encoding
-        "f\(self.name)_"
+        "Z\(self.indexType.encoding)_"
         }
         
     private var indexType: Argon.ArrayIndex = .none
     
-    public required init(originalType: TypeNode,types: TypeNodes)
+    public required init(originalType: TypeNode,indexType: Argon.ArrayIndex)
         {
-        super.init(originalType: originalType,types: types)
+        self.indexType = indexType
+        super.init(originalType: originalType,types: [])
         }
         
     public required init(coder: NSCoder)
         {
         self.indexType = coder.decodeArrayIndex(forKey: "indexType")
         super.init(coder: coder)
+        }
+        
+    public required init(originalType: TypeNode,types: TypeNodes)
+        {
+        super.init(originalType: originalType,types: types)
         }
         
     public override func encode(with coder: NSCoder)

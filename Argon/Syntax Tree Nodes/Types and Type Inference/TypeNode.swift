@@ -32,7 +32,7 @@ public class TypeNode: SyntaxTreeNode
     // Float64              K
     // Date                 L
     // Time                 M
-    // DaetTime             N
+    // DateTime             N
     // Slot                 O
     // Byte                 P
     // Character            Q
@@ -62,22 +62,22 @@ public class TypeNode: SyntaxTreeNode
     // AliasedType          s
     // Pointer              t
     // Metaclass            u
+    // Module               v
     //
-    // Count = 0            v
-    // Count = 1            w
-    // Count = 2            x
-    // Count = 3            y
-    // Count = 4            z
-    // Count = 5            0
-    // Count = 6            1
-    // Count = 7            2
-    // Count = 8            3
-    // Count = 9            4
-    // Count = 10           5
-    // Count = 11           6
-    // Count = 12           7
-    // Count = 13           8
-    // Count = 14           9
+    // Count = 0            w
+    // Count = 1            x
+    // Count = 2            y
+    // Count = 3            z
+    // Count = 4            0
+    // Count = 5            1
+    // Count = 6            2
+    // Count = 7            3
+    // Count = 8            4
+    // Count = 9            5
+    // Count = 10           6
+    // Count = 11           7
+    // Count = 12           8
+    // Count = 13           9
     //
     // For objects such as ArrayTypeInstance, GenericTypeInstance, Pointer, Class, Enumeration and Metaclass
     // the encoding letter is output first for example for classes "b" followed by the name of the object for example "Customer" and then is
@@ -185,7 +185,7 @@ public class TypeNode: SyntaxTreeNode
         true
         }
         
-    public var encoding: String
+    public override var encoding: String
         {
         self._encoding!
         }

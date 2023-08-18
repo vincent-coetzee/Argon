@@ -28,6 +28,11 @@ public class RootModule: Module
         self
         }
         
+    public override var parentModules: Modules
+        {
+        Modules()
+        }
+        
     public override var rootModule: RootModule
         {
         self

@@ -9,4 +9,8 @@ import Foundation
 
 public class MemberAccessExpression: BinaryExpression
     {
+    public override var lValue: Expression?
+        {
+        self.left.lValue
+        }
     }

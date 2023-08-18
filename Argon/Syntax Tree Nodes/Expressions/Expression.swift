@@ -24,6 +24,26 @@ public class Expression: SyntaxTreeNode
         false
         }
         
+    public var lValue: Expression?
+        {
+        nil
+        }
+        
+    public var rValue: Expression?
+        {
+        nil
+        }
+        
+    public var leftSide: Expression?
+        {
+        nil
+        }
+        
+    public var rightSide: Expression?
+        {
+        nil
+        }
+        
     public required init(coder: NSCoder)
         {
         super.init(coder: coder)
@@ -53,3 +73,5 @@ public class Expression: SyntaxTreeNode
         visitor.visit(expression: self)
         }
     }
+
+public typealias Expressions = Array<Expression>

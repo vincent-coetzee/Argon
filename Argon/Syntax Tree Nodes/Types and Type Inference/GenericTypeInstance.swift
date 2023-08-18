@@ -35,26 +35,23 @@ public class GenericTypeInstance: TypeNode
         }
         
     private let originalType: TypeNode
-    private let types: TypeNodes
     
     public required init(originalType: TypeNode,types: TypeNodes)
         {
-        self.types = types
         self.originalType = originalType
         super.init()
+        self.setGenericTypes(types)
         }
         
     public required init(coder: NSCoder)
         {
         self.originalType = coder.decodeObject(forKey: "orginalType") as! TypeNode
-        self.types = coder.decodeObject(forKey: "types") as! TypeNodes
         super.init(coder: coder)
         }
         
     public override func encode(with coder: NSCoder)
         {
         coder.encode(self.originalType,forKey: "originalType")
-        coder.encode(self.types,forKey: "types")
         super.encode(with: coder)
         }
     }

@@ -29,6 +29,20 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
     private var pathControlWidthConstraint: NSLayoutConstraint!
     private var selectedSourceNode: SourceNode!
     
+    public var outlinerWidth: CGFloat
+        {
+        get
+            {
+            self.splitView.arrangedSubviews[0].frame.size.width
+            }
+        set
+            {
+            var frame = self.splitView.arrangedSubviews[0].frame
+            frame.size.width = newValue
+            self.splitView.arrangedSubviews[0].frame = frame
+            }
+        }
+        
     public var project: SourceProjectNode
         {
         get
