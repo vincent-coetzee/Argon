@@ -54,6 +54,7 @@ public class SignalStatement: Statement
         
     public override func accept(visitor: Visitor)
         {
-        visitor.visit(signalStatement: self)
+        visitor.enter(signalStatement: self)
+        visitor.exit(signalStatement: self)
         }
     }

@@ -36,6 +36,11 @@ public class Parameter: Variable
         coder.encode(self.externalName,forKey: "externalName")
         super.encode(with: coder)
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        visitor.visit(parameter: self)
+        }
     }
 
 public typealias Parameters = Array<Parameter>

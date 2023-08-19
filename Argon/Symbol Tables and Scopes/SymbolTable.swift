@@ -61,7 +61,7 @@ public class SymbolTable: NSObject,NSCoding
         {
         self.symbolEntries = SymbolEntries()
         }
-        
+
     public func addNode(_ node: SyntaxTreeNode)
         {
         var entry = self.symbolEntries[node.name]

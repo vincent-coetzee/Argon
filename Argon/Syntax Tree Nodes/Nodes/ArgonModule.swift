@@ -226,6 +226,7 @@ public class ArgonModule: Module
         self.addSystemClass(named: "List",superclassesNamed: ["Collection"],generics: [.newTypeVariable(name: "Element")],instanceType: ListInstance.self)
         self.addSystemClass(named: "Dictionary",superclassesNamed: ["Collection"],generics: [.newTypeVariable(name: "Element"),.newTypeVariable(name: "Key")],instanceType: DictionaryInstance.self)
         self.addSystemClass(named: "Pointer",superclassesNamed: ["Object"],generics: [.newTypeVariable(name: "Element")],instanceType: PointerInstance.self)
+        self.addSystemClass(named: "BitSet",superclassesNamed: ["Collection"],generics: [.newTypeVariable(name: "Element"),.newTypeVariable(name: "Key")],instanceType: BitSetInstance.self)
         self.addSystemAliasedType(named: "Byte",toTypeNamed: "UInteger8",encoding: "P")
         self.addSystemAliasedType(named: "Character",toTypeNamed: "UInteger16",encoding: "Q")
         self.addSystemAliasedType(named: "Integer",toTypeNamed: "Integer64",encoding: "R")

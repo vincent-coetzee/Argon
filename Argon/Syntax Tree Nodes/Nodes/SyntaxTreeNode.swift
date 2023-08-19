@@ -9,7 +9,7 @@ import Foundation
 
 fileprivate var _NextSymbol = 1
 
-public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visited
+public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
     {
     public static func ==(lhs: SyntaxTreeNode,rhs: SyntaxTreeNode) -> Bool
         {

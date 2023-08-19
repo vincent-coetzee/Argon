@@ -102,6 +102,7 @@
 		BF8CB1862A8FE8380056F145 /* ProjectState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8CB1852A8FE8380056F145 /* ProjectState.swift */; };
 		BF8CB1882A8FF90B0056F145 /* MakeExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8CB1872A8FF90B0056F145 /* MakeExpression.swift */; };
 		BF9076352969803B00995CB8 /* ArgonParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9076342969803B00995CB8 /* ArgonParser.swift */; };
+		BF9618C42A90F1A100D6EC9C /* BitSetInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9618C32A90F1A100D6EC9C /* BitSetInstance.swift */; };
 		BF96903C29F55BF400A7ED65 /* LineNumberRulerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF96903B29F55BF400A7ED65 /* LineNumberRulerView.swift */; };
 		BF96903E29F57FA200A7ED65 /* SourceCodeEditingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF96903D29F57FA200A7ED65 /* SourceCodeEditingView.swift */; };
 		BF97988C2A19188D00C9852C /* libLLVM.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF97988B2A19188D00C9852C /* libLLVM.dylib */; };
@@ -157,7 +158,7 @@
 		BFDC80152A7D42D7008118FF /* DateTimeToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFDC80142A7D42D7008118FF /* DateTimeToken.swift */; };
 		BFDC80172A7D5CFF008118FF /* NodeChangeSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFDC80162A7D5CFF008118FF /* NodeChangeSet.swift */; };
 		BFDC80192A7D8058008118FF /* PathToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFDC80182A7D8058008118FF /* PathToken.swift */; };
-		BFE1AD0E2A8A78BF00402294 /* Visitor + Visited.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE1AD0D2A8A78BF00402294 /* Visitor + Visited.swift */; };
+		BFE1AD0E2A8A78BF00402294 /* Visitor + Visitable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE1AD0D2A8A78BF00402294 /* Visitor + Visitable.swift */; };
 		BFE1AD102A8A7CD200402294 /* ArgonSemanticChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE1AD0F2A8A7CD200402294 /* ArgonSemanticChecker.swift */; };
 		BFE99B372A710A690056E700 /* BinaryExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE99B362A710A690056E700 /* BinaryExpression.swift */; };
 		BFE99B392A710A8A0056E700 /* MethodInvocationExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE99B382A710A8A0056E700 /* MethodInvocationExpression.swift */; };
@@ -302,6 +303,7 @@
 		BF8CB1852A8FE8380056F145 /* ProjectState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectState.swift; sourceTree = "<group>"; };
 		BF8CB1872A8FF90B0056F145 /* MakeExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeExpression.swift; sourceTree = "<group>"; };
 		BF9076342969803B00995CB8 /* ArgonParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgonParser.swift; sourceTree = "<group>"; };
+		BF9618C32A90F1A100D6EC9C /* BitSetInstance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitSetInstance.swift; sourceTree = "<group>"; };
 		BF96903B29F55BF400A7ED65 /* LineNumberRulerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineNumberRulerView.swift; sourceTree = "<group>"; };
 		BF96903D29F57FA200A7ED65 /* SourceCodeEditingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceCodeEditingView.swift; sourceTree = "<group>"; };
 		BF97988B2A19188D00C9852C /* libLLVM.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libLLVM.dylib; path = ../../../../../opt/homebrew/Cellar/llvm/16.0.1/lib/libLLVM.dylib; sourceTree = "<group>"; };
@@ -361,7 +363,7 @@
 		BFDC80162A7D5CFF008118FF /* NodeChangeSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeChangeSet.swift; sourceTree = "<group>"; };
 		BFDC80182A7D8058008118FF /* PathToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathToken.swift; sourceTree = "<group>"; };
 		BFDC801C2A7D850E008118FF /* Notes.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Notes.md; sourceTree = "<group>"; };
-		BFE1AD0D2A8A78BF00402294 /* Visitor + Visited.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Visitor + Visited.swift"; sourceTree = "<group>"; };
+		BFE1AD0D2A8A78BF00402294 /* Visitor + Visitable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Visitor + Visitable.swift"; sourceTree = "<group>"; };
 		BFE1AD0F2A8A7CD200402294 /* ArgonSemanticChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgonSemanticChecker.swift; sourceTree = "<group>"; };
 		BFE99B362A710A690056E700 /* BinaryExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinaryExpression.swift; sourceTree = "<group>"; };
 		BFE99B382A710A8A0056E700 /* MethodInvocationExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MethodInvocationExpression.swift; sourceTree = "<group>"; };
@@ -495,6 +497,7 @@
 			children = (
 				BFBD79762A576CFB0038EEEA /* AliasedType.swift */,
 				BF3F517B2A7CBA8A0042C0CC /* ArrayTypeInstance.swift */,
+				BF9618C32A90F1A100D6EC9C /* BitSetInstance.swift */,
 				BF2D01E52A7C0E2A00887DD7 /* CallableTypeNode.swift */,
 				BFCB438929845D5D001D1CFD /* Class.swift */,
 				BF60D6312A8CB90E00ED3F6B /* DictionaryInstance.swift */,
@@ -753,7 +756,7 @@
 				BF57672329EDC0FC007EECA5 /* Stack.swift */,
 				BFE99B3C2A710BCF0056E700 /* ObjectInstance.swift */,
 				BFE99B3E2A710C560056E700 /* EnumerationInstance.swift */,
-				BFE1AD0D2A8A78BF00402294 /* Visitor + Visited.swift */,
+				BFE1AD0D2A8A78BF00402294 /* Visitor + Visitable.swift */,
 				BFABDBCF2A8BB12800806F7D /* ColorSet.swift */,
 			);
 			path = Infrastructure;
@@ -935,7 +938,7 @@
 				BF1F4AFA2A5549DF00C1F977 /* HandleStatement.swift in Sources */,
 				BFDC80152A7D42D7008118FF /* DateTimeToken.swift in Sources */,
 				BFCB438A29845D5D001D1CFD /* Class.swift in Sources */,
-				BFE1AD0E2A8A78BF00402294 /* Visitor + Visited.swift in Sources */,
+				BFE1AD0E2A8A78BF00402294 /* Visitor + Visitable.swift in Sources */,
 				BFA1DBA729F314FF00BD3FF9 /* NSColor+Extensions.swift in Sources */,
 				BFE99B412A7117300056E700 /* IdentifierExpression.swift in Sources */,
 				BF836F492A6D84C10085BB9D /* LiteralExpression.swift in Sources */,
@@ -1037,6 +1040,7 @@
 				BFBD79772A576CFB0038EEEA /* AliasedType.swift in Sources */,
 				BF3B430929A15319009C269F /* SourceTheme.swift in Sources */,
 				BF53D13B2A72DFAF00C2777D /* Argument.swift in Sources */,
+				BF9618C42A90F1A100D6EC9C /* BitSetInstance.swift in Sources */,
 				BF96903C29F55BF400A7ED65 /* LineNumberRulerView.swift in Sources */,
 				BF54B9A729F5C7C600A755DC /* AspectModel.swift in Sources */,
 				BFA9DA98292D5C3900C6859D /* SyntaxTreeNode.swift in Sources */,

@@ -98,8 +98,9 @@ public class HandleStatement: Statement
         
     public override func accept(visitor: Visitor)
         {
+        visitor.enter(handleStatement: self)
         self.inductionVariable.accept(visitor: visitor)
         self.handlerBlock.accept(visitor: visitor)
-        visitor.visit(handleStatement: self)
+        visitor.exit(handleStatement: self)
         }
     }

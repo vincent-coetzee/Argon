@@ -13,4 +13,20 @@ public class DictionaryInstance: GenericTypeInstance
         {
         return("X\(self.genericTypes[0].encoding)_")
         }
+        
+    public override var isSystemNode: Bool
+        {
+        get
+            {
+            true
+            }
+        set
+            {
+            }
+        }
+        
+    public override func accept(visitor: Visitor)
+        {
+        visitor.visit(dictionaryInstance: self)
+        }
     }

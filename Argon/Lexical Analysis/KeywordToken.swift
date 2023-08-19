@@ -7,9 +7,9 @@
 
 import Foundation
 
-fileprivate let _Keywords = ["CLASS","CONSTANT","KEY","DYNAMIC","ELSE","ENTRY","ENUMERATION","EXIT",
-                            "FOR","FROM","FUNCTION","IF","HANDLE","IMPORT","INTO","IS","LET","LOOP","MADE","MAKE","METHOD","MODULE","OTHERWISE","READ","REPEAT",
-                            "RETURN","SELECT","SLOT","SIGNAL","THEN","TIMES","TYPE","UNMADE","USES",
+fileprivate let _Keywords = ["CLASS","CONSTANT","DEFORM","DYNAMIC","ELSE","ENTRY","ENUMERATION","EXIT",
+                            "FOR","FROM","FREE","FORM","FUNCTION","IF","HANDLE","IMPORT","INTO","IS","KEY","LET","LOOP","MAKE","METHOD","MODULE","OTHERWISE","READ","REPEAT",
+                            "RETURN","SELECT","SLOT","SIGNAL","THEN","TIMES","TYPE","USES",
                             "VIRTUAL","WHEN","WHILE","WRAPPER","WRITE"]
                             
 public class KeywordToken: Token
@@ -79,14 +79,14 @@ public class KeywordToken: Token
         self.matchString == "WHILE"
         }
         
-    public override var isMade: Bool
+    public override var isForm: Bool
         {
-        self.matchString == "MADE"
+        self.matchString == "FORM"
         }
         
-    public override var isUnmade: Bool
+    public override var isDeform: Bool
         {
-        self.matchString == "UNMADE"
+        self.matchString == "DEFORM"
         }
         
     public override var isDefault: Bool
@@ -157,8 +157,8 @@ public class KeywordToken: Token
                 return(.LOOP)
             case "MAKE":
                 return(.MAKE)
-            case "MADE":
-                return(.MADE)
+            case "FORM":
+                return(.FORM)
             case "METHOD":
                 return(.METHOD)
             case "MODULE":
@@ -173,6 +173,8 @@ public class KeywordToken: Token
                 return(.RETURN)
             case "SELECT":
                 return(.SELECT)
+            case "DEFORM":
+                return(.DEFORM)
             case "SLOT":
                 return(.SLOT)
             case "SIGNAL":

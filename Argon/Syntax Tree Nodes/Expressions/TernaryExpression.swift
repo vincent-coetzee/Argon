@@ -36,4 +36,12 @@ public class TernaryExpression: Expression
         coder.encode(self.elseArm,forKey: "elseArm")
         super.encode(with: coder)
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        visitor.enter(ternaryExpression: self)
+        self.thenArm.accept(visitor: visitor)
+        self.elseArm.accept(visitor: visitor)
+        visitor.exit(ternaryExpression: self)
+        }
     }

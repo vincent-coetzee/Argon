@@ -50,7 +50,8 @@ public class ReturnStatement: Statement
         
     public override func accept(visitor: Visitor)
         {
+        visitor.enter(returnStatement: self)
         self.expression.accept(visitor: visitor)
-        visitor.visit(returnStatement: self)
+        visitor.exit(returnStatement: self)
         }
     }

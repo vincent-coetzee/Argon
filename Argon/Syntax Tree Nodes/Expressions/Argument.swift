@@ -29,6 +29,11 @@ public class Argument: NSObject,NSCoding
         coder.encode(self.name,forKey: "name")
         coder.encode(self.value,forKey: "value")
         }
+        
+    public func accept(visitor: Visitor)
+        {
+        visitor.visit(argument: self)
+        }
     }
 
 public typealias Arguments = Array<Argument>

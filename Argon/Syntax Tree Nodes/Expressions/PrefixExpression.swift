@@ -33,5 +33,12 @@ public class PrefixExpression: Expression
         coder.encode(self.operator.rawValue,forKey: "tokenType")
         super.encode(with: coder)
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        visitor.enter(prefixExpression: self)
+        self.right.accept(visitor: visitor)
+        visitor.exit(prefixExpression: self)
+        }
     }
     

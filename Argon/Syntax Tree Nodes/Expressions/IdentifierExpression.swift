@@ -50,4 +50,9 @@ public class IdentifierExpression: Expression
         coder.encode(self._identifier,forKey: "_identifier")
         super.encode(with: coder)
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        visitor.visit(identifierExpression: self)
+        }
     }

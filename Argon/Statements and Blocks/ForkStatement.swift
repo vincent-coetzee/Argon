@@ -48,7 +48,8 @@ public class ForkStatement: Statement
         
     public override func accept(visitor: Visitor)
         {
+        visitor.enter(forkStatement: self)
         self.block.accept(visitor: visitor)
-        visitor.visit(forkStatement: self)
+        visitor.exit(forkStatement: self)
         }
     }

@@ -57,8 +57,9 @@ public class AssignmentStatement: Statement
         
     public override func accept(visitor: Visitor)
         {
+        visitor.enter(assignmentStatement: self)
         self.left.accept(visitor: visitor)
         self.right.accept(visitor: visitor)
-        visitor.visit(assignmentStatement: self)
+        visitor.exit(assignmentStatement: self)
         }
     }

@@ -57,9 +57,10 @@ public class AssignmentExpression: Expression
         
     public override func accept(visitor: Visitor)
         {
+        visitor.enter(assignmentExpression: self)
         self.left.accept(visitor: visitor)
         self.right.accept(visitor: visitor)
-        visitor.visit(assignmentExpression: self)
+        visitor.exit(assignmentExpression: self)
         }
         
     public static override func parse(using parser: ArgonParser)

@@ -82,6 +82,11 @@ public class LiteralExpression: Expression
         coder.encode(self.value,forKey: "value")
         super.encode(with: coder)
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        visitor.visit(literalExpression: self)
+        }
     }
         
 extension NSCoder

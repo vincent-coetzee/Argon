@@ -126,6 +126,13 @@ public class Module: CompositeSyntaxTreeNode
                 }
             }
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        visitor.enter(module: self)
+        self.symbolTable.accept(visitor: visitor)
+        visitor.exit(module: self)
+        }
     }
 
 public typealias Modules = Array<Module>

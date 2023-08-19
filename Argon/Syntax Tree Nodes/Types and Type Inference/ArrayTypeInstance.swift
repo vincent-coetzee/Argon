@@ -9,6 +9,17 @@ import Foundation
 
 public class ArrayTypeInstance: GenericTypeInstance
     {
+    public override var isSystemNode: Bool
+        {
+        get
+            {
+            true
+            }
+        set
+            {
+            }
+        }
+        
     public override var encoding: String
         {
         "Z\(self.indexType.encoding)_"
@@ -42,5 +53,10 @@ public class ArrayTypeInstance: GenericTypeInstance
     public func setIndexType(_ type: Argon.ArrayIndex)
         {
         self.indexType = type
+        }
+        
+    public override func accept(visitor: Visitor)
+        {
+        visitor.visit(arrayTypeInstance: self)
         }
     }

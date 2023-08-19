@@ -13,4 +13,11 @@ public class MemberAccessExpression: BinaryExpression
         {
         self.left.lValue
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        visitor.enter(memberAccessExpression: self)
+        self.left.accept(visitor: visitor)
+        visitor.exit(memberAccessExpression: self)
+        }
     }

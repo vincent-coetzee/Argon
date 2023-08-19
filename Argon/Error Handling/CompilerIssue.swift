@@ -21,6 +21,7 @@ public enum ErrorCode: Int
     case couldNotWriteFile
     
     case discreteTypeExpected
+    case deformAlreadyDefined
     
     case enumerationCaseExpected
     
@@ -84,7 +85,6 @@ public enum ErrorCode: Int
     case undefinedSymbol
     case undefinedType
     case undefinedClass
-    case unmadeAlreadyDefined
     case usingGenericTypesOnNonGenericType
     
     case vitualSlotMustSpecifyType

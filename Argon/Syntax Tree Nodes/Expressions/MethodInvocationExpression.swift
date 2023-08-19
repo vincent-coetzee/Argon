@@ -35,4 +35,9 @@ public class MethodInvocationExpression: Expression
         coder.encode(self.arguments,forKey: "arguments")
         super.encode(with: coder)
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        visitor.visit(methodInvocationExpression: self)
+        }
     }

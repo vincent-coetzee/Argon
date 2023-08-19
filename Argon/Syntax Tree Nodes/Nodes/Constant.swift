@@ -40,6 +40,11 @@ public class Constant: Variable
         let constant = Constant(name: name,type: type,expression: expression!)
         parser.currentScope.addNode(constant)
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        visitor.visit(constant: self)
+        }
     }
 
 public typealias Constants = Array<Constant>

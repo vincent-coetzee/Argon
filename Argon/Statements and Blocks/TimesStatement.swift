@@ -50,8 +50,9 @@ public class TimesStatement: Block
         
     public override func accept(visitor: Visitor)
         {
+        visitor.enter(timesStatement: self)
         self.expression.accept(visitor: visitor)
         self.block.accept(visitor: visitor)
-        visitor.visit(timesStatement: self)
+        visitor.exit(timesStatement: self)
         }
     }

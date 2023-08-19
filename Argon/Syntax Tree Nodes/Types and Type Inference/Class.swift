@@ -40,8 +40,8 @@ public class Class: StructuredType
         
     public private(set) var superclasses: ClassTypes = []
     public private(set) var slots: Slots = []
-    public private(set) var mades = Methods()
-    public private(set) var unmade: Method?
+    public private(set) var forms = Methods()
+    public private(set) var deform: Method?
     
     public init(name: String,slots: Slots = [],superclasses: ClassTypes = [],generics: TypeNodes = TypeNodes())
         {
@@ -69,14 +69,14 @@ public class Class: StructuredType
         }
         
     
-    public func addMade(_ method: Method)
+    public func addForm(_ method: Method)
         {
-        self.mades.append(method)
+        self.forms.append(method)
         }
         
-    public func setUnmade(_ method: Method)
+    public func setDeform(_ method: Method)
         {
-        self.unmade = method
+        self.deform = method
         }
 
         
@@ -136,6 +136,7 @@ public class Class: StructuredType
             parser.nextToken()
             }
         let scope = Class(name: name)
+        parser.currentScope.addNode(scope)
         var superclasses = ClassTypes()
         var typeVariables = TypeVariables()
         if parser.token.isLeftBrocket
@@ -163,29 +164,29 @@ public class Class: StructuredType
         var slots = Slots()
         parser.parseBraces
             {
-            var unmadeAdded = false
+            var deformAdded = false
             while parser.token.isSlotRelatedKeyword
                 {
                 slots.append(self.parseSlotDeclaration(using: parser))
                 }
             while !parser.token.isRightBrace
                 {
-                if parser.token.isMade
+                if parser.token.isForm
                     {
-                    let made = self.parseMade(using: parser)
-                    scope.addMade(made)
+                    let form = self.parseForm(using: parser)
+                    scope.addForm(form)
                     }
-                else if parser.token.isUnmade
+                else if parser.token.isDeform
                     {
-                    if unmadeAdded
+                    if deformAdded
                         {
-                        parser.lodgeIssue(code: .unmadeAlreadyDefined,location: parser.token.location)
-                        self.parseUnmade(using: parser)
+                        parser.lodgeIssue(code: .deformAlreadyDefined,location: parser.token.location)
+                        self.parseDeform(using: parser)
                         }
                     else
                         {
-                        scope.setUnmade(self.parseUnmade(using: parser))
-                        unmadeAdded = true
+                        scope.setDeform(self.parseDeform(using: parser))
+                        deformAdded = true
                         }
                     }
                 }
@@ -193,7 +194,7 @@ public class Class: StructuredType
         scope.setSlots(slots)
         }
         
-    private class func parseMade(using parser: ArgonParser) -> Method
+    private class func parseForm(using parser: ArgonParser) -> Method
         {
         parser.nextToken()
         let parameters = parser.parseParameters()
@@ -202,20 +203,23 @@ public class Class: StructuredType
             {
             block.addLocal(parameter)
             }
-        Block.parseBlockInner(block: block,using: parser)
-        let method = Method(name: "MADE")
+        parser.parseBraces
+            {
+            Block.parseBlockInner(block: block,using: parser)
+            }
+        let method = Method(name: "DEFORM")
         method.setParameters(parameters)
         method.setBlock(block)
         return(method)
         }
         
     @discardableResult
-    private class func parseUnmade(using parser: ArgonParser) -> Method
+    private class func parseDeform(using parser: ArgonParser) -> Method
         {
         parser.nextToken()
         let block = Block()
         Block.parseBlockInner(block: block,using: parser)
-        let method = Method(name: "UNMADE")
+        let method = Method(name: "DEFORM")
         method.setBlock(block)
         return(method)
         }
@@ -396,10 +400,12 @@ public class Class: StructuredType
         
     public override func accept(visitor: Visitor)
         {
+        visitor.enter(class: self)
         for slot in self.slots
             {
             slot.accept(visitor: visitor)
             }
+        visitor.exit(class: self)
         }
     }
 

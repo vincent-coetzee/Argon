@@ -33,6 +33,7 @@ public enum TokenType: Int
     case comma
     
     case DYNAMIC
+    case DEFORM
     case decrement
     case divide
     case divideAssign
@@ -47,6 +48,7 @@ public enum TokenType: Int
     
     case Float
     case FOR
+    case FORM
     case FORK
     case FROM
     case FUNCTION
@@ -98,7 +100,6 @@ public enum TokenType: Int
     
     case MACRO
     case MAKE
-    case MADE
     case METHOD
     case MODULE
     case minus
@@ -152,7 +153,6 @@ public enum TokenType: Int
     case timesTimes
     
     case USES
-    case UNMADE
     
     case VIRTUAL
     
@@ -244,12 +244,12 @@ public class Token: NSObject,NSCoding
         false
         }
         
-    public var isMade: Bool
+    public var isForm: Bool
         {
         false
         }
         
-    public var isUnmade: Bool
+    public var isDeform: Bool
         {
         false
         }

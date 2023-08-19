@@ -33,5 +33,12 @@ public class PostfixExpression: Expression
         coder.encode(self.operator.rawValue,forKey: "tokenType")
         super.encode(with: coder)
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        visitor.enter(postfixExpression: self)
+        self.left.accept(visitor: visitor)
+        visitor.exit(postfixExpression: self)
+        }
     }
     

@@ -9,4 +9,8 @@ import Foundation
 
 public class FunctionInvocationExpression: Expression
     {
+    public override func accept(visitor: Visitor)
+        {
+        visitor.visit(functionInvocationExpression: self)
+        }
     }

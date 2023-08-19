@@ -63,21 +63,21 @@ public class TypeNode: SyntaxTreeNode
     // Pointer              t
     // Metaclass            u
     // Module               v
+    // BitSet               w
     //
-    // Count = 0            w
-    // Count = 1            x
-    // Count = 2            y
-    // Count = 3            z
-    // Count = 4            0
-    // Count = 5            1
-    // Count = 6            2
-    // Count = 7            3
-    // Count = 8            4
-    // Count = 9            5
-    // Count = 10           6
-    // Count = 11           7
-    // Count = 12           8
-    // Count = 13           9
+    // Count = 0            x
+    // Count = 1            y
+    // Count = 2            z
+    // Count = 3            0
+    // Count = 4            1
+    // Count = 5            2
+    // Count = 6            3
+    // Count = 7            4
+    // Count = 8            5
+    // Count = 9            6
+    // Count = 10           7
+    // Count = 11           8
+    // Count = 12           9
     //
     // For objects such as ArrayTypeInstance, GenericTypeInstance, Pointer, Class, Enumeration and Metaclass
     // the encoding letter is output first for example for classes "b" followed by the name of the object for example "Customer" and then is

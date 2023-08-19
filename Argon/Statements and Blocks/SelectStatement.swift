@@ -31,8 +31,9 @@ public class SelectBlock: Block
 
     public override func accept(visitor: Visitor)
         {
+        visitor.enter(selectBlock: self)
         self.expression.accept(visitor: visitor)
-        visitor.visit(selectBlock: self)
+        visitor.exit(selectBlock: self)
         }
     }
     
@@ -122,8 +123,9 @@ public class SelectStatement: Statement
         
     public override func accept(visitor: Visitor)
         {
+        visitor.enter(selectStatement: self)
         self.expression.accept(visitor: visitor)
         self.selectBlocks.accept(visitor: visitor)
-        visitor.visit(selectStatement: self)
+        visitor.exit(selectStatement: self)
         }
     }

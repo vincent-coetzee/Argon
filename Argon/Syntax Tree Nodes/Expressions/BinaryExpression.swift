@@ -47,8 +47,9 @@ public class BinaryExpression: Expression
         
     public override func accept(visitor: Visitor)
         {
+        visitor.enter(binaryExpression: self)
         self.left.accept(visitor: visitor)
         self.right.accept(visitor: visitor)
-        visitor.visit(binaryExpression: self)
+        visitor.exit(binaryExpression: self)
         }
     }

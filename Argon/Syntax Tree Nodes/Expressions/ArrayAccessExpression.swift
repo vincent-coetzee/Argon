@@ -41,8 +41,9 @@ public class ArrayAccessExpression: BinaryExpression
         
     public override func accept(visitor: Visitor)
         {
+        visitor.enter(arrayAccessExpression: self)
         self.left.accept(visitor: visitor)
         self.right.accept(visitor: visitor)
-        visitor.visit(arrayAccessExpression: self)
+        visitor.exit(arrayAccessExpression: self)
         }
     }

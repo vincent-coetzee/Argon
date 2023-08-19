@@ -32,4 +32,9 @@ public class MakeExpression: Expression
         coder.encode(self.arguments,forKey: "arguments")
         super.encode(with: coder)
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        visitor.visit(makeExpression: self)
+        }
     }

@@ -18,4 +18,15 @@ public class PointerInstance: GenericTypeInstance
         {
         self.genericTypes[0]
         }
+        
+    public override var isSystemNode: Bool
+        {
+        get
+            {
+            true
+            }
+        set
+            {
+            }
+        }
     }

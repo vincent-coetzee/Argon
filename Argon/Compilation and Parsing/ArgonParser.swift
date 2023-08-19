@@ -146,7 +146,7 @@ public class ArgonParser
     private func nextToken(offset: Int) -> Token
         {
         var actualOffset = offset
-        if self.tokenIndex + offset < self.tokens.count
+        if self.tokenIndex + offset >= self.tokens.count
             {
             actualOffset = self.tokens.count - self.tokenIndex
             }
@@ -729,6 +729,7 @@ public class ArgonParser
             {
             // we just have a single name that is external and internal
             internalName = self.parseIdentifier(errorCode: .identifierExpected).lastPart
+            externalName = internalName
             }
         // now we should have a scope operator followed by a type
         if self.token.isScope

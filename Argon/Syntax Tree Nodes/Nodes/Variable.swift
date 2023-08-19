@@ -36,6 +36,10 @@ public class Variable: SyntaxTreeNode
         super.encode(with: coder)
         }
 
+    public override func accept(visitor: Visitor)
+        {
+        visitor.visit(variable: self)
+        }
     }
 
 public typealias Variables = Array<Variable>

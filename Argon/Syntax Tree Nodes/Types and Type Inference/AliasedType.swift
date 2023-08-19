@@ -122,6 +122,11 @@ public class AliasedType: StructuredType
         let alias = AliasedType(name: name.lastPart, baseType: type)
         parser.currentScope.addNode(alias)
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        visitor.visit(aliasedType: self)
+        }
     }
     
 public typealias AliasedTypes = Array<AliasedType>
