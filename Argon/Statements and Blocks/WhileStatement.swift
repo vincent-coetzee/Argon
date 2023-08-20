@@ -38,11 +38,18 @@ public class WhileStatement: Block
         let location = parser.token.location
         parser.nextToken()
         var expression: Expression = Expression()
+        parser.pushCurrentScope(block)
+        defer
+            {
+            parser.popCurrentScope()
+            }
         parser.parseParentheses
             {
             expression = parser.parseExpression(precedence: 0)
             }
-        let whileBlock = Block.parseBlock(using: parser)
+        let whileBlock = Block()
+        whileBlock.setParent(block)
+        Block.parseBlockInner(block: whileBlock, using: parser)
         let statement = WhileStatement(expression: expression,block: whileBlock)
         statement.addDeclaration(location)
         block.addStatement(statement)

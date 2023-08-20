@@ -34,11 +34,10 @@ public class Block: Statement
             {
             parser.popCurrentScope()
             }
-        repeat
+        while !parser.token.isRightBrace && !parser.token.isEnd
             {
             self.parseBlockEntry(block: block,using: parser)
             }
-        while !parser.token.isRightBrace && !parser.token.isEnd
         }
         
     public static func parseBlockEntry(block: Block,using parser: ArgonParser)
@@ -68,7 +67,8 @@ public class Block: Statement
             case(.RETURN):
                 ReturnStatement.parse(into: block,using: parser)
             default:
-                break
+                parser.lodgeIssue(code: .statementExpected,location: parser.token.location)
+                parser.nextToken()
             }
         }
         
@@ -131,6 +131,18 @@ public class Block: Statement
     public func addLocal(_ variable: Variable)
         {
         self.locals.append(variable)
+        }
+        
+    public override func lookupNode(atName: String) -> SyntaxTreeNode?
+        {
+        for local in self.locals
+            {
+            if local.name == atName
+                {
+                return(local)
+                }
+            }
+        return(self.parent?.lookupNode(atName: atName))
         }
         
     public override func accept(visitor: Visitor)

@@ -25,6 +25,9 @@ public extension NSCoder
             case(2):
                 let expression = self.decodeObject(forKey: key + "expression") as! Expression
                 return(.expression(expression))
+            case(3):
+                let block = self.decodeObject(forKey: key + "block") as! Block
+                return(.block(block))
             default:
                 fatalError("Invalid index in decodeParent")
             }
@@ -48,6 +51,9 @@ public extension NSCoder
             case .expression(let expression):
                 self.encode(2,forKey: key + "index")
                 self.encode(expression,forKey: key + "expression")
+            case .block(let block):
+                self.encode(3,forKey: key + "index")
+                self.encode(block,forKey: key + "block")
             }
         }
     }

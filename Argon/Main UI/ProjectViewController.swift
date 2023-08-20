@@ -29,6 +29,21 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
     private var pathControlWidthConstraint: NSLayoutConstraint!
     private var selectedSourceNode: SourceNode!
     
+    public var projectState: ProjectState
+        {
+        get
+            {
+            return(ProjectState(project: self.project, outlinerWidth: self.outliner.frame.size.width, sourceEditorWidth: self.sourceView.frame.size.width))
+            }
+        set
+            {
+            self.splitView.setPosition(newValue.outlinerWidth, ofDividerAt: 0)
+            let offset = self.splitView.dividerThickness + newValue.outlinerWidth + newValue.sourceEditorWidth
+            self.splitView.setPosition(offset,ofDividerAt: 1)
+            self.project = newValue.project
+            }
+        }
+        
     public var outlinerWidth: CGFloat
         {
         get

@@ -37,22 +37,24 @@ public class AssignmentStatement: Statement
         
     public static func parse(into block: Block,using parser: ArgonParser)
         {
-        let identifier = parser.token.identifier
-        let location = parser.token.location
-        parser.nextToken()
-        if !parser.token.isAssign
-            {
-            parser.lodgeIssue( code: .assignExpected, location: location)
-            }
-        else
-            {
-            parser.nextToken()
-            }
-        let left = IdentifierExpression(identifier: identifier)
-        let right = parser.parseExpression(precedence: 0)
-        let statement = AssignmentStatement(left: left,right: right)
-        statement.addDeclaration(location)
-        block.addStatement(statement)
+//        let identifier = parser.token.identifier
+//        let location = parser.token.location
+//        parser.nextToken()
+//        if !parser.token.isAssign
+//            {
+//            parser.lodgeIssue( code: .assignExpected, location: location)
+//            }
+//        else
+//            {
+//            parser.nextToken()
+//            }
+//        let left = IdentifierExpression(identifier: identifier)
+//        let right = parser.parseExpression(precedence: 0)
+//        let statement = AssignmentStatement(left: left,right: right)
+//        statement.addDeclaration(location)
+//        block.addStatement(statement)
+        let expression = parser.parseExpression(precedence: 0)
+        block.addStatement(AssignmentExpressionStatement(expression: expression))
         }
         
     public override func accept(visitor: Visitor)
@@ -61,5 +63,28 @@ public class AssignmentStatement: Statement
         self.left.accept(visitor: visitor)
         self.right.accept(visitor: visitor)
         visitor.exit(assignmentStatement: self)
+        }
+    }
+
+public class AssignmentExpressionStatement: Statement
+    {
+    private let expression: Expression
+    
+    public init(expression: Expression)
+        {
+        self.expression = expression
+        super.init()
+        }
+        
+    public required init(coder: NSCoder)
+        {
+        self.expression = coder.decodeObject(forKey: "expression") as! Expression
+        super.init(coder: coder)
+        }
+        
+    public override func encode(with coder: NSCoder)
+        {
+        coder.encode(self.expression,forKey: "expression")
+        super.encode(with: coder)
         }
     }

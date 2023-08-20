@@ -7,7 +7,7 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>argp</string>
+				<string>argonp</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>ArgonProjectFileIcon</string>
@@ -123,7 +123,7 @@
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
-					<string>argp</string>
+					<string>argonp</string>
 				</array>
 				<key>public.mime-type</key>
 				<array>

@@ -13,6 +13,8 @@ public enum Parent
         {
         switch(self)
             {
+            case(.block(let block)):
+                return(block.parentModules)
             case(.none):
                 return([])
             case(.symbol(let symbol)):
@@ -26,6 +28,8 @@ public enum Parent
         {
         switch(self)
             {
+            case(.block(let block)):
+                return(block.rootModule)
             case(.none):
                 fatalError("This should not happen in practice.")
             case(.symbol(let symbol)):
@@ -39,6 +43,8 @@ public enum Parent
         {
         switch(self)
             {
+            case(.block(let block)):
+                return(block.parent)
             case(.none):
                 return(nil)
             case(.symbol(let symbol)):
@@ -52,6 +58,8 @@ public enum Parent
         {
         switch(self)
             {
+            case(.block(let block)):
+                return(block.identifier)
             case(.none):
                 return(Identifier(string: "//"))
             case(.symbol(let symbol)):
@@ -65,6 +73,8 @@ public enum Parent
         {
         switch(self)
             {
+            case(.block(let block)):
+                return(block.module)
             case(.none):
                 fatalError("This should not occur")
             case(.symbol(let symbol)):
@@ -88,11 +98,14 @@ public enum Parent
     case none
     case symbol(SyntaxTreeNode)
     case expression(Expression)
+    case block(Block)
     
     public func removeNode(_ node: SyntaxTreeNode)
         {
         switch(self)
             {
+            case .block:
+                break
             case .none:
                 break
             case .symbol(let symbol):
@@ -106,6 +119,8 @@ public enum Parent
         {
         switch(self)
             {
+            case .block(let block):
+                return(block.lookupNode(atName: atName))
             case .none:
                 return(nil)
             case .symbol(let symbol):
@@ -119,6 +134,8 @@ public enum Parent
         {
         switch(self)
             {
+            case .block(let block):
+                return(block.lookupMethods(atName: atName))
             case .none:
                 return(Methods())
             case .symbol(let symbol):
@@ -143,6 +160,9 @@ public extension NSCoder
             case(2):
                 let expression = self.decodeObject(forKey: key + "expression") as! Expression
                 return(.expression(expression))
+            case(3):
+                let block = self.decodeObject(forKey: key + "block") as! Block
+                return(.block(block))
             default:
                 fatalError("This should not happen, invalid key for Parent")
             }
@@ -160,6 +180,9 @@ public extension NSCoder
             case(.expression(let expression)):
                 self.encode(2,forKey: key)
                 self.encode(expression,forKey: key + "expression")
+            case(.block(let block)):
+                self.encode(3,forKey: key)
+                self.encode(block,forKey: key + "block")
             }
         }
     }

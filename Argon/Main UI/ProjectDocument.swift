@@ -9,8 +9,8 @@ import Cocoa
 
 class ProjectDocument: NSDocument
     {
-    private var project: SourceProjectNode? = nil
-    private var outlinerWidth: CGFloat = 0
+    private var projectState: ProjectState!
+    private var project: SourceProjectNode?
     
     override init()
         {
@@ -29,12 +29,12 @@ class ProjectDocument: NSDocument
         let windowController = storyboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("ProjectWindowController")) as! NSWindowController
         if let contentViewController = windowController.contentViewController as? ProjectViewController
             {
-            if let node = self.project
-                {
-                contentViewController.project = node
-                contentViewController.outlinerWidth = self.outlinerWidth
-                }
             contentViewController.windowWasCreated(window: windowController.window!)
+            if let project = self.project
+                {
+                contentViewController.project = project
+//                windowController.window?.setFrame(self.projectState.windowFrame,display: true,animate: true)
+                }
             }
         self.addWindowController(windowController)
         }
@@ -42,14 +42,15 @@ class ProjectDocument: NSDocument
     override func write(to url: URL,ofType: String) throws
         {
         var path = url.path
-        if !path.hasSuffix(".argp")
+        if !path.hasSuffix(".argonp")
             {
-            path += ".argp"
+            path += ".argonp"
             }
         let aURL = URL(fileURLWithPath: path)
         let viewController = self.windowControllers[0].contentViewController as! ProjectViewController
-        var state = ProjectState(project: viewController.project,outlinerWidth: viewController.outlinerWidth)
-        if let data = try? NSKeyedArchiver.archivedData(withRootObject: state, requiringSecureCoding: false)
+        var state = viewController.projectState
+        state.windowFrame = viewController.view.window!.frame
+        if let data = try? NSKeyedArchiver.archivedData(withRootObject: state.project, requiringSecureCoding: false)
             {
             if (try? data.write(to: url)).isNil
                 {
@@ -62,9 +63,9 @@ class ProjectDocument: NSDocument
         {
         do
             {
-            guard url.path.hasSuffix(".argp") else
+            guard url.path.hasSuffix(".argonp") else
                 {
-                throw(CompilerIssue(code: .invalidFileType, message: "Argon can only open projects with a .argp file extension."))
+                throw(CompilerIssue(code: .invalidFileType, message: "Argon can only open projects with a .argonp file extension."))
                 }
             guard let data = try? Data(contentsOf: url) else
                 {
@@ -75,13 +76,12 @@ class ProjectDocument: NSDocument
                 throw(CompilerIssue(code: .fileDataIsCorrupt, message: "The file at \(url.path) is corrupt."))
                 }
             unarchiver.requiresSecureCoding = false
-            let state = unarchiver.decodeObject(of: ProjectState.self, forKey: NSKeyedArchiveRootObjectKey)
-            guard let state = state else
+            let aProject = unarchiver.decodeObject(of: SourceProjectNode.self, forKey: NSKeyedArchiveRootObjectKey)
+            guard let aProject = aProject else
                 {
                 throw(CompilerIssue(code: .fileDataIsCorrupt, message: "The file at \(url.path) is corrupt."))
                 }
-            self.project = state.project
-            self.outlinerWidth = state.outlinerWidth
+            self.project = aProject
             }
         catch let error
             {

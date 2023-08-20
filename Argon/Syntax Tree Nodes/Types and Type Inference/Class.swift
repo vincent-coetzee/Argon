@@ -169,26 +169,14 @@ public class Class: StructuredType
                 {
                 slots.append(self.parseSlotDeclaration(using: parser))
                 }
-            while !parser.token.isRightBrace
+            while parser.token.isForm
                 {
-                if parser.token.isForm
-                    {
-                    let form = self.parseForm(using: parser)
-                    scope.addForm(form)
-                    }
-                else if parser.token.isDeform
-                    {
-                    if deformAdded
-                        {
-                        parser.lodgeIssue(code: .deformAlreadyDefined,location: parser.token.location)
-                        self.parseDeform(using: parser)
-                        }
-                    else
-                        {
-                        scope.setDeform(self.parseDeform(using: parser))
-                        deformAdded = true
-                        }
-                    }
+                let form = self.parseForm(using: parser)
+                scope.addForm(form)
+                }
+            if parser.token.isDeform
+                {
+                scope.setDeform(self.parseDeform(using: parser))
                 }
             }
         scope.setSlots(slots)
@@ -207,7 +195,7 @@ public class Class: StructuredType
             {
             Block.parseBlockInner(block: block,using: parser)
             }
-        let method = Method(name: "DEFORM")
+        let method = Method(name: "FORM")
         method.setParameters(parameters)
         method.setBlock(block)
         return(method)

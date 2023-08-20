@@ -60,6 +60,7 @@ public enum ErrorCode: Int
     case mustInheritFromEnumerationBase
     
     case none
+    case nodeAlreadyDefined
 
     case pathExpected
     
@@ -78,7 +79,7 @@ public enum ErrorCode: Int
     case superclassIdentifierExpected
     case superclassExpected
     case symbolExpected
-    case nodeAlreadyDefined
+    case statementExpected
     
     case typeOrAssignmentExpected
 

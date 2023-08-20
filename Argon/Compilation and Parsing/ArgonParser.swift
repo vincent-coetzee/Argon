@@ -619,7 +619,8 @@ public class ArgonParser
             case(.FORK):
                 ForkStatement.parse(using: self)
             default:
-                fatalError()
+                self.lodgeIssue(code: .statementExpected,location: self.token.location)
+                self.nextToken()
             }
         }
         
