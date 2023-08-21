@@ -69,6 +69,11 @@ public class ArgonModule: Module
         return(self.lookupNode(atName: "EnumerationBase") as! Class)
         }
         
+    public var enumerationType: Class
+        {
+        return(self.lookupNode(atName: "Enumeration") as! Class)
+        }
+        
     public var objectType: Class
         {
         return(self.lookupNode(atName: "Object") as! Class)
@@ -217,16 +222,16 @@ public class ArgonModule: Module
         self.addSystemClass(named: "Slot",superclassesNamed: ["Object"],encoding: "O").slot("name",self.stringType)
         self.addSystemClass(named: "Class",superclassesNamed: ["Object"]).slot("name",self.stringType)
         self.addSystemClass(named: "Metaclass",superclassesNamed: ["Class"]).slot("name",self.stringType)
-        self.addSystemClass(named: "EnumerationCase",superclassesNamed: ["Object"]).slot("name",self.stringType)
-        self.addSystemClass(named: "Enumeration",superclassesNamed: ["Object"]).slot("name",self.stringType).slot("rawType",self.integer64Type)
+        self.addSystemClass(named: "EnumerationCase",superclassesNamed: ["Object"],generics: [.newTypeVariable(named: "BaseType")]).slot("name",self.stringType)
+        self.addSystemClass(named: "Enumeration",superclassesNamed: ["Object"],generics: [.newTypeVariable(named: "BaseType")]).slot("name",self.stringType)
         self.addSystemClass(named: "Collection",superclassesNamed: ["Object"],generics: []).slot("count",self.integer64Type)
         self.addSystemClass(named: "IndexedCollection",superclassesNamed: ["Collection"],generics: [])
-        self.addSystemClass(named: "Array",superclassesNamed: ["IndexedCollection"],generics: [.newTypeVariable(name: "Element"),.newTypeVariable(name: "Index")])
-        self.addSystemClass(named: "Set",superclassesNamed: ["Collection"],generics: [.newTypeVariable(name: "Element")],instanceType: SetInstance.self)
-        self.addSystemClass(named: "List",superclassesNamed: ["Collection"],generics: [.newTypeVariable(name: "Element")],instanceType: ListInstance.self)
-        self.addSystemClass(named: "Dictionary",superclassesNamed: ["Collection"],generics: [.newTypeVariable(name: "Element"),.newTypeVariable(name: "Key")],instanceType: DictionaryInstance.self)
-        self.addSystemClass(named: "Pointer",superclassesNamed: ["Object"],generics: [.newTypeVariable(name: "Element")],instanceType: PointerInstance.self)
-        self.addSystemClass(named: "BitSet",superclassesNamed: ["Collection"],generics: [.newTypeVariable(name: "Element"),.newTypeVariable(name: "Key")],instanceType: BitSetInstance.self)
+        self.addSystemClass(named: "Array",superclassesNamed: ["IndexedCollection"],generics: [.newTypeVariable(named: "Element"),.newTypeVariable(named: "Index")])
+        self.addSystemClass(named: "Set",superclassesNamed: ["Collection"],generics: [.newTypeVariable(named: "Element")],instanceType: SetInstance.self)
+        self.addSystemClass(named: "List",superclassesNamed: ["Collection"],generics: [.newTypeVariable(named: "Element")],instanceType: ListInstance.self)
+        self.addSystemClass(named: "Dictionary",superclassesNamed: ["Collection"],generics: [.newTypeVariable(named: "Element"),.newTypeVariable(named: "Key")],instanceType: DictionaryInstance.self)
+        self.addSystemClass(named: "Pointer",superclassesNamed: ["Object"],generics: [.newTypeVariable(named: "Element")],instanceType: PointerInstance.self)
+        self.addSystemClass(named: "BitSet",superclassesNamed: ["Collection"],generics: [.newTypeVariable(named: "Element"),.newTypeVariable(named: "Key")],instanceType: BitSetInstance.self)
         self.addSystemAliasedType(named: "Byte",toTypeNamed: "UInteger8",encoding: "P")
         self.addSystemAliasedType(named: "Character",toTypeNamed: "UInteger16",encoding: "Q")
         self.addSystemAliasedType(named: "Integer",toTypeNamed: "Integer64",encoding: "R")
@@ -240,6 +245,26 @@ public class ArgonModule: Module
         self.addSystemConstant(named: "$PI",ofTypeNamed: "Float")
         
         self.addNode(VoidType(name: "Void",superclasses: [self.objectType]))
+        }
+        
+    public func initializeMetaclasses()
+        {
+        self.symbolTable.doNodes
+            {
+            node in
+            if let aClass = node as? Class
+                {
+                let metaclass = Metaclass(class: aClass)
+                metaclass.setType(self.classType)
+                aClass.setType(metaclass)
+                }
+            else if let enumeration = node as? Enumeration
+                {
+                let metaclass = Metaclass(class: self.enumerationType)
+                metaclass.setType(self.classType)
+                enumeration.setType(metaclass)
+                }
+            }
         }
         
     public func initializeSystemMethods()

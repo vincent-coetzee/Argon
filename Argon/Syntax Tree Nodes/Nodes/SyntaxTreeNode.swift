@@ -7,8 +7,6 @@
 
 import Foundation
 
-fileprivate var _NextSymbol = 1
-
 public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
     {
     public static func ==(lhs: SyntaxTreeNode,rhs: SyntaxTreeNode) -> Bool
@@ -19,13 +17,6 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
     public static func isEqual(lhs: SyntaxTreeNode,rhs: SyntaxTreeNode) -> Bool
         {
         lhs.identifier == rhs.identifier
-        }
-        
-    public static var nextIndex: Int
-        {
-        let index = _NextSymbol
-        _NextSymbol += 1
-        return(index)
         }
         
     public var isType: Bool
@@ -73,32 +64,24 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
         self.parent.isNil ? Identifier(string: self.name) : self.parent!.identifier + name
         }
         
-    public var type: TypeNode
-        {
-        self._type
-        }
-        
     public private(set) var references = NodeReferences()
     public private(set) var name: String
     public private(set) var index: Int?
     public private(set) var parent: Parent?
     public var isSystemNode: Bool = false
-    public var assignedType: TypeNode?
-    internal var _type: TypeNode!
+    public private(set) var type: TypeNode!
     public private(set) var issues = CompilerIssues()
     
     init(index: Int? = nil,name: String)
         {
         self.name = name
-        self.index = _NextSymbol
-        _NextSymbol += 1
+        self.index = index.isNil ? Argon.nextIndex : index!
         }
     
     public init(name: String)
         {
         self.name = name
-        self.index = _NextSymbol
-        _NextSymbol += 1
+        self.index = Argon.nextIndex
         }
         
     public required init(coder: NSCoder)
@@ -106,6 +89,9 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
         self.name = coder.decodeObject(forKey: "name") as! String
         self.index = coder.decodeInteger(forKey: "index")
         self.parent = coder.decodeParent(forKey: "parent")
+        self.issues = coder.decodeObject(forKey: "issues") as! CompilerIssues
+        self.references = coder.decodeNodeReferences(forKey: "references")
+        self.isSystemNode = coder.decodeBool(forKey: "isSystemNode")
         }
         
     public func addIssue(code: ErrorCode,message: String? = nil,location: Location)
@@ -128,6 +114,9 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
         coder.encode(self.name,forKey: "name")
         coder.encode(self.index,forKey: "indeX")
         coder.encode(self.parent,forKey: "parent")
+        coder.encode(self.references,forKey: "references")
+        coder.encode(self.issues,forKey: "issues")
+        coder.encode(self.isSystemNode,forKey: "isSystemNode")
         }
         
     @discardableResult
@@ -147,6 +136,11 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
         self.name = name
         }
         
+    public func setType(_ type: TypeNode?)
+        {
+        self.type = type
+        }
+        
     public func setParent(_ symbol: SyntaxTreeNode?)
         {
         if symbol.isNil
@@ -160,6 +154,11 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
     public func setParent(_ expression: Expression)
         {
         self.parent = .expression(expression)
+        }
+        
+    public func setIndex(_ index: Int)
+        {
+        self.index = index
         }
         
     public func dump(indent: String)

@@ -9,15 +9,6 @@ import Foundation
 
 public class Class: StructuredType
     {
-    public override var type: TypeNode
-        {
-        if self._type.isNil
-            {
-            self._type = Metaclass(class: self)
-            }
-        return(self._type)
-        }
-                
     public override var isClass: Bool
         {
         true
@@ -148,7 +139,7 @@ public class Class: StructuredType
                     parser.parseComma()
                     if parser.token.isIdentifier
                         {
-                        typeVariables.append(TypeNode.newTypeVariable(name: parser.token.identifier.lastPart))
+                        typeVariables.append(SubstitutionSet.newTypeVariable(named: parser.token.identifier.lastPart))
                         }
                     parser.nextToken()
                     }
@@ -164,25 +155,26 @@ public class Class: StructuredType
         var slots = Slots()
         parser.parseBraces
             {
-            var deformAdded = false
             while parser.token.isSlotRelatedKeyword
                 {
                 slots.append(self.parseSlotDeclaration(using: parser))
                 }
             while parser.token.isForm
                 {
-                let form = self.parseForm(using: parser)
+                let form = self.parseForm(in: scope,using: parser)
                 scope.addForm(form)
                 }
             if parser.token.isDeform
                 {
-                scope.setDeform(self.parseDeform(using: parser))
+                scope.setDeform(self.parseDeform(in: scope,using: parser))
                 }
             }
         scope.setSlots(slots)
+        let metaclass = Metaclass(class: scope)
+        scope.setType(metaclass)
         }
         
-    private class func parseForm(using parser: ArgonParser) -> Method
+    private class func parseForm(`in` aClass: Class,using parser: ArgonParser) -> Method
         {
         parser.nextToken()
         let parameters = parser.parseParameters()
@@ -191,6 +183,7 @@ public class Class: StructuredType
             {
             block.addLocal(parameter)
             }
+        block.addLocal(PseudoVariable.`self`(type: aClass))
         parser.parseBraces
             {
             Block.parseBlockInner(block: block,using: parser)
@@ -202,10 +195,11 @@ public class Class: StructuredType
         }
         
     @discardableResult
-    private class func parseDeform(using parser: ArgonParser) -> Method
+    private class func parseDeform(`in` aClass: Class,using parser: ArgonParser) -> Method
         {
         parser.nextToken()
         let block = Block()
+        block.addLocal(PseudoVariable.`self`(type: aClass))
         Block.parseBlockInner(block: block,using: parser)
         let method = Method(name: "DEFORM")
         method.setBlock(block)
@@ -216,6 +210,16 @@ public class Class: StructuredType
         {
         let location = parser.token.location
         let slot = Slot(name: "")
+        if parser.token.isVirtual
+            {
+            slot.isVirtualSlot = true
+            parser.nextToken()
+            }
+        if parser.token.isDynamic
+            {
+            slot.isDynamicSlot = true
+            parser.nextToken()
+            }
         slot.isReadWriteSlot = true
         if parser.token.isRead
             {
@@ -225,16 +229,6 @@ public class Class: StructuredType
         else if parser.token.isWrite
             {
             slot.isReadWriteSlot = true
-            parser.nextToken()
-            }
-        if parser.token.isDynamic
-            {
-            slot.isDynamicSlot = true
-            parser.nextToken()
-            }
-        if parser.token.isVirtual
-            {
-            slot.isVirtualSlot = true
             parser.nextToken()
             }
         if !parser.token.isSlot
@@ -251,7 +245,7 @@ public class Class: StructuredType
             parser.lodgeIssue(code: .singleIdentifierExpected,message: "An identifier path is not allowed here.",location: location)
             }
         let name = identifier.lastPart
-        var type: TypeNode = TypeNode.newTypeVariable()
+        var type: TypeNode = SubstitutionSet.newTypeVariable()
         if parser.token.isScope
             {
             parser.nextToken()

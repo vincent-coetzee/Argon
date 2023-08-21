@@ -21,7 +21,7 @@ public class Variable: SyntaxTreeNode
         {
         self.expression = expression
         super.init(name: name)
-        self.assignedType = type
+        self.setType(type) 
         }
         
     public required init(coder: NSCoder)

@@ -11,6 +11,7 @@ public class PrefixExpression: Expression
     {
     public let `operator`: TokenType
     public let right: Expression
+    public var methods: Methods?
     
     public init(operator: TokenType,right: Expression)
         {
@@ -39,6 +40,11 @@ public class PrefixExpression: Expression
         visitor.enter(prefixExpression: self)
         self.right.accept(visitor: visitor)
         visitor.exit(prefixExpression: self)
+        }
+        
+    public func setMethods(_ methods: Methods)
+        {
+        self.methods = methods
         }
     }
     

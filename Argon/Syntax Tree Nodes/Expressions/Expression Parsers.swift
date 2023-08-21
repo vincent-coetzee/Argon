@@ -32,6 +32,7 @@ public class IdentifierParser: PrefixParser
             parser.lodgeIssue(code: .undefinedSymbol,location: location)
             return(expression)
             }
+        expression.setIdentifierValue(symbol.valueBox)
         return(expression)
         }
     }
@@ -49,7 +50,9 @@ public class PrefixOperatorParser: PrefixParser
         {
         let location = parser.token.location
         parser.nextToken()
-        return(PrefixExpression(operator: token.tokenType,right: parser.parseExpression(precedence: self.precedence)).addDeclaration(location))
+        let expression = PrefixExpression(operator: token.tokenType,right: parser.parseExpression(precedence: self.precedence)).addDeclaration(location)
+        expression.setMethods(parser.currentScope.lookupMethods(atName: token.matchString))
+        return(expression)
         }
     }
     
@@ -77,7 +80,9 @@ public class PostfixOperatorParser: InfixParser
         {
         let location = parser.token.location
         parser.nextToken()
-        return(PostfixExpression(left: left,operator: token.tokenType).addDeclaration(location))
+        let expression = PostfixExpression(left: left,operator: token.tokenType).addDeclaration(location)
+        expression.setMethods(parser.currentScope.lookupMethods(atName: token.matchString))
+        return(expression)
         }
     }
 
@@ -112,7 +117,10 @@ public class BinaryOperatorParser: InfixParser
         {
         let location = parser.token.location
         let right = parser.parseExpression(precedence: Precedence.assignment - (self.isRightAssociative ? 1 : 0))
-        return(BinaryExpression(left: left, operator: token.tokenType, right: right).addDeclaration(location))
+        let methods = parser.currentScope.lookupMethods(atName: token.matchString)
+        let expression = BinaryExpression(left: left, operator: token.tokenType, right: right).addDeclaration(location)
+        expression.setMethods(methods)
+        return(expression)
         }
     }
     
@@ -141,18 +149,19 @@ public class MakeParser: PrefixParser
         {
         let location = parser.token.location
         parser.nextToken()
-        var mainExpression: Expression!
         var arguments = Expressions()
+        var aClass: Class?
         parser.parseParentheses
             {
-            mainExpression = parser.parseExpression(precedence: 0)
+            let identifier = parser.parseIdentifier(errorCode: .identifierExpected)
+            aClass = parser.currentScope.lookupNode(atIdentifier: identifier) as? Class
             while parser.token.isComma && !parser.token.isEnd
                 {
                 parser.parseComma()
                 arguments.append(parser.parseExpression())
                 }
             }
-        let expression = MakeExpression(classExpression: mainExpression,arguments: arguments)
+        let expression = MakeExpression(class: aClass,arguments: arguments)
         return(expression.addDeclaration(location))
         }
     }
@@ -185,15 +194,15 @@ public class MethodInvocationParser: InfixParser
     public func parse(parser: ArgonParser,left: Expression,token: Token) -> Expression
         {
         let location = parser.token.location
-        var methodName = ""
+        var methodName: Identifier!
         if !token.isIdentifier
             {
             parser.lodgeIssue(code: .identifierExpected,location: location)
-            methodName = Argon.nextIndex(named: "METHOD")
+            methodName = Identifier(string: Argon.nextIndex(named: "METHOD"))
             }
         else
             {
-            methodName = parser.token.identifier.lastPart
+            methodName = parser.token.identifier
             parser.nextToken()
             }
         var arguments = Arguments()
@@ -217,7 +226,10 @@ public class MethodInvocationParser: InfixParser
             {
             parser.lodgeIssue(code: .rightParenthesisExpected,location: location)
             }
-        return(MethodInvocationExpression(methodName: methodName,arguments: arguments).addDeclaration(location))
+        let methods = parser.currentScope.lookupMethods(atIdentifier: methodName)
+        let expression = MethodInvocationExpression(methodName: methodName,arguments: arguments).addDeclaration(location)
+        expression.setMethods(methods)
+        return(expression)
         }
     }
 

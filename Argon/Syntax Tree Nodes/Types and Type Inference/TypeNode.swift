@@ -115,6 +115,11 @@ public class TypeNode: SyntaxTreeNode
         ArgonModule.shared.floatType
         }
         
+    public static var enumerationType: TypeNode
+        {
+        ArgonModule.shared.enumerationType
+        }
+        
     public static var monthType: TypeNode
         {
         ArgonModule.shared.monthType
@@ -183,6 +188,11 @@ public class TypeNode: SyntaxTreeNode
     public override var isType: Bool
         {
         true
+        }
+        
+    public static func newTypeVariable(named name: String) -> TypeVariable
+        {
+        SubstitutionSet.newTypeVariable(named: name)
         }
         
     public override var encoding: String
@@ -270,17 +280,6 @@ public class TypeNode: SyntaxTreeNode
     public func setEncoding(_ encoding: String?)
         {
         self._encoding = encoding
-        }
-        
-    public static func newTypeVariable(name: String? = nil) -> TypeVariable
-        {
-        let index = SyntaxTreeNode.nextIndex
-        var theName: String? = name
-        if theName.isNil
-            {
-            theName = "TypeVariable(\(index)"
-            }
-        return(TypeVariable(name: theName!,index: index))
         }
         
     public func inherits(from someClass: Class) -> Bool

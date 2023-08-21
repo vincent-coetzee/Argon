@@ -12,6 +12,7 @@ public class BinaryExpression: Expression
     public let left: Expression
     private let `operator`: TokenType
     public let right: Expression
+    private var methods: Methods?
     
     public init(left: Expression,right: Expression)
         {
@@ -51,5 +52,10 @@ public class BinaryExpression: Expression
         self.left.accept(visitor: visitor)
         self.right.accept(visitor: visitor)
         visitor.exit(binaryExpression: self)
+        }
+        
+    public func setMethods(_ methods: Methods)
+        {
+        self.methods = methods
         }
     }

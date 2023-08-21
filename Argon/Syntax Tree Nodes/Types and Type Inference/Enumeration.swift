@@ -89,6 +89,7 @@ public class Enumeration: StructuredType
                 }
             }
         parser.currentScope.addNode(enumeration)
+        enumeration.setType(.enumerationType)
         }
         
     public private(set) var cases: EnumerationCases = []

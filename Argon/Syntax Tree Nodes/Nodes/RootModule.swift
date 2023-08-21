@@ -81,6 +81,7 @@ public class RootModule: Module
             rootModule.addNode(module)
             self._rootModule = rootModule
             module.initializeSystemMethods()
+            module.initializeMetaclasses()
             return(rootModule)
             }
         else

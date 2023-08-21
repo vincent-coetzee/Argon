@@ -9,11 +9,11 @@ import Foundation
 
 public class MethodInvocationExpression: Expression
     {
-    private var method: Method?
-    private let methodName: String
+    private var methods: Methods?
+    private let methodName: Identifier
     private let arguments: Arguments
     
-    public init(methodName: String,arguments: Arguments)
+    public init(methodName: Identifier,arguments: Arguments)
         {
         self.methodName = methodName
         self.arguments = arguments
@@ -22,15 +22,15 @@ public class MethodInvocationExpression: Expression
         
     public required init(coder: NSCoder)
         {
-        self.method = coder.decodeObject(forKey: "method") as? Method
-        self.methodName = coder.decodeObject(forKey: "methodName") as! String
+        self.methods = coder.decodeObject(forKey: "methods") as? Methods
+        self.methodName = coder.decodeObject(forKey: "methodName") as! Identifier
         self.arguments = coder.decodeObject(forKey: "arguments") as! Arguments
         super.init(coder: coder)
         }
         
     public override func encode(with coder: NSCoder)
         {
-        coder.encode(self.method,forKey: "method")
+        coder.encode(self.methods,forKey: "methods")
         coder.encode(self.methodName,forKey: "methodName")
         coder.encode(self.arguments,forKey: "arguments")
         super.encode(with: coder)
@@ -39,5 +39,10 @@ public class MethodInvocationExpression: Expression
     public override func accept(visitor: Visitor)
         {
         visitor.visit(methodInvocationExpression: self)
+        }
+        
+    public func setMethods(_ methods: Methods)
+        {
+        self.methods = methods
         }
     }

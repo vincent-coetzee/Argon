@@ -138,6 +138,7 @@
 		BFBDC5392A21151D0093C554 /* libLLVM-C.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BFBDC5382A21151D0093C554 /* libLLVM-C.dylib */; };
 		BFBDC53D2A211C4F0093C554 /* libLLVM-C.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = BFBDC5382A21151D0093C554 /* libLLVM-C.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		BFBDC53E2A211C510093C554 /* libLLVM.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF97988B2A19188D00C9852C /* libLLVM.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		BFC4B6CA2A934A1C0098FBB1 /* SubstitutionSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC4B6C92A934A1C0098FBB1 /* SubstitutionSet.swift */; };
 		BFC6C0722A69990600BC424D /* ModuleBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC6C0712A69990600BC424D /* ModuleBundle.swift */; };
 		BFCA9342296F43340049B39A /* Scope.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCA9341296F43340049B39A /* Scope.swift */; };
 		BFCB438429845D07001D1CFD /* Slot.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCB438329845D07001D1CFD /* Slot.swift */; };
@@ -342,6 +343,7 @@
 		BFBD0E4629E08521002873C9 /* ArgonCompiler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgonCompiler.swift; sourceTree = "<group>"; };
 		BFBD79762A576CFB0038EEEA /* AliasedType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AliasedType.swift; sourceTree = "<group>"; };
 		BFBDC5382A21151D0093C554 /* libLLVM-C.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libLLVM-C.dylib"; path = "../../../../../opt/homebrew/Cellar/llvm/16.0.1/lib/libLLVM-C.dylib"; sourceTree = "<group>"; };
+		BFC4B6C92A934A1C0098FBB1 /* SubstitutionSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstitutionSet.swift; sourceTree = "<group>"; };
 		BFC6C0712A69990600BC424D /* ModuleBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleBundle.swift; sourceTree = "<group>"; };
 		BFCA9341296F43340049B39A /* Scope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scope.swift; sourceTree = "<group>"; };
 		BFCB438329845D07001D1CFD /* Slot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slot.swift; sourceTree = "<group>"; };
@@ -515,6 +517,7 @@
 				BF60D62D2A8CB8C500ED3F6B /* SetInstance.swift */,
 				BFCB438329845D07001D1CFD /* Slot.swift */,
 				BF1F4B022A5616B000C1F977 /* StructuredType.swift */,
+				BFC4B6C92A934A1C0098FBB1 /* SubstitutionSet.swift */,
 				BF60D6332A8CCAC400ED3F6B /* SubType.swift */,
 				BF4DB6D72A813DE700A509A4 /* SystemMethod.swift */,
 				BF1F4B082A56196300C1F977 /* TupleType.swift */,
@@ -990,6 +993,7 @@
 				BF3676C92972DBFC00E1A5B9 /* Identifier.swift in Sources */,
 				BFF0CD462A1EA09100F99EC3 /* SeparatorToken.swift in Sources */,
 				BF54B9A829F5C7C600A755DC /* SelectionInListModel.swift in Sources */,
+				BFC4B6CA2A934A1C0098FBB1 /* SubstitutionSet.swift in Sources */,
 				BF174B5B294CC80E0094A6D4 /* ByteToken.swift in Sources */,
 				BFAD2C2B2A75509000565B6B /* Parameter.swift in Sources */,
 				BFE99B372A710A690056E700 /* BinaryExpression.swift in Sources */,

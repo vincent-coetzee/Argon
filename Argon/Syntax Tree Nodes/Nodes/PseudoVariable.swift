@@ -9,6 +9,13 @@ import Foundation
 
 public class PseudoVariable: Variable
     {
+    public static func `self`(type: TypeNode) -> Self
+        {
+        let variable = PseudoVariable(name: "self")
+        variable.setType(type)
+        return(variable as! Self)
+        }
+        
     public override init(name: String)
         {
         super.init(name: name)

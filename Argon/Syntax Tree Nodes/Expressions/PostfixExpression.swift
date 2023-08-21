@@ -11,6 +11,7 @@ public class PostfixExpression: Expression
     {
     public let `operator`: TokenType
     public let left: Expression
+    public var methods: Methods?
     
     public init(left: Expression,operator: TokenType)
         {
@@ -39,6 +40,11 @@ public class PostfixExpression: Expression
         visitor.enter(postfixExpression: self)
         self.left.accept(visitor: visitor)
         visitor.exit(postfixExpression: self)
+        }
+        
+    public func setMethods(_ methods: Methods)
+        {
+        self.methods = methods
         }
     }
     

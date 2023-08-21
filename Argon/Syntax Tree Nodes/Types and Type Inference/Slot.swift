@@ -19,7 +19,7 @@ public class Slot: SyntaxTreeNode
     public init(name: String,type: TypeNode? = nil)
         {
         super.init(name: name)
-        self.assignedType = type
+        self.setType(type)
         }
         
     required public init(coder: NSCoder)
@@ -44,11 +44,6 @@ public class Slot: SyntaxTreeNode
         super.encode(with: coder)
         }
         
-    public func setType(_ type: TypeNode)
-        {
-        self.assignedType = type
-        }
-        
     public func setInitialExpression(_ expression: Expression?)
         {
         self.initialExpression = expression
@@ -67,7 +62,6 @@ public class Slot: SyntaxTreeNode
     public override func accept(visitor: Visitor)
         {
         self.initialExpression?.accept(visitor: visitor)
-        self.assignedType?.accept(visitor: visitor)
         self.readBlock?.accept(visitor: visitor)
         self.writeBlock?.accept(visitor: visitor)
         visitor.visit(slot: self)

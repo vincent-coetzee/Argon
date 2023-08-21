@@ -84,6 +84,17 @@ public class SymbolTable: NSObject,NSCoding
             entry!.node = node
             }
         }
+        
+    public func doNodes(_ closure: (SyntaxTreeNode) -> Void)
+        {
+        for (_,entry) in self.symbolEntries
+            {
+            if entry.node.isNotNil
+                {
+                closure(entry.node!)
+                }
+            }
+        }
 
     public func lookupMethods(atName name: String) -> Methods
         {
