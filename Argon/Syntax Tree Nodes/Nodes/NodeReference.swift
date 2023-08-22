@@ -24,13 +24,13 @@ extension NSCoder
             case(.declaration(let location)):
                 self.encode(0,forKey: key + "index")
                 self.encode(location.line,forKey: key + "line")
-                self.encode(location.sourceKey,forKey: key + "sourceKey")
+                self.encode(location.nodeKey,forKey: key + "sourceKey")
                 self.encode(location.start,forKey: key + "start")
                 self.encode(location.stop,forKey: key + "stop")
             case(.reference(let location)):
                 self.encode(1,forKey: key + "index")
                 self.encode(location.line,forKey: key + "line")
-                self.encode(location.sourceKey,forKey: key + "sourceKey")
+                self.encode(location.nodeKey,forKey: key + "sourceKey")
                 self.encode(location.start,forKey: key + "start")
                 self.encode(location.stop,forKey: key + "stop")
             }
@@ -43,16 +43,16 @@ extension NSCoder
             {
             case(0):
                 let line = self.decodeInteger(forKey: key + "line")
-                let sourceKey = self.decodeInteger(forKey: key + "sourceKey")
+                let nodeKey = self.decodeInteger(forKey: key + "nodeKey")
                 let start = self.decodeInteger(forKey: key + "start")
                 let stop = self.decodeInteger(forKey: key + "stop")
-                return(.declaration(Location(sourceKey: sourceKey, line: line, start: start, stop: stop)))
+                return(.declaration(Location(nodeKey: nodeKey, line: line, start: start, stop: stop)))
             case(1):
                 let line = self.decodeInteger(forKey: key + "line")
-                let sourceKey = self.decodeInteger(forKey: key + "sourceKey")
+                let nodeKey = self.decodeInteger(forKey: key + "nodeKey")
                 let start = self.decodeInteger(forKey: key + "start")
                 let stop = self.decodeInteger(forKey: key + "stop")
-                return(.reference(Location(sourceKey: sourceKey, line: line, start: start, stop: stop)))
+                return(.reference(Location(nodeKey: nodeKey, line: line, start: start, stop: stop)))
             default:
                 fatalError("This should not happen.")
             }

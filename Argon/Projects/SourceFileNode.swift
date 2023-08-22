@@ -30,9 +30,21 @@ public class SourceFileNode: SourceNode
         self.name + ".argon"
         }
         
+    public override var compilerIssues: CompilerIssues
+        {
+        get
+            {
+            self._compilerIssues
+            }
+        set
+            {
+            self._compilerIssues = newValue
+            }
+        }
+        
     public private(set) var source: String
     public var expandedSource: String
-    public var compilerIssues = CompilerIssues()
+    private var _compilerIssues = CompilerIssues()
     public var tokens = Tokens()
     public var astNode: SyntaxTreeNode?
     
@@ -49,7 +61,7 @@ public class SourceFileNode: SourceNode
         self.source = coder.decodeObject(forKey: "source") as! String
         self.expandedSource = coder.decodeObject(forKey: "expandedSource") as! String
         self.tokens = coder.decodeObject(forKey: "tokens") as! Tokens
-        self.compilerIssues = coder.decodeObject(forKey: "compilerIssues") as! CompilerIssues
+        self._compilerIssues = coder.decodeObject(forKey: "compilerIssues") as! CompilerIssues
         super.init(coder: coder)
         }
         
@@ -58,7 +70,7 @@ public class SourceFileNode: SourceNode
         coder.encode(self.source,forKey: "source")
         coder.encode(self.expandedSource,forKey: "expandedSource")
         coder.encode(self.tokens,forKey: "tokens")
-        coder.encode(self.compilerIssues,forKey: "compilerIssues")
+        coder.encode(self._compilerIssues,forKey: "compilerIssues")
         super.encode(with: coder)
         }
         

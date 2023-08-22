@@ -66,7 +66,7 @@ public struct ArgonCompiler
         {
         for node in self.sourceFileNodes
             {
-            node.tokens = ArgonScanner(source: node.expandedSource, sourceKey: node.sourceKey).allTokens()
+            node.tokens = ArgonScanner(source: node.expandedSource).allTokens()
             }
         }
         
@@ -76,7 +76,9 @@ public struct ArgonCompiler
         for node in self.sourceFileNodes
             {
             node.compilerIssues = CompilerIssues()
+            parser.nodeKey = node.nodeKey
             parser.parse(sourceFileNode: node)
+            node.compilerIssues = parser.compilerIssues(forNodeKey: node.nodeKey)
             self.wereIssues = node.compilerIssues.count > 0 || self.wereIssues
             }
         }

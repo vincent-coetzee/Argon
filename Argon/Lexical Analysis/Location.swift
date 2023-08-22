@@ -9,29 +9,29 @@ import Foundation
 
 public struct Location
     {
-    public static var zero = Location(sourceKey: 0,line: 0)
+    public static var zero = Location(nodeKey: 0,line: 0)
         
     public var range: NSRange
         {
         NSRange(location: self.start,length: self.stop - self.start)
         }
         
-    public var sourceKey: Int
+    public var nodeKey: Int
     public let line: Int
     public let start: Int
     public let stop: Int
     
-    init(sourceKey: Int,line: Int)
+    init(nodeKey: Int,line: Int)
         {
-        self.sourceKey = sourceKey
+        self.nodeKey = nodeKey
         self.line = line
         self.start = 0
         self.stop = 0
         }
         
-    public init(sourceKey: Int,line: Int,start: Int,stop: Int)
+    public init(nodeKey: Int,line: Int,start: Int,stop: Int)
         {
-        self.sourceKey = sourceKey
+        self.nodeKey = nodeKey
         self.line = line
         self.start = start
         self.stop = stop
@@ -42,7 +42,7 @@ public extension NSCoder
     {
     func encode(_ location: Location,forKey key: String)
         {
-        self.encode(location.sourceKey,forKey: key + "sourceKey")
+        self.encode(location.nodeKey,forKey: key + "nodeKey")
         self.encode(location.line,forKey: key + "line")
         self.encode(location.start,forKey: key + "start")
         self.encode(location.stop,forKey: key + "stop")
@@ -50,10 +50,10 @@ public extension NSCoder
         
     func decodeLocation(forKey key: String) -> Location
         {
-        let sourceKey = self.decodeInteger(forKey: "sourceKey")
-        let line = self.decodeInteger(forKey: "line")
-        let start = self.decodeInteger(forKey: "start")
-        let stop = self.decodeInteger(forKey: "stop")
-        return(Location(sourceKey: sourceKey, line: line, start: start, stop: stop))
+        let nodeKey = self.decodeInteger(forKey: key + "nodeKey")
+        let line = self.decodeInteger(forKey: key + "line")
+        let start = self.decodeInteger(forKey: key + "start")
+        let stop = self.decodeInteger(forKey: key + "stop")
+        return(Location(nodeKey: nodeKey, line: line, start: start, stop: stop))
         }
     }

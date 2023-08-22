@@ -96,7 +96,7 @@ public enum ErrorCode: Int
     case writeBlockExpectedForVirtualSlot
     }
     
-public class CompilerIssue: NSObject,NSCoding,Error
+public class CompilerIssue: NSObject,NSCoding,Error,NSCopying
     {
     public let code: ErrorCode
     public let message: String?
@@ -136,5 +136,10 @@ public class CompilerIssue: NSObject,NSCoding,Error
         coder.encode(self.code.rawValue,forKey: "code")
         coder.encode(self.message,forKey: "message")
         coder.encode(self.location,forKey: "location")
+        }
+        
+    public func copy(with zone: NSZone? = nil) -> Any
+        {
+        CompilerIssue(code: self.code,message: self.message,location: self.location)
         }
     }

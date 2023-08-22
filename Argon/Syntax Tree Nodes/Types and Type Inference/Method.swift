@@ -84,6 +84,7 @@ public class Method: CallableTypeNode
     public func setBlock(_ block: Block)
         {
         self.block = block
+        block.setParent(self)
         }
     }
 

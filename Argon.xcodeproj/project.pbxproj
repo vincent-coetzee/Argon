@@ -584,6 +584,7 @@
 				BF47CD612A68729B00C63D1E /* ModuleBundleDocument.swift */,
 				BF47CD632A68749700C63D1E /* ModuleBundleViewController.swift */,
 				BFA93E42291678AF0001F05D /* ProjectDocument.swift */,
+				BF8CB1852A8FE8380056F145 /* ProjectState.swift */,
 				BF71EEC729F02F96009356E0 /* ProjectViewCell.swift */,
 				BF71EEC529F02C15009356E0 /* ProjectViewCell.xib */,
 				BFA93E40291678AF0001F05D /* ProjectViewController.swift */,
@@ -592,7 +593,6 @@
 				BF3B430629A1515F009C269F /* SourceView.swift */,
 				BFAB87712A8671B30048B20E /* ToggleState.swift */,
 				BFAB87732A86A18E0048B20E /* Toolbar.swift */,
-				BF8CB1852A8FE8380056F145 /* ProjectState.swift */,
 			);
 			path = "Main UI";
 			sourceTree = "<group>";
@@ -754,13 +754,13 @@
 			children = (
 				BFA93E3E291678AF0001F05D /* AppDelegate.swift */,
 				BF71EECB29F06E33009356E0 /* BrowserActionSet.swift */,
+				BFABDBCF2A8BB12800806F7D /* ColorSet.swift */,
+				BFE99B3E2A710C560056E700 /* EnumerationInstance.swift */,
+				BFE99B3C2A710BCF0056E700 /* ObjectInstance.swift */,
 				BFED872F2A168CF000CC70A8 /* Queue.swift */,
 				BF54B99729F59D2600A755DC /* Repository.swift */,
 				BF57672329EDC0FC007EECA5 /* Stack.swift */,
-				BFE99B3C2A710BCF0056E700 /* ObjectInstance.swift */,
-				BFE99B3E2A710C560056E700 /* EnumerationInstance.swift */,
 				BFE1AD0D2A8A78BF00402294 /* Visitor + Visitable.swift */,
-				BFABDBCF2A8BB12800806F7D /* ColorSet.swift */,
 			);
 			path = Infrastructure;
 			sourceTree = "<group>";

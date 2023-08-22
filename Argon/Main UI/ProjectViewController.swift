@@ -204,7 +204,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         self.outliner.indentationPerLevel = 15
         self.outliner.indentationMarkerFollowsCell = true
         self.outliner.intercellSpacing = NSSize(width: 5,height: 0)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.outlinerSelectionChanged), name: NSOutlineView.selectionDidChangeNotification, object: self.outliner)
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.outlinerSelectionChanged), name: NSOutlineView.selectionDidChangeNotification, object: self.outliner)
         }
         
     private func updatePathControl(from node: SourceNode?)
@@ -289,7 +289,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
             node.addNode(file)
             self.outliner.reloadItem(node,reloadChildren: true)
             self.outliner.expandItem(node,expandChildren: true)
-            let _ = ArgonScanner(source: file.source,sourceKey: 0)
+            let _ = ArgonScanner(source: file.source)
             let row = self.outliner.row(forItem: file)
             let indexSet = IndexSet(integer: row)
             self.outliner.selectRowIndexes(indexSet, byExtendingSelection: false)
@@ -339,11 +339,9 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         if sourceNode.isSourceFileNode
             {
             let sourceFileNode = sourceNode as! SourceFileNode
-            let source = sourceFileNode.source
-            self.sourceView.string = source
-            self.sourceView.tokens = ArgonScanner(source: sourceFileNode.expandedSource, sourceKey: sourceFileNode.sourceKey).allTokens()
+            self.sourceView.string = sourceFileNode.expandedSource
+            self.sourceView.tokens = ArgonScanner(source: sourceFileNode.expandedSource).allTokens()
             }
-        self.view.window?.title = sourceNode.title
         }
     }
     
@@ -381,27 +379,27 @@ extension ProjectViewController: NSMenuItemValidation
         }
     }
     
-extension ProjectViewController
-    {
-    @objc func outlinerSelectionChanged(_ notification: Notification)
-        {
-        let row = self.outliner.selectedRow
-        guard row != -1 else
-            {
-            return
-            }
-        let item = self.outliner.item(atRow: row) as! SourceNode
-        if item.isSourceFileNode
-            {
-            let node = item as! SourceFileNode
-            node.tokens = ArgonScanner(source: node.source, sourceKey: node.sourceKey).allTokens()
-            self.sourceView.string = node.source
-            self.sourceView.tokens = node.tokens
-            }
-        self.updatePathControl(from: item)
-        }
-    }
-    
+//extension ProjectViewController
+//    {
+//    @objc func outlinerSelectionChanged(_ notification: Notification)
+//        {
+//        let row = self.outliner.selectedRow
+//        guard row != -1 else
+//            {
+//            return
+//            }
+//        let item = self.outliner.item(atRow: row) as! SourceNode
+//        if item.isSourceFileNode
+//            {
+//            let node = item as! SourceFileNode
+//            node.tokens = ArgonScanner(source: node.source).allTokens()
+//            self.sourceView.string = node.source
+//            self.sourceView.tokens = node.tokens
+//            }
+//        self.updatePathControl(from: item)
+//        }
+//    }
+//
 extension ProjectViewController: NSMenuDelegate
     {
     public func menuNeedsUpdate(_ menu: NSMenu)
@@ -445,7 +443,7 @@ extension ProjectViewController: NSOutlineViewDataSource
     
 extension ProjectViewController: NSOutlineViewDelegate
     {
-    @MainActor func outlineViewSelectionDidChange(_ notification: Notification)
+    public func outlineViewSelectionDidChange(_ notification: Notification)
         {
         let row = self.outliner.selectedRow
         guard row != -1 else
@@ -454,6 +452,7 @@ extension ProjectViewController: NSOutlineViewDelegate
             }
         let item = self.outliner.item(atRow: row) as! SourceNode
         self.setSelected(sourceNode: item)
+        self.updatePathControl(from: item)
         }
         
     public func outlineView(_ outlineView: NSOutlineView, shouldEdit tableColumn: NSTableColumn?, item: Any) -> Bool
@@ -543,6 +542,11 @@ extension ProjectViewController
     @IBAction public func onBuildClicked(_ sender: Any?)
         {
         ArgonCompiler.build(nodes: self._project.allSourceFiles)
+        guard let node = self.selectedSourceNode,node.isSourceFileNode else
+            {
+            return
+            }
+        self.sourceView.compilerIssues = node.compilerIssues
         }
         
     @IBAction public func onParseClicked(_ sender: Any?)

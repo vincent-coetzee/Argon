@@ -36,6 +36,18 @@ public class SourceCodeEditingView: NSView,NSTextViewDelegate,Model
             }
         }
         
+    public var compilerIssues: CompilerIssues
+        {
+        get
+            {
+            self.textView.compilerIssues
+            }
+        set
+            {
+            self.textView.compilerIssues = newValue
+            }
+        }
+        
     public var textViewDelegate: NSTextViewDelegate?
         {
         get
@@ -64,6 +76,8 @@ public class SourceCodeEditingView: NSView,NSTextViewDelegate,Model
     private var _textViewDelegate: NSTextViewDelegate?
     public var dependentKey = DependentSet.nextDependentKey
     public var dependents = DependentSet()
+    private var _compilerIssues = CompilerIssues()
+    
     public override init(frame: NSRect)
         {
         super.init(frame: frame)

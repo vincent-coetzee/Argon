@@ -105,8 +105,8 @@ public class SourceTheme
         self.styles[.colorToolbarImage] = NSColor.controlAccentColor
         self.styles[.colorToolbarBackground] = NSColor.argonWhite25
         self.styles[.colorDefault] = NSColor.argonWhite50
-//        self.styles[.colorTint] = NSColor.controlAccentColor
-        self.styles[.colorTint] = NSColor.argonLivingCoral
+        self.styles[.colorTint] = NSColor.controlAccentColor
+//        self.styles[.colorTint] = NSColor.argonLivingCoral
         self.styles[.colorOutlineBackground] = NSColor.windowBackgroundColor
         self.styles[.colorEditorBackground] = NSColor.argonBlack20
         self.styles[.colorEditorText] = NSColor.argonStandardPink
@@ -139,7 +139,7 @@ public class SourceTheme
 //        self.styles[.colorWarning] = NSColor.argonBrightYellowCrayola
 //        self.styles[.colorWarning] = NSColor.argonSunglow
         self.styles[.colorWarning] = NSColor.argonDeepOrange
-        self.styles[.colorIssue] = NSColor.argonSizzlingRed
+        self.styles[.colorIssue] = NSColor.argonBrightYellowCrayola
         self.styles[.colorSystemEnumeration] = NSColor.argonDeepOrange
         self.styles[.colorSystemAliasedType] = NSColor.argonPomelo
         self.styles[.colorSeparator] = NSColor.argonAnnotationOrange

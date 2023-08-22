@@ -91,7 +91,6 @@ public class ArgonScanner
         }
     
     private var _source:String = ""
-    private let sourceKey: Int
     private var location: Int
     private var rules: Array<TokenRule> = []
     private var lineRecords = Array<LineRecord>()
@@ -110,9 +109,8 @@ public class ArgonScanner
     private var sourceCount: Int
     public private(set) var tokens: Tokens?
     
-    init(source: String,sourceKey: Int)
+    init(source: String)
         {
-        self.sourceKey = sourceKey
         self.sourceCount = source.count
         self.tokenStart = 0
         self.currentIndex = source.startIndex
@@ -214,11 +212,11 @@ public class ArgonScanner
                         var token:Token
                         if rule.tag == "identifier" && KeywordToken.isKeyword(rule.matchString)
                             {
-                            token = KeywordToken(location: Location(sourceKey: self.sourceKey,line: theLine, start: self.location, stop: self.location + matchLength),string: rule.matchString)
+                            token = KeywordToken(location: Location(nodeKey: 0,line: theLine, start: self.location, stop: self.location + matchLength),string: rule.matchString)
                             }
                         else
                             {
-                            token = rule.tokenType!.init(location: Location(sourceKey: self.sourceKey,line: theLine, start: self.location, stop: self.location + matchLength),string: rule.matchString)
+                            token = rule.tokenType!.init(location: Location(nodeKey: 0,line: theLine, start: self.location, stop: self.location + matchLength),string: rule.matchString)
                             }
 //                        let start1 = self.source.index(self.source.startIndex, offsetBy: self.location)
 //                        let end1 = self.source.index(start, offsetBy: matchLength)
@@ -232,13 +230,13 @@ public class ArgonScanner
                 }
             if !wasMatched
                 {
-                let errorToken = ErrorToken(location: Location(sourceKey: self.sourceKey,line: self.line, start: self.location, stop: self.location + 1), code: .invalidCharacterSequence, message: "Invalid character sequence")
+                let errorToken = ErrorToken(location: Location(nodeKey: 0,line: self.line, start: self.location, stop: self.location + 1), code: .invalidCharacterSequence, message: "Invalid character sequence")
                 tokens.append(errorToken)
                 self.location += 1
                 }
             wasMatched = false
             }
-        tokens.append(EndToken(location: Location(sourceKey: self.sourceKey,line: 0),string: ""))
+        tokens.append(EndToken(location: Location(nodeKey: 0,line: 0),string: ""))
         return(tokens)
         }
         
@@ -309,7 +307,7 @@ public class ArgonScanner
             self.nextCharacter()
             }
         while self.continueIdentifierSet.contains(self.currentCharacter) && !self.isAtEndOfLine() && !self.isAtEnd()
-        return(IdentifierToken(location: Location(sourceKey: self.sourceKey,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
+        return(IdentifierToken(location: Location(nodeKey: 0,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
         }
         
     private func scanOperator() -> Token
@@ -321,7 +319,7 @@ public class ArgonScanner
             self.nextCharacter()
             }
         while self.continueOperatorSet.contains(self.currentCharacter) && !self.isAtEndOfLine() && !self.isAtEnd()
-        return(OperatorToken(location: Location(sourceKey: self.sourceKey,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
+        return(OperatorToken(location: Location(nodeKey: 0,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
         }
         
     private func scanComment() -> Token
@@ -335,7 +333,7 @@ public class ArgonScanner
                 string += String(self.currentCharacter)
                 self.nextCharacter()
                 }
-            return(CommentToken(location: Location(sourceKey: self.sourceKey,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
+            return(CommentToken(location: Location(nodeKey: 0,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
             }
         else if self.currentCharacter == "*"
             {
@@ -344,10 +342,10 @@ public class ArgonScanner
                 string += String(self.currentCharacter)
                 self.nextCharacter()
                 }
-            return(CommentToken(location: Location(sourceKey: self.sourceKey,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
+            return(CommentToken(location: Location(nodeKey: 0,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
             }
 //        self.reporter.addIssue("Invalid character sequence '\(string)'.", at: Location(line: self.line, start: self.tokenStart, stop: self.tokenStop), isWarning: false)
-        return(CommentToken(location: Location(sourceKey: self.sourceKey,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
+        return(CommentToken(location: Location(nodeKey: 0,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
         }
         
     private func scanString() -> Token
@@ -360,7 +358,7 @@ public class ArgonScanner
             string += String(self.currentCharacter)
             self.nextCharacter()
             }
-        return(StringToken(location: Location(sourceKey: self.sourceKey,line: self.line, start: self.tokenStart, stop: self.tokenStart), string: string))
+        return(StringToken(location: Location(nodeKey: 0,line: self.line, start: self.tokenStart, stop: self.tokenStart), string: string))
         }
         
     private func scanSymbol() -> Token
@@ -372,7 +370,7 @@ public class ArgonScanner
             string += String(self.currentCharacter)
             self.nextCharacter()
             }
-        return(SymbolToken(location: Location(sourceKey: self.sourceKey,line: self.line, start: self.tokenStart, stop: self.tokenStart), string: string))
+        return(SymbolToken(location: Location(nodeKey: 0,line: self.line, start: self.tokenStart, stop: self.tokenStart), string: string))
         }
     
     private func scanNumber() -> Token
@@ -387,7 +385,7 @@ public class ArgonScanner
         if self.currentCharacter == "f"
             {
             self.nextCharacter()
-            return(FloatToken(location: Location(sourceKey: self.sourceKey,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
+            return(FloatToken(location: Location(nodeKey: 0,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
             }
         if self.currentCharacter == "."
             {
@@ -401,9 +399,9 @@ public class ArgonScanner
                 {
                 self.nextCharacter()
                 }
-            return(FloatToken(location: Location(sourceKey: self.sourceKey,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
+            return(FloatToken(location: Location(nodeKey: 0,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
             }
-        return(IntegerToken(location: Location(sourceKey: self.sourceKey,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
+        return(IntegerToken(location: Location(nodeKey: 0,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
         }
         
     public func scanToken() -> Token
@@ -438,7 +436,7 @@ public class ArgonScanner
         else if self.currentCharacter == ","
             {
             self.nextCharacter()
-            return(OperatorToken(location: Location(sourceKey: self.sourceKey,line: self.line, start: self.tokenStart, stop: self.tokenStart), string: "."))
+            return(OperatorToken(location: Location(nodeKey: 0,line: self.line, start: self.tokenStart, stop: self.tokenStart), string: "."))
             }
         else if self.currentCharacter == "#"
             {
@@ -446,7 +444,7 @@ public class ArgonScanner
             }
         else if self.isAtEnd()
             {
-            return(EndToken(location: Location(sourceKey: self.sourceKey,line: self.line),string: ""))
+            return(EndToken(location: Location(nodeKey: 0,line: self.line),string: ""))
             }
         else
             {

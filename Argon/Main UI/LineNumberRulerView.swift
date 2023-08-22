@@ -269,10 +269,10 @@ public class LineNumberRulerView: NSRulerView
 
     public func addIssue(_ issue: CompilerIssue)
         {
-//        if let marker = self.rulerMarker(from: issue)
-//            {
-//            self.addMarker(marker)
-//            }
+        if let marker = self.rulerMarker(from: issue)
+            {
+            self.addMarker(marker)
+            }
         }
         
     public func issueContainingPoint(_ point: NSPoint) -> CompilerIssue?
@@ -287,35 +287,35 @@ public class LineNumberRulerView: NSRulerView
         return(nil)
         }
         
-//    public func rulerMarker(from issue: CompilerIssue) -> NSRulerMarker?
-//        {
-//        var image = NSImage(named: "IconMarker")!
-//        image.isTemplate = true
-//        image = image.image(withTintColor: Palette.shared.color(for: issue.isWarning ? .warningColor : .errorColor))
-//        image.size = NSSize(width: self.lineHeight,height: self.lineHeight)
-//        guard let offset = self.offset(forLine: issue.location.line) else
-//            {
-//            return(nil)
-//            }
-//        let marker = NSRulerMarker(rulerView: self, markerLocation: offset, image: image, imageOrigin: NSPoint(x: 0,y: self.lineHeight / 2))
-//        marker.representedObject = issue as NSCopying
-//        return(marker)
-//        }
+    public func rulerMarker(from issue: CompilerIssue) -> NSRulerMarker?
+        {
+        var image = NSImage(named: "IconMarker")!
+        image.isTemplate = true
+        image = image.image(withTintColor: SourceTheme.shared.color(for: .colorIssue))
+        image.size = NSSize(width: self.lineHeight,height: self.lineHeight)
+        guard let offset = self.offset(forLine: issue.location.line) else
+            {
+            return(nil)
+            }
+        let marker = NSRulerMarker(rulerView: self, markerLocation: offset, image: image, imageOrigin: NSPoint(x: 0,y: self.lineHeight / 2))
+        marker.representedObject = issue as NSCopying
+        return(marker)
+        }
         
-//    public func addIssues(_ issues: CompilerIssues)
-//        {
-//        for issue in issues
-//            {
-//            self.addIssue(issue)
-//            }
-//        }
+    public func addIssues(_ issues: CompilerIssues)
+        {
+        for issue in issues
+            {
+            self.addIssue(issue)
+            }
+        }
         
-//    public func removeAllIssues()
-//        {
-//        let some = self.markers ?? []
-//        for marker in some
-//            {
-//            self.removeMarker(marker)
-//            }
-//        }
+    public func removeAllIssues()
+        {
+        let some = self.markers ?? []
+        for marker in some
+            {
+            self.removeMarker(marker)
+            }
+        }
     }

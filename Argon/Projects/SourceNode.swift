@@ -25,6 +25,11 @@ public class SourceNode: NSObject,NSCoding,Comparable,Dependent
         self.path.polynomialRollingHash
         }
 
+    public var compilerIssues: CompilerIssues
+        {
+        fatalError("compilerIssues sent to SourceNode and should not have been.")
+        }
+        
     public var isSourceFileNode: Bool
         {
         false

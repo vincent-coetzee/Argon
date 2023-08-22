@@ -200,7 +200,10 @@ public class Class: StructuredType
         parser.nextToken()
         let block = Block()
         block.addLocal(PseudoVariable.`self`(type: aClass))
-        Block.parseBlockInner(block: block,using: parser)
+        parser.parseBraces
+            {
+            Block.parseBlockInner(block: block,using: parser)
+            }
         let method = Method(name: "DEFORM")
         method.setBlock(block)
         return(method)

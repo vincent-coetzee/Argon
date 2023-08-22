@@ -46,7 +46,6 @@ class ProjectDocument: NSDocument
             {
             path += ".argonp"
             }
-        let aURL = URL(fileURLWithPath: path)
         let viewController = self.windowControllers[0].contentViewController as! ProjectViewController
         var state = viewController.projectState
         state.windowFrame = viewController.view.window!.frame

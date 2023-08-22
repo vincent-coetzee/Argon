@@ -29,13 +29,13 @@ public struct ArgonTests
     public static func testDateTimeScanning()
         {
         var string = "@(2/12/2009)"
-        var scanner = ArgonScanner(source: string,sourceKey: 0)
+        var scanner = ArgonScanner(source: string)
         assert(scanner.tokens.isNotNil,"Tokens is nil and should not be.")
         assert(scanner.tokens!.count == 2,"There should be two tokens and there is not.")
         assert(scanner.tokens![0].isDateValue,"Token should be date token but is not")
         assert(scanner.tokens![0].dateValue == Argon.Date(day: 2,month: 12,year: 2009),"Date should be 02/12/2009 but is not.")
         string = "@(02:10:43:0000)"
-        scanner = ArgonScanner(source: string,sourceKey: 0)
+        scanner = ArgonScanner(source: string)
         assert(scanner.tokens.isNotNil,"Tokens is nil and should not be.")
         assert(scanner.tokens!.count == 2,"There should be two tokens and there is not.")
         assert(scanner.tokens![0].isTimeValue,"Token should be date token but is not")
@@ -232,7 +232,7 @@ public struct ArgonTests
         KeywordToken.initKeywords()
         let sourceFile = SourceFileNode(name: "",path: Path(Path.root))
         sourceFile.setSource(source)
-        let scanner = ArgonScanner(source: source,sourceKey: 0)
+        let scanner = ArgonScanner(source: source)
         let tokens = scanner.allTokens()
         for token in tokens
             {

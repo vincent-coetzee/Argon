@@ -22,6 +22,19 @@ public protocol SourceEditorDelegate
     
 class SourceView: NSTextView
     {
+    public var compilerIssues: CompilerIssues
+        {
+        get
+            {
+            self._compilerIssues
+            }
+        set
+            {
+            self._compilerIssues = newValue
+            self.refreshIssueDisplay()
+            }
+        }
+        
     public var tokens: Tokens
         {
         get
@@ -41,6 +54,7 @@ class SourceView: NSTextView
     public private(set) var rulerView: LineNumberRulerView!
     public var textFocusDelegate: TextFocusDelegate?
     public var sourceEditorDelegate: SourceEditorDelegate?
+    private var _compilerIssues = CompilerIssues()
     
     public override init(frame: NSRect)
         {
@@ -91,6 +105,12 @@ class SourceView: NSTextView
         NotificationCenter.default.addObserver(self, selector: #selector(self.textDidChange), name: NSText.didChangeNotification, object: self)
         }
         
+    private func refreshIssueDisplay()
+        {
+        self.rulerView.removeAllIssues()
+        self.rulerView.addIssues(self._compilerIssues)
+        }
+        
     @objc func textDidChange(_ sender: Any?)
         {
         self.sourceEditorDelegate?.sourceEditor(self, changedSource: self.string)
@@ -107,15 +127,14 @@ class SourceView: NSTextView
     private func refresh()
         {
         self.textStorage?.beginEditing()
+        let sourceTheme = SourceTheme.shared
+        let font = sourceTheme.font(for: .fontEditor)
         for token in self._tokens
             {
-            let color = SourceTheme.shared.color(for: token.styleElement)
-            let font = SourceTheme.shared.font(for: .fontEditor)
             var attributes = Dictionary<NSAttributedString.Key,Any>()
-            attributes[.foregroundColor] = color
+            attributes[.foregroundColor] = sourceTheme.color(for: token.styleElement)
+            print("Color is \(sourceTheme.color(for: token.styleElement))")
             attributes[.font] = font
-            print(token)
-            print(token.location.range)
             self.textStorage?.setAttributes(attributes, range: token.location.range)
             }
         self.textStorage?.endEditing()
@@ -154,7 +173,7 @@ class SourceView: NSTextView
                 currentIndex = string.index(after: currentIndex)
                 }
             }
-        let range = NSRange(location: location,length: 0)
+//        let range = NSRange(location: location,length: 0)
         self.rulerView.needsDisplay = true
 //        self.textStorage?.replaceCharacters(in: range, with: "\n\(tabString)")
         super.insertNewline(sender)

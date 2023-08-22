@@ -18,10 +18,10 @@ public class ArgonParser
     private var scopeStack = Stack<Scope>()
     public private(set) var currentScope: Scope
     private var rootModule: RootModule
-    private var operandStack = Stack<ValueBox>()
-    private var operatorStack = Stack<TokenType>()
+//    private var operandStack = Stack<ValueBox>()
+//    private var operatorStack = Stack<TokenType>()
     private var topModule: Module?
-    private var symbolIndex = 1
+    public var nodeKey = 0
     private var prefixParsers = Dictionary<TokenType,PrefixParser>()
     private var infixParsers = Dictionary<TokenType,InfixParser>()
     private var issues = CompilerIssues()
@@ -96,6 +96,11 @@ public class ArgonParser
         self.prefix(tokenType: .logicalNot,precedence: Precedence.prefix)
         self.prefix(tokenType: .plus,precedence: Precedence.prefix)
         self.prefix(tokenType: .minus,precedence: Precedence.prefix)
+        }
+        
+    public func compilerIssues(forNodeKey nodeKey: Int) -> CompilerIssues
+        {
+        self.issues.filter{$0.location.nodeKey == nodeKey}
         }
         
     private func register(tokenType: TokenType,parser: InfixParser)
@@ -185,9 +190,7 @@ public class ArgonParser
         guard self.token.isIdentifier else
             {
             self.lodgeIssue(code: errorCode,message: message,location: location)
-            let index = self.symbolIndex
-            self.symbolIndex += 1
-            return(Identifier(string: "Symbol\(index)"))
+            return(Identifier(string: Argon.nextIndex(named: "Symbol")))
             }
         let identifier = self.token.identifier
         self.nextToken()
@@ -649,7 +652,9 @@ public class ArgonParser
         
     public func lodgeIssue(code: ErrorCode,message: String? = nil,location: Location)
         {
-        self.issues.append(CompilerIssue(code: code, message: message,location: location))
+        var newLocation = location
+        newLocation.nodeKey = self.nodeKey
+        self.issues.append(CompilerIssue(code: code, message: message,location: newLocation))
         }
 
     public func parseExpression() -> Expression

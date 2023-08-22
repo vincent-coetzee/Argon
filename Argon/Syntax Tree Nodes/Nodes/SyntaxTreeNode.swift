@@ -143,7 +143,7 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
         
     public func setParent(_ symbol: SyntaxTreeNode?)
         {
-        if symbol.isNil
+        guard symbol.isNotNil else
             {
             self.parent = Parent.none
             return
