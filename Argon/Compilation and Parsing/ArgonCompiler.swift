@@ -45,6 +45,7 @@ public struct ArgonCompiler
     private var compilerIssues: CompilerIssues?
     private var abstractSyntaxTree: SyntaxTreeNode?
     private var wereIssues = false
+    private var issueCount = 0
     
     public init(nodes: SourceFileNodes)
         {
@@ -73,13 +74,19 @@ public struct ArgonCompiler
     public mutating func parse() // STEP 3
         {
         let parser = ArgonParser(rootModule: self.rootModule)
+        self.issueCount = 0
         for node in self.sourceFileNodes
             {
             node.compilerIssues = CompilerIssues()
             parser.nodeKey = node.nodeKey
             parser.parse(sourceFileNode: node)
             node.compilerIssues = parser.compilerIssues(forNodeKey: node.nodeKey)
+            if node.compilerIssues.count != parser.allCompilerIssues().count
+                {
+                print("halt")
+                }
             self.wereIssues = node.compilerIssues.count > 0 || self.wereIssues
+            self.issueCount += node.compilerIssues.count
             }
         }
         

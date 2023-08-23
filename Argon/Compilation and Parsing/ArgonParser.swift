@@ -98,6 +98,11 @@ public class ArgonParser
         self.prefix(tokenType: .minus,precedence: Precedence.prefix)
         }
         
+    public func allCompilerIssues() -> CompilerIssues
+        {
+        self.issues
+        }
+        
     public func compilerIssues(forNodeKey nodeKey: Int) -> CompilerIssues
         {
         self.issues.filter{$0.location.nodeKey == nodeKey}

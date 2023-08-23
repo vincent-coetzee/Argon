@@ -55,6 +55,7 @@ class SourceView: NSTextView
     public var textFocusDelegate: TextFocusDelegate?
     public var sourceEditorDelegate: SourceEditorDelegate?
     private var _compilerIssues = CompilerIssues()
+    private var activeAnnotations = Dictionary<Int,CALayer>()
     
     public override init(frame: NSRect)
         {
@@ -105,6 +106,27 @@ class SourceView: NSTextView
         NotificationCenter.default.addObserver(self, selector: #selector(self.textDidChange), name: NSText.didChangeNotification, object: self)
         }
         
+    private func toggleIssueDisplay(`for` issue: CompilerIssue)
+        {
+        let line = issue.location.line
+        if let layer = self.activeAnnotations[line]
+            {
+            layer.removeFromSuperlayer()
+            self.activeAnnotations[line] = nil
+            return
+            }
+        let newLayer = CATextLayer()
+        newLayer.string = issue.message
+        newLayer.backgroundColor = SourceTheme.shared.color(for: .colorIssue).cgColor
+        newLayer.foregroundColor = SourceTheme.shared.color(for: .colorIssueText).cgColor
+        newLayer.frame = self.endOfLineRect(forLine: line)
+        let font = SourceTheme.shared.font(for: .fontEditor)
+        newLayer.font = font
+        newLayer.fontSize = font.pointSize
+        self.layer?.addSublayer(newLayer)
+        self.activeAnnotations[line] = newLayer
+        }
+        
     private func refreshIssueDisplay()
         {
         self.rulerView.removeAllIssues()
@@ -133,7 +155,6 @@ class SourceView: NSTextView
             {
             var attributes = Dictionary<NSAttributedString.Key,Any>()
             attributes[.foregroundColor] = sourceTheme.color(for: token.styleElement)
-            print("Color is \(sourceTheme.color(for: token.styleElement))")
             attributes[.font] = font
             self.textStorage?.setAttributes(attributes, range: token.location.range)
             }
@@ -179,6 +200,28 @@ class SourceView: NSTextView
         super.insertNewline(sender)
         }
         
+    public func endOfLineRect(forLine: Int) -> CGRect
+        {
+        var line = 1
+        let text = self.string
+        var index = text.startIndex
+        while index < text.endIndex && line < forLine
+            {
+            if text[index] == "\n"
+                {
+                line += 1
+                }
+            index = text.index(index, offsetBy: 1)
+            }
+        let characterIndex = text.distance(from: text.startIndex,to: index) - 1
+        let glyphIndex = self.layoutManager!.glyphIndexForCharacter(at: characterIndex)
+        let range = NSRange(location: glyphIndex,length: 1)
+        var rect = self.layoutManager!.boundingRect(forGlyphRange: range, in: self.textContainer!)
+        rect.size.width = max(rect.size.width,self.bounds.size.width - 4)
+        rect.size.height = self.font!.lineHeight
+        return(rect)
+        }
+        
     public override func keyDown(with event: NSEvent)
         {
         if event.characters == "="
@@ -209,5 +252,16 @@ class SourceView: NSTextView
             }
         location = self.selectedRanges.first!.rangeValue.location
         self.sourceEditorDelegate?.sourceEditor(self,changedLine: line + 1,offset: location - offset)
+        }
+        
+    public override func rulerView(_ rulerView: NSRulerView,handleMouseDownWith event: NSEvent)
+        {
+        var location = self.convert(event.locationInWindow,from: nil)
+        let lineNumberRuler = rulerView as! LineNumberRulerView
+        location = rulerView.convert(location,from: self)
+        if let issue = lineNumberRuler.issueContainingPoint(location)
+            {
+            self.toggleIssueDisplay(for: issue)
+            }
         }
     }

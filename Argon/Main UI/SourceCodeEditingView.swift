@@ -115,7 +115,7 @@ public class SourceCodeEditingView: NSView,NSTextViewDelegate,Model
 
 extension SourceCodeEditingView: SourceEditorDelegate
     {
-    public func sourceEditor(_ editor: NSTextView, changedSource: String)
+    public func sourceEditor(_ editor: NSTextView,changedSource: String)
         {
         self.changed(aspect: "source",with: changedSource,from: self)
         }

@@ -175,6 +175,8 @@
 		BFF395662A5C1A0D00BCA42F /* Function.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF395652A5C1A0D00BCA42F /* Function.swift */; };
 		BFF7B53329857CE80075F011 /* RootModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF7B53229857CE80075F011 /* RootModule.swift */; };
 		BFF7B53529857CF60075F011 /* ArgonModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF7B53429857CF60075F011 /* ArgonModule.swift */; };
+		BFFB59222A95E77400E80995 /* NSFont+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB59212A95E77400E80995 /* NSFont+Extensions.swift */; };
+		BFFB59242A96758A00E80995 /* KeyedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB59232A96758A00E80995 /* KeyedModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -381,6 +383,8 @@
 		BFF395652A5C1A0D00BCA42F /* Function.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Function.swift; sourceTree = "<group>"; };
 		BFF7B53229857CE80075F011 /* RootModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootModule.swift; sourceTree = "<group>"; };
 		BFF7B53429857CF60075F011 /* ArgonModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgonModule.swift; sourceTree = "<group>"; };
+		BFFB59212A95E77400E80995 /* NSFont+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSFont+Extensions.swift"; sourceTree = "<group>"; };
+		BFFB59232A96758A00E80995 /* KeyedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyedModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -618,6 +622,7 @@
 				BF54B99D29F5C7C300A755DC /* ValueHolder.swift */,
 				BF54B9A129F5C7C600A755DC /* ValueModel.swift */,
 				BF0D32102A649D89002A2D8D /* ValueBox.swift */,
+				BFFB59232A96758A00E80995 /* KeyedModel.swift */,
 			);
 			path = "Value Models";
 			sourceTree = "<group>";
@@ -634,6 +639,7 @@
 				BF0E84E32A5D612E003BCC49 /* Path+Extensions.swift */,
 				BFB5E60D2A2664DA0018824E /* String+Extensions.swift */,
 				BFCDC3F12A8579FE00C20746 /* NSImage+Extensions.swift */,
+				BFFB59212A95E77400E80995 /* NSFont+Extensions.swift */,
 			);
 			path = "System Extensions";
 			sourceTree = "<group>";
@@ -1006,6 +1012,7 @@
 				BF4DB6DA2A8167D200A509A4 /* Metaclass.swift in Sources */,
 				BF08D3252A3B980C003C29B1 /* PolymorphicType.swift in Sources */,
 				BFDC80172A7D5CFF008118FF /* NodeChangeSet.swift in Sources */,
+				BFFB59242A96758A00E80995 /* KeyedModel.swift in Sources */,
 				BFE99B3D2A710BCF0056E700 /* ObjectInstance.swift in Sources */,
 				BF54B99829F59D2600A755DC /* Repository.swift in Sources */,
 				BFEE2AE8298EF7960060EE74 /* TypeVariable.swift in Sources */,
@@ -1014,6 +1021,7 @@
 				BFCA9342296F43340049B39A /* Scope.swift in Sources */,
 				BFDC80112A7D3616008118FF /* DateToken.swift in Sources */,
 				BF1F4AE32A5527C900C1F977 /* Method.swift in Sources */,
+				BFFB59222A95E77400E80995 /* NSFont+Extensions.swift in Sources */,
 				BF60D6342A8CCAC400ED3F6B /* SubType.swift in Sources */,
 				BF60D6362A8D0C9600ED3F6B /* VoidType.swift in Sources */,
 				BF1F4AEE2A55490100C1F977 /* Statement.swift in Sources */,

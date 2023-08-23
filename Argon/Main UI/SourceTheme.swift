@@ -35,6 +35,7 @@ public enum StyleElement
     case colorIdentifier
     case colorInteger
     case colorIssue
+    case colorIssueText
 
     case colorLine
     
@@ -140,6 +141,7 @@ public class SourceTheme
 //        self.styles[.colorWarning] = NSColor.argonSunglow
         self.styles[.colorWarning] = NSColor.argonDeepOrange
         self.styles[.colorIssue] = NSColor.argonBrightYellowCrayola
+        self.styles[.colorIssueText] = NSColor.black
         self.styles[.colorSystemEnumeration] = NSColor.argonDeepOrange
         self.styles[.colorSystemAliasedType] = NSColor.argonPomelo
         self.styles[.colorSeparator] = NSColor.argonAnnotationOrange
