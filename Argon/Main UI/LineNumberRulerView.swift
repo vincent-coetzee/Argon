@@ -14,7 +14,7 @@ public class LineNumberRulerView: NSRulerView
         {
         willSet
             {
-//            self.removeAllIssues()
+            self.removeAllIssues()
             self.needsDisplay = true
             }
         didSet

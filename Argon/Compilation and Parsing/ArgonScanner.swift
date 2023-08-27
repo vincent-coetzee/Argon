@@ -1,472 +1,816 @@
 //
-//  Scanner.swift
+//  ArgonTokenStream.swift
 //  Argon
 //
-//  Created by Vincent Coetzee on 27/12/2022.
+//  Created by Vincent Coetzee on 25/08/2023.
 //
 
 import Foundation
-import Path
 
-public class TokenRule
-    {
-    public var makesToken: Bool
-        {
-        true
-        }
-        
-    public var matchString: String
-        {
-        self._matchString!
-        }
-        
-    public var matchLength: Int
-        {
-        self.matchRange!.length
-        }
-        
-    public var isEndOfLineRule: Bool
-        {
-        false
-        }
-        
-    public let tag: String
-    public let pattern: String
-    public let tokenType: Token.Type?
-    public let startSet: CharacterSet
-    
-    public var mustMatchLineSeparators = false
-    
-    private var _matchString: String?
-    private var token: Token?
-    private var matchRange: NSRange?
-    private let regex: NSRegularExpression
-    
-    public init(tag: String,pattern: String,tokenType: Token.Type?,startSet: CharacterSet)
-        {
-        self.startSet = startSet
-        self.tag = tag
-        self.pattern = pattern
-        self.tokenType = tokenType
-        self.regex = try! NSRegularExpression(pattern: pattern,options: [])
-        }
-        
-    public func matches(in source: String,at location: Int) -> Bool
-        {
-        let range = self.regex.rangeOfFirstMatch(in: source, options: [.anchored], range: NSRange(location: location,length: source.count - location))
-        if range.location != NSNotFound
-            {
-            self.matchRange = range
-            let start = source.index(source.startIndex, offsetBy: self.matchRange!.location)
-            let end = source.index(start, offsetBy: self.matchRange!.length)
-            self._matchString = String(source[start..<end])
-            return(true)
-            }
-        return(false)
-        }
+//public enum LexicalPattern
+//    {
+//    case startsWith(String)
+//    case characterSet(CharacterSet)
+//
+//    public func matches(string: String) -> Bool
+//        {
+//        switch(self)
+//            {
+//            case .startsWith(let localString):
+//                return(string == localString)
+//            case .characterSet(let characters):
+//                for scalar in string.unicodeScalars
+//                    {
+//                    if !characters.contains(scalar)
+//                        {
+//                        return(false)
+//                        }
+//                    }
+//                return(true)
+//            }
+//        }
+//    }
+//
+//public struct LexicalRule
+//    {
+//    public let pattern: LexicalPattern
+//    public let function: () -> Token
+//    }
+//
+//public protocol SubScanner
+//    {
+//    func matches(scanner: ArgonScanner) -> Bool
+//    func scan(using scanner: ArgonScanner,location: Int) -> Token
+//    }
+//
+//public struct IdentifierScanner: SubScanner
+//    {
+//    private static let characters = CharacterSet.letters.union(CharacterSet.decimalDigits).union(CharacterSet(charactersIn: "-_?!"))
+//
+//    public func matches(scanner: ArgonScanner) -> Bool
+//        {
+//        return(CharacterSet.letters.contains(scanner.nextCharacter(incrementIndex: false)))
+//        }
+//
+//    public func scan(using scanner: ArgonScanner,location: Int) -> Token
+//        {
+//        var offset = location
+//        let start = location
+//        var string = String()
+//        var character = scanner.currentCharacter
+//        while Self.characters.contains(character) && !scanner.atEnd
+//            {
+//            string += String(character)
+//            offset += 1
+//            scanner.nextCharacter()
+//            character = scanner.currentCharacter
+//            }
+//        let location = Location(nodeKey: 0, line: scanner.lineNumber, start: start, stop: offset)
+//        guard KeywordToken.isKeyword(string) else
+//            {
+//            return(IdentifierToken(location: location, string: string))
+//            }
+//        return(KeywordToken(location: location,string: string))
+//        }
+//    }
+//
+//public struct OperatorScanner: SubScanner
+//    {
+//    private static let characters = CharacterSet(charactersIn: "!$%^&*()-+=:;{}[]\\\\|<>?/.,~@")
+//
+//    public func matches(scanner: ArgonScanner) -> Bool
+//        {
+//        return(Self.characters.contains(scanner.nextCharacter(incrementIndex: false)))
+//        }
+//
+//    public func scan(using scanner: ArgonScanner,location: Int) -> Token
+//        {
+//        var offset = location
+//        let start = location
+//        var string = String()
+//        var character = scanner.nextCharacter(incrementIndex: true)
+//        repeat
+//            {
+//            string += String(character)
+//            offset += 1
+//            character = scanner.nextCharacter(incrementIndex: true)
+//            }
+//        while Self.characters.contains(character) && !scanner.atEnd
+//        let location = Location(nodeKey: 0, line: scanner.lineNumber, start: start, stop: offset)
+//        return(OperatorToken(location: location,string: string))
+//        }
+//    }
+//
+//public struct WhitespaceScanner: SubScanner
+//    {
+//    private static let characters = CharacterSet.whitespacesAndNewlines
+//
+//    public func matches(scanner: ArgonScanner) -> Bool
+//        {
+//        return(Self.characters.contains(scanner.nextCharacter(incrementIndex: false)))
+//        }
+//
+//    public func scan(using scanner: ArgonScanner,location: Int) -> Token
+//        {
+//        var offset = location
+//        let start = location
+//        var string = String()
+//        var character = scanner.nextCharacter(incrementIndex: false)
+//        while Self.characters.contains(character) && !scanner.atEnd
+//            {
+//            scanner.nextCharacter(incrementIndex: true)
+//            string += String(character)
+//            offset += 1
+//            character = scanner.nextCharacter(incrementIndex: false)
+//            }
+//        let location = Location(nodeKey: 0, line: scanner.lineNumber, start: start, stop: offset)
+//        return(WhitespaceToken(location: location,string: string))
+//        }
+//    }
+//
+//public struct StringScanner: SubScanner
+//    {
+//    public func matches(scanner: ArgonScanner) -> Bool
+//        {
+//        return(String(scanner.nextCharacter(incrementIndex: false)) == "\"")
+//        }
+//
+//    public func scan(using scanner: ArgonScanner,location: Int) -> Token
+//        {
+//        var offset = location
+//        let start = location
+//        var string = String()
+//        var character = scanner.nextCharacter(incrementIndex: true)
+//        character = scanner.nextCharacter(incrementIndex: true)
+//        repeat
+//            {
+//            string += String(character)
+//            offset += 1
+//            character = scanner.nextCharacter(incrementIndex: true)
+//            }
+//        while String(character) != "\"" && !scanner.atEnd
+//        let location = Location(nodeKey: 0, line: scanner.lineNumber, start: start, stop: offset)
+//        return(StringToken(location: location,string: string))
+//        }
+//    }
+//
+//public struct SymbolScanner: SubScanner
+//    {
+//    private static let characters = CharacterSet.letters.union(CharacterSet.decimalDigits).union(CharacterSet(charactersIn: "-_"))
+//
+//    public func matches(scanner: ArgonScanner) -> Bool
+//        {
+//        return(String(scanner.nextCharacter(incrementIndex: false)) == "#")
+//        }
+//
+//    public func scan(using scanner: ArgonScanner,location: Int) -> Token
+//        {
+//        var offset = location
+//        let start = location
+//        var string = String()
+//        var character = scanner.nextCharacter(incrementIndex: true)
+//        character = scanner.nextCharacter(incrementIndex: true)
+//        repeat
+//            {
+//            string += String(character)
+//            offset += 1
+//            character = scanner.nextCharacter(incrementIndex: true)
+//            }
+//        while Self.characters.contains(character) && !scanner.atEnd
+//        let location = Location(nodeKey: 0, line: scanner.lineNumber, start: start, stop: offset)
+//        return(SymbolToken(location: location,string: string))
+//        }
+//    }
+//
+//public struct CommentScanner: SubScanner
+//    {
+//    public func matches(scanner: ArgonScanner) -> Bool
+//        {
+//        let prefix = scanner.sourceStringPrefix(ofLength: 2)
+//        return(prefix == "/*" || prefix == "//")
+//        }
+//
+//    public func scan(using scanner: ArgonScanner,location: Int) -> Token
+//        {
+//        let prefix = scanner.sourceStringPrefix(ofLength: 2)
+//        if prefix == "/*"
+//            {
+//            return(self.scanMultilineComment(scanner: scanner,location: location))
+//            }
+//        else
+//            {
+//            return(self.scanSinglelineComment(scanner: scanner,location: location))
+//            }
+//        }
+//
+//    private func scanMultilineComment(scanner: ArgonScanner,location: Int) -> Token
+//        {
+//        let start = location
+//        var offset = 0
+//        var character = scanner.nextCharacter(incrementIndex: true)
+//        var string = String()
+//        repeat
+//            {
+//            string += String(character)
+//            offset += 1
+//            character = scanner.nextCharacter(incrementIndex: true)
+//            }
+//        while scanner.nextCharacter(at: 0) != "*" && scanner.nextCharacter(at: 1) != "/" && !scanner.atEnd
+//        string += "*/"
+//        let location = Location(nodeKey: 0, line: scanner.lineNumber, start: start, stop: start + offset)
+//        return(CommentToken(location: location, string: string))
+//        }
+//
+//    private func scanSinglelineComment(scanner: ArgonScanner,location: Int) -> Token
+//        {
+//        let start = location
+//        let string = scanner.scanUntilEndOfLine()
+//        let stop = location + string.count
+//        let location = Location(nodeKey: 0, line: scanner.lineNumber, start: start, stop: stop)
+//        return(CommentToken(location: location, string: string))
+//        }
+//    }
+//
+//public struct NumberScanner: SubScanner
+//    {
+//    public func matches(scanner: ArgonScanner) -> Bool
+//        {
+//        return(CharacterSet.decimalDigits.contains(scanner.nextCharacter(incrementIndex: false)))
+//        }
+//
+//    public func scan(using scanner: ArgonScanner,location: Int) -> Token
+//        {
+//        let prefix = scanner.sourceStringPrefix(ofLength: 2)
+//        if prefix == "0B"
+//            {
+//            return(self.scanBinaryNumber(scanner: scanner,location: location))
+//            }
+//        else if prefix == "0T"
+//            {
+//            return(self.scanTernaryNumber(scanner: scanner,location: location))
+//            }
+//        else if prefix == "0O"
+//            {
+//            return(self.scanOctalNumber(scanner: scanner,location: location))
+//            }
+//        else if prefix == "0X"
+//            {
+//            return(self.scanHexadecimalNumber(scanner: scanner,location: location))
+//            }
+//        else
+//            {
+//            return(self.scanNumber(scanner: scanner,location: location))
+//            }
+//        }
+//
+//    public func scanBinaryNumber(scanner: ArgonScanner,location: Int) -> Token
+//        {
+//        fatalError()
+//        }
+//
+//    public func scanTernaryNumber(scanner: ArgonScanner,location: Int) -> Token
+//        {
+//        fatalError()
+//        }
+//
+//    public func scanHexadecimalNumber(scanner: ArgonScanner,location: Int) -> Token
+//        {
+//        fatalError()
+//        }
+//
+//    public func scanOctalNumber(scanner: ArgonScanner,location: Int) -> Token
+//        {
+//        fatalError()
+//        }
+//
+//    public func scanNumber(scanner: ArgonScanner,location: Int) -> Token
+//        {
+//        var offset = location
+//        let start = location
+//        var string = String()
+//        var character = scanner.nextCharacter(incrementIndex: true)
+//        repeat
+//            {
+//            string += String(character)
+//            offset += 1
+//            character = scanner.nextCharacter(incrementIndex: true)
+//            }
+//        while CharacterSet.decimalDigits.contains(character) && !scanner.atEnd
+//        if character == "."
+//            {
+//            return(self.scanFloatingPointNumber(string: string,scanner: scanner,location: location))
+//            }
+//        let location = Location(nodeKey: 0, line: scanner.lineNumber, start: start, stop: offset)
+//        return(IntegerToken(location: location, string: string))
+//        }
+//
+//    public func scanFloatingPointNumber(string incoming: String,scanner: ArgonScanner,location: Int) -> Token
+//        {
+//        var string = incoming
+//        var offset = 1
+//        string += "."
+//        var character = scanner.nextCharacter(incrementIndex: true)
+//        while CharacterSet.decimalDigits.contains(character) && !scanner.atEnd
+//            {
+//            string += String(character)
+//            offset += 1
+//            character = scanner.nextCharacter(incrementIndex: true)
+//            }
+//        let stop = location + string.count + offset
+//        let location = Location(nodeKey: 0, line: scanner.lineNumber, start: location, stop: stop)
+//        return(FloatToken(location: location, string: string))
+//        }
+//    }
+//
+//public class ArgonScanner
+//    {
+//    public var atEnd: Bool
+//        {
+//        self.offset >= self.sourceCharacterCount
+//        }
+//
+//    public var lineNumber: Int
+//        {
+//        self.sourceLine
+//        }
+//
+//    private var subScanners = Array<SubScanner>()
+//    private let source:String
+//    private var offset = 0
+//    private var sourceCharacterCount: Int
+//    private var sourceIndex: String.Index
+//    private var sourceLine: Int = 1
+//    public var currentCharacter = Unicode.Scalar(0)!
+//    private var rules = Array<LexicalRule>()
+//
+//    public init(source: String)
+//        {
+//        self.source = source
+//        self.sourceIndex = self.source.startIndex
+//        self.sourceCharacterCount = self.source.count
+//        self.subScanners.append(CommentScanner())
+//        self.subScanners.append(WhitespaceScanner())
+//        self.subScanners.append(StringScanner())
+//        self.subScanners.append(NumberScanner())
+//        self.subScanners.append(IdentifierScanner())
+//        self.subScanners.append(OperatorScanner())
+//        self.subScanners.append(SymbolScanner())
+//        self.rules.append(LexicalRule(pattern: ., function: <#T##() -> Token#>
+//        }
+//
+//    public func sourceStringPrefix(ofLength length: Int) -> String
+//        {
+//        let endIndex = self.source.index(self.sourceIndex,offsetBy: length)
+//        return(String(self.source[self.sourceIndex...endIndex]))
+//        }
+//
+//    public func nextCharacter(at integerOffset: Int) -> UnicodeScalar
+//        {
+//        let newIndex = self.source.index(self.sourceIndex,offsetBy: integerOffset)
+//        let character = self.source.unicodeScalars[newIndex]
+//        return(character)
+//        }
+//
+//    @discardableResult
+//    public func nextCharacter() -> Unicode.Scalar
+//        {
+//        self.currentCharacter = self.source.unicodeScalars[self.sourceIndex]
+//        self.offset += 1
+//        self.sourceIndex = self.source.index(after: self.sourceIndex)
+//        if self.currentCharacter == "\n"
+//            {
+//            self.sourceLine += 1
+//            }
+//        return(self.currentCharacter)
+//        }
+//
+//    public func scanUntilEndOfLine() -> String
+//        {
+//        self.nextCharacter()
+//        var string = String()
+//        while self.currentCharacter != "\n" && !self.atEnd
+//            {
+//            string += String(self.currentCharacter)
+//            self.nextCharacter()
+//            }
+//        return(string)
+//        }
+//
+//    private func scanToken() -> Token
+//        {
+//        let start = self.offset
+//        for rule in self.rules
+//            {
+//            if rule.pattern.matches(string: String(self.currentCharacter))
+//                {
+//                return(rule.function())
+//                }
+//            }
+//        let location = Location(nodeKey: 0, line: self.lineNumber, start: start, stop: self.offset)
+//        return(ErrorToken(location: location, string: "Unexpected character '\(self.currentCharacter)'."))
+//        }
+//
+//    private func scanComment() -> Token
+//        {
+//        let prefix = self.sourceStringPrefix(ofLength: 2)
+//        if prefix == "/*"
+//            {
+//            return(self.scanMultilineComment())
+//            }
+//        else
+//            {
+//            return(self.scanSinglelineComment())
+//            }
+//        }
+//
+//    private func scanMultilineComment() -> Token
+//        {
+//        let start = self.offset
+//        var localOffset = 0
+//        var string = String()
+//        repeat
+//            {
+//            string += String(self.currentCharacter)
+//            localOffset += 1
+//            self.nextCharacter()
+//            }
+//        while self.nextCharacter(at: 0) != "*" && self.nextCharacter(at: 1) != "/" && !self.atEnd
+//        string += "*/"
+//        let location = Location(nodeKey: 0, line: self.lineNumber, start: start, stop: start + localOffset)
+//        return(CommentToken(location: location, string: string))
+//        }
+//
+//    private func scanSinglelineComment() -> Token
+//        {
+//        let start = self.offset
+//        let string = self.scanUntilEndOfLine()
+//        let stop = start + string.count
+//        let location = Location(nodeKey: 0, line: self.lineNumber, start: start, stop: stop)
+//        return(CommentToken(location: location, string: string))
+//        }
+//        }
+//
+//
+//
+//    @discardableResult
+//    public func nextCharacter(incrementIndex: Bool) -> UnicodeScalar
+//        {
+//        let character = self.source.unicodeScalars[self.sourceIndex]
+//        if incrementIndex
+//            {
+//            self.offset += 1
+//            self.sourceIndex = self.source.index(after: self.sourceIndex)
+//            if character == "\n"
+//                {
+//                self.sourceLine += 1
+//                }
+//            }
+//        return(character)
+//        }
+//
+//    private func scanToken() -> Token
+//        {
+//        if self.offset >= self.sourceCharacterCount
+//            {
+//            return(EndToken(location: .zero,string: ""))
+//            }
+//        for subScanner in self.subScanners
+//            {
+//            if subScanner.matches(scanner: self)
+//                {
+//                let token = subScanner.scan(using: self, location: self.offset)
+//                return(token)
+//                }
+//            }
+//        fatalError("Unknown token type.")
+//        }
+//
+//    public func allTokens() -> Tokens
+//        {
+//        var tokens = Tokens()
+//        var token: Token!
+//        repeat
+//            {
+//            token = self.scanToken()
+//            tokens.append(token)
+//            }
+//        while !token.isEnd
+//        return(tokens)
+//        }
+//    }
 
-    }
-    
-public class WhitespaceRule: TokenRule
-    {
-    public override var makesToken: Bool
-        {
-        false
-        }
-    }
-    
+
 public class ArgonScanner
     {
-    public var source: String
+    public var atEnd: Bool
         {
-        get
+        self.offset >= self.sourceCharacterCount
+        }
+
+    private let source:String
+    private var offset = 0
+    private var startOffset = 0
+    private var sourceCharacterCount: Int
+    private var sourceIndex: String.Index
+    private var sourceLine: Int = 1
+    private let operatorCharacters = CharacterSet(charactersIn: "!$%^&*()-+=:;{}[]\\\\|<>?/.,~@")
+    private let identifierStartCharacters = CharacterSet.letters
+    private let identifierCharacters = CharacterSet.letters.union(CharacterSet.decimalDigits).union(CharacterSet(charactersIn: "-_!?"))
+    private let symbolCharacters = CharacterSet.letters.union(.decimalDigits).union(CharacterSet(charactersIn: "-_"))
+    public var currentCharacter = Unicode.Scalar(0)!
+
+    public init(source: String)
+        {
+        self.source = source
+        self.sourceIndex = self.source.startIndex
+        self.sourceCharacterCount = self.source.count
+        self.nextCharacter()
+        }
+
+    public func sourcePrefix(length: Int) -> String
+        {
+        let beginIndex = self.source.index(before: self.sourceIndex)
+        let endIndex = self.source.index(beginIndex,offsetBy: length)
+        return(String(self.source[beginIndex..<endIndex]))
+        }
+
+//    public func nextCharacter(at integerOffset: Int) -> UnicodeScalar
+//        {
+//        let newIndex = self.source.index(self.sourceIndex,offsetBy: integerOffset)
+//        let character = self.source.unicodeScalars[newIndex]
+//        return(character)
+//        }
+
+    @discardableResult
+    public func nextDirtyCharacter() -> Unicode.Scalar
+        {
+        if self.offset >= self.sourceCharacterCount
             {
-            self._source
+            return(self.currentCharacter)
             }
-        set
+        self.currentCharacter = self.source.unicodeScalars[self.sourceIndex]
+        self.offset += 1
+        self.sourceIndex = self.source.index(after: self.sourceIndex)
+        if self.currentCharacter == "\n"
             {
-            self._source = newValue
-            self.rescan()
+            self.sourceLine += 1
             }
-        }
-    
-    private var _source:String = ""
-    private var location: Int
-    private var rules: Array<TokenRule> = []
-    private var lineRecords = Array<LineRecord>()
-    private var line: Int = 1
-    private var currentCharacter = UnicodeScalar(0)!
-    private let startWhitespaceSet = CharacterSet(charactersIn: "\n\r\t ")
-    private let startOperatorSet = CharacterSet(charactersIn: "!@%^&*()_+=-~{}[]|\\:;.<>?")
-    private let startIdentifierSet = CharacterSet.letters
-    private let continueIdentifierSet = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "!?-_"))
-    private let continueOperatorSet = CharacterSet(charactersIn: "!@%^&*()_+=-[]{}:;\\|/<>.")
-    private let startNumberSet = CharacterSet.decimalDigits
-    private let symbolSet = CharacterSet.alphanumerics
-    private var currentIndex: String.Index
-    private var tokenStart: Int = 0
-    private var tokenStop: Int = 0
-    private var sourceCount: Int
-    public private(set) var tokens: Tokens?
-    
-    init(source: String)
-        {
-        self.sourceCount = source.count
-        self.tokenStart = 0
-        self.currentIndex = source.startIndex
-        self.location = 0
-        self._source = source
-        self.initRules()
-        self.scanLines()
-        self.scan()
+        return(self.currentCharacter)
         }
         
-    public func scan()
+    @discardableResult
+    public func nextCharacter() -> Unicode.Scalar
         {
-        self.tokens = self.allTokens()
-        }
-        
-    public func rescan()
-        {
-        self.tokens = nil
-        self.sourceCount = self._source.count
-        self.tokenStart = 0
-        self.currentIndex = self._source.startIndex
-        self.location = 0
-        self.scanLines()
-        self.scan()
-        }
-        
-    private func scanLines()
-        {
-        var line = 1
-        var count = 0
-        var start = 0
-        for character in self._source
+        if self.offset >= self.sourceCharacterCount
             {
-            if character == "\n"
-                {
-                let record = LineRecord(file: Path("/")!,line: line, lineStart: start, lineEnd: count)
-                self.lineRecords.append(record)
-                line += 1
-                start = count + 1
-                }
-            count += 1
+            return(self.currentCharacter)
             }
+        self.currentCharacter = self.source.unicodeScalars[self.sourceIndex]
+        self.offset += 1
+        self.sourceIndex = self.source.index(after: self.sourceIndex)
+        if self.currentCharacter == "\n"
+            {
+            self.sourceLine += 1
+            return(self.nextCharacter())
+            }
+        return(self.currentCharacter)
+        }
+
+    public func scanUntilEndOfLine() -> String
+        {
+        self.nextDirtyCharacter()
+        var string = String()
+        while self.currentCharacter != "\n" && !self.atEnd
+            {
+            string += String(self.currentCharacter)
+            self.nextDirtyCharacter()
+            }
+        if self.currentCharacter == "\n"
+            {
+            self.nextCharacter()
+            }
+        return(string)
         }
         
-    private func initRules()
+    public func scanUntilEndOfMultilineComment() -> String
         {
-        self.rules.append(TokenRule(tag: "separator",pattern: ",", tokenType: SeparatorToken.self,startSet: CharacterSet(charactersIn: ",")))
-//        self.rules.append(TokenRule(tag: "path",pattern: "\\A(/)?[a-zA-Z0-9]+[/a-zA-Z0-9_\\-]*", tokenType: PathToken.self,startSet: .letters.union(CharacterSet(charactersIn: "/"))))
-        self.rules.append(TokenRule(tag: "identifier",pattern: "\\A(\\$)?[a-zA-Z\\\\]+[a-zA-Z0-9_\\!\\?\\\\]*", tokenType: IdentifierToken.self,startSet: .letters.union(CharacterSet(charactersIn: "\\$"))))
-//        self.rules.append(TokenRule(tag: "identifier",pattern: "\\A[a-zA-Z//]+[a-zA-Z0-9_\\-!\\?/]*", tokenType: IdentifierToken.self,startSet: .letters.union(CharacterSet(charactersIn: "/"))))
-//        self.rules.append(TokenRule(tag: "character",pattern: "\\A§.", tokenType: CharacterToken.self,startSet: CharacterSet(charactersIn: "§")))
-//        self.rules.append(TokenRule(tag: "byte",pattern: "\\A_[0-9]{1,3}", tokenType: ByteToken.self,startSet: CharacterSet(charactersIn: "_")))
-        self.rules.append(TokenRule(tag: "symbol",pattern: "\\A#[a-zA-Z]+[a-zA-Z0-9_\\-!\\?]*", tokenType: SymbolToken.self,startSet: CharacterSet(charactersIn: "#")))
-        self.rules.append(TokenRule(tag: "date",pattern: "\\A(?:@\\()[0-9]{1,2}\\/[0-1]?[0-9]\\/[0-9]{4}(?:\\))", tokenType: DateToken.self,startSet: CharacterSet(charactersIn: "@")))
-        self.rules.append(TokenRule(tag: "time",pattern: "\\A@\\([0-9]{1,2}\\:[0-9]{1,2}\\:[0-9]{1,2}(:[0-9]{1,4})?\\)", tokenType: TimeToken.self,startSet: CharacterSet(charactersIn: "@")))
-        self.rules.append(TokenRule(tag: "dateTime",pattern: "\\A@\\([0-9]{1,2}\\/[0-1]?[0-9]\\/[0-9]{4}[:space:][0-9]{1,2}\\:[0-9]{1,2}\\:[0-9]{1,2}(\\:[0-9]{1,4})?\\)", tokenType: DateTimeToken.self,startSet: CharacterSet(charactersIn: "@")))
-        self.rules.append(WhitespaceRule(tag: "whitespace", pattern: "\\A(\\s|\n|\r|\t)+", tokenType: nil,startSet: CharacterSet(charactersIn: "\t\r\n ")))
-        self.rules.append(TokenRule(tag: "comment1", pattern: "\\A\\/\\*(.|\n)*?\\*\\/", tokenType: CommentToken.self,startSet: CharacterSet(charactersIn: "/")))
-        self.rules.append(TokenRule(tag: "comment2",pattern: "\\A\\/\\/(.)*?\n", tokenType: CommentToken.self,startSet: CharacterSet(charactersIn: "/")))
-        self.rules.append(TokenRule(tag: "operator",pattern: "\\A([!\\$%\\^&\\*\\+\\-\\/~\\<\\>\\|\\[\\]\\{\\}\\(\\)\\.=\\:;]+)|(\\-\\>)?", tokenType: OperatorToken.self,startSet: CharacterSet(charactersIn: "!$%^&*()_+=-}{[]\\|?></~:;")))
-//        self.rules.append(TokenRule(tag: "symbol",pattern: "\\A#[a-zA-Z]+[a-zA-Z0-9]*", tokenType: SymbolToken.self,startSet: CharacterSet(charactersIn: "#")))
-        self.rules.append(TokenRule(tag: "integer",pattern: "\\A[0-9]+(?!\\.)", tokenType: IntegerToken.self,startSet: CharacterSet(charactersIn: "0123456789")))
-        self.rules.append(TokenRule(tag: "float",pattern: "\\A[0-9]+(\\.[0-9]*)?[F]?", tokenType: FloatToken.self,startSet: CharacterSet(charactersIn: "0123456789")))
-        self.rules.append(TokenRule(tag: "string",pattern: "\\A\\\"[^\\\"]*\\\"", tokenType: StringToken.self,startSet: CharacterSet(charactersIn: "\\\"")))
-        self.rules.append(TokenRule(tag: "comma",pattern: "\\A,", tokenType: OperatorToken.self,startSet: CharacterSet(charactersIn: ",")))
+        self.nextDirtyCharacter()
+        self.nextDirtyCharacter()
+        var string = String("/*")
+        while self.sourcePrefix(length: 2) != "*/" && !self.atEnd
+            {
+            string += String(self.currentCharacter)
+            self.nextDirtyCharacter()
+            }
+        string.append("*/")
+        return(string)
         }
         
     public func allTokens() -> Tokens
         {
-        if let someTokens = self.tokens
-            {
-            return(someTokens)
-            }
         var tokens = Tokens()
-        var wasMatched = false
-        while self.location < self._source.count
+        while !self.atEnd
             {
-//            let start = self.source.index(self.source.startIndex, offsetBy: self.location)
-//            let end = self.source.index(start, offsetBy: min(40,self.source.count - location))
-//            print("LOCATION: \(self.location)")
-//            print("SOURCE: \(String(self.source[start..<end]))")
-            for rule in self.rules
-                {
-//                print("TRYING TO MATCH \(rule.tag) = \(rule.pattern)")
-                let index = self._source.index(self._source.startIndex,offsetBy: self.location)
-                let character = self._source.unicodeScalars[index]
-                if rule.startSet.contains(character) && rule.matches(in: self._source,at: self.location)
-                    {
-                    wasMatched = true
-//                    print("DID MATCH \(rule.tag)")
-                    let matchLength = rule.matchLength
-//                    print("MATCH WAS AT \(self.location),\(matchLength)")
-//                    print("MATCH STRING WAS \(rule.tag)(\(rule.matchString))")
-                    if rule.makesToken
-                        {
-                        let theLine = self.line(forLocation: self.location)
-                        self.line = theLine
-//                        print("LINE IS \(theLine)")
-                        var token:Token
-                        if rule.tag == "identifier" && KeywordToken.isKeyword(rule.matchString)
-                            {
-                            token = KeywordToken(location: Location(nodeKey: 0,line: theLine, start: self.location, stop: self.location + matchLength),string: rule.matchString)
-                            }
-                        else
-                            {
-                            token = rule.tokenType!.init(location: Location(nodeKey: 0,line: theLine, start: self.location, stop: self.location + matchLength),string: rule.matchString)
-                            }
-//                        let start1 = self.source.index(self.source.startIndex, offsetBy: self.location)
-//                        let end1 = self.source.index(start, offsetBy: matchLength)
-//                        let text = self.source[start1..<end1]
-//                        print("TEXT FROM TOKEN = $\(text)$")
-                        tokens.append(token)
-                        }
-                    self.location += matchLength
-                    break
-                    }
-                }
-            if !wasMatched
-                {
-                let errorToken = ErrorToken(location: Location(nodeKey: 0,line: self.line, start: self.location, stop: self.location + 1), code: .invalidCharacterSequence, message: "Invalid character sequence")
-                tokens.append(errorToken)
-                self.location += 1
-                }
-            wasMatched = false
+            tokens.append(self.scanToken())
             }
-        tokens.append(EndToken(location: Location(nodeKey: 0,line: 0),string: ""))
         return(tokens)
         }
         
-    private func line(forLocation location: Int) -> Int
+    private func scanToken() -> Token
         {
-        for record in self.lineRecords
+        if self.atEnd
             {
-            if location >= record.lineStart && location <= record.lineEnd
-                {
-                return(record.line)
-                }
+            return(EndToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: ""))
             }
-        return(0)
-        }
-    
-    private func isAtEnd() -> Bool
-        {
-        self.location + 1 >= self.sourceCount
-        }
-        
-    private func isAtEndOfLine() -> Bool
-        {
-        self.currentCharacter == "\n"
-        }
-        
-    private func scanWhitespace()
-        {
-        if self.currentCharacter == "\n"
-            {
-            self.line += 1
-            }
-        self.nextCharacter()
-        if self.startWhitespaceSet.contains(self.currentCharacter)
+        self.startOffset = offset - 1
+        if CharacterSet.whitespaces.contains(self.currentCharacter)
             {
             self.scanWhitespace()
+            return(self.scanToken())
             }
-        }
-        
-    private func peekCharacter(at: Int) -> Unicode.Scalar
-        {
-        let newIndex = self._source.index(self.currentIndex,offsetBy: at)
-        if newIndex >= self._source.endIndex
+        let prefix = self.sourcePrefix(length: 2)
+        if prefix == "/*" || prefix == "//"
             {
-            return(Unicode.Scalar(0)!)
+            return(self.scanComment())
             }
-        return(self._source.unicodeScalars[newIndex])
-        }
-        
-    private func nextCharacter()
-        {
-        if self._source.index(self.currentIndex, offsetBy: 1) >= self._source.endIndex
+        else if CharacterSet.decimalDigits.contains(self.currentCharacter)
             {
-            self.currentCharacter = Unicode.Scalar(0)!
-            return
+            return(self.scanNumber())
             }
-        self.currentIndex = self._source.index(self.currentIndex, offsetBy: 1)
-        self.currentCharacter = self._source.unicodeScalars[self.currentIndex]
-        self.tokenStop += 1
-        self.location += 1
+        else if self.currentCharacter == Unicode.Scalar("\"")
+            {
+            return(self.scanString())
+            }
+        else if self.currentCharacter == Unicode.Scalar("#")
+            {
+            return(self.scanSymbol())
+            }
+        else if self.operatorCharacters.contains(self.currentCharacter)
+            {
+            return(self.scanOperator())
+            }
+        else if self.identifierStartCharacters.contains(self.currentCharacter)
+            {
+            return(self.scanIdentifier())
+            }
+        let character = self.currentCharacter
+        self.nextCharacter()
+        return(ErrorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: "Unknown character '\(character)'"))
         }
         
     private func scanIdentifier() -> Token
         {
-        var string = ""
-        repeat
+        var identifier = String()
+        while self.identifierCharacters.contains(self.currentCharacter) && !self.atEnd
             {
-            string += String(self.currentCharacter)
+            identifier.append(String(self.currentCharacter))
             self.nextCharacter()
             }
-        while self.continueIdentifierSet.contains(self.currentCharacter) && !self.isAtEndOfLine() && !self.isAtEnd()
-        return(IdentifierToken(location: Location(nodeKey: 0,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
+        let location = Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset)
+        if KeywordToken.isKeyword(identifier)
+            {
+            return(KeywordToken(location: location,string: identifier))
+            }
+        return(IdentifierToken(location: location, string: identifier))
         }
         
     private func scanOperator() -> Token
         {
-        var string = ""
-        repeat
+        var string = String()
+        while self.operatorCharacters.contains(self.currentCharacter) && !self.atEnd
             {
-            string += String(self.currentCharacter)
+            string.append(self.currentCharacter)
             self.nextCharacter()
             }
-        while self.continueOperatorSet.contains(self.currentCharacter) && !self.isAtEndOfLine() && !self.isAtEnd()
-        return(OperatorToken(location: Location(nodeKey: 0,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
+        return(OperatorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string))
         }
         
-    private func scanComment() -> Token
+    private func scanSymbol() -> Token
         {
-        var string = String(self.currentCharacter)
         self.nextCharacter()
-        if self.currentCharacter == "/"
+        var string = "#"
+        while self.symbolCharacters.contains(self.currentCharacter) && !self.atEnd
             {
-            while !self.isAtEndOfLine() && !self.isAtEnd()
-                {
-                string += String(self.currentCharacter)
-                self.nextCharacter()
-                }
-            return(CommentToken(location: Location(nodeKey: 0,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
+            string.append(self.currentCharacter)
+            self.nextCharacter()
             }
-        else if self.currentCharacter == "*"
-            {
-            while !self.isAtEnd() && !(self.currentCharacter == "*" && self.peekCharacter(at: 1) == "/")
-                {
-                string += String(self.currentCharacter)
-                self.nextCharacter()
-                }
-            return(CommentToken(location: Location(nodeKey: 0,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
-            }
-//        self.reporter.addIssue("Invalid character sequence '\(string)'.", at: Location(line: self.line, start: self.tokenStart, stop: self.tokenStop), isWarning: false)
-        return(CommentToken(location: Location(nodeKey: 0,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
+        return(SymbolToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string))
         }
         
     private func scanString() -> Token
         {
         self.nextCharacter()
         var string = ""
-        self.nextCharacter()
-        while self.currentCharacter != "\"" && !self.isAtEnd() && !self.isAtEndOfLine()
+        while self.currentCharacter != Unicode.Scalar("\"") && !self.atEnd
             {
-            string += String(self.currentCharacter)
+            string.append(self.currentCharacter)
             self.nextCharacter()
             }
-        return(StringToken(location: Location(nodeKey: 0,line: self.line, start: self.tokenStart, stop: self.tokenStart), string: string))
+        if self.currentCharacter == Unicode.Scalar("\"")
+            {
+            self.nextCharacter()
+            }
+        return(StringToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string))
         }
         
-    private func scanSymbol() -> Token
-        {
-        var string = "#"
-        self.nextCharacter()
-        while self.symbolSet.contains(self.currentCharacter) && !self.isAtEnd() && !self.isAtEndOfLine()
-            {
-            string += String(self.currentCharacter)
-            self.nextCharacter()
-            }
-        return(SymbolToken(location: Location(nodeKey: 0,line: self.line, start: self.tokenStart, stop: self.tokenStart), string: string))
-        }
-    
     private func scanNumber() -> Token
         {
-        var string = ""
-        repeat
-            {
-            string += String(self.currentCharacter)
-            self.nextCharacter()
-            }
-        while CharacterSet.decimalDigits.contains(self.currentCharacter) && !self.isAtEnd() && !self.isAtEndOfLine()
-        if self.currentCharacter == "f"
+        if self.currentCharacter == Unicode.Scalar("0")
             {
             self.nextCharacter()
-            return(FloatToken(location: Location(nodeKey: 0,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
-            }
-        if self.currentCharacter == "."
-            {
-            self.nextCharacter()
-            while CharacterSet.decimalDigits.contains(self.currentCharacter)
-                {
-                string += String(self.currentCharacter)
-                self.nextCharacter()
-                }
-            if self.currentCharacter == "f"
+            if self.currentCharacter == Unicode.Scalar("B")
                 {
                 self.nextCharacter()
+                return(self.scanBinaryNumber())
                 }
-            return(FloatToken(location: Location(nodeKey: 0,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
+            else if self.currentCharacter == Unicode.Scalar("T")
+                {
+                self.nextCharacter()
+                return(self.scanTernaryNumber())
+                }
+            else if self.currentCharacter == Unicode.Scalar("O")
+                {
+                self.nextCharacter()
+                return(self.scanOctalNumber())
+                }
+            else if self.currentCharacter == Unicode.Scalar("X")
+                {
+                self.nextCharacter()
+                return(self.scanHexadecimalNumber())
+                }
             }
-        return(IntegerToken(location: Location(nodeKey: 0,line: self.line, start: self.tokenStart, stop: self.tokenStop), string: string))
+        return(self.scanDecimalNumber())
         }
-        
-    public func scanToken() -> Token
+
+    private func scanBinaryNumber() -> Token
         {
-        self.tokenStart = self.location
-        self.tokenStop = self.tokenStart
-        if self.startWhitespaceSet.contains(self.currentCharacter)
-            {
-            self.scanWhitespace()
-            return(self.scanToken())
-            }
-        else if self.startIdentifierSet.contains(self.currentCharacter)
-            {
-            return(self.scanIdentifier())
-            }
-        else if self.startOperatorSet.contains(self.currentCharacter)
-            {
-            return(self.scanOperator())
-            }
-        else if self.currentCharacter == "/"
-            {
-            return(self.scanComment())
-            }
-        else if self.currentCharacter == "\""
-            {
-            return(self.scanString())
-            }
-        else if self.startNumberSet.contains(self.currentCharacter)
-            {
-            return(self.scanNumber())
-            }
-        else if self.currentCharacter == ","
-            {
-            self.nextCharacter()
-            return(OperatorToken(location: Location(nodeKey: 0,line: self.line, start: self.tokenStart, stop: self.tokenStart), string: "."))
-            }
-        else if self.currentCharacter == "#"
-            {
-            return(self.scanSymbol())
-            }
-        else if self.isAtEnd()
-            {
-            return(EndToken(location: Location(nodeKey: 0,line: self.line),string: ""))
-            }
-        else
-            {
-            print("INVALID CHARACTER SEQUENCE \(self.currentCharacter)")
-//            self.reporter.addIssue("Invalid character sequence '\(self.currentCharacter)'.", at: Location(line: self.line, start: self.tokenStart, stop: self.tokenStop), isWarning: false)
-            self.nextCharacter()
-            return(self.scanToken())
-            }
+        fatalError()
         }
         
-//    public func allTokens() -> Tokens
-//        {
-//        self.reporter = reporter
-//        var token: Token = Token(location: Location(line: 0), string: "")
-//        var tokens = Tokens()
-//        self.nextCharacter()
-//        repeat
-//            {
-//            token = self.scanToken()
-//            tokens.append(token)
-//            }
-//        while !token.isEndToken
-//        return(tokens)
-//        }
+    private func scanTernaryNumber() -> Token
+        {
+        fatalError()
+        }
+        
+    private func scanOctalNumber() -> Token
+        {
+        fatalError()
+        }
+        
+    private func scanHexadecimalNumber() -> Token
+        {
+        fatalError()
+        }
+        
+    private func scanDecimalNumber() -> Token
+        {
+        var string = String()
+        while CharacterSet.decimalDigits.contains(self.currentCharacter) && !self.atEnd
+            {
+            string.append(String(self.currentCharacter))
+            self.nextCharacter()
+            }
+        if self.currentCharacter == Unicode.Scalar(".")
+            {
+            string.append(".")
+            self.nextCharacter()
+            while CharacterSet.decimalDigits.contains(self.currentCharacter) && !self.atEnd
+                {
+                string.append(String(self.currentCharacter))
+                self.nextCharacter()
+                }
+            return(FloatToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string))
+            }
+        return(IntegerToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string))
+        }
+        
+    private func scanComment() -> Token
+        {
+        let prefix = self.sourcePrefix(length: 2)
+        if prefix == String("/*")
+            {
+            return(self.scanMultilineComment())
+            }
+        return(self.scanSinglelineComment())
+        }
+        
+    private func scanMultilineComment() -> Token
+        {
+        let string = self.scanUntilEndOfMultilineComment()
+        return(CommentToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string))
+        }
+        
+    private func scanSinglelineComment() -> Token
+        {
+        let string = self.scanUntilEndOfLine()
+        return(CommentToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string))
+        }
+        
+    private func scanWhitespace()
+        {
+        while CharacterSet.whitespaces.contains(self.currentCharacter) && !self.atEnd
+            {
+            self.nextCharacter()
+            }
+        }
     }

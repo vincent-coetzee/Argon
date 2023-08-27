@@ -48,6 +48,18 @@ public class SourceCodeEditingView: NSView,NSTextViewDelegate,Model
             }
         }
         
+    public var sourceEditorDelegate: SourceEditorDelegate?
+        {
+        get
+            {
+            self.textView.sourceEditorDelegate
+            }
+        set
+            {
+            self.textView.sourceEditorDelegate = newValue
+            }
+        }
+        
     public var textViewDelegate: NSTextViewDelegate?
         {
         get
@@ -94,7 +106,6 @@ public class SourceCodeEditingView: NSView,NSTextViewDelegate,Model
         {
         let aView = SourceView(frame: .zero)
         self.textView = aView
-        self.textView.sourceEditorDelegate = self
         self.scrollView = NSScrollView(frame: .zero)
         self.scrollView.translatesAutoresizingMaskIntoConstraints = false
         self.scrollView.borderType = .noBorder
@@ -113,18 +124,3 @@ public class SourceCodeEditingView: NSView,NSTextViewDelegate,Model
         }
     }
 
-extension SourceCodeEditingView: SourceEditorDelegate
-    {
-    public func sourceEditor(_ editor: NSTextView,changedSource: String)
-        {
-        self.changed(aspect: "source",with: changedSource,from: self)
-        }
-        
-    public func sourceEditorKeyPressed(_ editor: NSTextView)
-        {
-        }
-        
-    public func sourceEditor(_ editor: NSTextView,changedLine: Int,offset: Int)
-        {
-        }
-    }

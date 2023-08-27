@@ -36,6 +36,7 @@ class ModuleBundleDocument: NSDocument
         
     public override func read(from fileWrapper: FileWrapper, ofType typeName: String) throws
         {
+        fatalError()
         }
 
     override class var autosavesInPlace: Bool

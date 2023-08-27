@@ -50,6 +50,11 @@ extension String
         return(nil)
         }
         
+    public mutating func append(_ scalar: Unicode.Scalar)
+        {
+        self.append(String(scalar))
+        }
+        
     public func firstIndex(of string: String,after: Self.Index) -> Self.Index?
         {
         let length = string.count

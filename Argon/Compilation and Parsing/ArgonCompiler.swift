@@ -87,6 +87,12 @@ public struct ArgonCompiler
                 }
             self.wereIssues = node.compilerIssues.count > 0 || self.wereIssues
             self.issueCount += node.compilerIssues.count
+            print("Node = \(node.name).")
+            print("\(node.compilerIssues.count) compiler issues in node.")
+            for issue in node.compilerIssues
+                {
+                print("Line \(issue.location.line) \(issue.message)")
+                }
             }
         }
         

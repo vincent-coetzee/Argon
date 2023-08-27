@@ -57,12 +57,12 @@ public class SourceFileNode: SourceNode
         
     public required init?(coder: NSCoder)
         {
-        print("SourceFileNode.init")
         self.source = coder.decodeObject(forKey: "source") as! String
         self.expandedSource = coder.decodeObject(forKey: "expandedSource") as! String
         self.tokens = coder.decodeObject(forKey: "tokens") as! Tokens
         self._compilerIssues = coder.decodeObject(forKey: "compilerIssues") as! CompilerIssues
         super.init(coder: coder)
+        self.expandedSource = self.source
         }
         
     public override func encode(with coder: NSCoder)
@@ -82,6 +82,11 @@ public class SourceFileNode: SourceNode
     public override func setSource(_ string: String)
         {
         self.source = string
+        }
+        
+    public override func setTokens(_ tokens: Tokens)
+        {
+        self.tokens = tokens
         }
     }
     

@@ -17,7 +17,7 @@ public protocol SourceEditorDelegate
     {
     func sourceEditorKeyPressed(_ editor: NSTextView)
     func sourceEditor(_ editor: NSTextView,changedLine: Int,offset: Int)
-    func sourceEditor(_ editor: NSTextView,changedSource: String)
+    func sourceEditor(_ editor: NSTextView,changedSource: String,tokens: Tokens)
     }
     
 class SourceView: NSTextView
@@ -120,6 +120,13 @@ class SourceView: NSTextView
         newLayer.backgroundColor = SourceTheme.shared.color(for: .colorIssue).cgColor
         newLayer.foregroundColor = SourceTheme.shared.color(for: .colorIssueText).cgColor
         newLayer.frame = self.endOfLineRect(forLine: line)
+        frame = newLayer.frame
+        if frame.origin.x + 10 < self.bounds.maxX
+            {
+            frame.origin.x += 10
+            frame.size.width -= 10
+            }
+        newLayer.frame = frame
         let font = SourceTheme.shared.font(for: .fontEditor)
         newLayer.font = font
         newLayer.fontSize = font.pointSize
@@ -135,7 +142,11 @@ class SourceView: NSTextView
         
     @objc func textDidChange(_ sender: Any?)
         {
-        self.sourceEditorDelegate?.sourceEditor(self, changedSource: self.string)
+        let theString = self.string
+        let someTokens = ArgonScanner(source: theString).allTokens()
+        self._tokens = someTokens
+        self.sourceEditorDelegate?.sourceEditor(self, changedSource: theString,tokens: someTokens)
+        self.refresh()
         }
         
     @objc func textDidEndEditing(_ sender: Any?)
@@ -194,9 +205,7 @@ class SourceView: NSTextView
                 currentIndex = string.index(after: currentIndex)
                 }
             }
-//        let range = NSRange(location: location,length: 0)
         self.rulerView.needsDisplay = true
-//        self.textStorage?.replaceCharacters(in: range, with: "\n\(tabString)")
         super.insertNewline(sender)
         }
         
@@ -230,8 +239,7 @@ class SourceView: NSTextView
             let newEvent = NSEvent.keyEvent(with: event.type, location: event.locationInWindow, modifierFlags: event.modifierFlags, timestamp: event.timestamp, windowNumber: event.windowNumber, context: nil, characters: newCharacters, charactersIgnoringModifiers: event.charactersIgnoringModifiers!, isARepeat: event.isARepeat, keyCode: event.keyCode)
             self.interpretKeyEvents([newEvent!])
             }
-        else
-        if event.isARepeat,let someCharacters = event.characters
+        else if event.isARepeat,let someCharacters = event.characters
             {
             let newCharacters = someCharacters + someCharacters + someCharacters + someCharacters
             let newEvent = NSEvent.keyEvent(with: event.type, location: event.locationInWindow, modifierFlags: event.modifierFlags, timestamp: event.timestamp, windowNumber: event.windowNumber, context: nil, characters: newCharacters, charactersIgnoringModifiers: event.charactersIgnoringModifiers!, isARepeat: event.isARepeat, keyCode: event.keyCode)

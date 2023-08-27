@@ -185,6 +185,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         self.sourceView.textViewDelegate = self
         self.sourceView.textFocusDelegate = self
         self.sourceView.autoresizingMask = [.width]
+        self.sourceView.sourceEditorDelegate = self
         }
         
     private func initOutliner()
@@ -192,7 +193,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         self.outliner.backgroundColor = SourceTheme.shared.color(for: .colorOutlineBackground)
         self.outliner.rowSizeStyle = .custom
         self.outliner.intercellSpacing = NSSize(width: 0, height: 4)
-        self.outliner.doubleAction = #selector(self.onOutlinerClicked)
+        self.outliner.doubleAction = #selector(self.onOutlinerDoubleClicked)
         self.outliner.target = self
         self.outliner.style = .plain
         self.outliner.columnAutoresizingStyle = .lastColumnOnlyAutoresizingStyle
@@ -204,7 +205,6 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         self.outliner.indentationPerLevel = 15
         self.outliner.indentationMarkerFollowsCell = true
         self.outliner.intercellSpacing = NSSize(width: 5,height: 0)
-//        NotificationCenter.default.addObserver(self, selector: #selector(self.outlinerSelectionChanged), name: NSOutlineView.selectionDidChangeNotification, object: self.outliner)
         }
         
     private func updatePathControl(from node: SourceNode?)
@@ -263,10 +263,6 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         }
         
     @IBAction public func textDidBeginEditing(_ notification: Notification)
-        {
-        }
-        
-    @IBAction public func onOutlinerClicked(_ sender: Any?)
         {
         }
         
@@ -498,6 +494,24 @@ extension ProjectViewController: NSOutlineViewDelegate
         }
     }
 
+extension ProjectViewController: SourceEditorDelegate
+    {
+    func sourceEditorKeyPressed(_ editor: NSTextView)
+        {
+        
+        }
+    
+    func sourceEditor(_ editor: NSTextView, changedLine: Int, offset: Int)
+        {
+        }
+    
+    func sourceEditor(_ editor: NSTextView,changedSource string: String,tokens: Tokens)
+        {
+        self.selectedSourceNode.setSource(string)
+        self.selectedSourceNode.setTokens(tokens)
+        }
+    }
+    
 extension ProjectViewController
     {
     @IBAction public func onImportFileClicked(_ sender: Any?)
@@ -563,6 +577,10 @@ extension ProjectViewController
         }
         
     @IBAction public func onDebugClicked(_ sender: Any?)
+        {
+        }
+        
+    @IBAction public func onOutlinerDoubleClicked(_ sender: Any?)
         {
         }
     }

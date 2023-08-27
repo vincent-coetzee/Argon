@@ -153,4 +153,8 @@ public class SourceNode: NSObject,NSCoding,Comparable,Dependent
     public func sortNodes()
         {
         }
+        
+    public func setTokens(_ tokens: Tokens)
+        {
+        }
     }
