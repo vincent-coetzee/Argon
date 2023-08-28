@@ -78,42 +78,42 @@ public class AliasedType: StructuredType
                     {
                     parser.lodgeIssue(code: .integerOrIdentifierExpected,location: location)
                     }
-                }
-            if !parser.token.isRangeOperator
-                {
-                parser.lodgeIssue(code: .rangeOperatorExpected,location: location)
-                }
-            else
-                {
-                parser.nextToken()
-                }
-            if lowerBound.isInteger
-                {
-                if !parser.token.isIntegerValue
+                if !parser.token.isRangeOperator
                     {
-                    parser.lodgeIssue(code: .integerUpperBoundExpectedAfterIntegerLowerBound,location: location)
+                    parser.lodgeIssue(code: .rangeOperatorExpected,location: location)
                     }
                 else
                     {
-                    upperBound = .integer(parser.token.integerValue)
                     parser.nextToken()
                     }
-                }
-            else if lowerBound.isIdentifier
-                {
-                if !parser.token.isIdentifier
+                if lowerBound.isInteger
                     {
-                    parser.lodgeIssue(code: .identifierUpperBoundExpectedAfterIdentifierLowerBound,location: location)
+                    if !parser.token.isIntegerValue
+                        {
+                        parser.lodgeIssue(code: .integerUpperBoundExpectedAfterIntegerLowerBound,location: location)
+                        }
+                    else
+                        {
+                        upperBound = .integer(parser.token.integerValue)
+                        parser.nextToken()
+                        }
+                    }
+                else if lowerBound.isIdentifier
+                    {
+                    if !parser.token.isIdentifier
+                        {
+                        parser.lodgeIssue(code: .identifierUpperBoundExpectedAfterIdentifierLowerBound,location: location)
+                        }
+                    else
+                        {
+                        upperBound = .identifier(parser.token.identifier)
+                        parser.nextToken()
+                        }
                     }
                 else
                     {
-                    upperBound = .identifier(parser.token.identifier)
-                    parser.nextToken()
+                    parser.lodgeIssue(code: .integerOrIdentifierExpected,location: location)
                     }
-                }
-            else
-                {
-                parser.lodgeIssue(code: .integerOrIdentifierExpected,location: location)
                 }
             let subType = SubType(name: name.lastPart,baseType: type,lowerBound: lowerBound,upperBound: upperBound)
             parser.currentScope.addNode(subType)

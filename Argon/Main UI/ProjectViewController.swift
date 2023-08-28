@@ -113,7 +113,9 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
                 {
                 toolbarWidth += CGFloat(20 + 8)
                 }
-            }            // TRAFFIC LiGHTS & ICON   RIGHT ICON
+            }
+        self.resizePathControl()
+                    // TRAFFIC LiGHTS & ICON   RIGHT ICON
 //        let width = toolbarWidth + CGFloat(120) + CGFloat(80)
 //        let remainder = frame.size.width - width
 //        self.pathControl.removeConstraint(self.pathControlWidthConstraint)
@@ -123,10 +125,39 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
 //        widthConstraint.isActive = true
         }
         
+    private func resizePathControl()
+        {
+        self.pathControl.removeConstraint(self.pathControlWidthConstraint)
+        let widthConstraint = NSLayoutConstraint(item: self.pathControl!, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: self.pathControlWidth)
+        self.pathControl.addConstraint(widthConstraint)
+        self.pathControlWidthConstraint = widthConstraint
+        widthConstraint.isActive = true
+        }
+        
     @objc public func leftViewFrameDidChange(_ notification: Notification)
         {
         let frame = self.leftView.frame
         self.leftSidebarController.rightOffset = frame.maxX
+        }
+        
+    private var pathControlWidth: CGFloat
+        {
+        let toolbar = self.view.window!.toolbar!
+        var toolbarWidth = CGFloat(0)
+        for item in toolbar.items
+            {
+            if item.itemIdentifier == NSToolbarItem.Identifier("issueControl")
+                {
+                toolbarWidth += item.view!.frame.size.width + CGFloat(20)
+                }
+            else if item.itemIdentifier != NSToolbarItem.Identifier("pathControl")
+                {
+                toolbarWidth += CGFloat(36 + 14)
+                }
+            }
+        var frame = self.view.window!.frame
+        let width = frame.size.width - toolbarWidth - CGFloat(60) - CGFloat(2 * 30)
+        return(width)
         }
         
     public func toolbar(_ toolbar: NSToolbar,itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem?
@@ -140,8 +171,6 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
             let view = NSPathControl()
             toolbarItem.view = view
             view.wantsLayer = true
-//            view.layer!.borderWidth = 1
-//            view.layer!.borderColor = SourceTheme.shared.color(for: .colorProjectControls).cgColor
             view.layer!.cornerRadius = SourceTheme.shared.metric(for: .metricControlCornerRadius)
             view.layer!.backgroundColor = SourceTheme.shared.color(for: .colorToolbarBackground).cgColor
             self.pathControl = view
@@ -149,7 +178,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
             let heightConstraint = NSLayoutConstraint(item: view, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 20)
             view.addConstraint(heightConstraint)
             heightConstraint.isActive = true
-            let widthConstraint = NSLayoutConstraint(item: view, attribute: .width, relatedBy: .greaterThanOrEqual, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 360)
+            let widthConstraint = NSLayoutConstraint(item: view, attribute: .width, relatedBy: .greaterThanOrEqual, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: self.pathControlWidth)
             view.addConstraint(widthConstraint)
             self.pathControlWidthConstraint = widthConstraint
             widthConstraint.isActive = true

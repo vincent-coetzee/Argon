@@ -16,7 +16,7 @@ public class CommentToken: Token
         
     public override var tokenType: TokenType
         {
-        .comment
+        return(.comment)
         }
         
     public override var tokenName: String

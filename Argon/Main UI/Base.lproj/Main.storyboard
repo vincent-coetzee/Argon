@@ -88,12 +88,6 @@
                                             </menu>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="qTQ-Hi-Yrc"/>
-                                        <menuItem title="Compile" keyEquivalent="k" id="O6I-vO-1Fz">
-                                            <connections>
-                                                <action selector="onCompileClicked:" target="Ady-hI-5gd" id="PbU-bK-up7"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
                                         <menuItem title="Close" keyEquivalent="w" id="DVo-aG-piG">
                                             <connections>
                                                 <action selector="performClose:" target="Ady-hI-5gd" id="HmO-Ls-i7Q"/>
@@ -352,29 +346,29 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Project" id="Ulm-a1-mbF">
                                     <items>
-                                        <menuItem title="Build" keyEquivalent="b" id="yBa-f5-zxa">
+                                        <menuItem title="Build Project" keyEquivalent="b" id="yBa-f5-zxa">
                                             <connections>
                                                 <action selector="onBuildClicked:" target="Ady-hI-5gd" id="Yj2-a1-TAx"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Parse" keyEquivalent="e" id="MzC-Us-xzh">
+                                        <menuItem title="Parse File" keyEquivalent="e" id="MzC-Us-xzh">
                                             <connections>
                                                 <action selector="onParseClicked:" target="Ady-hI-5gd" id="9Ys-iN-F8M"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="jzi-A4-ikW"/>
-                                        <menuItem title="Run" keyEquivalent="r" id="dXN-oi-Tw7">
+                                        <menuItem title="Run Project" keyEquivalent="r" id="dXN-oi-Tw7">
                                             <connections>
                                                 <action selector="onRunClicked:" target="Ady-hI-5gd" id="Qan-WE-6wB"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Debug" keyEquivalent="d" id="yr8-6G-OHv">
+                                        <menuItem title="Debug Project" keyEquivalent="d" id="yr8-6G-OHv">
                                             <connections>
                                                 <action selector="onDebugClicked:" target="Ady-hI-5gd" id="gbV-Et-6Y8"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="TZe-H6-6tH"/>
-                                        <menuItem title="Clean" keyEquivalent="l" id="ise-Gj-tI0">
+                                        <menuItem title="Clean Project" keyEquivalent="l" id="ise-Gj-tI0">
                                             <connections>
                                                 <action selector="onCleanClicked:" target="Ady-hI-5gd" id="u4j-H2-7ng"/>
                                             </connections>
@@ -730,7 +724,7 @@
             <objects>
                 <windowController storyboardIdentifier="ProjectWindowController" id="jGA-0Y-lOj" sceneMemberID="viewController">
                     <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="Ckk-yw-fiv">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="196" y="240" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
@@ -813,13 +807,13 @@
                                         <rect key="frame" x="0.0" y="0.0" width="267" height="519"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <subviews>
-                                            <scrollView autohidesScrollers="YES" horizontalLineScroll="17" horizontalPageScroll="10" verticalLineScroll="17" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rph-e3-F7q">
+                                            <scrollView autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rph-e3-F7q">
                                                 <rect key="frame" x="0.0" y="0.0" width="267" height="519"/>
-                                                <clipView key="contentView" id="70y-Yz-d4H">
+                                                <clipView key="contentView" drawsBackground="NO" id="70y-Yz-d4H">
                                                     <rect key="frame" x="1" y="1" width="265" height="517"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="20" outlineTableColumn="kup-4O-3vK" id="rZq-DJ-3Zi">
+                                                        <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="24" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="13" outlineTableColumn="kup-4O-3vK" id="rZq-DJ-3Zi">
                                                             <rect key="frame" x="0.0" y="0.0" width="417" height="517"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <size key="intercellSpacing" width="17" height="0.0"/>
@@ -846,6 +840,7 @@
                                                             </connections>
                                                         </outlineView>
                                                     </subviews>
+                                                    <nil key="backgroundColor"/>
                                                 </clipView>
                                                 <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="jl8-Z8-xCz">
                                                     <rect key="frame" x="1" y="502" width="265" height="16"/>
@@ -947,7 +942,7 @@
                 </windowController>
                 <customObject id="NyY-Eb-qyU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1141" y="157"/>
+            <point key="canvasLocation" x="-1141" y="158"/>
         </scene>
         <!--Module Bundle View Controller-->
         <scene sceneID="6ZK-sx-zFa">

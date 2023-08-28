@@ -13,6 +13,7 @@ public typealias ParseClosure = () -> Void
 public class ArgonParser
     {
     private var tokens: Tokens = Tokens()
+    private var lastIdentifierToken = Token(location: .zero)
     private var tokenIndex = 0
     public private(set) var token: Token
     private var scopeStack = Stack<Scope>()
@@ -160,6 +161,10 @@ public class ArgonParser
             {
             actualOffset = self.tokens.count - self.tokenIndex
             }
+        if self.token.isIdentifier
+            {
+            self.lastIdentifierToken = self.token
+            }
         return(self.tokens[actualOffset + self.tokenIndex])
         }
         
@@ -168,6 +173,10 @@ public class ArgonParser
         {
         if self.tokenIndex + 1 < self.tokens.count
             {
+            if self.token.isIdentifier
+                {
+                self.lastIdentifierToken = self.token
+                }
             self.tokenIndex += 1
             self.token = self.tokens[self.tokenIndex]
             return(self.token)
@@ -274,10 +283,27 @@ public class ArgonParser
         var type: TypeNode = TypeNode(name: "")
         if typeName == "Array"
             {
+            self.lastIdentifierToken.setStyleElement(.colorArray)
             return(self.parseArrayType(location: location))
             }
         else
             {
+            if typeName == "Set"
+                {
+                self.lastIdentifierToken.setStyleElement(.colorSet)
+                }
+            else if typeName == "List"
+                {
+                self.lastIdentifierToken.setStyleElement(.colorList)
+                }
+            else if typeName == "Dictionary"
+                {
+                self.lastIdentifierToken.setStyleElement(.colorDictionary)
+                }
+            else if typeName == "BitSet"
+                {
+                self.lastIdentifierToken.setStyleElement(.colorBitSet)
+                }
             if self.token.isLeftBrocket
                 {
                 return(self.parseGenericTypeInstance(typeName: typeName,location: location))
@@ -588,7 +614,8 @@ public class ArgonParser
             case(.identifier):
                 AssignmentExpression.parse(using: self)
             default:
-                fatalError()
+                self.lodgeIssue(code: .statementExpected,message: "A statement was expected but '\(self.token.matchString)' was found.",location: self.token.location)
+                self.nextToken()
             }
         }
         

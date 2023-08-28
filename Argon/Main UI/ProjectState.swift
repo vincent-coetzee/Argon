@@ -14,7 +14,6 @@ public class ProjectState: NSObject,NSCoding
     public var windowFrame: NSRect = .zero
     public let sourceEditorWidth: CGFloat
     
-    
     public init(project: SourceProjectNode,outlinerWidth: CGFloat,sourceEditorWidth: CGFloat)
         {
         self.project = project

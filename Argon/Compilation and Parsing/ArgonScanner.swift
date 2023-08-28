@@ -502,6 +502,60 @@ import Foundation
 
 public class ArgonScanner
     {
+//    private static let operatorList =
+//        {
+//        var operators: Array<String> =
+//            [
+//            "[",
+//            "]",
+//            "{",
+//            "}",
+//            "(",
+//            ")",
+//            "!",
+//            "@",
+//            "%",
+//            "^",
+//            "&&=",
+//            "||=",
+//            "&&",
+//            "**",
+//            "==",
+//            ">=",
+//            "<=",
+//            "-=",
+//            "+=",
+//            "/=",
+//            "*=",
+//            "||",
+//            "<<",
+//            ">>",
+//            "&=",
+//            ">>=",
+//            "<<=",
+//            "|=",
+//            "&=",
+//            "/=",
+//            "~=",
+//            "^=",
+//            "->",
+//            "::",
+//            "+",
+//            "-",
+//            "*",
+//            "/",
+//            "%",
+//            "&",
+//            "^",
+//            ":",
+//            ";",
+//            "<",
+//            ">",
+//            
+//            
+//        operators.append(
+//        }()
+//        
     public var atEnd: Bool
         {
         self.offset >= self.sourceCharacterCount
@@ -514,9 +568,10 @@ public class ArgonScanner
     private var sourceIndex: String.Index
     private var sourceLine: Int = 1
     private let operatorCharacters = CharacterSet(charactersIn: "!$%^&*()-+=:;{}[]\\\\|<>?/.,~@")
-    private let identifierStartCharacters = CharacterSet.letters
-    private let identifierCharacters = CharacterSet.letters.union(CharacterSet.decimalDigits).union(CharacterSet(charactersIn: "-_!?"))
+    private let identifierStartCharacters = CharacterSet.letters.union(CharacterSet(charactersIn: "\\"))
+    private let identifierCharacters = CharacterSet.letters.union(CharacterSet.decimalDigits).union(CharacterSet(charactersIn: "-_!?\\"))
     private let symbolCharacters = CharacterSet.letters.union(.decimalDigits).union(CharacterSet(charactersIn: "-_"))
+    private let pathCharacters = CharacterSet.letters.union(.decimalDigits).union(CharacterSet(charactersIn: "-_/~"))
     public var currentCharacter = Unicode.Scalar(0)!
 
     public init(source: String)
@@ -533,13 +588,6 @@ public class ArgonScanner
         let endIndex = self.source.index(beginIndex,offsetBy: length)
         return(String(self.source[beginIndex..<endIndex]))
         }
-
-//    public func nextCharacter(at integerOffset: Int) -> UnicodeScalar
-//        {
-//        let newIndex = self.source.index(self.sourceIndex,offsetBy: integerOffset)
-//        let character = self.source.unicodeScalars[newIndex]
-//        return(character)
-//        }
 
     @discardableResult
     public func nextDirtyCharacter() -> Unicode.Scalar
@@ -653,9 +701,25 @@ public class ArgonScanner
             {
             return(self.scanIdentifier())
             }
+        else if self.currentCharacter == "/"
+            {
+            return(self.scanPath())
+            }
         let character = self.currentCharacter
         self.nextCharacter()
         return(ErrorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: "Unknown character '\(character)'"))
+        }
+        
+    private func scanPath() -> Token
+        {
+        var string = String(self.currentCharacter)
+        self.nextCharacter()
+        while self.pathCharacters.contains(self.currentCharacter) && !self.atEnd
+            {
+            string.append(self.currentCharacter)
+            self.nextCharacter()
+            }
+        return(PathToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string))
         }
         
     private func scanIdentifier() -> Token

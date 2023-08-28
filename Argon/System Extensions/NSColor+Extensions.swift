@@ -151,6 +151,18 @@ extension NSColor
     public static let argonPiquantRed = NSColor(red: 221,green: 0,blue: 71)
     public static let argonIceCreamRose = NSColor(red: 232,green: 144,blue: 158)
     public static let argonMaquillePink = NSColor(red: 242,green: 104,blue: 127)
+    public static let argonFreshSalmon = NSColor(red: 239,green: 134,blue: 114)
+    public static let argonBurntOlive = NSColor(red: 100,green: 96,blue: 76)
+    public static let argonBluestone = NSColor(red: 44,green: 104,blue: 103)
+    public static let argonOrangeClownFish = NSColor(red: 238,green: 120,blue: 66)
+    public static let argonDivaPink = NSColor(red: 234,green: 57,blue: 93)
+    public static let argonMediumPurple = NSColor(red: 72,green: 30,blue: 137)
+    public static let argonYellowSpaghettiSquash = NSColor(red: 247,green: 211,blue: 74)
+    public static let argonRedTeaberry = NSColor(red: 207,green: 63,blue: 88)
+    public static let argonPearlBlue = NSColor(red: 176,green: 186,blue: 193)
+    public static let argonViridianGreen = NSColor(red: 65,green: 146,blue: 151)
+    public static let argonRayAnthracite = NSColor(red: 41,green: 40,blue: 44)
+    public static let argonDelphiniumBlue = NSColor(red: 110,green: 156,blue: 176)
     
     public static let argonSand = NSColor(red: 198,green: 165,blue: 133)            // Goes well with Coral
     public static let argonBrazilianSand = NSColor(red: 218,green: 204,blue: 186)

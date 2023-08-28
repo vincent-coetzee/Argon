@@ -21,9 +21,14 @@ public class IdentifierToken: Token
         }
         
     private let _identifier: Identifier
+    private var _styleElement: StyleElement?
     
     public override var styleElement: StyleElement
         {
+        if self._styleElement.isNotNil
+            {
+            return(self._styleElement!)
+            }
         if ArgonModule.shared.isSystemClass(named: self.matchString)
             {
             return(.colorSystemClass)
@@ -39,9 +44,14 @@ public class IdentifierToken: Token
         return(.colorIdentifier)
         }
         
+    public override func setStyleElement(_ element: StyleElement)
+        {
+        self._styleElement = element
+        }
+        
     public override var tokenType: TokenType
         {
-        .identifier
+        return(.identifier)
         }
         
     public override var tokenName: String

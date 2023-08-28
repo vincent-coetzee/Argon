@@ -10,6 +10,9 @@ import Cocoa
 
 public enum StyleElement
     {
+    case colorArray
+    
+    case colorBitSet
     case colorBarBackground
     case colorBackground
     case colorBoolean
@@ -23,6 +26,7 @@ public enum StyleElement
     case colorDate
     case colorDateTime
     case colorDefault
+    case colorDictionary
     
     case colorEditorBackground
     case colorEditorText
@@ -36,12 +40,12 @@ public enum StyleElement
     case colorInteger
     case colorIssue
     case colorIssueText
-
-    case colorLine
     
     case colorKeyword
-
+    
+    case colorLine
     case colorLineNumber
+    case colorList
     case colorLowlight
     case colorMethod
     
@@ -55,6 +59,7 @@ public enum StyleElement
     case colorProjectControls
     
     case colorSeparator
+    case colorSet
     case colorSlot
     case colorString
     case colorSymbol
@@ -99,53 +104,74 @@ public class SourceTheme
         self.styles[.fontEditor] = NSFont(name: "Menlo-Regular",size: 11)
         self.styles[.fontLineNumber] = self.styles[.fontEditor]
         
-        self.styles[.colorProjectControls] = NSColor.argonWhite40
-        self.styles[.colorLowlight] = NSColor.argonWhite50
-        self.styles[.colorLine] = NSColor.argonWhite50
-        self.styles[.colorToolbarText] = NSColor.argonWhite50
-        self.styles[.colorToolbarImage] = NSColor.controlAccentColor
-        self.styles[.colorToolbarBackground] = NSColor.argonWhite25
-        self.styles[.colorDefault] = NSColor.argonWhite50
-        self.styles[.colorTint] = NSColor.controlAccentColor
-//        self.styles[.colorTint] = NSColor.argonLivingCoral
-        self.styles[.colorOutlineBackground] = NSColor.windowBackgroundColor
-        self.styles[.colorEditorBackground] = NSColor.argonBlack20
-        self.styles[.colorEditorText] = NSColor.argonStandardPink
-        self.styles[.colorEnumeration] = NSColor.argonThemeCyan
-        self.styles[.colorKeyword] = NSColor(red: 63,green: 149,blue: 116)
-        self.styles[.colorText] = NSColor.argonLime
-        self.styles[.colorDate] = NSColor.argonAtomicBlue
-        self.styles[.colorTime] = NSColor.argonAtomicBlue
-        self.styles[.colorDateTime] = NSColor.argonAtomicBlue
-        self.styles[.colorName] = NSColor.argonXIvory
-        self.styles[.colorString] = NSColor.argonXBlue
+        self.styles[.colorArray] = NSColor.argonYellowSpaghettiSquash
+
+        self.styles[.colorBackground] = NSColor.black
+        self.styles[.colorBarBackground] = NSColor.argonDarkestGray
+        self.styles[.colorBitSet] = NSColor.argonDivaPink
+        self.styles[.colorBoolean] = NSColor.argonBayside
+        self.styles[.colorByte] = NSColor.argonXSmoke
+        
         self.styles[.colorComment] = NSColor.argonSolidPlum
         self.styles[.colorClass] = NSColor.argonLime
+        self.styles[.colorCharacter] = NSColor.argonXSmoke
+        self.styles[.colorConstant] = NSColor.argonCheese
+        
+        self.styles[.colorDefault] = NSColor.argonWhite50
+        self.styles[.colorDate] = NSColor.argonAtomicBlue
+        self.styles[.colorDateTime] = NSColor.argonAtomicBlue
+        self.styles[.colorDictionary] = NSColor.argonFreshSalmon
+        
+        self.styles[.colorEnumeration] = NSColor.argonThemeCyan
+        self.styles[.colorEditorBackground] = NSColor.argonBlack20
+        self.styles[.colorEditorText] = NSColor.argonStandardPink
+        
+        self.styles[.colorFunction] = NSColor.argonXSeaBlue
+        self.styles[.colorFloat] = NSColor.argonSizzlingRed
+
+//        self.styles[.colorTint] = NSColor.argonLivingCoral
+
         self.styles[.colorIdentifier] = NSColor.argonThemePink
         self.styles[.colorInteger] = NSColor.argonZomp
-        self.styles[.colorFloat] = NSColor.argonSizzlingRed
-        self.styles[.colorSymbol] = NSColor.argonSalmonPink
-        self.styles[.colorOperator] = NSColor.argonSalmonPink
-        self.styles[.colorSystemClass] = NSColor.argonBrightYellowCrayola
-        self.styles[.colorByte] = NSColor.argonXSmoke
-        self.styles[.colorCharacter] = NSColor.argonXSmoke
-        self.styles[.colorLineNumber] = NSColor(hex: 0xA0A0A0)
-        self.styles[.colorType] = NSColor.argonXIvory
-        self.styles[.colorMethod] = NSColor.argonNeonOrange
-        self.styles[.colorFunction] = NSColor.argonXSeaBlue
-        self.styles[.colorBoolean] = NSColor.argonBayside
-        self.styles[.colorSlot] = NSColor.argonCoral
-        self.styles[.colorConstant] = NSColor.argonCheese
-        self.styles[.colorBackground] = NSColor.black
-//        self.styles[.colorWarning] = NSColor.argonBrightYellowCrayola
-//        self.styles[.colorWarning] = NSColor.argonSunglow
-        self.styles[.colorWarning] = NSColor.argonDeepOrange
         self.styles[.colorIssue] = NSColor.argonBrightYellowCrayola
         self.styles[.colorIssueText] = NSColor.black
+        
+        self.styles[.colorKeyword] = NSColor(red: 63,green: 149,blue: 116)
+        
+        self.styles[.colorLowlight] = NSColor.argonWhite50
+        self.styles[.colorLine] = NSColor.argonWhite50
+        self.styles[.colorLineNumber] = NSColor(hex: 0xA0A0A0)
+        self.styles[.colorList] = NSColor.argonBluestone
+        
+        self.styles[.colorMethod] = NSColor.argonNeonOrange
+        
+        self.styles[.colorName] = NSColor.argonXIvory
+        
+        self.styles[.colorOperator] = NSColor.argonSalmonPink
+        self.styles[.colorOutlineBackground] = NSColor.windowBackgroundColor
+        
+        self.styles[.colorProjectControls] = NSColor.argonWhite40
+        
+        self.styles[.colorSet] = NSColor.argonOrangeClownFish
+        self.styles[.colorSystemClass] = NSColor.argonBrightYellowCrayola
+        self.styles[.colorSlot] = NSColor.argonCoral
+        self.styles[.colorString] = NSColor.argonXBlue
+        self.styles[.colorSymbol] = NSColor.argonSalmonPink
         self.styles[.colorSystemEnumeration] = NSColor.argonDeepOrange
         self.styles[.colorSystemAliasedType] = NSColor.argonPomelo
         self.styles[.colorSeparator] = NSColor.argonAnnotationOrange
-        self.styles[.colorBarBackground] = NSColor.argonDarkestGray
+
+        self.styles[.colorText] = NSColor.argonLime
+        self.styles[.colorTint] = NSColor.controlAccentColor
+        self.styles[.colorTime] = NSColor.argonAtomicBlue
+        self.styles[.colorToolbarText] = NSColor.argonWhite50
+        self.styles[.colorToolbarImage] = NSColor.controlAccentColor
+        self.styles[.colorToolbarBackground] = NSColor.argonWhite25
+        self.styles[.colorType] = NSColor.argonXIvory
+
+//        self.styles[.colorWarning] = NSColor.argonBrightYellowCrayola
+//        self.styles[.colorWarning] = NSColor.argonSunglow
+        self.styles[.colorWarning] = NSColor.argonDeepOrange
         
         self.styles[.metricLineNumberRulerWidth] = CGFloat(40 + 10)
         self.styles[.metricLineNumberIndent] = CGFloat(10)

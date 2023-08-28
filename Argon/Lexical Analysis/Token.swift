@@ -15,7 +15,9 @@ public enum TokenType: Int
     case andAssign
     case andAndAssign
     case assign
+    case array
     
+    case bitSet
     case Boolean
     case Byte
     case booleanNot
@@ -32,9 +34,11 @@ public enum TokenType: Int
     case CONSTANT
     case comma
     
+    case dateTimeMarker
     case DYNAMIC
     case DEFORM
     case decrement
+    case dictionary
     case divide
     case divideAssign
     
@@ -76,6 +80,7 @@ public enum TokenType: Int
     case leftBrocket
     case leftParenthesis
     case LET
+    case list
     case literalByte
     case literalBoolean
     case literalCharacter
@@ -133,6 +138,7 @@ public enum TokenType: Int
     
     case SELECT
     case separator
+    case set
     case SLOT
     case SIGNAL
     case String
@@ -187,6 +193,11 @@ public class Token: NSObject,NSCoding
     public override var description: String
         {
         "\(self.tokenName): \(self.matchString)"
+        }
+        
+    public func setStyleElement(_ element: StyleElement)
+        {
+        fatalError("This should not happen.")
         }
         
     public var styleElement: StyleElement
@@ -442,6 +453,10 @@ public class Token: NSObject,NSCoding
         coder.encode(self.location,forKey: "location")
         coder.encode(self.matchString,forKey: "matchString")
         coder.encode(self.issues,forKey: "issues")
+        }
+        
+    public func setTokenType(_ aType: TokenType)
+        {
         }
         
     public var isRightParenthesis: Bool

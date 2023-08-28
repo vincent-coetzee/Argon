@@ -130,6 +130,8 @@ public class OperatorToken: Token
                 return(.modulus)
             case("%="):
                 return(.modulusAssign)
+            case("@("):
+                return(.dateTimeMarker)
             default:
                 fatalError("Operator for \(self.matchString) is not defined.")
             }
@@ -138,6 +140,11 @@ public class OperatorToken: Token
     public override var isMinus: Bool
         {
         self.matchString == "-"
+        }
+        
+    public override var isComma: Bool
+        {
+        self.matchString == ","
         }
         
     public override var isRangeOperator: Bool
