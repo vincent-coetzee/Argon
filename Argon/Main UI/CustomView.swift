@@ -15,7 +15,7 @@ import Cocoa
 public protocol Control: AnyObject
     {
     var key: String { get }
-    var textFontIdentifier: StyleElement { get set }
+    var textFontElement: StyleElement { get set }
     var valueModel: ValueModel { get set }
     }
     
@@ -29,14 +29,14 @@ public class CustomView: NSView
         case bottom
         }
         
-    public var textFontIdentifier: StyleElement = .fontDefault
+    public var textFontElement: StyleElement = .fontDefault
         
-    public var backgroundColorIdentifier: StyleElement = .colorBackground
+    public var backgroundColorElement: StyleElement = .colorBackground
         {
         didSet
             {
             self.wantsLayer = true
-            self.layer!.backgroundColor = SourceTheme.shared.color(for: self.backgroundColorIdentifier).cgColor
+            self.layer!.backgroundColor = SourceTheme.shared.color(for: self.backgroundColorElement).cgColor
             }
         }
         
@@ -48,7 +48,7 @@ public class CustomView: NSView
             }
         }
         
-    public var horizontalBorderColorIdentifier: StyleElement = .colorLine
+    public var horizontalBorderColorElement: StyleElement = .colorLine
         {
         didSet
             {

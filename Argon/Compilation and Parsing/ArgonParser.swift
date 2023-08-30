@@ -701,7 +701,7 @@ public class ArgonParser
         var left = Expression()
         if parser.isNil
             {
-            self.lodgeIssue(code: .invalidExpression,location: location)
+            self.lodgeIssue(code: .invalidExpression,message: "The value '\(self.token.matchString)' could not be parsed.",location: location)
             }
         else
             {

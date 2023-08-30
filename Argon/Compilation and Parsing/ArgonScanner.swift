@@ -569,7 +569,7 @@ public class ArgonScanner
     private var sourceLine: Int = 1
     private let operatorCharacters = CharacterSet(charactersIn: "!$%^&*()-+=:;{}[]\\\\|<>?/.,~@")
     private let identifierStartCharacters = CharacterSet.letters.union(CharacterSet(charactersIn: "\\"))
-    private let identifierCharacters = CharacterSet.letters.union(CharacterSet.decimalDigits).union(CharacterSet(charactersIn: "-_!?\\"))
+    private let identifierCharacters = CharacterSet.letters.union(CharacterSet.decimalDigits).union(CharacterSet(charactersIn: "_!?\\"))
     private let symbolCharacters = CharacterSet.letters.union(.decimalDigits).union(CharacterSet(charactersIn: "-_"))
     private let pathCharacters = CharacterSet.letters.union(.decimalDigits).union(CharacterSet(charactersIn: "-_/~"))
     public var currentCharacter = Unicode.Scalar(0)!
@@ -681,6 +681,10 @@ public class ArgonScanner
             {
             return(self.scanComment())
             }
+        else if prefix == "@("
+            {
+            return(self.scanDateOrTime())
+            }
         else if CharacterSet.decimalDigits.contains(self.currentCharacter)
             {
             return(self.scanNumber())
@@ -708,6 +712,23 @@ public class ArgonScanner
         let character = self.currentCharacter
         self.nextCharacter()
         return(ErrorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: "Unknown character '\(character)'"))
+        }
+        
+    private func scanDateOrTime() -> Token
+        {
+        self.nextCharacter()
+        self.nextCharacter()
+        var string = String()
+        while self.currentCharacter != ")" && !self.atEnd
+            {
+            string.append(self.currentCharacter)
+            self.nextCharacter()
+            }
+        if self.currentCharacter == ")"
+            {
+            self.nextCharacter()
+            }
+        return(CalendricalToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string))
         }
         
     private func scanPath() -> Token
@@ -833,6 +854,10 @@ public class ArgonScanner
             {
             string.append(String(self.currentCharacter))
             self.nextCharacter()
+            }
+        if self.sourcePrefix(length: 2) == ".."
+            {
+            return(IntegerToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string))
             }
         if self.currentCharacter == Unicode.Scalar(".")
             {

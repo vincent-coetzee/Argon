@@ -36,7 +36,8 @@ public class LineNumberRulerView: NSRulerView
         }
         
     private var lineNumberOffsets = Array<CGFloat>()
-    
+    /// Contains a true value for every line that is annotated or nil otherwise
+    private var annotatedLines = Dictionary<Int,Bool>()
     /// Holds the height of a line
     internal var lineHeight: CGFloat = 0
     /// Holds the number of lines
@@ -58,6 +59,15 @@ public class LineNumberRulerView: NSRulerView
             self.needsDisplay = true
             }
         }
+        
+    /// Holds the color of the annotated lines.
+    internal var annotatedLineColorStyleElement: StyleElement
+        {
+        didSet
+            {
+            self.needsDisplay = true
+            }
+        }
 
     ///  Initializes a LineNumberGutter with the given attributes.
     ///
@@ -66,11 +76,12 @@ public class LineNumberRulerView: NSRulerView
     ///  - parameter backgroundColor: Defines the background color.
     ///
     ///  - returns: An initialized LineNumberGutter object.
-    init(withTextView textView: NSTextView, foregroundColorStyleElement: StyleElement, backgroundColorStyleElement: StyleElement)
+    init(withTextView textView: NSTextView, foregroundColorStyleElement: StyleElement, backgroundColorStyleElement: StyleElement,annotatedLineColorStyleElement: StyleElement)
         {
         // Set the color preferences.
         self.backgroundColorStyleElement = backgroundColorStyleElement
         self.foregroundColorStyleElement = foregroundColorStyleElement
+        self.annotatedLineColorStyleElement = annotatedLineColorStyleElement
         // Make sure everything's set up properly before initializing properties.
         super.init(scrollView: textView.enclosingScrollView, orientation: .verticalRuler)
         // Set the rulers clientView to the supplied textview.
@@ -89,6 +100,7 @@ public class LineNumberRulerView: NSRulerView
     ///  - parameter rect: NSRect to draw the gutter view in.
     public override func drawHashMarksAndLabels(in rect: NSRect)
         {
+
         self.lineNumberOffsets = []
         // Set the current background color...
         SourceTheme.shared.color(for: self.backgroundColorStyleElement).set()
@@ -96,7 +108,7 @@ public class LineNumberRulerView: NSRulerView
         rect.fill()
         // Unwrap the clientView, the layoutManager and the textContainer, since we'll
         // them sooner or later.
-        guard let textView      = self.clientView as? NSTextView,let layoutManager = textView.layoutManager,let textContainer = textView.textContainer else
+        guard let textView = self.clientView as? NSTextView,let layoutManager = textView.layoutManager,let textContainer = textView.textContainer else
             {
             return
             }
@@ -247,7 +259,8 @@ public class LineNumberRulerView: NSRulerView
             return
             }
         // Define attributes for the attributed string.
-        let attrs = [NSAttributedString.Key.font: font, NSAttributedString.Key.foregroundColor: SourceTheme.shared.color(for: self.foregroundColorStyleElement)]
+        let color = (self.annotatedLines[number] ?? false) ? SourceTheme.shared.color(for: self.annotatedLineColorStyleElement) : SourceTheme.shared.color(for: self.foregroundColorStyleElement)
+        let attrs = [NSAttributedString.Key.font: font, NSAttributedString.Key.foregroundColor: color]
         // Define the attributed string.
         let attributedString = NSAttributedString(string: "\(number)", attributes: attrs)
         // Get the NSZeroPoint from the text view.
@@ -255,7 +268,7 @@ public class LineNumberRulerView: NSRulerView
         // Calculate the x position, within the gutter.
         let xPosition = SourceTheme.shared.metric(for: .metricLineNumberRulerWidth) - (attributedString.size().width)
         // Draw the attributed string to the calculated point.
-        attributedString.draw(at: NSPoint(x: xPosition - SourceTheme.shared.metric(for: .metricLineNumberIndent), y: relativePoint.y + yPos))
+        attributedString.draw(at: NSPoint(x: xPosition - SourceTheme.shared.metric(for: .metricLineNumberIndent), y: relativePoint.y + yPos + textView.textContainerInset.height))
         }
         
     public func offset(forLine line: Int) -> CGFloat?
@@ -264,7 +277,11 @@ public class LineNumberRulerView: NSRulerView
             {
             return(nil)
             }
-        return(self.lineNumberOffsets[line - 1])
+        guard let textView = self.clientView as? NSTextView else
+            {
+            return(nil)
+            }
+        return(self.lineNumberOffsets[line - 1] + textView.textContainerInset.height)
         }
 
     public func addIssue(_ issue: CompilerIssue)
@@ -272,6 +289,8 @@ public class LineNumberRulerView: NSRulerView
         if let marker = self.rulerMarker(from: issue)
             {
             self.addMarker(marker)
+            self.annotatedLines[issue.location.line] = true
+            self.needsDisplay = true
             }
         }
         
@@ -293,6 +312,7 @@ public class LineNumberRulerView: NSRulerView
         image.isTemplate = true
         image = image.image(withTintColor: SourceTheme.shared.color(for: .colorIssue))
         image.size = NSSize(width: self.lineHeight,height: self.lineHeight)
+        self.annotatedLines[issue.location.line] = true
         guard let offset = self.offset(forLine: issue.location.line) else
             {
             return(nil)
@@ -312,6 +332,7 @@ public class LineNumberRulerView: NSRulerView
         
     public func removeAllIssues()
         {
+        self.annotatedLines = Dictionary<Int,Bool>()
         let some = self.markers ?? []
         for marker in some
             {

@@ -31,11 +31,11 @@ public class IconLabelView: CustomView,Control,Dependent
         SourceTheme.shared.color(for: self.textColorElement)
         }
         
-    public override var textFontIdentifier: StyleElement
+    public override var textFontElement: StyleElement
         {
         didSet
             {
-            let font = SourceTheme.shared.font(for: self.textFontIdentifier)
+            let font = SourceTheme.shared.font(for: self.textFontElement)
             self.textLayer.font = font
             self.textLayer.fontSize = font.pointSize
             self.invalidateIntrinsicContentSize()
@@ -51,15 +51,15 @@ public class IconLabelView: CustomView,Control,Dependent
         didSet
             {
             self.iconTintColorValueModel.addDependent(self)
-            self.iconTintColorIdentifier = self.iconTintColorValueModel.value as? StyleElement
+            self.iconTintColorElement = self.iconTintColorValueModel.value as? StyleElement
             }
         }
         
-    public var iconTintColorIdentifier: StyleElement?
+    public var iconTintColorElement: StyleElement?
         {
         didSet
             {
-            if let identifier = self.iconTintColorIdentifier
+            if let identifier = self.iconTintColorElement
                 {
                 var image = self.imageValueModel.value as? NSImage
                 image?.isTemplate = true
@@ -71,7 +71,7 @@ public class IconLabelView: CustomView,Control,Dependent
         
     private var textFont: NSFont
         {
-        SourceTheme.shared.font(for: self.textFontIdentifier)
+        SourceTheme.shared.font(for: self.textFontElement)
         }
         
     public var textColorElement: StyleElement = .colorText
@@ -87,9 +87,16 @@ public class IconLabelView: CustomView,Control,Dependent
         self.imageValueModel.value as? NSImage
         }
         
-    private var text: String
+    public var text: String
         {
-        (self.valueModel.value as? String) ?? ""
+        get
+            {
+            (self.valueModel.value as? String) ?? ""
+            }
+        set
+            {
+            self.valueModel.value = newValue
+            }
         }
         
     public var valueModel: ValueModel
@@ -237,7 +244,7 @@ public class IconLabelView: CustomView,Control,Dependent
             }
         else if aspect == "value" && sender.dependentKey == self.iconTintColorValueModel.dependentKey
             {
-            self.iconTintColorIdentifier = self.iconTintColorValueModel.value as? StyleElement
+            self.iconTintColorElement = self.iconTintColorValueModel.value as? StyleElement
             self.needsLayout =  true
             self.needsDisplay = true
             }

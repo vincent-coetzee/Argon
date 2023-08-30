@@ -153,9 +153,7 @@
 		BFCDC3F22A8579FE00C20746 /* NSImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCDC3F12A8579FE00C20746 /* NSImage+Extensions.swift */; };
 		BFD0B50D2968758B00E9ABBD /* SourceProjectNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD0B50C2968758B00E9ABBD /* SourceProjectNode.swift */; };
 		BFD87E982954A3D200298094 /* CompilerIssue.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD87E972954A3D200298094 /* CompilerIssue.swift */; };
-		BFDC80112A7D3616008118FF /* DateToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFDC80102A7D3616008118FF /* DateToken.swift */; };
-		BFDC80132A7D3D0C008118FF /* TimeToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFDC80122A7D3D0C008118FF /* TimeToken.swift */; };
-		BFDC80152A7D42D7008118FF /* DateTimeToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFDC80142A7D42D7008118FF /* DateTimeToken.swift */; };
+		BFDC80152A7D42D7008118FF /* CalendricalToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFDC80142A7D42D7008118FF /* CalendricalToken.swift */; };
 		BFDC80172A7D5CFF008118FF /* NodeChangeSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFDC80162A7D5CFF008118FF /* NodeChangeSet.swift */; };
 		BFDC80192A7D8058008118FF /* PathToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFDC80182A7D8058008118FF /* PathToken.swift */; };
 		BFE1AD0E2A8A78BF00402294 /* Visitor + Visitable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE1AD0D2A8A78BF00402294 /* Visitor + Visitable.swift */; };
@@ -357,9 +355,7 @@
 		BFCDC3F12A8579FE00C20746 /* NSImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage+Extensions.swift"; sourceTree = "<group>"; };
 		BFD0B50C2968758B00E9ABBD /* SourceProjectNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceProjectNode.swift; sourceTree = "<group>"; };
 		BFD87E972954A3D200298094 /* CompilerIssue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompilerIssue.swift; sourceTree = "<group>"; };
-		BFDC80102A7D3616008118FF /* DateToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateToken.swift; sourceTree = "<group>"; };
-		BFDC80122A7D3D0C008118FF /* TimeToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeToken.swift; sourceTree = "<group>"; };
-		BFDC80142A7D42D7008118FF /* DateTimeToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateTimeToken.swift; sourceTree = "<group>"; };
+		BFDC80142A7D42D7008118FF /* CalendricalToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendricalToken.swift; sourceTree = "<group>"; };
 		BFDC80162A7D5CFF008118FF /* NodeChangeSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeChangeSet.swift; sourceTree = "<group>"; };
 		BFDC80182A7D8058008118FF /* PathToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathToken.swift; sourceTree = "<group>"; };
 		BFDC801C2A7D850E008118FF /* Notes.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Notes.md; sourceTree = "<group>"; };
@@ -415,8 +411,7 @@
 				BF174B5A294CC80E0094A6D4 /* ByteToken.swift */,
 				BF174B5C294CC81A0094A6D4 /* CharacterToken.swift */,
 				BF174B64294CC8A50094A6D4 /* CommentToken.swift */,
-				BFDC80142A7D42D7008118FF /* DateTimeToken.swift */,
-				BFDC80102A7D3616008118FF /* DateToken.swift */,
+				BFDC80142A7D42D7008118FF /* CalendricalToken.swift */,
 				BF6B053229620E2D0097C9A9 /* EndToken.swift */,
 				BF6B053029620CF10097C9A9 /* ErrorToken.swift */,
 				BF174B56294CC7D30094A6D4 /* FloatToken.swift */,
@@ -429,7 +424,6 @@
 				BFDC80182A7D8058008118FF /* PathToken.swift */,
 				BF174B5E294CC82B0094A6D4 /* StringToken.swift */,
 				BF174B62294CC8960094A6D4 /* SymbolToken.swift */,
-				BFDC80122A7D3D0C008118FF /* TimeToken.swift */,
 				BFA9DA93292D5BF900C6859D /* Token.swift */,
 				BF39BA802A9933F30037FB79 /* WhitespaceToken.swift */,
 			);
@@ -934,7 +928,7 @@
 				BF4202312960C180007564C1 /* OperatorToken.swift in Sources */,
 				BF4DB6D82A813DE700A509A4 /* SystemMethod.swift in Sources */,
 				BF1F4AFA2A5549DF00C1F977 /* HandleStatement.swift in Sources */,
-				BFDC80152A7D42D7008118FF /* DateTimeToken.swift in Sources */,
+				BFDC80152A7D42D7008118FF /* CalendricalToken.swift in Sources */,
 				BFCB438A29845D5D001D1CFD /* Class.swift in Sources */,
 				BFE1AD0E2A8A78BF00402294 /* Visitor + Visitable.swift in Sources */,
 				BFA1DBA729F314FF00BD3FF9 /* NSColor+Extensions.swift in Sources */,
@@ -946,7 +940,6 @@
 				BF53D13D2A72FDBB00C2777D /* Precedence.swift in Sources */,
 				BF0E84E42A5D612E003BCC49 /* Path+Extensions.swift in Sources */,
 				BF1F4AE92A55481600C1F977 /* LetStatement.swift in Sources */,
-				BFDC80132A7D3D0C008118FF /* TimeToken.swift in Sources */,
 				BF6B053129620CF10097C9A9 /* ErrorToken.swift in Sources */,
 				BFA9DA96292D5C1A00C6859D /* IdentifierToken.swift in Sources */,
 				BF54B9A929F5C7C600A755DC /* ValueModel.swift in Sources */,
@@ -1008,7 +1001,6 @@
 				BF54B9A329F5C7C600A755DC /* Dependent.swift in Sources */,
 				BFBD0E4729E08521002873C9 /* ArgonCompiler.swift in Sources */,
 				BFCA9342296F43340049B39A /* Scope.swift in Sources */,
-				BFDC80112A7D3616008118FF /* DateToken.swift in Sources */,
 				BF1F4AE32A5527C900C1F977 /* Method.swift in Sources */,
 				BFFB59222A95E77400E80995 /* NSFont+Extensions.swift in Sources */,
 				BF60D6342A8CCAC400ED3F6B /* SubType.swift in Sources */,

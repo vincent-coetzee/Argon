@@ -28,6 +28,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
     private var rightSidebarController: RightSidebarButtonController!
     private var pathControlWidthConstraint: NSLayoutConstraint!
     private var selectedSourceNode: SourceNode!
+    private var issueCountIconLabelView: IconLabelView!
     
     public var projectState: ProjectState
         {
@@ -193,7 +194,8 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
             toolbarItem.paletteLabel = ""
             toolbarItem.target = self
             let view = IconLabelView(image: NSImage(systemSymbolName: "exclamationmark.triangle", accessibilityDescription: "")!, imageEdge: .left, text: "0 issues",padding: NSSize(width:2,height: 2))
-            view.imageTintElement = .colorWarning
+            self.issueCountIconLabelView = view
+            view.imageTintElement = .colorIssue
             view.textColorElement = .colorToolbarText
             toolbarItem.view = view
             toolbarItem.view?.translatesAutoresizingMaskIntoConstraints = false
@@ -584,12 +586,16 @@ extension ProjectViewController
         
     @IBAction public func onBuildClicked(_ sender: Any?)
         {
-        ArgonCompiler.build(nodes: self._project.allSourceFiles)
+        var compiler = ArgonCompiler.build(nodes: self._project.allSourceFiles)
         guard let node = self.selectedSourceNode,node.isSourceFileNode else
             {
             return
             }
-        self.sourceView.compilerIssues = node.compilerIssues
+        self.sourceView.resetCompilerIssues(newIssues: node.compilerIssues)
+        let count = compiler.compilerIssueCount
+        self.issueCountIconLabelView.iconTintColorElement = count > 0 ? .colorIssue : .colorToolbarText
+        self.issueCountIconLabelView.text = count > 0 ? "\(count) issues" : ""
+        self.issueCountIconLabelView.textColorElement  = count > 0 ? .colorIssueText : .colorToolbarText
         }
         
     @IBAction public func onParseClicked(_ sender: Any?)

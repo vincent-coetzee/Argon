@@ -29,7 +29,7 @@ public class IdentifierParser: PrefixParser
         expression.addDeclaration(location)
         guard let symbol = parser.currentScope.lookupNode(atName: identifier.lastPart) else
             {
-            parser.lodgeIssue(code: .undefinedSymbol,location: location)
+            parser.lodgeIssue(code: .undefinedSymbol,message: "The symbol '\(identifier.description)' is undefined.",location: location)
             return(expression)
             }
         expression.setIdentifierValue(symbol.valueBox)

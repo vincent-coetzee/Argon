@@ -122,5 +122,10 @@ public class SourceCodeEditingView: NSView,NSTextViewDelegate,Model
         self.scrollView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         self.scrollView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
         }
+        
+    public func resetCompilerIssues(newIssues: CompilerIssues)
+        {
+        self.textView.resetCompilerIssues(newIssues: newIssues)
+        }
     }
 

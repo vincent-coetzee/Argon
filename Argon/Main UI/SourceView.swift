@@ -48,7 +48,7 @@ class SourceView: NSTextView
             }
         }
         
-    public private(set) var theme = SourceTheme.shared
+    public let theme = SourceTheme.shared
     
     private var _tokens = Tokens()
     public private(set) var rulerView: LineNumberRulerView!
@@ -96,14 +96,26 @@ class SourceView: NSTextView
         self.isVerticallyResizable = true
         self.isHorizontallyResizable = false
         self.maxSize = NSSize(width: CGFloat.infinity,height: CGFloat.infinity)
+        self.textContainerInset = NSSize(width: 0,height: 10)
+        self.textContainer?.lineFragmentPadding = 0
         self.textContainer?.containerSize = NSSize(width: 1000,height: CGFloat.infinity)
         self.textContainer?.widthTracksTextView = true
         self.autoresizingMask = [.width]
-        self.rulerView = LineNumberRulerView(withTextView: self, foregroundColorStyleElement: .colorLineNumber, backgroundColorStyleElement: .colorEditorBackground)
+        self.rulerView = LineNumberRulerView(withTextView: self, foregroundColorStyleElement: .colorLineNumber, backgroundColorStyleElement: .colorEditorBackground,annotatedLineColorStyleElement: .colorAnnotatedLineNumber)
         self.rulerView.clientView = self
         NotificationCenter.default.addObserver(self, selector: #selector(self.textDidEndEditing), name: NSText.didEndEditingNotification, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(self.textDidBeginEditing), name: NSText.didBeginEditingNotification, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(self.textDidChange), name: NSText.didChangeNotification, object: self)
+        }
+        
+    public func resetCompilerIssues(newIssues: CompilerIssues)
+        {
+        for annotation in self.activeAnnotations.values
+            {
+            annotation.removeFromSuperlayer()
+            }
+        self._compilerIssues = newIssues
+        self.refreshIssueDisplay()
         }
         
     private func toggleIssueDisplay(`for` issue: CompilerIssue)
@@ -120,13 +132,13 @@ class SourceView: NSTextView
         newLayer.backgroundColor = SourceTheme.shared.color(for: .colorIssue).cgColor
         newLayer.foregroundColor = SourceTheme.shared.color(for: .colorIssueText).cgColor
         newLayer.frame = self.endOfLineRect(forLine: line)
-        frame = newLayer.frame
-        if frame.origin.x + 10 < self.bounds.maxX
+        var layerFrame = newLayer.frame
+        if layerFrame.origin.x + 10 < self.bounds.maxX
             {
-            frame.origin.x += 10
-            frame.size.width -= 10
+            layerFrame.origin.x += 10
+            layerFrame.size.width -= 10
             }
-        newLayer.frame = frame
+        newLayer.frame = layerFrame
         let font = SourceTheme.shared.font(for: .fontEditor)
         newLayer.font = font
         newLayer.fontSize = font.pointSize
@@ -211,7 +223,7 @@ class SourceView: NSTextView
         
     public func endOfLineRect(forLine: Int) -> CGRect
         {
-        var line = 1
+        var line = 0
         let text = self.string
         var index = text.startIndex
         while index < text.endIndex && line < forLine
@@ -228,18 +240,13 @@ class SourceView: NSTextView
         var rect = self.layoutManager!.boundingRect(forGlyphRange: range, in: self.textContainer!)
         rect.size.width = max(rect.size.width,self.bounds.size.width - 4)
         rect.size.height = self.font!.lineHeight
+        rect.origin.y += self.textContainerInset.height
         return(rect)
         }
         
     public override func keyDown(with event: NSEvent)
         {
-        if event.characters == "="
-            {
-            let newCharacters = "⇦"
-            let newEvent = NSEvent.keyEvent(with: event.type, location: event.locationInWindow, modifierFlags: event.modifierFlags, timestamp: event.timestamp, windowNumber: event.windowNumber, context: nil, characters: newCharacters, charactersIgnoringModifiers: event.charactersIgnoringModifiers!, isARepeat: event.isARepeat, keyCode: event.keyCode)
-            self.interpretKeyEvents([newEvent!])
-            }
-        else if event.isARepeat,let someCharacters = event.characters
+        if event.isARepeat,let someCharacters = event.characters
             {
             let newCharacters = someCharacters + someCharacters + someCharacters + someCharacters
             let newEvent = NSEvent.keyEvent(with: event.type, location: event.locationInWindow, modifierFlags: event.modifierFlags, timestamp: event.timestamp, windowNumber: event.windowNumber, context: nil, characters: newCharacters, charactersIgnoringModifiers: event.charactersIgnoringModifiers!, isARepeat: event.isARepeat, keyCode: event.keyCode)

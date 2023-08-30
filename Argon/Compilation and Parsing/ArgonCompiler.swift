@@ -11,15 +11,7 @@ public struct ArgonCompiler
     {
     public var compilerIssueCount: Int
         {
-        mutating get
-            {
-            guard self.compilerIssues.isNotNil else
-                {
-                self.compilerIssues = self.sourceFileNodes.reduce(CompilerIssues()) { $0 + $1.compilerIssues }
-                return(self.compilerIssues!.count)
-                }
-            return(self.compilerIssues!.count)
-            }
+        self.compilerIssues.count
         }
         
     public static func parse(nodes: SourceFileNodes)
@@ -30,19 +22,20 @@ public struct ArgonCompiler
         compiler.parse()
         }
         
-    public static func build(nodes: SourceFileNodes)
+    public static func build(nodes: SourceFileNodes) -> ArgonCompiler
         {
         var compiler = Self.init(nodes: nodes)
         compiler.initialize()
         compiler.scan()
         compiler.parse()
         compiler.emitCode()
+        return(compiler)
         }
         
     private var rootModule: RootModule
     private var macroExpander: MacroExpander!
     private var sourceFileNodes: SourceFileNodes
-    private var compilerIssues: CompilerIssues?
+    private var compilerIssues = CompilerIssues()
     private var abstractSyntaxTree: SyntaxTreeNode?
     private var wereIssues = false
     private var issueCount = 0
@@ -57,7 +50,6 @@ public struct ArgonCompiler
     public mutating func initialize() // STEP 1
         {
         self.wereIssues = false
-        self.compilerIssues = CompilerIssues()
         self.abstractSyntaxTree = nil
         self.macroExpander = MacroExpander()
         self.macroExpander.processMacros(in: self.sourceFileNodes)
@@ -86,13 +78,7 @@ public struct ArgonCompiler
                 print("halt")
                 }
             self.wereIssues = node.compilerIssues.count > 0 || self.wereIssues
-            self.issueCount += node.compilerIssues.count
-            print("Node = \(node.name).")
-            print("\(node.compilerIssues.count) compiler issues in node.")
-            for issue in node.compilerIssues
-                {
-                print("Line \(issue.location.line) \(issue.message)")
-                }
+            self.compilerIssues.append(contentsOf: node.compilerIssues)
             }
         }
         
