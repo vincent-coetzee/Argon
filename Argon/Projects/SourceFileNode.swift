@@ -46,7 +46,7 @@ public class SourceFileNode: SourceNode
     public var expandedSource: String
     private var _compilerIssues = CompilerIssues()
     public var tokens = Tokens()
-    public var astNode: SyntaxTreeNode?
+    public var module: Module!
     
     public init(name: String,path: Path,source: String = "")
         {

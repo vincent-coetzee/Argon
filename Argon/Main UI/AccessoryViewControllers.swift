@@ -16,7 +16,7 @@ class LeftSidebarButtonController: NSTitlebarAccessoryViewController
             var frame = self.view.frame
             let width = max(45,self.rightOffset - (15 * 6))
 //            frame.size.width = width
-            frame.size.width = 60
+            frame.size.width = 120
             self.view.frame = frame
             }
         }
@@ -33,26 +33,26 @@ class LeftSidebarButtonController: NSTitlebarAccessoryViewController
         self.layoutAttribute = .left
         self.automaticallyAdjustsSize = false
         let button = TitlebarButton(imageName: "sidebar.left",target: self.target!, action: #selector(ProjectViewController.onToggleLeftSidebar),layoutAttribute: .left)
-        button.frame = NSRect(x: 0,y: 0,width: 20,height: 20)
+        button.frame = NSRect(x: 0,y: 0,width: 40,height: 20)
         self.view = button
         self.view.needsLayout = true
         }
     }
 
-class SpaceController: NSTitlebarAccessoryViewController
-    {
-    public override func viewDidLoad()
-        {
-        super.viewDidLoad()
-        }
-        
-    public override func loadView()
-        {
-        self.automaticallyAdjustsSize = false
-        self.view = NSView(frame: .zero)
-        self.view.frame = NSRect(x: 0,y: 0,width: 120,height: 20)
-        }
-    }
+//class SpaceController: NSTitlebarAccessoryViewController
+//    {
+//    public override func viewDidLoad()
+//        {
+//        super.viewDidLoad()
+//        }
+//        
+//    public override func loadView()
+//        {
+//        self.automaticallyAdjustsSize = false
+//        self.view = NSView(frame: .zero)
+//        self.view.frame = NSRect(x: 0,y: 0,width: 40,height: 20)
+//        }
+//    }
 
 class RightSidebarButtonController: NSTitlebarAccessoryViewController
     {

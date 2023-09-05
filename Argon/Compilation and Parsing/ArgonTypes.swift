@@ -126,7 +126,7 @@ public struct Argon
         {
         case none
         case discreteType(TypeNode)
-        case enumeration(Enumeration)
+        case enumeration(EnumerationType)
         case subType(SubType)
         case integer
         
@@ -164,7 +164,7 @@ extension NSCoder
             case(1):
                 return(.discreteType(self.decodeObject(forKey: key + "discreteType") as! TypeNode))
             case(2):
-                return(.enumeration(self.decodeObject(forKey: key + "enumeration") as! Enumeration))
+                return(.enumeration(self.decodeObject(forKey: key + "enumeration") as! EnumerationType))
             case(3):
                 let type = self.decodeObject(forKey: key + "subType") as! SubType
                 return(.subType(type))

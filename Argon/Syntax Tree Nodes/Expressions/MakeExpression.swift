@@ -9,26 +9,26 @@ import Foundation
 
 public class MakeExpression: Expression
     {
-    private let clazz: Class?
+    private let typeNode: TypeNode?
     private let arguments: Expressions
     
-    init(class: Class?,arguments: Expressions)
+    init(type: TypeNode?,arguments: Expressions)
         {
-        self.clazz = `class`
+        self.typeNode = type
         self.arguments = arguments
         super.init()
         }
         
     public required init(coder: NSCoder)
         {
-        self.clazz = coder.decodeObject(forKey: "class") as? Class
+        self.typeNode = coder.decodeObject(forKey: "type") as? TypeNode
         self.arguments = coder.decodeObject(forKey: "arguments") as! Expressions
         super.init(coder: coder)
         }
         
     public override func encode(with coder: NSCoder)
         {
-        coder.encode(self.clazz,forKey: "class")
+        coder.encode(self.typeNode,forKey: "type")
         coder.encode(self.arguments,forKey: "arguments")
         super.encode(with: coder)
         }

@@ -125,6 +125,16 @@ public class TypeNode: SyntaxTreeNode
         ArgonModule.shared.monthType
         }
         
+    public static var fileType: TypeNode
+        {
+        ArgonModule.shared.fileType
+        }
+        
+    public static var bufferType: TypeNode
+        {
+        ArgonModule.shared.bufferType
+        }
+        
     public static var integerType: TypeNode
         {
         ArgonModule.shared.integerType
@@ -282,11 +292,10 @@ public class TypeNode: SyntaxTreeNode
         self._encoding = encoding
         }
         
-    public func inherits(from someClass: Class) -> Bool
+    public func inherits(from someClass: ClassType) -> Bool
         {
         false
         }
-        
         
     public func setInstanceType(_ instanceType: GenericTypeInstance.Type?)
         {

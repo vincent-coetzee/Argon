@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class Method: CallableTypeNode
+public class MethodType: CallableTypeNode
     {
     public var signature: MethodSignature
         {
@@ -38,7 +38,7 @@ public class Method: CallableTypeNode
             returnType = parser.parseType()
             }
         Block.parseBlockInner(block: block, using: parser)
-        let method = Method(name: name)
+        let method = MethodType(name: name)
         method.setParameters(parameters)
         method.setBlock(block)
         method.setReturnType(returnType)
@@ -50,6 +50,13 @@ public class Method: CallableTypeNode
         let inners = self.parameters.map{$0.type.encoding}.joined(separator: "_")
         let returnTypeString = self.returnType.isNil ? ArgonModule.shared.voidType.encoding : self.returnType!.encoding
         return("c\(self.name)_\(inners)_\(returnTypeString)_")
+        }
+        
+    public override var description: String
+        {
+        let returnName = self.returnType?.name ?? "Void"
+        let parameterName = self.parameters.map{$0.description}.joined(separator: ",")
+        return("\(self.name)(\(parameterName)) -> \(returnName)")
         }
         
     public private(set) var block = Block()
@@ -88,7 +95,7 @@ public class Method: CallableTypeNode
         }
     }
 
-public typealias Methods = Array<Method>
+public typealias Methods = Array<MethodType>
 
 extension Methods
     {
@@ -98,5 +105,15 @@ extension Methods
             {
             method.accept(visitor: visitor)
             }
+        }
+    
+    public func appending(_ methods: Methods) -> Self
+        {
+        var newMethods = Methods()
+        for method in methods
+            {
+            newMethods.append(method)
+            }
+        return(newMethods)
         }
     }

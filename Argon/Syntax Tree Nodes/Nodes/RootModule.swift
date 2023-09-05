@@ -9,7 +9,7 @@ import Foundation
 
 public class RootModule: Module
     {
-    public static var rootModule: RootModule
+    public static var shared: RootModule
         {
         Self._rootModule!
         }
@@ -43,20 +43,19 @@ public class RootModule: Module
         self._argonModule
         }
     
-    public override func lookupNode(atName name: String) -> SyntaxTreeNode?
+    public override func lookupNode(atName someName: String) -> SyntaxTreeNode?
         {
-        if let node = self.symbolTable.lookupNode(atName: name)
+        if let entry = self.symbolEntries[someName]
             {
-            return(node)
+            return(entry.node)
             }
-        return(self._argonModule.lookupNode(atName: name))
+        return(self._argonModule.lookupNode(atName: someName))
         }
         
     public func flush()
         {
-        self.symbolTable.flush()
-        self.symbolTable = SymbolTable()
-        self.symbolTable.addNode(self.argonModule)
+        self.symbolEntries = Dictionary<String,SymbolEntry>()
+        self.addNode(self.argonModule)
         }
         
     public override func lookupMethods(atName name: String) -> Methods
@@ -80,8 +79,9 @@ public class RootModule: Module
             rootModule._argonModule = module
             rootModule.addNode(module)
             self._rootModule = rootModule
+            module.initializeSystemMetaclasses()
             module.initializeSystemMethods()
-            module.initializeMetaclasses()
+            module.dumpMethods()
             return(rootModule)
             }
         else

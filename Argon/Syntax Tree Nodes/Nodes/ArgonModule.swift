@@ -12,14 +12,14 @@ public class ArgonModule: Module
     public static let shared =
         {
         let module = ArgonModule(name: "Argon")
-        module.initializeModule()
+        module.initializeSystemClasses()
         return(module)
         }()
     
     public static var classType: TypeNode { ArgonModule.shared.lookupNode(atName: "Class") as! TypeNode}
     public static var voidType: TypeNode { ArgonModule.shared.lookupNode(atName: "Void") as! TypeNode}
     public static var objectType: TypeNode { ArgonModule.shared.lookupNode(atName: "Object") as! TypeNode}
-    public static var objectClass: Class { ArgonModule.shared.lookupNode(atName: "Object") as! Class}
+    public static var objectClass: ClassType { ArgonModule.shared.lookupNode(atName: "Object") as! ClassType}
     public static var stringType: TypeNode { ArgonModule.shared.lookupNode(atName: "String") as! TypeNode}
     public static var floatType: TypeNode { ArgonModule.shared.lookupNode(atName: "Float") as! TypeNode}
     public static var integerType: TypeNode { ArgonModule.shared.lookupNode(atName: "Integer") as! TypeNode}
@@ -30,16 +30,16 @@ public class ArgonModule: Module
     public static var symbolType: TypeNode { ArgonModule.shared.lookupNode(atName: "Symbol") as! TypeNode}
     public static var uIntegerType: TypeNode { ArgonModule.shared.lookupNode(atName: "UInteger") as! TypeNode}
     
-    private static func systemClass(named name: String,superclassesNamed: Array<String> = [],slots: Slots = Slots(),generics: TypeNodes = TypeNodes()) -> Class
+    private static func systemClass(named name: String,superclassesNamed: Array<String> = [],slots: Slots = Slots(),generics: TypeNodes = TypeNodes()) -> ClassType
         {
         guard let aClass = self.lookupNode(atName: name) else
             {
-            let classes = superclassesNamed.map{self.lookupNode(atName: $0) as! Class}
-            let aClass = Class(name: name,superclasses: classes)
+            let classes = superclassesNamed.map{self.lookupNode(atName: $0) as! ClassType}
+            let aClass = ClassType(name: name,superclasses: classes)
             self._systemTypes[name] = aClass
             return(aClass)
             }
-        return(aClass as! Class)
+        return(aClass as! ClassType)
         }
         
     private static func systemAliasedType(named name: String,toTypeNamed typeName: String) -> AliasedType
@@ -64,19 +64,19 @@ public class ArgonModule: Module
         self._systemTypes[atName]
         }
         
-    public var enumerationBaseType: Class
+    public var enumerationBaseType: ClassType
         {
-        return(self.lookupNode(atName: "EnumerationBase") as! Class)
+        return(self.lookupNode(atName: "EnumerationBase") as! ClassType)
         }
         
-    public var enumerationType: Class
+    public var enumerationType: ClassType
         {
-        return(self.lookupNode(atName: "Enumeration") as! Class)
+        return(self.lookupNode(atName: "Enumeration") as! ClassType)
         }
         
-    public var objectType: Class
+    public var objectType: ClassType
         {
-        return(self.lookupNode(atName: "Object") as! Class)
+        return(self.lookupNode(atName: "Object") as! ClassType)
         }
         
     public var floatType: TypeNode
@@ -184,12 +184,22 @@ public class ArgonModule: Module
         return(self.lookupNode(atName: "Month") as! TypeNode)
         }
         
-    public var voidType: Class
+    public var voidType: ClassType
         {
-        return(self.lookupNode(atName: "Void") as! Class)
+        return(self.lookupNode(atName: "Void") as! ClassType)
         }
         
-    public func initializeModule()
+    public var fileType: ClassType
+        {
+        return(self.lookupNode(atName: "File") as! ClassType)
+        }
+        
+    public var bufferType: TypeNode
+        {
+        return(self.lookupNode(atName: "Buffer") as! TypeNode)
+        }
+    
+    private func initializeSystemClasses()
         {
         self.addSystemClass(named: "Object",superclassesNamed: [])
         self.addSystemClass(named: "EnumerationBase",superclassesNamed: ["Object"])
@@ -200,7 +210,10 @@ public class ArgonModule: Module
         self.addSystemClass(named: "Stream",superclassesNamed: ["Object"])
         self.addSystemClass(named: "ReadStream",superclassesNamed: ["Stream"])
         self.addSystemClass(named: "WriteStream",superclassesNamed: ["Stream"])
-        self.addSystemClass(named: "File",superclassesNamed: ["ReadStream","WriteStream"])
+        self.addSystemClass(named: "File",superclassesNamed: ["Object"])
+        self.addSystemClass(named: "ReadFile",superclassesNamed: ["ReadStream","File"])
+        self.addSystemClass(named: "WriteFile",superclassesNamed: ["WriteStream","File"])
+        self.addSystemClass(named: "ReadWriteFile",superclassesNamed: ["ReadFile","WriteFile"])
         self.addSystemClass(named: "Magnitude",superclassesNamed:["Object"])
         self.addSystemClass(named: "Number",superclassesNamed:["Magnitude"])
         self.addSystemClass(named: "FixedPointNumber",superclassesNamed:["Number","EnumerationBase"])
@@ -237,30 +250,31 @@ public class ArgonModule: Module
         self.addSystemAliasedType(named: "Integer",toTypeNamed: "Integer64",encoding: "R")
         self.addSystemAliasedType(named: "UInteger",toTypeNamed: "UInteger64",encoding: "T")
         self.addSystemAliasedType(named: "Float",toTypeNamed: "Float64",encoding: "U")
+        self.addSystemAliasedType(named: "Buffer",toType: ArrayTypeInstance(originalType: self.byteType, indexType: .integer))
         
         self.addSystemEnumeration(named: "Month", cases: ["#January","#February","#March","#April","#May","#June","#July","#August","#September","#October","#November","#December"])
         
-        self.addSystemConstant(named: "$TODAY",ofTypeNamed: "Date")
-        self.addSystemConstant(named: "$NOW",ofTypeNamed: "Time")
-        self.addSystemConstant(named: "$PI",ofTypeNamed: "Float")
+        self.addSystemConstant(named: "$today",ofTypeNamed: "Date")
+        self.addSystemConstant(named: "$now",ofTypeNamed: "Time")
+        self.addSystemConstant(named: "$pi",ofTypeNamed: "Float")
+        self.addSystemConstant(named: "$e",ofTypeNamed: "Float")
         
         self.addNode(VoidType(name: "Void",superclasses: [self.objectType]))
         }
         
-    public func initializeMetaclasses()
+    public func initializeSystemMetaclasses()
         {
-        self.symbolTable.doNodes
+        for entry in self.symbolEntries.values
             {
-            node in
-            if let aClass = node as? Class
+            if let aClass = entry.node as? ClassType
                 {
-                let metaclass = Metaclass(class: aClass)
+                let metaclass = MetaclassType(class: aClass)
                 metaclass.setType(self.classType)
                 aClass.setType(metaclass)
                 }
-            else if let enumeration = node as? Enumeration
+            else if let enumeration = entry.node as? EnumerationType
                 {
-                let metaclass = Metaclass(class: self.enumerationType)
+                let metaclass = MetaclassType(class: self.enumerationType)
                 metaclass.setType(self.classType)
                 enumeration.setType(metaclass)
                 }
@@ -323,47 +337,47 @@ public class ArgonModule: Module
         self.addSystemMethod(named: "symbol").parameter(.byteType).returnType(.symbolType)
         
         self.addSystemMethod(named: "year").parameter(.dateType).returnType(.integerType)
-        self.addSystemMethod(named: "month").parameter(.dateType).returnType(.integerType)
+        self.addSystemMethod(named: "monthIndex").parameter(.dateType).returnType(.integerType)
         self.addSystemMethod(named: "day").parameter(.dateType).returnType(.integerType)
-        self.addSystemMethod(named: "monthElement").parameter(.dateType).returnType(.monthType)
+        self.addSystemMethod(named: "month").parameter(.dateType).returnType(.monthType)
         
         self.addSystemMethod(named: "hour").parameter(.timeType).returnType(.integerType)
         self.addSystemMethod(named: "minute").parameter(.timeType).returnType(.integerType)
         self.addSystemMethod(named: "second").parameter(.timeType).returnType(.integerType)
         self.addSystemMethod(named: "millisecond").parameter(.timeType).returnType(.integerType)
         
-        self.addSystemMethod(named: "year?").parameter(.dateTimeType).returnType(.integerType)
-        self.addSystemMethod(named: "month?").parameter(.dateTimeType).returnType(.integerType)
-        self.addSystemMethod(named: "day?").parameter(.dateTimeType).returnType(.integerType)
-        self.addSystemMethod(named: "monthElement?").parameter(.dateTimeType).returnType(.monthType)
+        self.addSystemMethod(named: "year").parameter(.dateTimeType).returnType(.integerType)
+        self.addSystemMethod(named: "monthIndex").parameter(.dateTimeType).returnType(.integerType)
+        self.addSystemMethod(named: "day").parameter(.dateTimeType).returnType(.integerType)
+        self.addSystemMethod(named: "month").parameter(.dateTimeType).returnType(.monthType)
         
-        self.addSystemMethod(named: "hour?").parameter(.dateTimeType).returnType(.integerType)
-        self.addSystemMethod(named: "minute?").parameter(.dateTimeType).returnType(.integerType)
-        self.addSystemMethod(named: "second?").parameter(.dateTimeType).returnType(.integerType)
-        self.addSystemMethod(named: "millisecond?").parameter(.dateTimeType).returnType(.integerType)
+        self.addSystemMethod(named: "hour").parameter(.dateTimeType).returnType(.integerType)
+        self.addSystemMethod(named: "minute").parameter(.dateTimeType).returnType(.integerType)
+        self.addSystemMethod(named: "second").parameter(.dateTimeType).returnType(.integerType)
+        self.addSystemMethod(named: "millisecond").parameter(.dateTimeType).returnType(.integerType)
         
-        self.addSystemMethod(named: "sin?").parameter(.floatType).returnType(.floatType)
-        self.addSystemMethod(named: "cos?").parameter(.floatType).returnType(.floatType)
-        self.addSystemMethod(named: "tan?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "sin").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "cos").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "tan").parameter(.floatType).returnType(.floatType)
         
-        self.addSystemMethod(named: "asin?").parameter(.floatType).returnType(.floatType)
-        self.addSystemMethod(named: "acos?").parameter(.floatType).returnType(.floatType)
-        self.addSystemMethod(named: "atan?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "asin").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "acos").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "atan").parameter(.floatType).returnType(.floatType)
         
-        self.addSystemMethod(named: "log?").parameter(.floatType).returnType(.floatType)
-        self.addSystemMethod(named: "ln?").parameter(.floatType).returnType(.floatType)
-        self.addSystemMethod(named: "exp?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "log").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "ln").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "exp").parameter(.floatType).returnType(.floatType)
         
-        self.addSystemMethod(named: "log2?").parameter(.floatType).returnType(.floatType)
-        self.addSystemMethod(named: "ln2?").parameter(.floatType).returnType(.floatType)
-        self.addSystemMethod(named: "exp2?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "log2").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "ln2").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "exp2").parameter(.floatType).returnType(.floatType)
         
-        self.addSystemMethod(named: "log10?").parameter(.floatType).returnType(.floatType)
-        self.addSystemMethod(named: "ln10?").parameter(.floatType).returnType(.floatType)
-        self.addSystemMethod(named: "exp10?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "log10").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "ln10").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "exp10").parameter(.floatType).returnType(.floatType)
         
-        self.addSystemMethod(named: "mantissa?").parameter(.floatType).returnType(.floatType)
-        self.addSystemMethod(named: "exponent?").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "mantissa").parameter(.floatType).returnType(.floatType)
+        self.addSystemMethod(named: "exponent").parameter(.floatType).returnType(.floatType)
         self.addSystemMethod(named: "isFinite?").parameter(.floatType).returnType(.booleanType)
         self.addSystemMethod(named: "isInfinite?").parameter(.floatType).returnType(.booleanType)
         self.addSystemMethod(named: "isNan?").parameter(.floatType).returnType(.floatType)
@@ -384,6 +398,27 @@ public class ArgonModule: Module
         self.addSystemMethod(named: "squareRoot?").parameter(.integerType).returnType(.integerType)
         self.addSystemMethod(named: "absoluteValue?").parameter(.integerType).returnType(.integerType)
         
+        self.addSystemMethod(named: "open").parameter("fileNamed",.stringType).returnType(.fileType)
+        self.addSystemMethod(named: "close").parameter("file",.fileType).returnType(.booleanType)
+        self.addSystemMethod(named: "write").parameter("string",.stringType).parameter("to",fileType).returnType(.integerType)
+        self.addSystemMethod(named: "write").parameter("integer",.integerType).parameter("to",.fileType).returnType(.integerType)
+        self.addSystemMethod(named: "write").parameter("float",.floatType).parameter("to",.fileType).returnType(.integerType)
+        self.addSystemMethod(named: "write").parameter("buffer",.bufferType).parameter("to",.fileType).returnType(.integerType)
+        self.addSystemMethod(named: "read").parameter("integerFrom",.fileType).returnType(.integerType)
+        self.addSystemMethod(named: "read").parameter("floatFrom",.fileType).returnType(.floatType)
+        self.addSystemMethod(named: "read").parameter("stringFrom",.fileType).parameter("ofLength",.integerType).returnType(.stringType)
+        self.addSystemMethod(named: "read").parameter("bufferFrom",.fileType).parameter("ofLength",.integerType).returnType(.bufferType)
+        }
+        
+    public func dumpMethods()
+        {
+        for entry in self.symbolEntries.values
+            {
+            for method in entry.methods
+                {
+                print(method.description)
+                }
+            }
         }
         
     @discardableResult
@@ -402,10 +437,10 @@ public class ArgonModule: Module
 //        }
         
     @discardableResult
-    private func addSystemClass(named name: String,superclassesNamed: Array<String>,generics: TypeNodes = [],encoding: String? = nil,instanceType: GenericTypeInstance.Type? = nil) -> Class
+    private func addSystemClass(named name: String,superclassesNamed: Array<String>,generics: TypeNodes = [],encoding: String? = nil,instanceType: GenericTypeInstance.Type? = nil) -> ClassType
         {
-        let classes = superclassesNamed.map{self.lookupNode(atName: $0) as! Class}
-        let aClass = Class(name: name,superclasses: classes,generics: generics)
+        let classes = superclassesNamed.map{self.lookupNode(atName: $0) as! ClassType}
+        let aClass = ClassType(name: name,superclasses: classes,generics: generics)
         self.addNode(aClass)
         aClass.isSystemNode = true
         aClass.setEncoding(encoding)
@@ -414,7 +449,7 @@ public class ArgonModule: Module
         }
         
     @discardableResult
-    private func addSystemEnumeration(named name: String,cases: Symbols,generics: TypeNodes = []) -> Enumeration
+    private func addSystemEnumeration(named name: String,cases: Symbols,generics: TypeNodes = []) -> EnumerationType
         {
         var actualCases = EnumerationCases()
         var index = 0
@@ -423,7 +458,7 @@ public class ArgonModule: Module
             actualCases.append(EnumerationCase(name: aCase, instanceValue: .integer(Argon.Integer(index))))
             index += 1
             }
-        let aClass = Enumeration(name: name,cases: actualCases)
+        let aClass = EnumerationType(name: name,cases: actualCases)
         self.addNode(aClass)
         aClass.isSystemNode = true
         return(aClass)
@@ -432,8 +467,8 @@ public class ArgonModule: Module
     private func addGenericSystemClass(named name: String,superclassesNamed: Array<String>,generics: Array<String>)
         {
         let generics = generics.map{self.lookupNode(atName: $0) as! TypeNode}
-        let classes = superclassesNamed.map{self.lookupNode(atName: $0) as! Class}
-        let aClass = Class(name: name,superclasses: classes,generics: generics)
+        let classes = superclassesNamed.map{self.lookupNode(atName: $0) as! ClassType}
+        let aClass = ClassType(name: name,superclasses: classes,generics: generics)
         aClass.isSystemNode = true
         self.addNode(aClass)
         }
@@ -442,6 +477,14 @@ public class ArgonModule: Module
         {
         let baseType = self.lookupNode(atName: typeName) as! TypeNode
         let typeAlias = AliasedType(name: name,baseType: baseType)
+        typeAlias.isSystemNode = true
+        typeAlias.setEncoding(encoding)
+        self.addNode(typeAlias)
+        }
+        
+    private func addSystemAliasedType(named name: String,toType type: TypeNode,encoding: String? = nil)
+        {
+        let typeAlias = AliasedType(name: name,baseType: type)
         typeAlias.isSystemNode = true
         typeAlias.setEncoding(encoding)
         self.addNode(typeAlias)
@@ -456,32 +499,37 @@ public class ArgonModule: Module
         }
         
         
-    public func addSystemMethod(named: String) -> SystemMethod
+    public func addSystemMethod(named: String) -> SystemMethodType
         {
-        let method = SystemMethod(name: named)
+        let method = SystemMethodType(name: named)
         self.addNode(method)
         return(method)
         }
         
-    public override func lookupNode(atName name: String) -> SyntaxTreeNode?
+    public override func lookupNode(atName someName: String) -> SyntaxTreeNode?
         {
-        if let node = self.symbolTable.lookupNode(atName: name)
+        if let entry = self.symbolEntries[someName]
             {
-            return(node)
+            return(entry.node)
             }
         return(nil)
         }
         
-    public override func lookupMethods(atName name: String) -> Methods
+    public override func lookupMethods(atName someName: String) -> Methods
         {
-        return(self.symbolTable.lookupMethods(atName: name))
+        var methods = Methods()
+        if let entry = self.symbolEntries[someName]
+            {
+            methods.append(contentsOf: entry.methods)
+            }
+        return(methods)
         }
         
     public func isSystemClass(named: String) -> Bool
         {
         if let aClass = self.lookupNode(atName: named)
             {
-            if aClass.isSystemNode,aClass is Class
+            if aClass.isSystemNode,aClass is ClassType
                 {
                 return(true)
                 }
@@ -493,7 +541,7 @@ public class ArgonModule: Module
         {
         if let enumeration = self.lookupNode(atName: named)
             {
-            if enumeration.isSystemNode,enumeration is Enumeration
+            if enumeration.isSystemNode,enumeration is EnumerationType
                 {
                 return(true)
                 }

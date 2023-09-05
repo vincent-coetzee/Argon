@@ -7,40 +7,71 @@
 
 import Foundation
     
+internal class SymbolEntry
+    {
+    var name: String
+    var node: SyntaxTreeNode?
+    var methods = Methods()
+    
+    init(name: String)
+        {
+        self.name = name
+        }
+    }
+    
 public class CompositeSyntaxTreeNode: SyntaxTreeNode
     {
-    internal var symbolTable = SymbolTable()
+    internal var symbolEntries = Dictionary<String,SymbolEntry>()
     
     public override func addNode(_ symbol: SyntaxTreeNode)
         {
-        self.symbolTable.addNode(symbol)
+        var entry = self.symbolEntries[symbol.name]
+        if entry.isNil
+            {
+            entry = SymbolEntry(name: symbol.name)
+            self.symbolEntries[symbol.name] = entry
+            }
+        if let method = symbol as? MethodType
+            {
+            entry!.methods.append(method)
+            }
+        else
+            {
+            entry!.node = symbol
+            }
         symbol.setParent(self)
         NodeChangeSet.currentChangeSet.insert(symbol)
         }
         
-    public override func lookupNode(atName name: String) -> SyntaxTreeNode?
+    public override func lookupNode(atName someName: String) -> SyntaxTreeNode?
         {
-        if let node = self.symbolTable.lookupNode(atName: name)
+        if let entry = self.symbolEntries[someName]
             {
-            return(node)
+            return(entry.node)
             }
-        return(self.parent?.lookupNode(atName: name))
+        return(self.parent?.lookupNode(atName: someName))
         }
         
-    public override func lookupMethods(atName name: String) -> Methods
+    public override func lookupMethods(atName someName: String) -> Methods
         {
-        var methods = self.parent!.lookupMethods(atName: name)
-        methods.append(contentsOf: self.symbolTable.lookupMethods(atName: name))
-        if !methods.isEmpty
+        var methods = self.parent!.lookupMethods(atName: someName)
+        if let entry = self.symbolEntries[someName]
             {
-            return(methods)
+            methods.append(contentsOf: entry.methods)
             }
-        return(Methods())
+        return(methods)
         }
         
     public override func accept(visitor: Visitor)
         {
-        self.symbolTable.accept(visitor: visitor)
+        for entry in self.symbolEntries.values
+            {
+            entry.node?.accept(visitor: visitor)
+            for method in entry.methods
+                {
+                method.accept(visitor: visitor)
+                }
+            }
         }
         
     public override func dump(indent: String)

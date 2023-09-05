@@ -38,6 +38,7 @@ public class Variable: SyntaxTreeNode
 
     public override func accept(visitor: Visitor)
         {
+        super.accept(visitor: visitor)
         visitor.visit(variable: self)
         }
     }

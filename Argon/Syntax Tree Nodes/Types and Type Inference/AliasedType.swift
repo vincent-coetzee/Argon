@@ -9,6 +9,11 @@ import Foundation
 
 public class AliasedType: StructuredType
     {
+    public override var description: String
+        {
+        self.baseType.name
+        }
+        
     public override var baseType: TypeNode
         {
         self._baseType.baseType
@@ -126,6 +131,11 @@ public class AliasedType: StructuredType
     public override func accept(visitor: Visitor)
         {
         visitor.visit(aliasedType: self)
+        }
+        
+    public override func inherits(from someClass: ClassType) -> Bool
+        {
+        self.baseType.inherits(from: someClass)
         }
     }
     

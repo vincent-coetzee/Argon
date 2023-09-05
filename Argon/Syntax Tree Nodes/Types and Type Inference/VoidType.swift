@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class VoidType: Class
+public class VoidType: ClassType
     {
     public override var encoding: String
         {

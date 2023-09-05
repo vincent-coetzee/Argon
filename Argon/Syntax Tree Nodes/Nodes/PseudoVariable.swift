@@ -16,6 +16,12 @@ public class PseudoVariable: Variable
         return(variable as! Self)
         }
         
+    public static let `nil`:PseudoVariable =
+        {
+        let variable = PseudoVariable(name: "self")
+        return(variable)
+        }()
+        
     public override init(name: String)
         {
         super.init(name: name)

@@ -9,12 +9,12 @@ import Foundation
 
 public class EnumerationInstance: NSObject,NSCoding
     {
-    public private(set) var enumeration: Enumeration
+    public private(set) var enumeration: EnumerationType
     public private(set) var enumerationCase: EnumerationCase
     
     public required init(coder: NSCoder)
         {
-        self.enumeration = coder.decodeObject(forKey: "enumeration") as! Enumeration
+        self.enumeration = coder.decodeObject(forKey: "enumeration") as! EnumerationType
         self.enumerationCase = coder.decodeObject(forKey: "enumerationCase") as! EnumerationCase
         }
         

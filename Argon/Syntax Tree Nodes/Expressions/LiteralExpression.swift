@@ -17,6 +17,12 @@ public class LiteralExpression: Expression
         super.init(coder: coder)
         }
         
+    public init(value: Bool)
+        {
+        self.value = .boolean(value)
+        super.init()
+        }
+        
     public init(value: ValueBox)
         {
         self.value = value
@@ -41,25 +47,19 @@ public class LiteralExpression: Expression
         super.init()
         }
         
-    public init(value: Bool)
-        {
-        self.value = .boolean(value)
-        super.init()
-        }
-        
-    public init(value: Class)
+    public init(value: ClassType)
         {
         self.value = .class(value)
         super.init()
         }
         
-    public init(value: Enumeration)
+    public init(value: EnumerationType)
         {
         self.value = .enumeration(value)
         super.init()
         }
         
-    public init(value: Method)
+    public init(value: MethodType)
         {
         self.value = .method(value)
         super.init()
@@ -71,7 +71,7 @@ public class LiteralExpression: Expression
         super.init()
         }
         
-    public init(enumeration: Enumeration,enumerationCase: EnumerationCase)
+    public init(enumeration: EnumerationType,enumerationCase: EnumerationCase)
         {
         self.value = .enumerationInstance(enumeration,enumerationCase)
         super.init()
@@ -184,7 +184,7 @@ extension NSCoder
             case(1):
                 return(.integer(self.decodeInt64(forKey: "\(key)_integer")))
             case(2):
-                return(.enumerationInstance(self.decodeObject(forKey: "\(key)_enumerationInstance_enumeration") as! Enumeration,self.decodeObject(forKey: "\(key)_enumerationInstance_enumerationCase") as! EnumerationCase))
+                return(.enumerationInstance(self.decodeObject(forKey: "\(key)_enumerationInstance_enumeration") as! EnumerationType,self.decodeObject(forKey: "\(key)_enumerationInstance_enumerationCase") as! EnumerationCase))
             case(3):
                 return(.object(self.decodeObject(forKey: "\(key)_object") as! ObjectInstance))
             case(4):
@@ -205,11 +205,11 @@ extension NSCoder
             case(11):
                 return(.byte(UInt8(self.decodeInteger(forKey: "\(key)_byte"))))
             case(12):
-                return(.class(self.decodeObject(forKey: "\(key)_class") as! Class))
+                return(.class(self.decodeObject(forKey: "\(key)_class") as! ClassType))
             case(13):
-                return(.method(self.decodeObject(forKey: "\(key)_method") as! Method))
+                return(.method(self.decodeObject(forKey: "\(key)_method") as! MethodType))
             case(14):
-                return(.enumeration(self.decodeObject(forKey: "\(key)_enumeration") as! Enumeration))
+                return(.enumeration(self.decodeObject(forKey: "\(key)_enumeration") as! EnumerationType))
             case(15):
                 return(.identifier(self.decodeObject(forKey: "\(key)_identifier") as! Identifier))
             case(16):

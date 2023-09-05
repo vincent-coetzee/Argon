@@ -56,3 +56,7 @@ public class IdentifierExpression: Expression
         visitor.visit(identifierExpression: self)
         }
     }
+
+public class NilExpression: Expression
+    {
+    }

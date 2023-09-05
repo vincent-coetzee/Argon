@@ -19,9 +19,7 @@ public class ArgonParser
     private var scopeStack = Stack<Scope>()
     public private(set) var currentScope: Scope
     private var rootModule: RootModule
-//    private var operandStack = Stack<ValueBox>()
-//    private var operatorStack = Stack<TokenType>()
-    private var topModule: Module?
+    private var initialModule: Module!
     public var nodeKey = 0
     private var prefixParsers = Dictionary<TokenType,PrefixParser>()
     private var infixParsers = Dictionary<TokenType,InfixParser>()
@@ -142,7 +140,6 @@ public class ArgonParser
         
     public func parse(sourceFileNode: SourceFileNode)
         {
-        sourceFileNode.astNode = nil
         sourceFileNode.compilerIssues = CompilerIssues()
         self.scopeStack = Stack<Scope>()
         self.currentScope = self.rootModule
@@ -151,10 +148,10 @@ public class ArgonParser
         self.token = self.tokens[self.tokenIndex]
         self.parseInitialModule()
         sourceFileNode.compilerIssues = self.tokens.reduce(CompilerIssues()) { $0 + $1.issues }
-        sourceFileNode.astNode = self.topModule
+        sourceFileNode.module = self.initialModule
         }
         
-    private func nextToken(offset: Int) -> Token
+    public func nextToken(atOffset offset: Int) -> Token
         {
         var actualOffset = offset
         if self.tokenIndex + offset >= self.tokens.count
@@ -166,6 +163,11 @@ public class ArgonParser
             self.lastIdentifierToken = self.token
             }
         return(self.tokens[actualOffset + self.tokenIndex])
+        }
+        
+    public func isNextTokenValid(atOffset offset: Int) -> Bool
+        {
+        self.tokenIndex + offset >= 0 && self.tokenIndex + offset < self.tokens.count
         }
         
     @discardableResult
@@ -253,9 +255,17 @@ public class ArgonParser
             self.lodgeIssue(code: .identifierExpected,location: location)
             return
             }
-        let initialModule = Module(name: self.token.identifier.lastPart)
+        let name = self.token.identifier.lastPart
+        if let someModule = RootModule.shared.lookupNode(atName: name) as? Module
+            {
+            initialModule = someModule
+            }
+        else
+            {
+            initialModule = Module(name: name)
+            self.currentScope.addNode(initialModule)
+            }
         self.nextToken()
-        self.currentScope.addNode(initialModule)
         self.pushCurrentScope(initialModule)
         self.parseBraces
             {
@@ -385,9 +395,13 @@ public class ArgonParser
             {
             index = self.parseDiscreteTypeIndex(location: location)
             }
-        if !self.token.isRightBracket
+        if !self.token.isRightBrocket
             {
-            self.lodgeIssue(code: .rightBracketExpected,location: location)
+            self.lodgeIssue(code: .rightBrocketExpected,location: location)
+            }
+        else
+            {
+            self.nextToken()
             }
         let arrayTypeInstance = ArrayTypeInstance(originalType: ArgonModule.arrayType,indexType: index)
         arrayTypeInstance.addGenericType(elementType)
@@ -421,7 +435,7 @@ public class ArgonParser
                 return(Argon.ArrayIndex.integer)
                 }
             }
-        else if let enumeration = self.currentScope.lookupNode(atIdentifier: identifier) as? Enumeration
+        else if let enumeration = self.currentScope.lookupNode(atIdentifier: identifier) as? EnumerationType
             {
             let newLocation = self.token.location
             if self.token.isLeftBracket
@@ -455,6 +469,7 @@ public class ArgonParser
                 let subType = SubType(name: Argon.nextIndex(named: "enumerationSubType"), baseType: enumeration, lowerBound: .enumerationCase(lowerCase), upperBound: .enumerationCase(upperCase))
                 return(Argon.ArrayIndex.subType(subType))
                 }
+            return(Argon.ArrayIndex.enumeration(enumeration))
             }
         else
             {
@@ -598,13 +613,13 @@ public class ArgonParser
             case(.STATIC):
                 StaticStatement.parse(using: self)
             case(.METHOD):
-                Method.parse(using: self)
+                MethodType.parse(using: self)
             case(.FUNCTION):
-                Function.parse(using: self)
+                FunctionType.parse(using: self)
             case(.CLASS):
-                Class.parse(using: self)
+                ClassType.parse(using: self)
             case(.ENUMERATION):
-                Enumeration.parse(using: self)
+                EnumerationType.parse(using: self)
             case(.LET):
                 LetStatement.parse(using: self)
             case(.CONSTANT):
@@ -626,13 +641,13 @@ public class ArgonParser
             case(.STATIC):
                 StaticStatement.parse(using: self)
             case(.METHOD):
-                Method.parse(using: self)
+                MethodType.parse(using: self)
             case(.FUNCTION):
-                Function.parse(using: self)
+                FunctionType.parse(using: self)
             case(.CLASS):
-                Class.parse(using: self)
+                ClassType.parse(using: self)
             case(.ENUMERATION):
-                Enumeration.parse(using: self)
+                EnumerationType.parse(using: self)
             case(.LET):
                 LetStatement.parse(using: self)
             case(.SELECT):
@@ -666,7 +681,7 @@ public class ArgonParser
             {
             return
             }
-        let importedModuleName = lastToken.identifier.lastPart
+//        let importedModuleName = lastToken.identifier.lastPart
         guard self.expect(tokenType: .leftParenthesis,error: .leftParenthesisExpected).isNotNil else
             {
             return
@@ -675,7 +690,7 @@ public class ArgonParser
             {
             return
             }
-        let importPath = middleToken.pathValue
+//        let importPath = middleToken.pathValue
         guard self.expect(tokenType: .rightParenthesis,error: .rightParenthesisExpected).isNil else
             {
             return
@@ -684,6 +699,10 @@ public class ArgonParser
         
     public func lodgeIssue(code: ErrorCode,message: String? = nil,location: Location)
         {
+        if location.line == 44
+            {
+            print("halt")
+            }
         var newLocation = location
         newLocation.nodeKey = self.nodeKey
         self.issues.append(CompilerIssue(code: code, message: message,location: newLocation))
@@ -720,33 +739,28 @@ public class ArgonParser
     public func parseArgument() -> Argument
         {
         let location = self.token.location
-        var value = Expression()
-        var argumentName: String!
-        if self.token.isIdentifier
+        var argumentName: String = ""
+        if self.nextToken(atOffset: 1).isScope
             {
-            argumentName = self.token.identifier.lastPart
-            self.nextToken()
+            if self.token.isIdentifier
+                {
+                argumentName = self.token.identifier.lastPart
+                self.nextToken()
+                self.nextToken()
+                }
+            else
+                {
+                self.lodgeIssue(code: .argumentNameExpected,location: location)
+                }
             }
-        else
-            {
-            self.lodgeIssue(code: .argumentNameExpected,location: location)
-            }
-        if !self.token.isScope
-            {
-            self.lodgeIssue(code: .scopeOperatorExpected,location: location)
-            }
-        else
-            {
-            self.nextToken()
-            }
-        value = self.parseExpression()
+        let value = self.parseExpression()
         return(Argument(name: argumentName, value: value))
         }
         
     public func parseParameter() -> Parameter
         {
         let location = self.token.location
-        var value = Expression()
+//        var value = Expression()
         var externalName:String?
         var internalName = ""
         var parameterDefinedByPosition = false
@@ -757,7 +771,7 @@ public class ArgonParser
             internalName = self.parseIdentifier(errorCode: .identifierExpected).lastPart
             parameterDefinedByPosition = true
             }
-        else if self.nextToken(offset: 2).isScope
+        else if self.nextToken(atOffset: 2).isScope
             {
             // we have an external name AND an internal name
             externalName = self.parseIdentifier(errorCode: .identifierExpected).lastPart

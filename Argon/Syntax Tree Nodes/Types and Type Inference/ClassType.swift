@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class Class: StructuredType
+public class ClassType: StructuredType
     {
     public override var isClass: Bool
         {
@@ -32,7 +32,7 @@ public class Class: StructuredType
     public private(set) var superclasses: ClassTypes = []
     public private(set) var slots: Slots = []
     public private(set) var forms = Methods()
-    public private(set) var deform: Method?
+    public private(set) var deform: MethodType?
     
     public init(name: String,slots: Slots = [],superclasses: ClassTypes = [],generics: TypeNodes = TypeNodes())
         {
@@ -60,12 +60,12 @@ public class Class: StructuredType
         }
         
     
-    public func addForm(_ method: Method)
+    public func addForm(_ method: MethodType)
         {
         self.forms.append(method)
         }
         
-    public func setDeform(_ method: Method)
+    public func setDeform(_ method: MethodType)
         {
         self.deform = method
         }
@@ -84,7 +84,7 @@ public class Class: StructuredType
         }
     
     @discardableResult
-    public func slot(_ name: String,_ type: TypeNode) -> Class
+    public func slot(_ name: String,_ type: TypeNode) -> ClassType
         {
         let slot = Slot(name: name,type: type)
         self.slots.append(slot)
@@ -126,7 +126,7 @@ public class Class: StructuredType
             name = parser.token.identifier.description
             parser.nextToken()
             }
-        let scope = Class(name: name)
+        let scope = ClassType(name: name)
         parser.currentScope.addNode(scope)
         var superclasses = ClassTypes()
         var typeVariables = TypeVariables()
@@ -170,11 +170,11 @@ public class Class: StructuredType
                 }
             }
         scope.setSlots(slots)
-        let metaclass = Metaclass(class: scope)
+        let metaclass = MetaclassType(class: scope)
         scope.setType(metaclass)
         }
         
-    private class func parseForm(`in` aClass: Class,using parser: ArgonParser) -> Method
+    private class func parseForm(`in` aClass: ClassType,using parser: ArgonParser) -> MethodType
         {
         parser.nextToken()
         let parameters = parser.parseParameters()
@@ -188,14 +188,14 @@ public class Class: StructuredType
             {
             Block.parseBlockInner(block: block,using: parser)
             }
-        let method = Method(name: "FORM")
+        let method = MethodType(name: "FORM")
         method.setParameters(parameters)
         method.setBlock(block)
         return(method)
         }
         
     @discardableResult
-    private class func parseDeform(`in` aClass: Class,using parser: ArgonParser) -> Method
+    private class func parseDeform(`in` aClass: ClassType,using parser: ArgonParser) -> MethodType
         {
         parser.nextToken()
         let block = Block()
@@ -204,7 +204,7 @@ public class Class: StructuredType
             {
             Block.parseBlockInner(block: block,using: parser)
             }
-        let method = Method(name: "DEFORM")
+        let method = MethodType(name: "DEFORM")
         method.setBlock(block)
         return(method)
         }
@@ -339,7 +339,7 @@ public class Class: StructuredType
             let identifier = parser.parseIdentifier(errorCode: .superclassIdentifierExpected)
             if let node = parser.lookupNode(atIdentifier: identifier)
                 {
-                if let classType = node as? Class
+                if let classType = node as? ClassType
                     {
                     superclasses.append(classType)
                     }
@@ -367,7 +367,7 @@ public class Class: StructuredType
         self.slots = slots
         }
         
-    public override func inherits(from someClass: Class) -> Bool
+    public override func inherits(from someClass: ClassType) -> Bool
         {
         for superclass in self.superclasses
             {
@@ -394,4 +394,4 @@ public class Class: StructuredType
         }
     }
 
-public typealias ClassTypes = Array<Class>
+public typealias ClassTypes = Array<ClassType>

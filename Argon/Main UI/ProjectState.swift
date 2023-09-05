@@ -10,31 +10,36 @@ import Foundation
 public class ProjectState: NSObject,NSCoding
     {
     public let project: SourceProjectNode
-    public let outlinerWidth: CGFloat
+    public let leftViewFrame: NSRect
+    public let centerViewFrame: NSRect
+    public let rightViewFrame: NSRect
     public var windowFrame: NSRect = .zero
-    public let sourceEditorWidth: CGFloat
+    public var stateWasRestored = false
     
-    public init(project: SourceProjectNode,outlinerWidth: CGFloat,sourceEditorWidth: CGFloat)
+    public init(project: SourceProjectNode,leftViewFrame: NSRect,centerViewFrame: NSRect,rightViewFrame: NSRect)
         {
         self.project = project
-        self.outlinerWidth = outlinerWidth
-        self.sourceEditorWidth = sourceEditorWidth
+        self.leftViewFrame = leftViewFrame
+        self.centerViewFrame = centerViewFrame
+        self.rightViewFrame = rightViewFrame
         }
         
     public required init(coder: NSCoder)
         {
-        self.sourceEditorWidth = coder.decodeDouble(forKey: "sourceEditorWidth")
         self.windowFrame = coder.decodeRect(forKey: "windowFrame")
         self.project = coder.decodeObject(forKey: "project") as! SourceProjectNode
-        self.outlinerWidth = coder.decodeDouble(forKey: "outlinerWidth")
+        self.leftViewFrame = coder.decodeRect(forKey: "leftViewFrame")
+        self.centerViewFrame = coder.decodeRect(forKey: "centerViewFrame")
+        self.rightViewFrame = coder.decodeRect(forKey: "rightViewFrame")
         }
         
     public func encode(with coder: NSCoder)
         {
         coder.encode(self.windowFrame,forKey: "windowFrame")
-        coder.encode(self.sourceEditorWidth,forKey: "sourceEditorWidth")
         coder.encode(self.project,forKey: "project")
-        coder.encode(self.outlinerWidth,forKey: "outlinerWidth")
+        coder.encode(self.leftViewFrame,forKey: "leftViewFrame")
+        coder.encode(self.centerViewFrame,forKey: "centerViewFrame")
+        coder.encode(self.rightViewFrame,forKey: "rightViewFrame")
         }
     }
     

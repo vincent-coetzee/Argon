@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class SystemMethod: Method
+public class SystemMethodType: MethodType
     {
     public init(name: String,parameters: Parameters,returnType: TypeNode? = nil)
         {

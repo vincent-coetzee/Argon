@@ -13,6 +13,17 @@ public class Parameter: Variable
     private let externalName: String?
     public let definedByPosition: Bool
     
+    public override var description: String
+        {
+        if self.definedByPosition
+            {
+            return(self.type.name)
+            }
+        let aName = self.externalName.isNil ? "-\(self.internalName)" : "\(self.externalName!)"
+        let typeName = self.type.name
+        return("\(aName)::\(typeName)")
+        }
+        
     init(definedByPosition: Bool,externalName: String?,internalName: String,type: TypeNode)
         {
         self.definedByPosition = definedByPosition

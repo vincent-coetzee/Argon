@@ -109,17 +109,17 @@ public class Module: CompositeSyntaxTreeNode
                     case(.CONSTANT):
                         Constant.parse(using: parser)
                     case(.CLASS):
-                        Class.parse(using: parser)
+                        ClassType.parse(using: parser)
                     case(.METHOD):
-                        Method.parse(using: parser)
+                        MethodType.parse(using: parser)
                     case(.TYPE):
                         AliasedType.parse(using: parser)
                     case(.MODULE):
                         Module.parse(using: parser)
                     case(.FUNCTION):
-                        Function.parse(using: parser)
+                        FunctionType.parse(using: parser)
                     case(.ENUMERATION):
-                        Enumeration.parse(using: parser)
+                        EnumerationType.parse(using: parser)
                     default:
                         parser.lodgeIssue(code: .moduleEntryExpected,location: location)
                     }
@@ -129,8 +129,19 @@ public class Module: CompositeSyntaxTreeNode
         
     public override func accept(visitor: Visitor)
         {
+        super.accept(visitor: visitor)
         visitor.enter(module: self)
-        self.symbolTable.accept(visitor: visitor)
+        for entry in self.symbolEntries.values
+            {
+            if let node = entry.node
+                {
+                node.accept(visitor: visitor)
+                }
+            for method in entry.methods
+                {
+                method.accept(visitor: visitor)
+                }
+            }
         visitor.exit(module: self)
         }
     }

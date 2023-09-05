@@ -1,18 +1,17 @@
 //
-//  ArgonSemanticChecker.swift
+//  ArgonTypeChecker.swift
 //  Argon
 //
-//  Created by Vincent Coetzee on 14/08/2023.
+//  Created by Vincent Coetzee on 04/09/2023.
 //
 
 import Foundation
 
-public class ArgonSemanticChecker: Visitor
+public class ArgonTypeChecker: Visitor
     {
-    
     public var processingFlag: ProcessingFlags
         {
-        .kSemanticsChecked
+        .kTypeChecked
         }
         
     public func enter(module: Module)
@@ -22,7 +21,7 @@ public class ArgonSemanticChecker: Visitor
     
     public func exit(module: Module)
         {
-        print("Exiting module \(module.name)")
+        
         }
     
     public func enter(class: ClassType)
@@ -389,5 +388,4 @@ public class ArgonSemanticChecker: Visitor
         {
         
         }
-    
     }

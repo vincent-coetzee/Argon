@@ -28,6 +28,7 @@ public struct ArgonCompiler
         compiler.initialize()
         compiler.scan()
         compiler.parse()
+        compiler.checkSemantics()
         compiler.emitCode()
         return(compiler)
         }
@@ -96,6 +97,15 @@ public struct ArgonCompiler
         
     public func debug() // STEP 6/B
         {
+        }
+        
+    public func checkSemantics()
+        {
+        let checker = ArgonSemanticChecker()
+        for node in self.sourceFileNodes
+            {
+            node.module.accept(visitor: checker)
+            }
         }
     }
 

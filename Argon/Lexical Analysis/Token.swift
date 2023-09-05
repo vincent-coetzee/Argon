@@ -50,6 +50,7 @@ public enum TokenType: Int
     case equals
     case EXIT
     
+    case FALSE
     case Float
     case FOR
     case FORM
@@ -154,6 +155,7 @@ public enum TokenType: Int
     case THEN
     case TIMES
     case TYPE
+    case TRUE
     case times
     case timesAssign
     case timesTimes
@@ -210,6 +212,11 @@ public class Token: NSObject,NSCoding
         false
         }
         
+    public var isBooleanValue: Bool
+        {
+        false
+        }
+        
     public var isRangeOperator: Bool
         {
         false
@@ -221,6 +228,16 @@ public class Token: NSObject,NSCoding
         }
         
     public var isDateValue: Bool
+        {
+        false
+        }
+        
+    public var isTrue: Bool
+        {
+        false
+        }
+        
+    public var isFalse: Bool
         {
         false
         }

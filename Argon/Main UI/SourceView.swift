@@ -138,12 +138,49 @@ class SourceView: NSTextView
             layerFrame.origin.x += 10
             layerFrame.size.width -= 10
             }
-        newLayer.frame = layerFrame
         let font = SourceTheme.shared.font(for: .fontEditor)
+        let attributes: [NSAttributedString.Key:Any] = [.backgroundColor:SourceTheme.shared.color(for: .colorIssue),.foregroundColor: SourceTheme.shared.color(for: .colorIssueText),.font: font]
+        let size = NSAttributedString(string: issue.message,attributes: attributes).size()
+        newLayer.cornerRadius = 8
         newLayer.font = font
         newLayer.fontSize = font.pointSize
+        if layerFrame.size.width + 8 > size.width
+            {
+            layerFrame.size.width = size.width + 8
+            }
+        newLayer.frame = layerFrame
         self.layer?.addSublayer(newLayer)
         self.activeAnnotations[line] = newLayer
+//        let line = issue.location.line
+//        if let layer = self.activeAnnotations[line]
+//            {
+//            layer.removeFromSuperlayer()
+//            self.activeAnnotations[line] = nil
+//            return
+//            }
+//        let newLayer = MessageLayer(message: issue.message)
+//        newLayer.backgroundColor = SourceTheme.shared.color(for: .colorIssue).cgColor
+//        newLayer.foregroundColor = SourceTheme.shared.color(for: .colorIssueText).cgColor
+//        newLayer.textColor = SourceTheme.shared.color(for: .colorIssueText).cgColor
+//        newLayer.strokeColor = SourceTheme.shared.color(for: .colorIssueText).cgColor
+//        var layerFrame = self.endOfLineRect(forLine: line)
+//        if layerFrame.origin.x + 10 < self.bounds.maxX
+//            {
+//            layerFrame.origin.x += 10
+//            layerFrame.size.width -= 10
+//            }
+//        let font = SourceTheme.shared.font(for: .fontEditor)
+//        let attributes: [NSAttributedString.Key:Any] = [.backgroundColor:SourceTheme.shared.color(for: .colorIssue),.foregroundColor: SourceTheme.shared.color(for: .colorIssueText),.font: font]
+//        let size = NSAttributedString(string: issue.message,attributes: attributes).size()
+//        newLayer.font = font
+//        newLayer.fontSize = font.pointSize
+//        if layerFrame.size.width + 8 > size.width
+//            {
+//            layerFrame.size.width = size.width + 8
+//            }
+//        newLayer.frame = layerFrame
+//        self.layer?.addSublayer(newLayer)
+//        self.activeAnnotations[line] = newLayer
         }
         
     private func refreshIssueDisplay()

@@ -9,17 +9,19 @@ import Foundation
 
 public protocol Visitor
     {
+    var processingFlag: ProcessingFlags { get }
+    
     func enter(module: Module)
     func exit(module: Module)
-    func enter(class: Class)
-    func exit(class: Class)
-    func enter(enumeration: Enumeration)
-    func exit(enumeration: Enumeration)
+    func enter(class: ClassType)
+    func exit(class: ClassType)
+    func enter(enumeration: EnumerationType)
+    func exit(enumeration: EnumerationType)
     func visit(enumerationCase: EnumerationCase)
     func visit(aliasedType: AliasedType)
     func visit(type: TypeNode)
-    func enter(function: Function)
-    func exit(function: Function)
+    func enter(function: FunctionType)
+    func exit(function: FunctionType)
     func visit(constant: Constant)
     func visit(variable: Variable)
     func visit(slot: Slot)

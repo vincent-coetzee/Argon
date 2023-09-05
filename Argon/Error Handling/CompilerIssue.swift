@@ -111,11 +111,6 @@ public class CompilerIssue: NSObject,NSCoding,Error,NSCopying
     public let code: ErrorCode
     private let _message: String?
     public var location: Location
-    
-    public var isFatalError: Bool
-        {
-        false
-        }
         
     public var isWarning: Bool
         {
@@ -151,5 +146,21 @@ public class CompilerIssue: NSObject,NSCoding,Error,NSCopying
     public func copy(with zone: NSZone? = nil) -> Any
         {
         CompilerIssue(code: self.code,message: self.message,location: self.location)
+        }
+    }
+
+public class CompilerWarning: CompilerIssue
+    {
+    public override var isWarning: Bool
+        {
+        true
+        }
+    }
+    
+public class CompilerError: CompilerIssue
+    {
+    public override var isError: Bool
+        {
+        true
         }
     }

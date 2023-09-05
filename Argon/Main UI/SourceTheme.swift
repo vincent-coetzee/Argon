@@ -131,7 +131,7 @@ public class SourceTheme
         self.styles[.colorIdentifier] = NSColor.argonThemePink
         self.styles[.colorInteger] = NSColor.argonZomp
         self.styles[.colorIssue] = NSColor.argonBrightYellowCrayola
-        self.styles[.colorIssueText] = NSColor.argonBrightYellowCrayola
+        self.styles[.colorIssueText] = NSColor.black
         
         self.styles[.colorKeyword] = NSColor(red: 63,green: 149,blue: 116)
         

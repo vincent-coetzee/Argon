@@ -71,6 +71,7 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
     public var isSystemNode: Bool = false
     public private(set) var type: TypeNode!
     public private(set) var issues = CompilerIssues()
+    public private(set) var processingFlags = ProcessingFlags()
     
     init(index: Int? = nil,name: String)
         {
@@ -213,7 +214,7 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
         
     public func accept(visitor: Visitor)
         {
-        fatalError("This should have been overriden but it wasn't.")
+        self.processingFlags.insert(visitor.processingFlag)
         }
         
         

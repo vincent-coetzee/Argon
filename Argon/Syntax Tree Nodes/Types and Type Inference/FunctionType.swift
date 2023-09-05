@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class Function: CallableTypeNode
+public class FunctionType: CallableTypeNode
     {
     public var signature: MethodSignature
         {

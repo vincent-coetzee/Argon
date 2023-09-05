@@ -43,6 +43,7 @@ public class Constant: Variable
         
     public override func accept(visitor: Visitor)
         {
+        super.accept(visitor: visitor)
         visitor.visit(constant: self)
         }
     }

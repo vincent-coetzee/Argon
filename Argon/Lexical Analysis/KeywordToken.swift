@@ -8,8 +8,9 @@
 import Foundation
 
 fileprivate let _Keywords = ["CLASS","CONSTANT","DEFORM","DYNAMIC","ELSE","ENTRY","ENUMERATION","EXIT",
-                            "FOR","FROM","FREE","FORM","FUNCTION","IF","HANDLE","IMPORT","INTO","IS","KEY","LET","LOOP","MAKE","METHOD","MODULE","OTHERWISE","READ","REPEAT",
-                            "RETURN","SELECT","SLOT","SIGNAL","THEN","TIMES","TYPE","USES",
+                            "FALSE","FOR","FROM","FREE","FORM","FUNCTION","IF","HANDLE","IMPORT","INTO",
+                            "IS","KEY","LET","LOOP","MAKE","METHOD","MODULE","OTHERWISE","READ","REPEAT",
+                            "RETURN","SELECT","SLOT","SIGNAL","THEN","TIMES","TRUE","TYPE","USES",
                             "VIRTUAL","WHEN","WHILE","WRAPPER","WRITE"]
                             
 public class KeywordToken: Token
@@ -97,6 +98,21 @@ public class KeywordToken: Token
     public override var isVirtual: Bool
         {
         self.matchString == "VIRTUAL"
+        }
+        
+    public override var isTrue: Bool
+        {
+        self.matchString == "TRUE"
+        }
+        
+    public override var isFalse: Bool
+        {
+        self.matchString == "FALSE"
+        }
+        
+    public override var isBooleanValue: Bool
+        {
+        self.matchString == "TRUE" || self.matchString == "FALSE"
         }
         
     public override var isStatic: Bool
@@ -197,6 +213,10 @@ public class KeywordToken: Token
                 return(.WRAPPER)
             case "WRITE":
                 return(.WRITE)
+            case "TRUE":
+                return(.literalBoolean)
+            case "FALSE":
+                return(.literalBoolean)
             default:
                 fatalError()
             }
@@ -238,5 +258,18 @@ public class KeywordToken: Token
     public override var isModule: Bool
         {
         return(self.matchString == "MODULE")
+        }
+        
+    public override var valueBox: ValueBox
+        {
+        switch(self.matchString)
+            {
+            case "FALSE":
+                return(.boolean(false))
+            case "TRUE":
+                return(.boolean(true))
+            default:
+                fatalError("valueBox should not have been called on KeywordToken.")
+            }
         }
     }

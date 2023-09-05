@@ -25,6 +25,10 @@ public class IdentifierParser: PrefixParser
         let location = parser.token.location
         let identifier = token.identifier
         parser.nextToken()
+        if identifier.lastPart == "nil"
+            {
+            return(NilExpression())
+            }
         let expression = IdentifierExpression(identifier: identifier)
         expression.addDeclaration(location)
         guard let symbol = parser.currentScope.lookupNode(atName: identifier.lastPart) else
@@ -94,10 +98,6 @@ public class AssignmentParser: InfixParser
         {
         let location = parser.token.location
         let right = parser.parseExpression(precedence: Precedence.assignment - 1)
-        if !left.isLValue
-            {
-            parser.lodgeIssue( code: .lValueExpectedOnLeft,location: location)
-            }
         return(AssignmentExpression(left: left, right: right).addDeclaration(location))
         }
     }
@@ -150,18 +150,17 @@ public class MakeParser: PrefixParser
         let location = parser.token.location
         parser.nextToken()
         var arguments = Expressions()
-        var aClass: Class?
+        var type: TypeNode!
         parser.parseParentheses
             {
-            let identifier = parser.parseIdentifier(errorCode: .identifierExpected)
-            aClass = parser.currentScope.lookupNode(atIdentifier: identifier) as? Class
+            type = parser.parseType()
             while parser.token.isComma && !parser.token.isEnd
                 {
                 parser.parseComma()
                 arguments.append(parser.parseExpression())
                 }
             }
-        let expression = MakeExpression(class: aClass,arguments: arguments)
+        let expression = MakeExpression(type: type,arguments: arguments)
         return(expression.addDeclaration(location))
         }
     }
@@ -195,28 +194,24 @@ public class MethodInvocationParser: InfixParser
         {
         let location = parser.token.location
         var methodName: Identifier!
-        if !token.isIdentifier
+        if parser.isNextTokenValid(atOffset: -2),parser.nextToken(atOffset: -2).isIdentifier
+            {
+            methodName = parser.nextToken(atOffset: -2).identifier
+            }
+        else
             {
             parser.lodgeIssue(code: .identifierExpected,location: location)
             methodName = Identifier(string: Argon.nextIndex(named: "METHOD"))
             }
-        else
-            {
-            methodName = parser.token.identifier
-            parser.nextToken()
-            }
         var arguments = Arguments()
-        parser.nextToken()
         if !parser.token.isRightParenthesis
             {
-            while !parser.token.isRightParenthesis && parser.token.isComma
+            repeat
                 {
-                if parser.token.isComma
-                    {
-                    parser.nextToken()
-                    }
+                parser.parseComma()
                 arguments.append(parser.parseArgument())
                 }
+            while !parser.token.isRightParenthesis && parser.token.isComma
             }
         if parser.token.isRightParenthesis
             {
@@ -240,7 +235,6 @@ public struct ArrayReferenceParser: InfixParser
     public func parse(parser: ArgonParser,left: Expression,token: Token) -> Expression
         {
         let location = parser.token.location
-        parser.nextToken()
         let index = parser.parseExpression(precedence: 0)
         if !parser.token.isRightBracket
             {

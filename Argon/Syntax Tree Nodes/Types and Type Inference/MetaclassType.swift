@@ -7,9 +7,9 @@
 
 import Foundation
 
-public class Metaclass: Class
+public class MetaclassType: ClassType
     {
-    public init(`class`: Class)
+    public init(`class`: ClassType)
         {
         super.init(name: `class`.name + " class")
         }

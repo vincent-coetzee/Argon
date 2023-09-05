@@ -17,7 +17,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
     @IBOutlet weak var toolbar: NSToolbar!
     @IBOutlet weak var splitView: NSSplitView!
     @IBOutlet weak var leftView: NSView!
-    @IBOutlet weak var centreView: NSView!
+    @IBOutlet weak var centerView: NSView!
     @IBOutlet weak var rightView: NSView!
     
     private var _project = SourceProjectNode(name: "Project",path: Path(Path.root))
@@ -29,33 +29,32 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
     private var pathControlWidthConstraint: NSLayoutConstraint!
     private var selectedSourceNode: SourceNode!
     private var issueCountIconLabelView: IconLabelView!
+    private var leftViewFrame: NSRect = .zero
+    private var centerViewFrame: NSRect = .zero
+    private var rightViewFrame: NSRect = .zero
+    private var stateWasRestored = false
+    
+    private static let outlinerViewHoldingPriority = NSLayoutConstraint.Priority(rawValue: 500)
+    private static let sourceViewHoldingPriority = NSLayoutConstraint.Priority(rawValue: 1000)
+    private static let rightViewHoldingPriority = NSLayoutConstraint.Priority(rawValue: 600)
+    
+    private static let outlinerViewIndex = 0
+    private static let sourceViewIndex = 1
+    private static let rightViewIndex = 2
     
     public var projectState: ProjectState
         {
         get
             {
-            return(ProjectState(project: self.project, outlinerWidth: self.outliner.frame.size.width, sourceEditorWidth: self.sourceView.frame.size.width))
+            return(ProjectState(project: self.project, leftViewFrame: self.leftViewFrame, centerViewFrame: self.centerViewFrame,rightViewFrame: self.rightViewFrame))
             }
         set
             {
-            self.splitView.setPosition(newValue.outlinerWidth, ofDividerAt: 0)
-            let offset = self.splitView.dividerThickness + newValue.outlinerWidth + newValue.sourceEditorWidth
-            self.splitView.setPosition(offset,ofDividerAt: 1)
+            self.splitView.setPosition(newValue.leftViewFrame.size.width, ofDividerAt: Self.outlinerViewIndex)
+            self.splitView.setPosition(newValue.centerViewFrame.size.width, ofDividerAt: Self.sourceViewIndex)
+            self.splitView.setPosition(newValue.rightViewFrame.size.width, ofDividerAt: Self.rightViewIndex)
             self.project = newValue.project
-            }
-        }
-        
-    public var outlinerWidth: CGFloat
-        {
-        get
-            {
-            self.splitView.arrangedSubviews[0].frame.size.width
-            }
-        set
-            {
-            var frame = self.splitView.arrangedSubviews[0].frame
-            frame.size.width = newValue
-            self.splitView.arrangedSubviews[0].frame = frame
+            self.stateWasRestored = true
             }
         }
         
@@ -77,8 +76,16 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         super.viewDidLoad()
         self.initSourceView()
         self.initOutliner()
+//        self.initSplitView()
         self.representedObject = self.project
         }
+        
+//    private func initSplitView()
+//        {
+////        self.splitView.setHoldingPriority(NSLayoutConstraint.Priority(rawValue: NSLayoutConstraint.Priority.required.rawValue - 100),forSubviewAt: Self.outlinerViewIndex)
+////        self.splitView.setHoldingPriority(NSLayoutConstraint.Priority(rawValue: NSLayoutConstraint.Priority.required.rawValue - 50),forSubviewAt: Self.rightViewIndex)
+//        self.splitView.delegate = self
+//        }
         
     public func windowWasCreated(window: NSWindow)
         {
@@ -92,16 +99,22 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         self.rightSidebarController = RightSidebarButtonController()
         self.rightSidebarController.target = self
         window.addTitlebarAccessoryViewController(self.rightSidebarController)
-//        NotificationCenter.default.addObserver(self, selector: #selector(self.rightViewFrameDidChange), name: NSView.frameDidChangeNotification, object: self.rightView)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.leftViewFrameDidChange), name: NSView.frameDidChangeNotification, object: self.leftView)
         NotificationCenter.default.addObserver(self, selector: #selector(self.windowFrameDidChange), name: NSWindow.didResizeNotification, object: window)
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.splitViewDidResizeSubviews), name: NSSplitView.didResizeSubviewsNotification, object: self.splitView)
         window.titleVisibility = .hidden
+        if !self.stateWasRestored
+            {
+            let frame = window.frame
+            let leftWidth = frame.size.width / 4.0
+            let centerWidth = leftWidth * 2.0
+            self.splitView.setPosition(leftWidth, ofDividerAt: 0)
+            self.splitView.setPosition(centerWidth + leftWidth,ofDividerAt: 1)
+            }
         }
         
     @objc public func windowFrameDidChange(_ notification: Notification)
         {
         let window = notification.object as! NSWindow
-        let frame = window.frame
         let toolbar = window.toolbar!
         var toolbarWidth = CGFloat(0)
         for item in toolbar.items
@@ -116,14 +129,6 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
                 }
             }
         self.resizePathControl()
-                    // TRAFFIC LiGHTS & ICON   RIGHT ICON
-//        let width = toolbarWidth + CGFloat(120) + CGFloat(80)
-//        let remainder = frame.size.width - width
-//        self.pathControl.removeConstraint(self.pathControlWidthConstraint)
-//        let widthConstraint = NSLayoutConstraint(item: self.pathControl!, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: remainder)
-//        self.pathControl.addConstraint(widthConstraint)
-//        self.pathControlWidthConstraint = widthConstraint
-//        widthConstraint.isActive = true
         }
         
     private func resizePathControl()
@@ -133,12 +138,6 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         self.pathControl.addConstraint(widthConstraint)
         self.pathControlWidthConstraint = widthConstraint
         widthConstraint.isActive = true
-        }
-        
-    @objc public func leftViewFrameDidChange(_ notification: Notification)
-        {
-        let frame = self.leftView.frame
-        self.leftSidebarController.rightOffset = frame.maxX
         }
         
     private var pathControlWidth: CGFloat
@@ -156,10 +155,18 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
                 toolbarWidth += CGFloat(36 + 14)
                 }
             }
-        var frame = self.view.window!.frame
-        let width = frame.size.width - toolbarWidth - CGFloat(60) - CGFloat(2 * 30)
+        let frame = self.view.window!.frame
+        let width = frame.size.width - toolbarWidth
         return(width)
         }
+        
+//    @objc func splitViewDidResizeSubviews(_ notification: NSNotification)
+//        {
+//        let subviews = self.splitView.arrangedSubviews
+//        self.leftViewFrame = subviews[Self.outlinerViewIndex].frame
+//        self.centerViewFrame = subviews[Self.sourceViewIndex].frame
+//        self.rightViewFrame = subviews[Self.rightViewIndex].frame
+//        }
         
     public func toolbar(_ toolbar: NSToolbar,itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem?
         {
@@ -179,7 +186,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
             let heightConstraint = NSLayoutConstraint(item: view, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 20)
             view.addConstraint(heightConstraint)
             heightConstraint.isActive = true
-            let widthConstraint = NSLayoutConstraint(item: view, attribute: .width, relatedBy: .greaterThanOrEqual, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: self.pathControlWidth)
+            let widthConstraint = NSLayoutConstraint(item: view, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: self.pathControlWidth)
             view.addConstraint(widthConstraint)
             self.pathControlWidthConstraint = widthConstraint
             widthConstraint.isActive = true
@@ -265,7 +272,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
             context.duration = 0.75
             if self.leftSidebarState.isExpanded
                 {
-                let amount = self.leftView.bounds.width
+                let amount = self.outliner.bounds.width
                 self.leftSidebarState = self.leftSidebarState.toggledState(amount)
                 self.splitView.setPosition(0, ofDividerAt: 0)
                 }
@@ -279,6 +286,25 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         
     @objc public func onToggleRightSidebar(_ sender: Any?)
         {
+        NSAnimationContext.runAnimationGroup
+            {
+            context in
+            context.allowsImplicitAnimation = true
+            context.duration = 0.75
+            if self.rightSidebarState.isExpanded
+                {
+                let amount = self.rightView.bounds.width
+                self.rightSidebarState = self.rightSidebarState.toggledState(amount)
+                let offset = self.splitView.bounds.size.width
+                self.splitView.setPosition(offset, ofDividerAt: 1)
+                }
+            else
+                {
+                let offset = self.splitView.bounds.size.width - self.rightSidebarState.amount
+                self.splitView.setPosition(offset,ofDividerAt: 1)
+                self.rightSidebarState = self.rightSidebarState.toggledState()
+                }
+            }
         }
         
     @IBAction public func textDidGainFocus(_ textView: NSTextView)
@@ -372,6 +398,14 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         }
     }
     
+//extension ProjectViewController: NSSplitViewDelegate
+//    {
+//    @objc func splitView(_ splitView: NSSplitView, constrainMinCoordinate proposedMinimumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat
+//        {
+//        proposedMinimumPosition
+//        }
+//    }
+    
 extension ProjectViewController: NSToolbarDelegate
     {
     }
@@ -405,28 +439,7 @@ extension ProjectViewController: NSMenuItemValidation
         return(false)
         }
     }
-    
-//extension ProjectViewController
-//    {
-//    @objc func outlinerSelectionChanged(_ notification: Notification)
-//        {
-//        let row = self.outliner.selectedRow
-//        guard row != -1 else
-//            {
-//            return
-//            }
-//        let item = self.outliner.item(atRow: row) as! SourceNode
-//        if item.isSourceFileNode
-//            {
-//            let node = item as! SourceFileNode
-//            node.tokens = ArgonScanner(source: node.source).allTokens()
-//            self.sourceView.string = node.source
-//            self.sourceView.tokens = node.tokens
-//            }
-//        self.updatePathControl(from: item)
-//        }
-//    }
-//
+
 extension ProjectViewController: NSMenuDelegate
     {
     public func menuNeedsUpdate(_ menu: NSMenu)
@@ -586,7 +599,7 @@ extension ProjectViewController
         
     @IBAction public func onBuildClicked(_ sender: Any?)
         {
-        var compiler = ArgonCompiler.build(nodes: self._project.allSourceFiles)
+        let compiler = ArgonCompiler.build(nodes: self._project.allSourceFiles)
         guard let node = self.selectedSourceNode,node.isSourceFileNode else
             {
             return
@@ -595,7 +608,33 @@ extension ProjectViewController
         let count = compiler.compilerIssueCount
         self.issueCountIconLabelView.iconTintColorElement = count > 0 ? .colorIssue : .colorToolbarText
         self.issueCountIconLabelView.text = count > 0 ? "\(count) issues" : ""
-        self.issueCountIconLabelView.textColorElement  = count > 0 ? .colorIssueText : .colorToolbarText
+        self.issueCountIconLabelView.textColorElement  = count > 0 ? .colorIssue : .colorToolbarText
+        }
+        
+    @IBAction public func onShowIssuesClicked(_ sender: Any?)
+        {
+        let item = sender as! NSToolbarItem
+        item.image = NSImage(systemSymbolName: "eye.slash", accessibilityDescription: "")
+        item.toolTip = "Hide all compiler issues"
+        item.label = "Hide"
+        item.action = #selector(self.onHideIssuesClicked)
+        }
+        
+    @IBAction public func onHideIssuesClicked(_ sender: Any?)
+        {
+        let item = sender as! NSToolbarItem
+        item.image = NSImage(systemSymbolName: "eye", accessibilityDescription: "")
+        item.toolTip = "Show all compiler issues"
+        item.label = "Show"
+        item.action = #selector(self.onShowIssuesClicked)
+        }
+        
+    @IBAction public func onLoadClicked(_ sender: Any?)
+        {
+        }
+        
+    @IBAction public func onSaveClicked(_ sender: Any?)
+        {
         }
         
     @IBAction public func onParseClicked(_ sender: Any?)
