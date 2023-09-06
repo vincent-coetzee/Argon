@@ -57,6 +57,11 @@ public class ArgonModule: Module
         return(anAlias)
         }
         
+    public override var isArgonModule: Bool
+        {
+        true
+        }
+        
     private static var _systemTypes = Dictionary<String,TypeNode>()
     
     private static func lookupNode(atName: String) -> TypeNode?
@@ -559,5 +564,9 @@ public class ArgonModule: Module
                 }
             }
         return(false)
+        }
+        
+    public override func accept(visitor: Visitor)
+        {
         }
     }

@@ -29,6 +29,7 @@ public struct ArgonCompiler
         compiler.scan()
         compiler.parse()
         compiler.checkSemantics()
+        compiler.checkTypes()
         compiler.emitCode()
         return(compiler)
         }
@@ -37,9 +38,8 @@ public struct ArgonCompiler
     private var macroExpander: MacroExpander!
     private var sourceFileNodes: SourceFileNodes
     private var compilerIssues = CompilerIssues()
-    private var abstractSyntaxTree: SyntaxTreeNode?
-    private var wereIssues = false
-    private var issueCount = 0
+//    private var abstractSyntaxTree: SyntaxTreeNode?
+//    private var wereIssues = false
     
     public init(nodes: SourceFileNodes)
         {
@@ -50,8 +50,8 @@ public struct ArgonCompiler
         
     public mutating func initialize() // STEP 1
         {
-        self.wereIssues = false
-        self.abstractSyntaxTree = nil
+//        self.wereIssues = false
+//        self.abstractSyntaxTree = nil
         self.macroExpander = MacroExpander()
         self.macroExpander.processMacros(in: self.sourceFileNodes)
         }
@@ -67,18 +67,19 @@ public struct ArgonCompiler
     public mutating func parse() // STEP 3
         {
         let parser = ArgonParser(rootModule: self.rootModule)
-        self.issueCount = 0
         for node in self.sourceFileNodes
             {
+            parser.resetParser()
             node.compilerIssues = CompilerIssues()
             parser.nodeKey = node.nodeKey
             parser.parse(sourceFileNode: node)
             node.compilerIssues = parser.compilerIssues(forNodeKey: node.nodeKey)
+            parser.setModule(forNode: node)
             if node.compilerIssues.count != parser.allCompilerIssues().count
                 {
                 print("halt")
                 }
-            self.wereIssues = node.compilerIssues.count > 0 || self.wereIssues
+//            self.wereIssues = node.compilerIssues.count > 0 || self.wereIssues
             self.compilerIssues.append(contentsOf: node.compilerIssues)
             }
         }
@@ -99,14 +100,19 @@ public struct ArgonCompiler
         {
         }
         
-    public func checkSemantics()
+    public mutating func checkSemantics()
         {
         let checker = ArgonSemanticChecker()
-        for node in self.sourceFileNodes
-            {
-            node.module.accept(visitor: checker)
-            }
+        checker.checkPrimaryModules(self.sourceFileNodes.map{$0.module!})
+        self.rootModule.accept(visitor: checker)
+        self.compilerIssues.append(contentsOf: checker.compilerIssues)
+        }
+        
+    public mutating func checkTypes()
+        {
+        let checker = ArgonTypeChecker()
+        self.rootModule.accept(visitor: checker)
+        self.compilerIssues.append(contentsOf: checker.compilerIssues)
         }
     }
 
-public typealias CompilerIssues = Array<CompilerIssue>

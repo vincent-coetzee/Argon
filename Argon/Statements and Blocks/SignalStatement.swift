@@ -38,7 +38,7 @@ public class SignalStatement: Statement
             {
             if !parser.token.isSymbolValue
                 {
-                parser.lodgeIssue( code: .symbolExpected, location: location)
+                parser.lodgeError( code: .symbolExpected, location: location)
                 symbol = Argon.nextIndex(named: "SYMBOL")
                 }
             else
@@ -48,6 +48,7 @@ public class SignalStatement: Statement
                 }
             }
         let statement = SignalStatement(symbol: symbol)
+        statement.location = location
         statement.addDeclaration(location)
         block.addStatement(statement)
         }

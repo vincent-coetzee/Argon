@@ -59,6 +59,16 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
         .none
         }
         
+    public var isRootModule: Bool
+        {
+        false
+        }
+        
+    public var isArgonModule: Bool
+        {
+        false
+        }
+        
     public var identifier: Identifier
         {
         self.parent.isNil ? Identifier(string: self.name) : self.parent!.identifier + name
@@ -70,8 +80,8 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
     public private(set) var parent: Parent?
     public var isSystemNode: Bool = false
     public private(set) var type: TypeNode!
-    public private(set) var issues = CompilerIssues()
     public private(set) var processingFlags = ProcessingFlags()
+    public var location: Location?
     
     init(index: Int? = nil,name: String)
         {
@@ -87,17 +97,13 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
         
     public required init(coder: NSCoder)
         {
+        self.type = coder.decodeObject(forKey: "type") as? TypeNode
         self.name = coder.decodeObject(forKey: "name") as! String
         self.index = coder.decodeInteger(forKey: "index")
         self.parent = coder.decodeParent(forKey: "parent")
-        self.issues = coder.decodeObject(forKey: "issues") as! CompilerIssues
         self.references = coder.decodeNodeReferences(forKey: "references")
         self.isSystemNode = coder.decodeBool(forKey: "isSystemNode")
-        }
-        
-    public func addIssue(code: ErrorCode,message: String? = nil,location: Location)
-        {
-        self.issues.append(CompilerIssue(code: code,message: message,location: location))
+        self.processingFlags = ProcessingFlags(rawValue: UInt64(coder.decodeInteger(forKey: "processingFlags")))
         }
         
     public func removeChildNode(_ node: SyntaxTreeNode)
@@ -112,12 +118,13 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
         
     public func encode(with coder: NSCoder)
         {
+        coder.encode(self.type,forKey: "type")
         coder.encode(self.name,forKey: "name")
         coder.encode(self.index,forKey: "indeX")
         coder.encode(self.parent,forKey: "parent")
         coder.encode(self.references,forKey: "references")
-        coder.encode(self.issues,forKey: "issues")
         coder.encode(self.isSystemNode,forKey: "isSystemNode")
+        coder.encode(self.processingFlags.rawValue,forKey: "processingFlags")
         }
         
     @discardableResult

@@ -164,11 +164,8 @@
 		BFE99B372A710A690056E700 /* BinaryExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE99B362A710A690056E700 /* BinaryExpression.swift */; };
 		BFE99B392A710A8A0056E700 /* MethodInvocationExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE99B382A710A8A0056E700 /* MethodInvocationExpression.swift */; };
 		BFE99B3B2A710AB30056E700 /* FunctionInvocationExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE99B3A2A710AB30056E700 /* FunctionInvocationExpression.swift */; };
-		BFE99B3D2A710BCF0056E700 /* ObjectInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE99B3C2A710BCF0056E700 /* ObjectInstance.swift */; };
-		BFE99B3F2A710C560056E700 /* EnumerationInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE99B3E2A710C560056E700 /* EnumerationInstance.swift */; };
 		BFE99B412A7117300056E700 /* IdentifierExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE99B402A7117300056E700 /* IdentifierExpression.swift */; };
 		BFE99B432A711A3B0056E700 /* PrefixExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE99B422A711A3B0056E700 /* PrefixExpression.swift */; };
-		BFED87302A168CF000CC70A8 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFED872F2A168CF000CC70A8 /* Queue.swift */; };
 		BFEE2AE8298EF7960060EE74 /* TypeVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEE2AE7298EF7960060EE74 /* TypeVariable.swift */; };
 		BFF0CD442A1E9EBD00F99EC3 /* ArgonTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF0CD432A1E9EBD00F99EC3 /* ArgonTypes.swift */; };
 		BFF395662A5C1A0D00BCA42F /* FunctionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF395652A5C1A0D00BCA42F /* FunctionType.swift */; };
@@ -370,11 +367,8 @@
 		BFE99B362A710A690056E700 /* BinaryExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinaryExpression.swift; sourceTree = "<group>"; };
 		BFE99B382A710A8A0056E700 /* MethodInvocationExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MethodInvocationExpression.swift; sourceTree = "<group>"; };
 		BFE99B3A2A710AB30056E700 /* FunctionInvocationExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionInvocationExpression.swift; sourceTree = "<group>"; };
-		BFE99B3C2A710BCF0056E700 /* ObjectInstance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectInstance.swift; sourceTree = "<group>"; };
-		BFE99B3E2A710C560056E700 /* EnumerationInstance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumerationInstance.swift; sourceTree = "<group>"; };
 		BFE99B402A7117300056E700 /* IdentifierExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifierExpression.swift; sourceTree = "<group>"; };
 		BFE99B422A711A3B0056E700 /* PrefixExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefixExpression.swift; sourceTree = "<group>"; };
-		BFED872F2A168CF000CC70A8 /* Queue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 		BFEE2AE7298EF7960060EE74 /* TypeVariable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeVariable.swift; sourceTree = "<group>"; };
 		BFF0CD432A1E9EBD00F99EC3 /* ArgonTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgonTypes.swift; sourceTree = "<group>"; };
 		BFF395652A5C1A0D00BCA42F /* FunctionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionType.swift; sourceTree = "<group>"; };
@@ -460,13 +454,13 @@
 			path = Expressions;
 			sourceTree = "<group>";
 		};
-		BF1F4AE72A553C7B00C1F977 /* Symbol Tables and Scopes */ = {
+		BF1F4AE72A553C7B00C1F977 /* Parents and Scopes */ = {
 			isa = PBXGroup;
 			children = (
 				BF3676CA2972DE1400E1A5B9 /* Parent.swift */,
 				BFCA9341296F43340049B39A /* Scope.swift */,
 			);
-			path = "Symbol Tables and Scopes";
+			path = "Parents and Scopes";
 			sourceTree = "<group>";
 		};
 		BF1F4AEA2A5548B700C1F977 /* Statements and Blocks */ = {
@@ -555,7 +549,7 @@
 			path = "LLVM Support";
 			sourceTree = "<group>";
 		};
-		BF3B42FD29A14C82009C269F /* Projects */ = {
+		BF3B42FD29A14C82009C269F /* Source Nodes */ = {
 			isa = PBXGroup;
 			children = (
 				BF3B430029A14CC6009C269F /* SourceCompositeNode.swift */,
@@ -564,7 +558,7 @@
 				BF3B42FE29A14C9D009C269F /* SourceNode.swift */,
 				BFD0B50C2968758B00E9ABBD /* SourceProjectNode.swift */,
 			);
-			path = Projects;
+			path = "Source Nodes";
 			sourceTree = "<group>";
 		};
 		BF3B430429A14F87009C269F /* Main UI */ = {
@@ -696,9 +690,9 @@
 				BF2C0AE929FB213300CCC384 /* LLVM Support */,
 				BF86786929EEE79E00DFF03C /* LLVMC */,
 				BF3B430429A14F87009C269F /* Main UI */,
-				BF3B42FD29A14C82009C269F /* Projects */,
+				BF3B42FD29A14C82009C269F /* Source Nodes */,
 				BF1F4AEA2A5548B700C1F977 /* Statements and Blocks */,
-				BF1F4AE72A553C7B00C1F977 /* Symbol Tables and Scopes */,
+				BF1F4AE72A553C7B00C1F977 /* Parents and Scopes */,
 				BFCA9340296F431B0049B39A /* Syntax Tree Nodes */,
 				BF6B052A2962096D0097C9A9 /* System Extensions */,
 				BF54B99929F5C7AD00A755DC /* Value Models */,
@@ -735,6 +729,7 @@
 				BFF0CD432A1E9EBD00F99EC3 /* ArgonTypes.swift */,
 				BFDC80162A7D5CFF008118FF /* NodeChangeSet.swift */,
 				BFE6BDA62AA670BA00614F71 /* ProcessingFlags.swift */,
+				BFE1AD0D2A8A78BF00402294 /* Visitor + Visitable.swift */,
 			);
 			path = "Compilation and Parsing";
 			sourceTree = "<group>";
@@ -755,12 +750,8 @@
 				BFA93E3E291678AF0001F05D /* AppDelegate.swift */,
 				BF71EECB29F06E33009356E0 /* BrowserActionSet.swift */,
 				BFABDBCF2A8BB12800806F7D /* ColorSet.swift */,
-				BFE99B3E2A710C560056E700 /* EnumerationInstance.swift */,
-				BFE99B3C2A710BCF0056E700 /* ObjectInstance.swift */,
-				BFED872F2A168CF000CC70A8 /* Queue.swift */,
 				BF54B99729F59D2600A755DC /* Repository.swift */,
 				BF57672329EDC0FC007EECA5 /* Stack.swift */,
-				BFE1AD0D2A8A78BF00402294 /* Visitor + Visitable.swift */,
 			);
 			path = Infrastructure;
 			sourceTree = "<group>";
@@ -1004,7 +995,6 @@
 				BF4DB6DA2A8167D200A509A4 /* MetaclassType.swift in Sources */,
 				BF08D3252A3B980C003C29B1 /* PolymorphicType.swift in Sources */,
 				BFDC80172A7D5CFF008118FF /* NodeChangeSet.swift in Sources */,
-				BFE99B3D2A710BCF0056E700 /* ObjectInstance.swift in Sources */,
 				BF54B99829F59D2600A755DC /* Repository.swift in Sources */,
 				BFEE2AE8298EF7960060EE74 /* TypeVariable.swift in Sources */,
 				BF39BA7F2A9906950037FB79 /* ArgonScanner.swift in Sources */,
@@ -1020,7 +1010,6 @@
 				BF3676CE2972DE4400E1A5B9 /* Expression.swift in Sources */,
 				BF9BAD482965F33500608266 /* ArgonTests.swift in Sources */,
 				BFE6BDA92AA6738800614F71 /* ArgonTypeChecker.swift in Sources */,
-				BFED87302A168CF000CC70A8 /* Queue.swift in Sources */,
 				BF3B430329A14D47009C269F /* SourceFileNode.swift in Sources */,
 				BFA93E43291678AF0001F05D /* ProjectDocument.swift in Sources */,
 				BFCB438C29845DDA001D1CFD /* CompositeSyntaxTreeNode.swift in Sources */,
@@ -1031,7 +1020,6 @@
 				BF3B430729A1515F009C269F /* SourceView.swift in Sources */,
 				BFCD396F2A3442FF00E84B5F /* AttributeScopes+Extensions.swift in Sources */,
 				BF60D62C2A8CB48300ED3F6B /* PointerInstance.swift in Sources */,
-				BFE99B3F2A710C560056E700 /* EnumerationInstance.swift in Sources */,
 				BFE1AD102A8A7CD200402294 /* ArgonSemanticChecker.swift in Sources */,
 				BF1279A72A261BA300855760 /* MacroExpander.swift in Sources */,
 				BFAD2C2D2A75986A00565B6B /* ArrayAccessExpression.swift in Sources */,

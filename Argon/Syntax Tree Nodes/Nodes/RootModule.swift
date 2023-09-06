@@ -17,7 +17,13 @@ public class RootModule: Module
     private static var _rootModule: RootModule?
         
     private var _argonModule: ArgonModule!
+    private var globallyInitialisedNodes = SyntaxTreeNodes()
     
+    public override var isRootModule: Bool
+        {
+        true
+        }
+
     public override var identifier: Identifier
         {
         Identifier(parts: [Identifier.IdentifierPart.root])
@@ -88,5 +94,20 @@ public class RootModule: Module
             {
             return(self._rootModule!)
             }
+        }
+        
+    public func addGloballyInitialisedNode(_ node: SyntaxTreeNode)
+        {
+        self.globallyInitialisedNodes.append(node)
+        }
+        
+    public override func accept(visitor: Visitor)
+        {
+        visitor.enter(rootModule: self)
+        for entry in self.symbolEntries.values
+            {
+            entry.node?.accept(visitor: visitor)
+            }
+        visitor.exit(rootModule: self)
         }
     }

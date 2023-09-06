@@ -54,7 +54,7 @@ public class HandleStatement: Statement
                     }
                 else
                     {
-                    parser.lodgeIssue( code: .symbolExpected, location: location)
+                    parser.lodgeError( code: .symbolExpected, location: location)
                     }
                 }
             while parser.token.isComma && !parser.token.isEnd
@@ -66,7 +66,7 @@ public class HandleStatement: Statement
             {
             if !parser.token.isInto
                 {
-                parser.lodgeIssue( code: .intoExpected, location: location)
+                parser.lodgeError( code: .intoExpected, location: location)
                 }
             else
                 {
@@ -76,7 +76,7 @@ public class HandleStatement: Statement
                 {
                 if !parser.token.isIdentifier
                     {
-                    parser.lodgeIssue( code: .identifierExpected, location: location)
+                    parser.lodgeError( code: .identifierExpected, location: location)
                     identifier = Argon.nextIndex(named: "symbolValue")
                     }
                 else
@@ -91,6 +91,7 @@ public class HandleStatement: Statement
             Block.parseBlockInner(block: handleBlock,using: parser)
             }
         let statement = HandleStatement(signals: symbols, handlerBlock: handleBlock,inductionVariable: variable)
+        statement.location = location
         statement.addDeclaration(location)
         statement.inductionVariable = variable
         block.addStatement(statement)

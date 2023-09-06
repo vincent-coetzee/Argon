@@ -38,7 +38,7 @@ public class AssignmentStatement: Statement
     public static func parse(into block: Block,using parser: ArgonParser)
         {
 //        let identifier = parser.token.identifier
-//        let location = parser.token.location
+        let location = parser.token.location
 //        parser.nextToken()
 //        if !parser.token.isAssign
 //            {
@@ -54,7 +54,9 @@ public class AssignmentStatement: Statement
 //        statement.addDeclaration(location)
 //        block.addStatement(statement)
         let expression = parser.parseExpression(precedence: 0)
-        block.addStatement(AssignmentExpressionStatement(expression: expression))
+        let statement = AssignmentExpressionStatement(expression: expression)
+        statement.location = location
+        block.addStatement(statement)
         }
         
     public override func accept(visitor: Visitor)

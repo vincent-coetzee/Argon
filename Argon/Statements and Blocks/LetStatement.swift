@@ -27,7 +27,7 @@ public class LetStatement: Statement
                 return
                 }
             }
-        parser.lodgeIssue(code: .invalidAssignmentExpression,location: location)
+        parser.lodgeError(code: .invalidAssignmentExpression,location: location)
         }
         
     public class override func parse(using parser: ArgonParser)
@@ -36,6 +36,7 @@ public class LetStatement: Statement
         parser.nextToken()
         let expression = parser.parseExpression()
         let statement = LetStatement(expression: expression)
+        statement.location = location
         parser.currentScope.addNode(statement)
         if let lValue = expression.lValue,let rValue = expression.rValue
             {
@@ -46,7 +47,7 @@ public class LetStatement: Statement
                 return
                 }
             }
-        parser.lodgeIssue(code: .invalidAssignmentExpression,location: location)
+        parser.lodgeError(code: .invalidAssignmentExpression,location: location)
         }
         
     public init(expression: Expression)

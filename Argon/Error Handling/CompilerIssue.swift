@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ErrorCode: String
+public enum IssueCode: String
     {
     public var message: String
         {
@@ -63,6 +63,7 @@ public enum ErrorCode: String
     case moduleExpected                                             = "'MODULE' expected."
     case moduleNameExpected                                         = "module name expected."
     case mustInheritFromEnumerationBase                             = "must inherit from EnumerationBase."
+    case multipleMainMethodsFound                                   = "multiple 'main' methods found."
     
     case none                                                       = "none"
     case nodeAlreadyDefined                                         = "node already defined."
@@ -108,7 +109,7 @@ public class CompilerIssue: NSObject,NSCoding,Error,NSCopying
         self._message.isNil ? self.code.message : self._message!
         }
         
-    public let code: ErrorCode
+    public let code: IssueCode
     private let _message: String?
     public var location: Location
         
@@ -122,7 +123,7 @@ public class CompilerIssue: NSObject,NSCoding,Error,NSCopying
         return(false)
         }
         
-    public init(code: ErrorCode,message: String?,location: Location = .zero)
+    public init(code: IssueCode,message: String?,location: Location = .zero)
         {
         self.code = code
         self._message = message
@@ -131,7 +132,7 @@ public class CompilerIssue: NSObject,NSCoding,Error,NSCopying
         
     public required init(coder: NSCoder)
         {
-        self.code = ErrorCode(rawValue: coder.decodeObject(forKey: "code") as! String)!
+        self.code = IssueCode(rawValue: coder.decodeObject(forKey: "code") as! String)!
         self._message = coder.decodeObject(forKey: "message") as? String
         self.location = coder.decodeLocation(forKey: "location")
         }
@@ -164,3 +165,5 @@ public class CompilerError: CompilerIssue
         true
         }
     }
+
+public typealias CompilerIssues = Array<CompilerIssue>

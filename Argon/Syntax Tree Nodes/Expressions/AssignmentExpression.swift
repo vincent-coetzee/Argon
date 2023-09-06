@@ -79,6 +79,6 @@ public class AssignmentExpression: Expression
                     }
                 }
             }
-        parser.lodgeIssue(code: .invalidAssignmentExpression,location: location)
+        parser.lodgeError(code: .invalidAssignmentExpression,location: location)
         }
     }

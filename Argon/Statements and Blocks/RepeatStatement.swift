@@ -38,10 +38,11 @@ public class RepeatStatement: Block
         let firstLocation = parser.token.location
         parser.nextToken()
         let repeatBlock = Block.parseBlock(using: parser)
+        repeatBlock.location = firstLocation
         let location = parser.token.location
         if !parser.token.isWhile
             {
-            parser.lodgeIssue(code: .whileExpectedAfterRepeatBlock,location: location)
+            parser.lodgeError(code: .whileExpectedAfterRepeatBlock,location: location)
             }
         else
             {
@@ -53,6 +54,7 @@ public class RepeatStatement: Block
             expression = parser.parseExpression(precedence: 0)
             }
         let statement = RepeatStatement(expression: expression,block: repeatBlock)
+        statement.location = location
         statement.addDeclaration(firstLocation)
         block.addStatement(statement)
         }

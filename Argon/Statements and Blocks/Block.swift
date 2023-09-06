@@ -12,6 +12,7 @@ public class Block: Statement
     public static override func parse(using parser: ArgonParser)
         {
         let block = Block()
+        parser.currentScope.addNode(block)
         parser.pushCurrentScope(block)
         defer
             {
@@ -66,8 +67,10 @@ public class Block: Statement
                 ForkStatement.parse(into: block,using: parser)
             case(.RETURN):
                 ReturnStatement.parse(into: block,using: parser)
+            case(.STATIC):
+                StaticStatement.parse(into: block,using: parser)
             default:
-                parser.lodgeIssue(code: .statementExpected,location: parser.token.location)
+                parser.lodgeError(code: .statementExpected,location: parser.token.location)
                 parser.nextToken()
             }
         }

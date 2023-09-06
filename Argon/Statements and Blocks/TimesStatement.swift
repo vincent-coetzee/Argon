@@ -43,7 +43,9 @@ public class TimesStatement: Block
             expression = parser.parseExpression(precedence: 0)
             }
         let whileBlock = Block.parseBlock(using: parser)
+        whileBlock.location = location
         let statement = TimesStatement(expression: expression,block: whileBlock)
+        statement.location = location
         statement.addDeclaration(location)
         block.addStatement(statement)
         }

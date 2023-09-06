@@ -30,10 +30,11 @@ public class IdentifierParser: PrefixParser
             return(NilExpression())
             }
         let expression = IdentifierExpression(identifier: identifier)
+        expression.location = location
         expression.addDeclaration(location)
         guard let symbol = parser.currentScope.lookupNode(atName: identifier.lastPart) else
             {
-            parser.lodgeIssue(code: .undefinedSymbol,message: "The symbol '\(identifier.description)' is undefined.",location: location)
+            parser.lodgeError(code: .undefinedSymbol,message: "The symbol '\(identifier.description)' is undefined.",location: location)
             return(expression)
             }
         expression.setIdentifierValue(symbol.valueBox)
@@ -55,6 +56,7 @@ public class PrefixOperatorParser: PrefixParser
         let location = parser.token.location
         parser.nextToken()
         let expression = PrefixExpression(operator: token.tokenType,right: parser.parseExpression(precedence: self.precedence)).addDeclaration(location)
+        expression.location = location
         expression.setMethods(parser.currentScope.lookupMethods(atName: token.matchString))
         return(expression)
         }
@@ -67,7 +69,9 @@ public class LiteralParser: PrefixParser
         let location = parser.token.location
         let valueBox = token.valueBox
         parser.nextToken()
-        return(LiteralExpression(value: valueBox).addDeclaration(location))
+        let expression = LiteralExpression(value: valueBox).addDeclaration(location)
+        expression.location = location
+        return(expression)
         }
     }
 
@@ -86,6 +90,7 @@ public class PostfixOperatorParser: InfixParser
         parser.nextToken()
         let expression = PostfixExpression(left: left,operator: token.tokenType).addDeclaration(location)
         expression.setMethods(parser.currentScope.lookupMethods(atName: token.matchString))
+        expression.location = location
         return(expression)
         }
     }
@@ -98,7 +103,9 @@ public class AssignmentParser: InfixParser
         {
         let location = parser.token.location
         let right = parser.parseExpression(precedence: Precedence.assignment - 1)
-        return(AssignmentExpression(left: left, right: right).addDeclaration(location))
+        let expression = AssignmentExpression(left: left, right: right).addDeclaration(location)
+        expression.location = location
+        return(expression)
         }
     }
 
@@ -120,6 +127,7 @@ public class BinaryOperatorParser: InfixParser
         let methods = parser.currentScope.lookupMethods(atName: token.matchString)
         let expression = BinaryExpression(left: left, operator: token.tokenType, right: right).addDeclaration(location)
         expression.setMethods(methods)
+        expression.location = location
         return(expression)
         }
     }
@@ -137,9 +145,11 @@ public class GroupParser: PrefixParser
             }
         else
             {
-            parser.lodgeIssue( code: .rightParenthesisExpected,location: location)
+            parser.lodgeError( code: .rightParenthesisExpected,location: location)
             }
-        return(expression.addDeclaration(location))
+        let nextExpression = expression.addDeclaration(location)
+        nextExpression.location = location
+        return(nextExpression)
         }
     }
     
@@ -161,6 +171,7 @@ public class MakeParser: PrefixParser
                 }
             }
         let expression = MakeExpression(type: type,arguments: arguments)
+        expression.location = location
         return(expression.addDeclaration(location))
         }
     }
@@ -175,14 +186,16 @@ public class TernaryParser: InfixParser
         let then = parser.parseExpression(precedence: 0)
         if !parser.token.isColon
             {
-            parser.lodgeIssue( code: .colonExpected,location: location)
+            parser.lodgeError( code: .colonExpected,location: location)
             }
         else
             {
             parser.nextToken()
             }
         let `else` = parser.parseExpression(precedence: Precedence.ternary - 1)
-        return(TernaryExpression(operator: .ternary, then: then, else:  `else`).addDeclaration(location))
+        let expression = TernaryExpression(operator: .ternary, then: then, else:  `else`).addDeclaration(location)
+        expression.location = location
+        return(expression)
         }
     }
 
@@ -200,7 +213,7 @@ public class MethodInvocationParser: InfixParser
             }
         else
             {
-            parser.lodgeIssue(code: .identifierExpected,location: location)
+            parser.lodgeError(code: .identifierExpected,location: location)
             methodName = Identifier(string: Argon.nextIndex(named: "METHOD"))
             }
         var arguments = Arguments()
@@ -219,11 +232,13 @@ public class MethodInvocationParser: InfixParser
             }
         else
             {
-            parser.lodgeIssue(code: .rightParenthesisExpected,location: location)
+            parser.lodgeError(code: .rightParenthesisExpected,location: location)
             }
+        arguments.location = location
         let methods = parser.currentScope.lookupMethods(atIdentifier: methodName)
         let expression = MethodInvocationExpression(methodName: methodName,arguments: arguments).addDeclaration(location)
         expression.setMethods(methods)
+        expression.location = location
         return(expression)
         }
     }
@@ -238,13 +253,15 @@ public struct ArrayReferenceParser: InfixParser
         let index = parser.parseExpression(precedence: 0)
         if !parser.token.isRightBracket
             {
-            parser.lodgeIssue(code: .rightBracketExpected,location: location)
+            parser.lodgeError(code: .rightBracketExpected,location: location)
             }
         else
             {
             parser.nextToken()
             }
-        return(ArrayAccessExpression(array: left,memberIndex: index).addDeclaration(location))
+        let expression = ArrayAccessExpression(array: left,memberIndex: index).addDeclaration(location)
+        expression.location = location
+        return(expression)
         }
     }
     
@@ -257,7 +274,9 @@ public struct MemberAccessParser: InfixParser
         let location = token.location
         let `operator` = token.tokenType
         let member = parser.parseExpression(precedence: 0)
-        return(MemberAccessExpression(left: left,operator: `operator`,right: member).addDeclaration(location))
+        let expression = MemberAccessExpression(left: left,operator: `operator`,right: member).addDeclaration(location)
+        expression.location = location
+        return(expression)
         }
     }
 
@@ -276,7 +295,7 @@ public struct ClosureParser: PrefixParser
         parser.nextToken()
         if !parser.token.isInto
             {
-            parser.lodgeIssue( code: .intoExpected, location: location)
+            parser.lodgeError( code: .intoExpected, location: location)
             }
         else
             {
@@ -291,7 +310,7 @@ public struct ClosureParser: PrefixParser
                 parser.parseComma()
                 if !parser.token.isIdentifier
                     {
-                    parser.lodgeIssue( code: .identifierExpected, location: location)
+                    parser.lodgeError( code: .identifierExpected, location: location)
                     name = Argon.nextIndex(named: "ID")
                     }
                 else
@@ -305,7 +324,7 @@ public struct ClosureParser: PrefixParser
                     }
                 else
                     {
-                    parser.lodgeIssue( code: .scopeOperatorExpected, location: location)
+                    parser.lodgeError( code: .scopeOperatorExpected, location: location)
                     }
                 let type = parser.parseType()
                 parameters.append(Parameter(definedByPosition: true,externalName: name, internalName: name, type: type))
@@ -313,7 +332,11 @@ public struct ClosureParser: PrefixParser
             while !parser.token.isEnd && !parser.token.isRightParenthesis
             }
         let block = Block()
+        block.location = location
+        parameters.location = location
         Block.parseBlockInner(block: block,using: parser)
-        return(ClosureExpression(block: block,parameters: parameters).addDeclaration(location))
+        let expression = ClosureExpression(block: block,parameters: parameters).addDeclaration(location)
+        expression.location = location
+        return(expression)
         }
     }

@@ -97,6 +97,21 @@ public class ArgonParser
         self.prefix(tokenType: .minus,precedence: Precedence.prefix)
         }
         
+    public func setModule(forNode node: SourceFileNode)
+        {
+        node.module = self.initialModule
+        }
+        
+    public func resetParser()
+        {
+        self.issues = CompilerIssues()
+        self.tokenIndex = 0
+        self.lastIdentifierToken = Token(location: .zero)
+        self.scopeStack = Stack<Scope>()
+        self.currentScope = self.rootModule
+        self.token = EndToken(location: .zero)
+        }
+        
     public func allCompilerIssues() -> CompilerIssues
         {
         self.issues
@@ -187,7 +202,7 @@ public class ArgonParser
         }
         
     @discardableResult
-    public func expect(tokenType: TokenType,error: ErrorCode) -> Token?
+    public func expect(tokenType: TokenType,error: IssueCode) -> Token?
         {
         let location = self.token.location
         if self.token.tokenType == tokenType
@@ -196,16 +211,16 @@ public class ArgonParser
             self.nextToken()
             return(temp)
             }
-        self.lodgeIssue(code: error,location: location)
+        self.lodgeError(code: error,location: location)
         return(nil)
         }
         
-    public func parseIdentifier(errorCode: ErrorCode = .identifierExpected,message: String = "Identifier expected.") -> Identifier
+    public func parseIdentifier(errorCode: IssueCode = .identifierExpected,message: String = "Identifier expected.") -> Identifier
         {
         let location = self.token.location
         guard self.token.isIdentifier else
             {
-            self.lodgeIssue(code: errorCode,message: message,location: location)
+            self.lodgeError(code: errorCode,message: message,location: location)
             return(Identifier(string: Argon.nextIndex(named: "Symbol")))
             }
         let identifier = self.token.identifier
@@ -246,13 +261,13 @@ public class ArgonParser
         let location = self.token.location
         guard self.token.isModule else
             {
-            self.lodgeIssue(code: .initialModuleDeclarationNotFound,location: location)
+            self.lodgeError(code: .initialModuleDeclarationNotFound,location: location)
             return
             }
         self.nextToken()
         guard self.token.isIdentifier else
             {
-            self.lodgeIssue(code: .identifierExpected,location: location)
+            self.lodgeError(code: .identifierExpected,location: location)
             return
             }
         let name = self.token.identifier.lastPart
@@ -325,7 +340,7 @@ public class ArgonParser
             }
         else
             {
-            self.lodgeIssue(code: .undefinedType,message: "Type '\(identifier.description)' is undefined.",location: location)
+            self.lodgeError(code: .undefinedType,message: "Type '\(identifier.description)' is undefined.",location: location)
             }
         return(type)
         }
@@ -350,7 +365,7 @@ public class ArgonParser
                 {
                 if type.genericTypes.count != typeValues.count
                     {
-                    self.lodgeIssue(code: .invalidGenericArguments,message: "Type '\(typeName)' expects \(type.genericTypes.count) types but \(typeValues.count) were found.",location:location)
+                    self.lodgeError(code: .invalidGenericArguments,message: "Type '\(typeName)' expects \(type.genericTypes.count) types but \(typeValues.count) were found.",location:location)
                     }
                 if type.instanceType.isNotNil
                     {
@@ -360,13 +375,13 @@ public class ArgonParser
                 }
             else
                 {
-                self.lodgeIssue(code: .usingGenericTypesOnNonGenericType,message: "The type '\(typeName)' does not have generic parameters so it can't be instantiated.",location: location)
+                self.lodgeError(code: .usingGenericTypesOnNonGenericType,message: "The type '\(typeName)' does not have generic parameters so it can't be instantiated.",location: location)
                 }
             return(type)
             }
         else
             {
-            self.lodgeIssue(code: .undefinedType,message: "The type '\(typeName)' is not defined.",location: location)
+            self.lodgeError(code: .undefinedType,message: "The type '\(typeName)' is not defined.",location: location)
             return(TypeNode(name: typeName))
             }
         }
@@ -375,7 +390,7 @@ public class ArgonParser
         {
         if !self.token.isLeftBrocket
             {
-            self.lodgeIssue(code: .leftBrocketExpected,location: location)
+            self.lodgeError(code: .leftBrocketExpected,location: location)
             }
         else
             {
@@ -384,7 +399,7 @@ public class ArgonParser
         let elementType = self.parseType()
         if !self.token.isComma
             {
-            self.lodgeIssue(code: .commaExpected,location: location)
+            self.lodgeError(code: .commaExpected,location: location)
             }
         else
             {
@@ -397,7 +412,7 @@ public class ArgonParser
             }
         if !self.token.isRightBrocket
             {
-            self.lodgeIssue(code: .rightBrocketExpected,location: location)
+            self.lodgeError(code: .rightBrocketExpected,location: location)
             }
         else
             {
@@ -451,7 +466,7 @@ public class ArgonParser
                         }
                     else
                         {
-                        self.lodgeIssue(code: .rangeOperatorExpected,location: location)
+                        self.lodgeError(code: .rangeOperatorExpected,location: location)
                         }
                     upperBound = self.parseSymbolValue(code: .symbolExpected)
                     }
@@ -462,7 +477,7 @@ public class ArgonParser
                     }
                 else
                     {
-                    self.lodgeIssue(code: .invalidLowerBound,message: "Invalid lower bound for enumeration index '\(enumeration.name)'.",location: newLocation)
+                    self.lodgeError(code: .invalidLowerBound,message: "Invalid lower bound for enumeration index '\(enumeration.name)'.",location: newLocation)
                     }
                 let lowerCase = EnumerationCase(name: "#LOWER",associatedTypes: [],instanceValue: .none)
                 let upperCase = EnumerationCase(name: "#UPPER",associatedTypes: [],instanceValue: .none)
@@ -479,13 +494,13 @@ public class ArgonParser
                 }
             else
                 {
-                self.lodgeIssue(code: .discreteTypeExpected,location: location)
+                self.lodgeError(code: .discreteTypeExpected,location: location)
                 }
             }
         return(Argon.ArrayIndex.none)
         }
         
-    private func parseIntegerValue(code: ErrorCode) -> Argon.Integer
+    private func parseIntegerValue(code: IssueCode) -> Argon.Integer
         {
         let location = self.token.location
         if self.token.isIntegerValue
@@ -494,11 +509,11 @@ public class ArgonParser
             self.nextToken()
             return(integer)
             }
-        self.lodgeIssue(code: code,location: location)
+        self.lodgeError(code: code,location: location)
         return(Argon.Integer(Argon.nextIndex))
         }
         
-    private func parseSymbolValue(code: ErrorCode) -> Argon.Symbol
+    private func parseSymbolValue(code: IssueCode) -> Argon.Symbol
         {
         let location = self.token.location
         if self.token.isSymbolValue
@@ -507,7 +522,7 @@ public class ArgonParser
             self.nextToken()
             return(symbol)
             }
-        self.lodgeIssue(code: code,location: location)
+        self.lodgeError(code: code,location: location)
         return(Argon.Symbol(Argon.nextIndex(named: "#SYM")))
         }
         
@@ -518,7 +533,7 @@ public class ArgonParser
         var upperBound:Argon.Integer = 0
         if self.token.isInteger
             {
-            self.lodgeIssue(code: .integerExpected,location: location)
+            self.lodgeError(code: .integerExpected,location: location)
             }
         else
             {
@@ -532,14 +547,14 @@ public class ArgonParser
         {
         guard self.token.isLeftBrace else
             {
-            self.lodgeIssue(code: .leftBraceExpected,location: self.token.location)
+            self.lodgeError(code: .leftBraceExpected,location: self.token.location)
             return
             }
         self.nextToken()
         closure()
         guard self.token.isRightBrace else
             {
-            self.lodgeIssue(code: .rightBraceExpected,location: self.token.location)
+            self.lodgeError(code: .rightBraceExpected,location: self.token.location)
             return
             }
         self.nextToken()
@@ -549,14 +564,14 @@ public class ArgonParser
         {
         guard self.token.isLeftBrocket else
             {
-            self.lodgeIssue(code: .leftBrocketExpected,location: self.token.location)
+            self.lodgeError(code: .leftBrocketExpected,location: self.token.location)
             return
             }
         self.nextToken()
         closure()
         guard self.token.isRightBrocket else
             {
-            self.lodgeIssue(code: .rightBrocketExpected,location: self.token.location)
+            self.lodgeError(code: .rightBrocketExpected,location: self.token.location)
             return
             }
         self.nextToken()
@@ -566,14 +581,14 @@ public class ArgonParser
         {
         guard self.token.isLeftBracket else
             {
-            self.lodgeIssue(code: .leftBracketExpected,location: self.token.location)
+            self.lodgeError(code: .leftBracketExpected,location: self.token.location)
             return
             }
         self.nextToken()
         closure()
         guard self.token.isRightBracket else
             {
-            self.lodgeIssue(code: .rightBracketExpected,location: self.token.location)
+            self.lodgeError(code: .rightBracketExpected,location: self.token.location)
             return
             }
         self.nextToken()
@@ -583,14 +598,14 @@ public class ArgonParser
         {
         guard self.token.isLeftParenthesis else
             {
-            self.lodgeIssue(code: .leftParenthesisExpected,location: self.token.location)
+            self.lodgeError(code: .leftParenthesisExpected,location: self.token.location)
             return
             }
         self.nextToken()
         closure()
         guard self.token.isRightParenthesis else
             {
-            self.lodgeIssue(code: .rightParenthesisExpected,location: self.token.location)
+            self.lodgeError(code: .rightParenthesisExpected,location: self.token.location)
             return
             }
         self.nextToken()
@@ -629,7 +644,7 @@ public class ArgonParser
             case(.identifier):
                 AssignmentExpression.parse(using: self)
             default:
-                self.lodgeIssue(code: .statementExpected,message: "A statement was expected but '\(self.token.matchString)' was found.",location: self.token.location)
+                self.lodgeError(code: .statementExpected,message: "A statement was expected but '\(self.token.matchString)' was found.",location: self.token.location)
                 self.nextToken()
             }
         }
@@ -669,7 +684,7 @@ public class ArgonParser
             case(.FORK):
                 ForkStatement.parse(using: self)
             default:
-                self.lodgeIssue(code: .statementExpected,location: self.token.location)
+                self.lodgeError(code: .statementExpected,location: self.token.location)
                 self.nextToken()
             }
         }
@@ -697,15 +712,18 @@ public class ArgonParser
             }
         }
         
-    public func lodgeIssue(code: ErrorCode,message: String? = nil,location: Location)
+    public func lodgeError(code: IssueCode,message: String? = nil,location: Location)
         {
-        if location.line == 44
-            {
-            print("halt")
-            }
         var newLocation = location
         newLocation.nodeKey = self.nodeKey
-        self.issues.append(CompilerIssue(code: code, message: message,location: newLocation))
+        self.issues.append(CompilerError(code: code, message: message,location: newLocation))
+        }
+        
+    public func lodgeWarning(code: IssueCode,message: String? = nil,location: Location)
+        {
+        var newLocation = location
+        newLocation.nodeKey = self.nodeKey
+        self.issues.append(CompilerWarning(code: code, message: message,location: newLocation))
         }
 
     public func parseExpression() -> Expression
@@ -720,7 +738,7 @@ public class ArgonParser
         var left = Expression()
         if parser.isNil
             {
-            self.lodgeIssue(code: .invalidExpression,message: "The value '\(self.token.matchString)' could not be parsed.",location: location)
+            self.lodgeError(code: .invalidExpression,message: "The value '\(self.token.matchString)' could not be parsed.",location: location)
             }
         else
             {
@@ -750,7 +768,7 @@ public class ArgonParser
                 }
             else
                 {
-                self.lodgeIssue(code: .argumentNameExpected,location: location)
+                self.lodgeError(code: .argumentNameExpected,location: location)
                 }
             }
         let value = self.parseExpression()
@@ -790,7 +808,7 @@ public class ArgonParser
             }
         else
             {
-            self.lodgeIssue(code: .scopeOperatorExpected,location: location)
+            self.lodgeError(code: .scopeOperatorExpected,location: location)
             }
         let type = self.parseType()
         return(Parameter(definedByPosition: parameterDefinedByPosition,externalName: externalName!,internalName: internalName, type: type))

@@ -9,6 +9,7 @@ import Foundation
 
 public class Argument: NSObject,NSCoding
     {
+    public var location: Location = .zero
     public let name: String
     public let value: Expression
     
@@ -37,3 +38,21 @@ public class Argument: NSObject,NSCoding
     }
 
 public typealias Arguments = Array<Argument>
+
+extension Arguments
+    {
+    public var location: Location
+        {
+        get
+            {
+            .zero
+            }
+        set
+            {
+            for argument in self
+                {
+                argument.location = newValue
+                }
+            }
+        }
+    }

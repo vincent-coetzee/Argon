@@ -157,4 +157,8 @@ public class SourceNode: NSObject,NSCoding,Comparable,Dependent
     public func setTokens(_ tokens: Tokens)
         {
         }
+        
+    public func visit(visitor: Visitor)
+        {
+        }
     }

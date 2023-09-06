@@ -48,9 +48,11 @@ public class WhileStatement: Block
             expression = parser.parseExpression(precedence: 0)
             }
         let whileBlock = Block()
+        whileBlock.location = location
         whileBlock.setParent(block)
         Block.parseBlockInner(block: whileBlock, using: parser)
         let statement = WhileStatement(expression: expression,block: whileBlock)
+        statement.location = location
         statement.addDeclaration(location)
         block.addStatement(statement)
         }

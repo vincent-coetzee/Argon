@@ -42,6 +42,7 @@ public class ForkStatement: Statement
                 }
             }
         let statement = ForkStatement(block: forkBlock!)
+        statement.location = location
         statement.addDeclaration(location)
         block.addStatement(statement)
         }

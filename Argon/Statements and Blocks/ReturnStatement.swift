@@ -26,6 +26,7 @@ public class ReturnStatement: Statement
             expression = parser.parseExpression()
             }
         let statement = ReturnStatement(expression: expression!)
+        statement.location = location
         statement.addDeclaration(location)
         block.addStatement(statement)
         }

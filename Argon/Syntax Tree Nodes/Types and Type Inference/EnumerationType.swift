@@ -31,13 +31,14 @@ public class EnumerationType: StructuredType
         var baseType: TypeNode?
         let name = parser.parseIdentifier(errorCode: .identifierExpected).lastPart
         let enumeration = EnumerationType(name: name)
+        enumeration.location = location
         if parser.token.isScope
             {
             parser.nextToken()
             baseType = parser.parseType()
             if !baseType!.inherits(from: ArgonModule.shared.enumerationBaseType)
                 {
-                parser.lodgeIssue(code: .mustInheritFromEnumerationBase,location: location)
+                parser.lodgeError(code: .mustInheritFromEnumerationBase,location: location)
                 }
             enumeration.setRawType(baseType!)
             }
@@ -67,7 +68,7 @@ public class EnumerationType: StructuredType
                     parser.nextToken()
                     if !parser.token.isInstanceOfEnumerationBase
                         {
-                        parser.lodgeIssue(code: .instanceOfEnumerationBaseExpected,location: localLocation)
+                        parser.lodgeError(code: .instanceOfEnumerationBaseExpected,location: localLocation)
                         }
                     else
                         {
@@ -81,6 +82,7 @@ public class EnumerationType: StructuredType
                     isDefault = true
                     }
                 let someCase = EnumerationCase(name: caseSymbol, associatedTypes: types,instanceValue:  instanceValue)
+                someCase.location = localLocation
                 enumeration.addCase(someCase)
                 if isDefault
                     {

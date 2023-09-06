@@ -11,6 +11,8 @@ public protocol Visitor
     {
     var processingFlag: ProcessingFlags { get }
     
+    func enter(rootModule: RootModule)
+    func exit(rootModule: RootModule)
     func enter(module: Module)
     func exit(module: Module)
     func enter(class: ClassType)
@@ -22,6 +24,8 @@ public protocol Visitor
     func visit(type: TypeNode)
     func enter(function: FunctionType)
     func exit(function: FunctionType)
+    func enter(method: MethodType)
+    func exit(method: MethodType)
     func visit(constant: Constant)
     func visit(variable: Variable)
     func visit(slot: Slot)
@@ -88,6 +92,9 @@ public protocol Visitor
     func exit(whileStatement: WhileStatement)
     func enter(staticStatement: StaticStatement)
     func exit(staticStatement: StaticStatement)
+    
+    func lodgeWarning(code: IssueCode,location: Location,message: String?)
+    func lodgeError(code: IssueCode,location: Location,message: String?)
     }
 
 public protocol Visitable

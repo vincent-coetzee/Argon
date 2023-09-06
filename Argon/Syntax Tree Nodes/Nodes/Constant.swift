@@ -34,10 +34,12 @@ public class Constant: Variable
             }
         else
             {
-            parser.lodgeIssue(code: .constantMustBeInitialised,message: "Constants must be initialised at the same time that they are declared.",location: location)
+            parser.lodgeError(code: .constantMustBeInitialised,message: "Constants must be initialised at the same time that they are declared.",location: location)
             expression = Expression()
             }
+        expression?.location = location
         let constant = Constant(name: name,type: type,expression: expression!)
+        constant.location = location
         parser.currentScope.addNode(constant)
         }
         

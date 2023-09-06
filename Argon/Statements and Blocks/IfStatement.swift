@@ -49,6 +49,7 @@ public class IfStatement: Block
             elseBlock = Block.parseBlock(using: parser)
             }
         let statement = IfStatement(condition: condition,trueBlock: trueBlock)
+        statement.location = location
         statement.elseBlock = elseBlock
         statement.addDeclaration(location)
         block.addStatement(statement)

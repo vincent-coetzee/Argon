@@ -14,6 +14,7 @@ public class EnumerationCase: NSObject,NSCoding
         "p\(self.name.symbolString)_"
         }
         
+    public var location: Location = .zero
     public let name: String
     public let instanceValue: ValueBox
     public var associatedTypes = TypeNodes()

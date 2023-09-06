@@ -61,6 +61,7 @@ public class SourceFileNode: SourceNode
         self.expandedSource = coder.decodeObject(forKey: "expandedSource") as! String
         self.tokens = coder.decodeObject(forKey: "tokens") as! Tokens
         self._compilerIssues = coder.decodeObject(forKey: "compilerIssues") as! CompilerIssues
+        self.module = coder.decodeObject(forKey: "module") as? Module
         super.init(coder: coder)
         self.expandedSource = self.source
         }
@@ -71,6 +72,7 @@ public class SourceFileNode: SourceNode
         coder.encode(self.expandedSource,forKey: "expandedSource")
         coder.encode(self.tokens,forKey: "tokens")
         coder.encode(self._compilerIssues,forKey: "compilerIssues")
+        coder.encode(self.module,forKey: "module")
         super.encode(with: coder)
         }
         
@@ -87,6 +89,11 @@ public class SourceFileNode: SourceNode
     public override func setTokens(_ tokens: Tokens)
         {
         self.tokens = tokens
+        }
+        
+    public func append(compilerIssues issues: CompilerIssues)
+        {
+        self.compilerIssues.append(contentsOf: issues)
         }
     }
     

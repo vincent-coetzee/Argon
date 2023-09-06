@@ -26,4 +26,10 @@ public class FunctionType: CallableTypeNode
         let returnTypeString = self.returnType.isNil ? ArgonModule.shared.voidType.encoding : self.returnType!.encoding
         return("a\(self.name)_\(string)_\(returnTypeString)_")
         }
+        
+    public override func accept(visitor: Visitor)
+        {
+        visitor.enter(function: self)
+        visitor.exit(function: self)
+        }
     }

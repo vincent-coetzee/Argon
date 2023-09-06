@@ -8,6 +8,55 @@
 import Foundation
 import Cocoa
 
+public enum InterfaceAction: Int
+    {
+    case leftSidebarAction = 1
+    case rightSidebarAction = 2
+    case loadAction = 4
+    case saveAction = 8
+    case buildAction = 16
+    case hideIssuesAction = 32
+    case showIssuesAction = 64
+    case compilerNodeAction = 128
+    case cleanAction = 256
+    case runAction = 512
+    case debugAction = 1024
+    case importAction = 2048
+    case exportAction = 4096
+    }
+    
+public struct InterfaceActionSet
+    {
+    private var rawValue: Int = 0
+    
+    public init()
+        {
+        }
+        
+    public init(_ values: Array<InterfaceAction>)
+        {
+        for action in values
+            {
+            self.insert(action)
+            }
+        }
+        
+    public mutating func insert(_ action: InterfaceAction)
+        {
+        self.rawValue |= action.rawValue
+        }
+        
+    public func contains(_ action: InterfaceAction) -> Bool
+        {
+        (self.rawValue & action.rawValue) == action.rawValue
+        }
+        
+    public mutating func remove(_ action: InterfaceAction)
+        {
+        self.rawValue = self.rawValue & ~action.rawValue
+        }
+    }
+    
 public struct BrowserActionSet: OptionSet
     {
     public static let browserActionMenu =

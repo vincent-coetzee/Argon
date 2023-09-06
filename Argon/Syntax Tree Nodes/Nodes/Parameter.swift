@@ -56,6 +56,24 @@ public class Parameter: Variable
 
 public typealias Parameters = Array<Parameter>
 
+extension Parameters
+    {
+    public var location: Location
+        {
+        get
+            {
+            .zero
+            }
+        set
+            {
+            for parameter in self
+                {
+                parameter.location = newValue
+                }
+            }
+        }
+    }
+    
 //extension Parameters
 //    {
 //    public init(arguments: Arguments)

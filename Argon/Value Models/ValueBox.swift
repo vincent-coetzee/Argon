@@ -26,7 +26,6 @@ public enum ValueBox
     case integer(Int64)
     case uInteger(UInt64)
     case string(String)
-    case object(ObjectInstance)
     case enumerationInstance(EnumerationType,EnumerationCase)
     case boolean(Bool)
     case void

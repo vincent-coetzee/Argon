@@ -10,9 +10,11 @@ import Foundation
 public class StaticStatement: Statement
     {
     private let expression: Expression?
+    public let staticVariable: StaticVariable
     
     public static func parse(into block: Block,using parser: ArgonParser)
         {
+        let location = parser.token.location
         parser.nextToken()
         let identifier = parser.parseIdentifier(errorCode: .identifierExpected)
         var expression: Expression?
@@ -28,11 +30,14 @@ public class StaticStatement: Statement
             expression = parser.parseExpression()
             }
         let statement = StaticStatement(name: identifier.lastPart,type: type,expression: expression)
+        statement.location = location
+        block.rootModule.addGloballyInitialisedNode(statement.staticVariable)
         block.addNode(statement)
         }
         
     public class override func parse(using parser: ArgonParser)
         {
+        let location = parser.token.location
         parser.nextToken()
         let identifier = parser.parseIdentifier(errorCode: .identifierExpected)
         var expression: Expression?
@@ -48,11 +53,14 @@ public class StaticStatement: Statement
             expression = parser.parseExpression()
             }
         let statement = StaticStatement(name: identifier.lastPart,type: type,expression: expression)
+        parser.currentScope.rootModule.addGloballyInitialisedNode(statement.staticVariable)
+        statement.location = location
         parser.currentScope.addNode(statement)
         }
         
     public init(name: String,type: TypeNode?,expression: Expression?)
         {
+        self.staticVariable = StaticVariable(name: name, type: type, expression: expression)
         self.expression = expression
         super.init()
         self.setName(name)
@@ -60,13 +68,14 @@ public class StaticStatement: Statement
         
     public required init(coder: NSCoder)
         {
+        self.staticVariable = coder.decodeObject(forKey: "staticVariable") as! StaticVariable
         self.expression = coder.decodeObject(forKey: "expression") as? Expression
         super.init(coder: coder)
         }
         
     public override func encode(with coder: NSCoder)
         {
-        coder.encode(self.type,forKey: "type")
+        coder.encode(self.staticVariable,forKey: "staticVariable")
         coder.encode(self.expression,forKey: "expression")
         super.encode(with: coder)
         }

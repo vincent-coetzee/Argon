@@ -56,13 +56,14 @@ public class AliasedType: StructuredType
         let name = parser.parseIdentifier(errorCode: .identifierExpected)
         if !parser.token.isIs
             {
-            parser.lodgeIssue(code: .isExpected,location: location)
+            parser.lodgeError(code: .isExpected,location: location)
             }
         else
             {
             parser.nextToken()
             }
         let type = parser.parseType()
+        type.location = location
         if parser.token.isLeftParenthesis
             {
             var lowerBound: ValueBox = .none
@@ -81,11 +82,11 @@ public class AliasedType: StructuredType
                     }
                 else
                     {
-                    parser.lodgeIssue(code: .integerOrIdentifierExpected,location: location)
+                    parser.lodgeError(code: .integerOrIdentifierExpected,location: location)
                     }
                 if !parser.token.isRangeOperator
                     {
-                    parser.lodgeIssue(code: .rangeOperatorExpected,location: location)
+                    parser.lodgeError(code: .rangeOperatorExpected,location: location)
                     }
                 else
                     {
@@ -95,7 +96,7 @@ public class AliasedType: StructuredType
                     {
                     if !parser.token.isIntegerValue
                         {
-                        parser.lodgeIssue(code: .integerUpperBoundExpectedAfterIntegerLowerBound,location: location)
+                        parser.lodgeError(code: .integerUpperBoundExpectedAfterIntegerLowerBound,location: location)
                         }
                     else
                         {
@@ -107,7 +108,7 @@ public class AliasedType: StructuredType
                     {
                     if !parser.token.isIdentifier
                         {
-                        parser.lodgeIssue(code: .identifierUpperBoundExpectedAfterIdentifierLowerBound,location: location)
+                        parser.lodgeError(code: .identifierUpperBoundExpectedAfterIdentifierLowerBound,location: location)
                         }
                     else
                         {
@@ -117,14 +118,16 @@ public class AliasedType: StructuredType
                     }
                 else
                     {
-                    parser.lodgeIssue(code: .integerOrIdentifierExpected,location: location)
+                    parser.lodgeError(code: .integerOrIdentifierExpected,location: location)
                     }
                 }
             let subType = SubType(name: name.lastPart,baseType: type,lowerBound: lowerBound,upperBound: upperBound)
+            subType.location = location
             parser.currentScope.addNode(subType)
             return
             }
         let alias = AliasedType(name: name.lastPart, baseType: type)
+        alias.location = location
         parser.currentScope.addNode(alias)
         }
         

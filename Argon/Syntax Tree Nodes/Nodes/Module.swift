@@ -15,6 +15,26 @@ public class Module: CompositeSyntaxTreeNode
         return("v\(encodedName)_")
         }
         
+    public var hasMainMethod: Bool
+        {
+        self.mainMethod.isNotNil
+        }
+        
+    public var mainMethod: MethodType?
+        {
+        for entry in self.symbolEntries.values
+            {
+            for method in entry.methods
+                {
+                if method.name == "main"
+                    {
+                    return(method)
+                    }
+                }
+            }
+        return(nil)
+        }
+        
     public override var module: Module
         {
         self
@@ -24,7 +44,7 @@ public class Module: CompositeSyntaxTreeNode
         {
         true
         }
-
+        
     public override var nodeType: NodeType
         {
         return(.module)
@@ -74,7 +94,7 @@ public class Module: CompositeSyntaxTreeNode
                     }
                 else
                     {
-                    parser.lodgeIssue(code: .identifierAlreadyDefined,location: location)
+                    parser.lodgeError(code: .identifierAlreadyDefined,location: location)
                     return(Module(name: Argon.nextIndex(named: "MODULE_")))
                     }
                 }
@@ -84,7 +104,7 @@ public class Module: CompositeSyntaxTreeNode
                 parser.addNode(module)
                 if lastToken.identifier.isCompoundIdentifier
                     {
-                    parser.lodgeIssue(code: .moduleNameExpected,location: location)
+                    parser.lodgeError(code: .moduleNameExpected,location: location)
                     }
                 return(module)
                 }
@@ -98,6 +118,7 @@ public class Module: CompositeSyntaxTreeNode
     private class func parseModuleContents(using parser: ArgonParser,into module: Module)
         {
         let location = parser.token.location
+        module.location = location
         if parser.expect(tokenType: .leftBrace, error: .leftBraceExpected).isNotNil
             {
             while !parser.token.isRightBrace
@@ -121,22 +142,28 @@ public class Module: CompositeSyntaxTreeNode
                     case(.ENUMERATION):
                         EnumerationType.parse(using: parser)
                     default:
-                        parser.lodgeIssue(code: .moduleEntryExpected,location: location)
+                        parser.lodgeError(code: .moduleEntryExpected,location: location)
                     }
                 }
             }
         }
-        
+    //
+    //
+    // When visiting a regular module we visit
+    // both the node of the entry and the methods
+    // of the entry. In the case of an ArgonModule
+    // accept does nothing because system classes and
+    // methods do not need to be visited. In the case
+    // of a RootModule only the nodes are visited
+    // because there should not be any methods in the
+    // RootModule.
+    //
     public override func accept(visitor: Visitor)
         {
-        super.accept(visitor: visitor)
         visitor.enter(module: self)
         for entry in self.symbolEntries.values
             {
-            if let node = entry.node
-                {
-                node.accept(visitor: visitor)
-                }
+            entry.node?.accept(visitor: visitor)
             for method in entry.methods
                 {
                 method.accept(visitor: visitor)
@@ -147,5 +174,3 @@ public class Module: CompositeSyntaxTreeNode
     }
 
 public typealias Modules = Array<Module>
-
-

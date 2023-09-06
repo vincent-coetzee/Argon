@@ -16,6 +16,7 @@ public class MethodType: CallableTypeNode
         
     public override class func parse(using parser: ArgonParser)
         {
+        let location = parser.token.location
         let name = parser.parseIdentifier(errorCode: .identifierExpected).lastPart
         var parameters = Parameters()
         parser.parseParentheses
@@ -27,6 +28,7 @@ public class MethodType: CallableTypeNode
                 }
             }
         let block = Block()
+        block.location = location
         for parameter in parameters
             {
             block.addLocal(parameter)
@@ -39,6 +41,7 @@ public class MethodType: CallableTypeNode
             }
         Block.parseBlockInner(block: block, using: parser)
         let method = MethodType(name: name)
+        method.location = location
         method.setParameters(parameters)
         method.setBlock(block)
         method.setReturnType(returnType)
@@ -92,6 +95,14 @@ public class MethodType: CallableTypeNode
         {
         self.block = block
         block.setParent(self)
+        }
+        
+    public override func accept(visitor: Visitor)
+        {
+        visitor.enter(method: self)
+        visitor.enter(block: self.block)
+        visitor.exit(block: self.block)
+        visitor.exit(method: self)
         }
     }
 

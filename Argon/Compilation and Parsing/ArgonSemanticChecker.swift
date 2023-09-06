@@ -9,10 +9,34 @@ import Foundation
 
 public class ArgonSemanticChecker: Visitor
     {
+    internal var compilerIssues = CompilerIssues()
+    internal var hasMainMethod = false
     
     public var processingFlag: ProcessingFlags
         {
         .kSemanticsChecked
+        }
+        
+    public func lodgeError(code: IssueCode,location: Location,message: String? = nil)
+        {
+        let error = CompilerError(code: code, message: message,location: location)
+        self.compilerIssues.append(error)
+        }
+        
+    public func lodgeWarning(code: IssueCode,location: Location,message: String? = nil)
+        {
+        let error = CompilerWarning(code: code, message: message,location: location)
+        self.compilerIssues.append(error)
+        }
+        
+    public func enter(rootModule: RootModule)
+        {
+        print("Entering rootModule \(rootModule.name)")
+        }
+    
+    public func exit(rootModule: RootModule)
+        {
+        print("Exiting rootModule \(rootModule.name)")
         }
         
     public func enter(module: Module)
@@ -23,6 +47,14 @@ public class ArgonSemanticChecker: Visitor
     public func exit(module: Module)
         {
         print("Exiting module \(module.name)")
+        }
+        
+    public func enter(method: MethodType)
+        {
+        }
+        
+    public func exit(method: MethodType)
+        {
         }
     
     public func enter(class: ClassType)
@@ -388,6 +420,17 @@ public class ArgonSemanticChecker: Visitor
     public func exit(staticStatement: StaticStatement)
         {
         
+        }
+        
+    public func checkPrimaryModules(_ modules: Modules)
+        {
+        let uniqueModules = Array(Set<Module>(modules))
+        let mainMethodCount = uniqueModules.reduce(0) { $0 + ($1.hasMainMethod ? 1 : 0) }
+        if mainMethodCount > 1
+            {
+            self.lodgeError(code: .multipleMainMethodsFound,location: Location(nodeKey: -1, line: -1, start: 0, stop: 0))
+            }
+        self.hasMainMethod = mainMethodCount == 1
         }
     
     }

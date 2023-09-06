@@ -26,7 +26,7 @@ public class ErrorToken: Token
         
     public let issue: CompilerIssue
     
-    init(location: Location,code: ErrorCode,message: String)
+    init(location: Location,code: IssueCode,message: String)
         {
         self.issue = CompilerIssue(code: code, message: message)
         super.init(location: location,string: "")

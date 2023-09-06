@@ -66,11 +66,15 @@ public class SelectStatement: Statement
             {
             repeat
                 {
-                selectBlocks.append(self.parseSelectBlock(using: parser))
+                let blockLocation = parser.token.location
+                let block = self.parseSelectBlock(using: parser)
+                block.location = blockLocation
+                selectBlocks.append(block)
                 }
             while !parser.token.isEnd && !parser.token.isRightBrace
             }
         let statement = SelectStatement(expression: expression)
+        statement.location = location
         statement.selectBlocks = selectBlocks
         statement.addDeclaration(location)
         block.addStatement(statement)
@@ -81,7 +85,7 @@ public class SelectStatement: Statement
         let location = parser.token.location
         if !parser.token.isWhen
             {
-            parser.lodgeIssue( code: .whenExpected, location: location)
+            parser.lodgeError( code: .whenExpected, location: location)
             }
         else
             {

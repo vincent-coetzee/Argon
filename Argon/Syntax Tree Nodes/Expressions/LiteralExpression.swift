@@ -65,12 +65,6 @@ public class LiteralExpression: Expression
         super.init()
         }
         
-    public init(value objectInstance: ObjectInstance)
-        {
-        self.value = .object(objectInstance)
-        super.init()
-        }
-        
     public init(enumeration: EnumerationType,enumerationCase: EnumerationCase)
         {
         self.value = .enumerationInstance(enumeration,enumerationCase)
@@ -104,9 +98,9 @@ extension NSCoder
                 self.encode(2,forKey: "\(key)_index")
                 self.encode(enumeration,forKey: "\(key)_enumerationInstance_enumeration")
                 self.encode(aCase,forKey: "\(key)_enumerationInstance_enumerationCase")
-            case(.object(let object)):
-                self.encode(3,forKey: "\(key)_index")
-                self.encode(object,forKey: "\(key)_object")
+//            case(.object(let object)):
+//                self.encode(3,forKey: "\(key)_index")
+//                self.encode(object,forKey: "\(key)_object")
             case(.float(let float)):
                 self.encode(4,forKey: "\(key)_index")
                 self.encode(float,forKey: "\(key)_float")
@@ -185,8 +179,8 @@ extension NSCoder
                 return(.integer(self.decodeInt64(forKey: "\(key)_integer")))
             case(2):
                 return(.enumerationInstance(self.decodeObject(forKey: "\(key)_enumerationInstance_enumeration") as! EnumerationType,self.decodeObject(forKey: "\(key)_enumerationInstance_enumerationCase") as! EnumerationCase))
-            case(3):
-                return(.object(self.decodeObject(forKey: "\(key)_object") as! ObjectInstance))
+//            case(3):
+//                return(.object(self.decodeObject(forKey: "\(key)_object") as! ObjectInstance))
             case(4):
                 return(.float(self.decodeDouble(forKey: "\(key)_float")))
             case(5):

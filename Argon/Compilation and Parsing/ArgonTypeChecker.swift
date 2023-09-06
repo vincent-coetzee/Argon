@@ -9,11 +9,29 @@ import Foundation
 
 public class ArgonTypeChecker: Visitor
     {
+    internal var compilerIssues = CompilerIssues()
+    
     public var processingFlag: ProcessingFlags
         {
         .kTypeChecked
         }
         
+    public func enter(rootModule: RootModule)
+        {
+        }
+        
+    public func exit(rootModule: RootModule)
+        {
+        }
+        
+    public func enter(method: MethodType)
+        {
+        }
+        
+    public func exit(method: MethodType)
+        {
+        }
+    
     public func enter(module: Module)
         {
         print("Entering module \(module.name)")
@@ -387,5 +405,17 @@ public class ArgonTypeChecker: Visitor
     public func exit(staticStatement: StaticStatement)
         {
         
+        }
+        
+    public func lodgeWarning(code: IssueCode, location: Location, message: String?)
+        {
+        }
+    
+    public func lodgeError(code: IssueCode, location: Location, message: String?)
+        {
+        }
+    
+    public func setNodeKey(_ key: Int?)
+        {
         }
     }

@@ -115,13 +115,13 @@ public class ClassType: StructuredType
         if !parser.token.isIdentifier
             {
             name = Argon.nextIndex(named: "CLASS")
-            parser.lodgeIssue(code: .identifierExpected,location: location)
+            parser.lodgeError(code: .identifierExpected,location: location)
             }
         else
             {
             if parser.token.identifier.isCompoundIdentifier
                 {
-                parser.lodgeIssue(code: .singleIdentifierExpected,location: location)
+                parser.lodgeError(code: .singleIdentifierExpected,location: location)
                 }
             name = parser.token.identifier.description
             parser.nextToken()
@@ -236,7 +236,7 @@ public class ClassType: StructuredType
             }
         if !parser.token.isSlot
             {
-            parser.lodgeIssue(code: .slotExpectedAfterRead,message: "'SLOT' expected.",location: location)
+            parser.lodgeError(code: .slotExpectedAfterRead,message: "'SLOT' expected.",location: location)
             }
         else
             {
@@ -245,7 +245,7 @@ public class ClassType: StructuredType
         var identifier = parser.parseIdentifier(errorCode: .identifierExpected,message: "Identifier expected after 'SLOT'.")
         if identifier.isCompoundIdentifier
             {
-            parser.lodgeIssue(code: .singleIdentifierExpected,message: "An identifier path is not allowed here.",location: location)
+            parser.lodgeError(code: .singleIdentifierExpected,message: "An identifier path is not allowed here.",location: location)
             }
         let name = identifier.lastPart
         var type: TypeNode = SubstitutionSet.newTypeVariable()
@@ -256,7 +256,7 @@ public class ClassType: StructuredType
             }
         else if slot.isVirtualSlot
             {
-            parser.lodgeIssue(code: .vitualSlotMustSpecifyType,location: location)
+            parser.lodgeError(code: .vitualSlotMustSpecifyType,location: location)
             }
         var initialExpression: Expression?
         if parser.token.isAssign
@@ -268,7 +268,7 @@ public class ClassType: StructuredType
                 }
             else
                 {
-                parser.lodgeIssue(code: .virtualSlotNotAllowedInitialExpression,location: location)
+                parser.lodgeError(code: .virtualSlotNotAllowedInitialExpression,location: location)
                 }
             }
         var readBlock: Block?
@@ -282,7 +282,7 @@ public class ClassType: StructuredType
                 }
             else
                 {
-                parser.lodgeIssue(code: .readBlockExpectedForVirtualSlot,location: location)
+                parser.lodgeError(code: .readBlockExpectedForVirtualSlot,location: location)
                 }
             if slot.isReadWriteSlot
                 {
@@ -293,7 +293,7 @@ public class ClassType: StructuredType
                     }
                 else
                     {
-                    parser.lodgeIssue(code: .writeBlockExpectedForVirtualSlot,location: location)
+                    parser.lodgeError(code: .writeBlockExpectedForVirtualSlot,location: location)
                     }
                 }
             }
@@ -311,7 +311,7 @@ public class ClassType: StructuredType
         let block = Block.parseBlock(using: parser)
         if !block.containsReturnStatement
             {
-            parser.lodgeIssue(code: .returnExpectedInReadBlock,location: location)
+            parser.lodgeError(code: .returnExpectedInReadBlock,location: location)
             }
         return(block)
         }
@@ -345,12 +345,12 @@ public class ClassType: StructuredType
                     }
                 else
                     {
-                    parser.lodgeIssue(code: .classExpectedButOtherSymbolFound,location: location)
+                    parser.lodgeError(code: .classExpectedButOtherSymbolFound,location: location)
                     }
                 }
             else
                 {
-                parser.lodgeIssue(code: .undefinedClass,location: location)
+                parser.lodgeError(code: .undefinedClass,location: location)
                 }
             }
         while parser.token.isComma && !parser.token.isEnd
