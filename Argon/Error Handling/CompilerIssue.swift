@@ -25,7 +25,7 @@ public enum IssueCode: String
     case couldNotReadFile                                           = "could not read file."
     case couldNotWriteFile                                          = "could not write file."
     
-    case discreteTypeExpected                                       = "discrete type expected."
+    case discreteClassExpected                                      = "discrete class expected."
     case deformAlreadyDefined                                       = "'DEFORM' already defined."
     
     case enumerationCaseExpected                                    = "enumeration case expected."
@@ -45,7 +45,7 @@ public enum IssueCode: String
     case invalidFileType                                            = "invalid file type."
     case invalidLowerBound                                          = "invalid lower bound."
     case invalidEnumerationCase                                     = "invalid enumeration case."
-    case invalidTypeVariables                                       = "invalid type variables."
+//    case invalidTypeVariables                                       = "invalid type variables."
     case invalidGenericArguments                                    = "invalid generic arguments."
     case invalidAssignmentExpression                                = "invalid assignment expression."
     case isExpected                                                 = "'IS' expected."
@@ -87,14 +87,11 @@ public enum IssueCode: String
     case symbolExpected                                             = "symbol expected."
     case statementExpected                                          = "statement expected."
     
-    case typeOrAssignmentExpected                                   = "type reference or assignment expected."
-
     case undefinedSymbol                                            = "undefined symbol."
-    case undefinedType                                              = "undefined type."
     case undefinedClass                                             = "undefined class."
-    case usingGenericTypesOnNonGenericType                          = "generic types used on non generic types."
+    case usingGenericClassesOnNonGenericClass                       = "generic classes used on non generic class."
     
-    case vitualSlotMustSpecifyType                                  = "virtual slot must specify type."
+    case vitualSlotMustSpecifyClass                                 = "virtual slot must specify class."
     case virtualSlotNotAllowedInitialExpression                     = "virtual slot not allowed initial value."
     
     case whenExpected                                               = "'WHEN' expected."

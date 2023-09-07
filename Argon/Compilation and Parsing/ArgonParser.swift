@@ -303,6 +303,7 @@ public class ArgonParser
     public func parseType() -> TypeNode
         {
         let location = self.token.location
+        self.token.setStyleElement(.colorType)
         let identifier = self.parseIdentifier(errorCode: .identifierExpected)
         let typeName = identifier.lastPart
         var type: TypeNode = TypeNode(name: "")
@@ -340,7 +341,7 @@ public class ArgonParser
             }
         else
             {
-            self.lodgeError(code: .undefinedType,message: "Type '\(identifier.description)' is undefined.",location: location)
+            self.lodgeError(code: .undefinedClass,message: "Class '\(identifier.description)' is undefined.",location: location)
             }
         return(type)
         }
@@ -365,7 +366,7 @@ public class ArgonParser
                 {
                 if type.genericTypes.count != typeValues.count
                     {
-                    self.lodgeError(code: .invalidGenericArguments,message: "Type '\(typeName)' expects \(type.genericTypes.count) types but \(typeValues.count) were found.",location:location)
+                    self.lodgeError(code: .invalidGenericArguments,message: "Class '\(typeName)' expects \(type.genericTypes.count) types but \(typeValues.count) were found.",location:location)
                     }
                 if type.instanceType.isNotNil
                     {
@@ -375,13 +376,13 @@ public class ArgonParser
                 }
             else
                 {
-                self.lodgeError(code: .usingGenericTypesOnNonGenericType,message: "The type '\(typeName)' does not have generic parameters so it can't be instantiated.",location: location)
+                self.lodgeError(code: .usingGenericClassesOnNonGenericClass,message: "The class '\(typeName)' does not have generic parameters so it can't be instantiated.",location: location)
                 }
             return(type)
             }
         else
             {
-            self.lodgeError(code: .undefinedType,message: "The type '\(typeName)' is not defined.",location: location)
+            self.lodgeError(code: .undefinedClass,message: "The class '\(typeName)' is not defined.",location: location)
             return(TypeNode(name: typeName))
             }
         }
@@ -494,7 +495,7 @@ public class ArgonParser
                 }
             else
                 {
-                self.lodgeError(code: .discreteTypeExpected,location: location)
+                self.lodgeError(code: .discreteClassExpected,location: location)
                 }
             }
         return(Argon.ArrayIndex.none)

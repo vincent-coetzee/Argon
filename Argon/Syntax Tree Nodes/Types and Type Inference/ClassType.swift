@@ -256,7 +256,7 @@ public class ClassType: StructuredType
             }
         else if slot.isVirtualSlot
             {
-            parser.lodgeError(code: .vitualSlotMustSpecifyType,location: location)
+            parser.lodgeError(code: .vitualSlotMustSpecifyClass,location: location)
             }
         var initialExpression: Expression?
         if parser.token.isAssign

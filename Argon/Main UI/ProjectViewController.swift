@@ -385,10 +385,10 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         {
         if self.selectedSourceNode.isNotNil
             {
-//            self.sourceView.removeDependent(self.selectedSourceNode)
+            self.sourceView.removeDependent(self.selectedSourceNode)
             }
         self.selectedSourceNode = sourceNode
-//        self.sourceView.addDependent(sourceNode)
+        self.sourceView.addDependent(sourceNode)
         if sourceNode.isSourceFileNode
             {
             let sourceFileNode = sourceNode as! SourceFileNode
@@ -483,7 +483,7 @@ extension ProjectViewController: NSOutlineViewDataSource
     
 extension ProjectViewController: NSOutlineViewDelegate
     {
-    public func outlineViewSelectionDidChange(_ notification: Notification)
+    @MainActor public func outlineViewSelectionDidChange(_ notification: Notification)
         {
         let row = self.outliner.selectedRow
         guard row != -1 else

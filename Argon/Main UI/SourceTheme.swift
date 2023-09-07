@@ -129,7 +129,7 @@ public class SourceTheme
 //        self.styles[.colorTint] = NSColor.argonLivingCoral
 
         self.styles[.colorIdentifier] = NSColor.argonThemePink
-        self.styles[.colorInteger] = NSColor.argonZomp
+        self.styles[.colorInteger] = NSColor.argonGreenSea
         self.styles[.colorIssue] = NSColor.argonBrightYellowCrayola
         self.styles[.colorIssueText] = NSColor.black
         
@@ -144,7 +144,7 @@ public class SourceTheme
         
         self.styles[.colorName] = NSColor.argonXIvory
         
-        self.styles[.colorOperator] = NSColor.argonSalmonPink
+        self.styles[.colorOperator] = NSColor.argonFulvous
         self.styles[.colorOutlineBackground] = NSColor.windowBackgroundColor
         
         self.styles[.colorProjectControls] = NSColor.argonWhite40
@@ -152,7 +152,7 @@ public class SourceTheme
         self.styles[.colorSet] = NSColor.argonOrangeClownFish
         self.styles[.colorSystemClass] = NSColor.argonBrightYellowCrayola
         self.styles[.colorSlot] = NSColor.argonCoral
-        self.styles[.colorString] = NSColor.argonXBlue
+        self.styles[.colorString] = NSColor.argonLivingCoral
         self.styles[.colorSymbol] = NSColor.argonSalmonPink
         self.styles[.colorSystemEnumeration] = NSColor.argonDeepOrange
         self.styles[.colorSystemAliasedType] = NSColor.argonPomelo

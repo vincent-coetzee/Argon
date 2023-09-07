@@ -442,7 +442,7 @@ public class Token: NSObject,NSCoding
         false
         }
         
-    public let location: Location
+    public private(set) var location: Location = .zero
     public var matchString: String = ""
     public var issues = CompilerIssues()
     

@@ -20,7 +20,7 @@ public class ArgonScanner
     private var sourceCharacterCount: Int
     private var sourceIndex: String.Index
     private var sourceLine: Int = 1
-    private let operatorCharacters = CharacterSet(charactersIn: "!$%^&*-+=:;\\\\|<>?/.,~@")
+    private let operatorCharacters = CharacterSet(charactersIn: "!$%^&*-+=:;|<>?/.,~@")
     private let brackets = CharacterSet(charactersIn: "()[]{}")
     private let identifierStartCharacters = CharacterSet.letters.union(CharacterSet(charactersIn: "\\"))
     private let identifierCharacters = CharacterSet.letters.union(CharacterSet.decimalDigits).union(CharacterSet(charactersIn: "_!?\\"))
@@ -53,7 +53,7 @@ public class ArgonScanner
         self.currentCharacter = self.source.unicodeScalars[self.sourceIndex]
         self.offset += 1
         self.sourceIndex = self.source.index(after: self.sourceIndex)
-        if self.currentCharacter == "\n"
+        if self.currentCharacter.isNewLine
             {
             self.sourceLine += 1
             }
@@ -70,7 +70,7 @@ public class ArgonScanner
         self.currentCharacter = self.source.unicodeScalars[self.sourceIndex]
         self.offset += 1
         self.sourceIndex = self.source.index(after: self.sourceIndex)
-        if self.currentCharacter == "\n"
+        if self.currentCharacter.isNewLine
             {
             self.sourceLine += 1
             return(self.nextCharacter())
@@ -81,13 +81,13 @@ public class ArgonScanner
     public func scanUntilEndOfLine() -> String
         {
         self.nextDirtyCharacter()
-        var string = String()
-        while self.currentCharacter != "\n" && !self.atEnd
+        var string = "//"
+        while self.currentCharacter.isNotNewLine && !self.atEnd
             {
             string += String(self.currentCharacter)
             self.nextDirtyCharacter()
             }
-        if self.currentCharacter == "\n"
+        if self.currentCharacter.isNewLine
             {
             self.nextCharacter()
             }
@@ -98,13 +98,15 @@ public class ArgonScanner
         {
         self.nextDirtyCharacter()
         self.nextDirtyCharacter()
-        var string = String("/*")
+        var string = "/*"
         while self.sourcePrefix(length: 2) != "*/" && !self.atEnd
             {
             string += String(self.currentCharacter)
             self.nextDirtyCharacter()
             }
         string.append("*/")
+        self.nextCharacter()
+        self.nextCharacter()
         return(string)
         }
         
@@ -113,7 +115,9 @@ public class ArgonScanner
         var tokens = Tokens()
         while !self.atEnd
             {
-            tokens.append(self.scanToken())
+            let token = self.scanToken()
+            tokens.append(token)
+            print(token)
             }
         return(tokens)
         }
@@ -125,12 +129,16 @@ public class ArgonScanner
             return(EndToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: ""))
             }
         self.startOffset = offset - 1
-        if CharacterSet.whitespaces.contains(self.currentCharacter)
+        if CharacterSet.whitespacesAndNewlines.contains(self.currentCharacter)
             {
             self.scanWhitespace()
             return(self.scanToken())
             }
         let prefix = self.sourcePrefix(length: 2)
+        if prefix == "\\"
+            {
+            print("halt")
+            }
         if prefix == "/*" || prefix == "//"
             {
             return(self.scanComment())
@@ -211,10 +219,14 @@ public class ArgonScanner
     private func scanIdentifier() -> Token
         {
         var identifier = String()
+        if self.sourcePrefix(length: 2)  == "\\"
+            {
+            print("halt")
+            }
         while self.identifierCharacters.contains(self.currentCharacter) && !self.atEnd
             {
-            identifier.append(String(self.currentCharacter))
-            self.nextCharacter()
+            identifier.append(self.currentCharacter)
+            self.nextDirtyCharacter()
             }
         let location = Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset)
         if KeywordToken.isKeyword(identifier)
@@ -362,7 +374,7 @@ public class ArgonScanner
         
     private func scanWhitespace()
         {
-        while CharacterSet.whitespaces.contains(self.currentCharacter) && !self.atEnd
+        while CharacterSet.whitespacesAndNewlines.contains(self.currentCharacter) && !self.atEnd
             {
             self.nextCharacter()
             }
