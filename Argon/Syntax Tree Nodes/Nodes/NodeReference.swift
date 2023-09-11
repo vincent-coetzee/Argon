@@ -65,6 +65,7 @@ extension NSCoder
         for reference in references
             {
             self.encode(reference,forKey: key + "\(index)")
+            index += 1
             }
         }
         

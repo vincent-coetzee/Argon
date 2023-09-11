@@ -65,6 +65,7 @@ public enum TokenType: Int
     
     case identifier
     case IF
+    case IN
     case IMPORT
     case integer
     case INTO
@@ -139,6 +140,7 @@ public enum TokenType: Int
     
     case SELECT
     case separator
+    case semicolon
     case set
     case SLOT
     case SIGNAL
@@ -412,6 +414,11 @@ public class Token: NSObject,NSCoding
         false
         }
         
+    public var isSemicolon: Bool
+        {
+        self.matchString == ";"
+        }
+        
     public var dateTimeValue: Argon.DateTime
         {
         fatalError("This should have been invoked on Token")
@@ -479,6 +486,21 @@ public class Token: NSObject,NSCoding
     public var isRightParenthesis: Bool
         {
         false
+        }
+        
+    public var isFor: Bool
+        {
+        self.matchString == "FOR"
+        }
+        
+    public var isLoop: Bool
+        {
+        self.matchString == "LOOP"
+        }
+        
+    public var isIn: Bool
+        {
+        self.matchString == "IN"
         }
         
     public var isLeftBrace: Bool

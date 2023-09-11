@@ -59,34 +59,21 @@ public class HandleStatement: Statement
                 }
             while parser.token.isComma && !parser.token.isEnd
             }
-        var identifier: String!
+        var identifier: Identifier!
         var handleBlock: Block!
         var variable: Variable!
         parser.parseBraces
             {
-            if !parser.token.isInto
-                {
-                parser.lodgeError( code: .intoExpected, location: location)
-                }
-            else
+            if parser.token.isInto
                 {
                 parser.nextToken()
-                }
-            parser.parseParentheses
-                {
-                if !parser.token.isIdentifier
+                parser.parseParentheses
                     {
-                    parser.lodgeError( code: .identifierExpected, location: location)
-                    identifier = Argon.nextIndex(named: "symbolValue")
-                    }
-                else
-                    {
-                    identifier = parser.token.identifier.lastPart
-                    parser.nextToken()
+                    identifier = parser.parseIdentifier(errorCode: .identifierExpected)
                     }
                 }
             handleBlock = Block()
-            variable = Variable(name: identifier,type: ArgonModule.shared.symbolType,expression: nil)
+            variable = InductionVariable(name: identifier.lastPart,type: ArgonModule.shared.symbolType,expression: nil)
             handleBlock.addLocal(variable)
             Block.parseBlockInner(block: handleBlock,using: parser)
             }

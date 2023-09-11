@@ -736,13 +736,13 @@
                                 <toolbarItem implicitItemIdentifier="NSToolbarPrintItem" id="0Pz-rP-lCt"/>
                                 <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="MeC-M0-CzF"/>
                                 <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="SaC-TI-ewb"/>
-                                <toolbarItem implicitItemIdentifier="ED19AF81-0292-4596-A42C-3B379458DF77" explicitItemIdentifier="build" label="Build" paletteLabel="Build" toolTip="Build this project" tag="-1" bordered="YES" sizingBehavior="auto" id="hcm-BS-cn1">
+                                <toolbarItem implicitItemIdentifier="ED19AF81-0292-4596-A42C-3B379458DF77" explicitItemIdentifier="build" label="Build" paletteLabel="Build" toolTip="Build this project" tag="1" bordered="YES" sizingBehavior="auto" id="hcm-BS-cn1">
                                     <imageReference key="image" image="hammer.fill" catalog="system" symbolScale="default"/>
                                     <connections>
                                         <action selector="onBuildClicked:" target="6f7-a7-6o1" id="w6K-g1-Jco"/>
                                     </connections>
                                 </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="F5639CAB-FC95-4E84-9BDE-4CD9270740B7" explicitItemIdentifier="parse" label="Parse" paletteLabel="Parse" toolTip="Parse all source files" tag="-1" bordered="YES" sizingBehavior="auto" id="2xL-mB-pcx">
+                                <toolbarItem implicitItemIdentifier="F5639CAB-FC95-4E84-9BDE-4CD9270740B7" explicitItemIdentifier="parse" label="Parse" paletteLabel="Parse" toolTip="Parse all source files" tag="2" bordered="YES" sizingBehavior="auto" id="2xL-mB-pcx">
                                     <imageReference key="image" image="screwdriver.fill" catalog="system" symbolScale="default"/>
                                     <connections>
                                         <action selector="onParseClicked:" target="6f7-a7-6o1" id="yNu-E6-I89"/>
@@ -766,7 +766,7 @@
                                         <action selector="onDebugClicked:" target="6f7-a7-6o1" id="JR1-lT-sPF"/>
                                     </connections>
                                 </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="19AE564D-CFCA-42C4-9580-E37DCB1749C2" explicitItemIdentifier="read" label="Load" paletteLabel="Load" toolTip="Load a project" tag="-1" bordered="YES" id="nHW-jx-wnX">
+                                <toolbarItem implicitItemIdentifier="19AE564D-CFCA-42C4-9580-E37DCB1749C2" explicitItemIdentifier="load" label="Load" paletteLabel="Load" toolTip="Load a project" tag="-1" bordered="YES" id="nHW-jx-wnX">
                                     <imageReference key="image" image="square.and.arrow.up" catalog="system" symbolScale="default"/>
                                     <size key="minSize" width="27" height="25"/>
                                     <size key="maxSize" width="27" height="25"/>
@@ -782,7 +782,7 @@
                                         <action selector="onSaveClicked:" target="6f7-a7-6o1" id="YwL-Ep-St6"/>
                                     </connections>
                                 </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="B7C08D13-B4DC-4BD7-AAF4-6394781BEC69" label="Show" paletteLabel="Show" toolTip="Show all compiler issues" tag="-1" bordered="YES" id="vzQ-JE-dYj">
+                                <toolbarItem implicitItemIdentifier="B7C08D13-B4DC-4BD7-AAF4-6394781BEC69" explicitItemIdentifier="show" label="Show" paletteLabel="Show" toolTip="Show all compiler issues" tag="-1" bordered="YES" id="vzQ-JE-dYj">
                                     <imageReference key="image" image="eye" catalog="system" symbolScale="default"/>
                                     <size key="minSize" width="33" height="25"/>
                                     <size key="maxSize" width="33" height="25"/>
@@ -790,7 +790,7 @@
                                         <action selector="onShowIssuesClicked:" target="6f7-a7-6o1" id="uH9-r8-r7T"/>
                                     </connections>
                                 </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="20960F55-D386-4EBF-A172-61D31820C742" label="Import" paletteLabel="Import" tag="-1" bordered="YES" id="jog-VP-KpF">
+                                <toolbarItem implicitItemIdentifier="20960F55-D386-4EBF-A172-61D31820C742" explicitItemIdentifier="import" label="Import" paletteLabel="Import" tag="-1" bordered="YES" id="jog-VP-KpF">
                                     <imageReference key="image" image="rectangle.portrait.and.arrow.right" catalog="system" symbolScale="default"/>
                                     <size key="minSize" width="30" height="25"/>
                                     <size key="maxSize" width="30" height="25"/>
@@ -842,9 +842,9 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <subviews>
                                             <scrollView autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cme-zL-tkg">
-                                                <rect key="frame" x="0.0" y="0.0" width="278" height="519"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="258" height="519"/>
                                                 <clipView key="contentView" id="lcR-PL-wMj">
-                                                    <rect key="frame" x="1" y="1" width="276" height="517"/>
+                                                    <rect key="frame" x="1" y="1" width="256" height="517"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="24" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="25" outlineTableColumn="Yjf-gi-ZVr" id="qTq-mR-y7V">
@@ -895,7 +895,7 @@
                                                     </subviews>
                                                 </clipView>
                                                 <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="AMd-30-E1b">
-                                                    <rect key="frame" x="1" y="502" width="276" height="16"/>
+                                                    <rect key="frame" x="1" y="502" width="256" height="16"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                                 <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="lED-p5-k2F">
@@ -916,7 +916,7 @@
                                         <autoresizingMask key="autoresizingMask"/>
                                         <subviews>
                                             <customView ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7kj-Fz-HQr" customClass="SourceCodeEditingView" customModule="Argon" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="297" height="519"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="317" height="519"/>
                                             </customView>
                                         </subviews>
                                         <constraints>

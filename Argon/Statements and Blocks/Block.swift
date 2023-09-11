@@ -65,6 +65,10 @@ public class Block: Statement
                 SignalStatement.parse(into: block,using: parser)
             case(.FORK):
                 ForkStatement.parse(into: block,using: parser)
+            case(.FOR):
+                ForStatement.parse(into: block,using: parser)
+            case(.LOOP):
+                LoopStatement.parse(into: block,using: parser)
             case(.RETURN):
                 ReturnStatement.parse(into: block,using: parser)
             case(.STATIC):
@@ -129,6 +133,7 @@ public class Block: Statement
     public func addStatement(_ statement: Statement)
         {
         self.statements.append(statement)
+        statement.setParent(self)
         }
         
     public func addLocal(_ variable: Variable)

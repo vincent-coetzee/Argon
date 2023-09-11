@@ -44,3 +44,9 @@ public class Variable: SyntaxTreeNode
     }
 
 public typealias Variables = Array<Variable>
+
+public class InductionVariable: Variable
+    {
+    }
+
+public typealias InductionVariables = Array<InductionVariable>

@@ -414,6 +414,14 @@ extension ProjectViewController: NSToolbarItemValidation
     {
     func validateToolbarItem(_ item: NSToolbarItem) -> Bool
         {
+        if item.itemIdentifier == NSToolbarItem.Identifier(rawValue: "show")
+            {
+            if let node = self.selectedSourceNode,node.isSourceFileNode
+                {
+                return(true)
+                }
+            return(false)
+            }
         return(true)
         }
     }
@@ -618,6 +626,7 @@ extension ProjectViewController
         item.toolTip = "Hide all compiler issues"
         item.label = "Hide"
         item.action = #selector(self.onHideIssuesClicked)
+        self.sourceView.showAllCompilerIssues()
         }
         
     @IBAction public func onHideIssuesClicked(_ sender: Any?)
@@ -627,6 +636,7 @@ extension ProjectViewController
         item.toolTip = "Show all compiler issues"
         item.label = "Show"
         item.action = #selector(self.onShowIssuesClicked)
+        self.sourceView.hideAllCompilerIssues()
         }
         
     @IBAction public func onLoadClicked(_ sender: Any?)

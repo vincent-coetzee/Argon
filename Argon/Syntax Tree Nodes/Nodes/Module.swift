@@ -62,7 +62,7 @@ public class Module: CompositeSyntaxTreeNode
             {
             return(nil)
             }
-        let name = parser.token.identifier.description
+//        let name = parser.token.identifier.description
         parser.nextToken()
 //        while !parser.token.isImport && !parser.token.isEnd
         fatalError()

@@ -92,6 +92,10 @@ public protocol Visitor
     func exit(whileStatement: WhileStatement)
     func enter(staticStatement: StaticStatement)
     func exit(staticStatement: StaticStatement)
+    func enter(forStatement: ForStatement)
+    func exit(forStatement: ForStatement)
+    func enter(loopStatement: LoopStatement)
+    func exit(loopStatement: LoopStatement)
     
     func lodgeWarning(code: IssueCode,location: Location,message: String?)
     func lodgeError(code: IssueCode,location: Location,message: String?)

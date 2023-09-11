@@ -14,7 +14,7 @@ class LeftSidebarButtonController: NSTitlebarAccessoryViewController
         didSet
             {
             var frame = self.view.frame
-            let width = max(45,self.rightOffset - (15 * 6))
+//            let width = max(45,self.rightOffset - (15 * 6))
 //            frame.size.width = width
             frame.size.width = 120
             self.view.frame = frame

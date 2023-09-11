@@ -8,7 +8,7 @@
 import Foundation
 
 fileprivate let _Keywords = ["CLASS","CONSTANT","DEFORM","DYNAMIC","ELSE","ENTRY","ENUMERATION","EXIT",
-                            "FALSE","FOR","FROM","FREE","FORM","FUNCTION","IF","HANDLE","IMPORT","INTO",
+                            "FALSE","FOR","FROM","FREE","FORM","FUNCTION","IF","IN","HANDLE","IMPORT","INTO",
                             "IS","KEY","LET","LOOP","MAKE","METHOD","MODULE","OTHERWISE","READ","REPEAT",
                             "RETURN","SELECT","SLOT","SIGNAL","THEN","TIMES","TRUE","TYPE","USES",
                             "VIRTUAL","WHEN","WHILE","WRAPPER","WRITE"]
@@ -159,6 +159,10 @@ public class KeywordToken: Token
                 return(.FUNCTION)
             case "IF":
                 return(.IF)
+            case "LOOP":
+                return(.LOOP)
+            case "IN":
+                return(.IN)
             case "IS":
                 return(.IS)
             case "HANDLE":
@@ -169,8 +173,6 @@ public class KeywordToken: Token
                 return(.INTO)
             case "LET":
                 return(.LET)
-            case "LOOP":
-                return(.LOOP)
             case "MAKE":
                 return(.MAKE)
             case "FORM":

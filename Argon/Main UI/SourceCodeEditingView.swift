@@ -127,5 +127,15 @@ public class SourceCodeEditingView: NSView,NSTextViewDelegate,Model
         {
         self.textView.resetCompilerIssues(newIssues: newIssues)
         }
+        
+    public func showAllCompilerIssues()
+        {
+        self.textView.showAllCompilerIssues()
+        }
+        
+    public func hideAllCompilerIssues()
+        {
+        self.textView.hideAllCompilerIssues()
+        }
     }
 

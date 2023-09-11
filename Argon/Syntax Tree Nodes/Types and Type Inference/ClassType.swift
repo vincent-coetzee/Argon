@@ -242,7 +242,7 @@ public class ClassType: StructuredType
             {
             parser.nextToken()
             }
-        var identifier = parser.parseIdentifier(errorCode: .identifierExpected,message: "Identifier expected after 'SLOT'.")
+        let identifier = parser.parseIdentifier(errorCode: .identifierExpected,message: "Identifier expected after 'SLOT'.")
         if identifier.isCompoundIdentifier
             {
             parser.lodgeError(code: .singleIdentifierExpected,message: "An identifier path is not allowed here.",location: location)

@@ -29,8 +29,8 @@ public class CalendricalToken: Token
     public var isTime: Bool
         {
         let scanner = Scanner(string: self.matchString)
-        let day = scanner.scanInt()
-        var delimeter = scanner.scanCharacter()
+//        let day = scanner.scanInt()
+        let delimeter = scanner.scanCharacter()
         if delimeter == ":"
             {
             return(true)
@@ -41,8 +41,8 @@ public class CalendricalToken: Token
     public var isDate: Bool
         {
         let scanner = Scanner(string: self.matchString)
-        let day = scanner.scanInt()
-        var delimeter = scanner.scanCharacter()
+//        let day = scanner.scanInt()
+        let delimeter = scanner.scanCharacter()
         if delimeter == "/"
             {
             return(true)
@@ -53,7 +53,7 @@ public class CalendricalToken: Token
     public var isDateTime: Bool
         {
         let scanner = Scanner(string: self.matchString)
-        let day = scanner.scanInt()
+//        let day = scanner.scanInt()
         var delimeter = scanner.scanCharacter()
         if delimeter == ":"
             {
@@ -63,39 +63,39 @@ public class CalendricalToken: Token
             {
             return(false)
             }
-        let month = scanner.scanInt()
+//        let month = scanner.scanInt()
         delimeter = scanner.scanCharacter()
         guard delimeter == "/" else
             {
             return(false)
             }
-        let year = scanner.scanInt()
+//        let year = scanner.scanInt()
         guard !scanner.isAtEnd else
             {
             return(false)
             }
-        delimeter = scanner.scanCharacter()
+//        delimeter = scanner.scanCharacter()
         guard delimeter == " " else
             {
             return(false)
             }
-        let hour = scanner.scanInt()
+//        let hour = scanner.scanInt()
         delimeter = scanner.scanCharacter()
         guard delimeter == ":" else
             {
             return(false)
             }
-        let minute = scanner.scanInt()
+//        let minute = scanner.scanInt()
         delimeter = scanner.scanCharacter()
         guard delimeter == ":" else
             {
             return(false)
             }
-        let second = scanner.scanInt()
+//        let second = scanner.scanInt()
         delimeter = scanner.scanCharacter()
         if delimeter == ":"
             {
-            let milliseconds = scanner.scanInt()
+//            let milliseconds = scanner.scanInt()
             delimeter = scanner.scanCharacter()
             }
         guard delimeter == ")" else

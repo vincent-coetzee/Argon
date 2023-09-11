@@ -160,38 +160,38 @@ public struct ArgonTests
         
     private static func testMacroExpansion()
         {
-        let source =
-        """
-            MODULE Test
-                {
-                #someSymbolOrOther #anotherSymbol
-                CLASS \\SomeClass\\SomeTopClass
-                    {
-                    SLOT someSlot = "" #yetAnotherSymbol
-                    SLOT floatSlot = 12.567
-                    SLOT integerSlot = 5964
-                    }
-                MACRO someMacro(a1,a2,a3)
-                    $
-                    this is some `a1 and some more `a2
-                    $
-                    
-                // This is a comment that stays on a line
-                /*  This comment
-                    stretches across
-                    several
-                    lines
-                */
-                LET thisValue = -> ,
-                $someMacro(this is some text,this is even more text, and the last lot of text)
-                LET someValue = MAKE(\\Module1\\Module2\\Module3\\AClass),
-                ENUMERATION SomeEnum::Integer
-                    {
-                    #someCase = 1
-                    }
-                LET someByteValue = §127
-                }
-            """
+//        let source =
+//        """
+//            MODULE Test
+//                {
+//                #someSymbolOrOther #anotherSymbol
+//                CLASS \\SomeClass\\SomeTopClass
+//                    {
+//                    SLOT someSlot = "" #yetAnotherSymbol
+//                    SLOT floatSlot = 12.567
+//                    SLOT integerSlot = 5964
+//                    }
+//                MACRO someMacro(a1,a2,a3)
+//                    $
+//                    this is some `a1 and some more `a2
+//                    $
+//
+//                // This is a comment that stays on a line
+//                /*  This comment
+//                    stretches across
+//                    several
+//                    lines
+//                */
+//                LET thisValue = -> ,
+//                $someMacro(this is some text,this is even more text, and the last lot of text)
+//                LET someValue = MAKE(\\Module1\\Module2\\Module3\\AClass),
+//                ENUMERATION SomeEnum::Integer
+//                    {
+//                    #someCase = 1
+//                    }
+//                LET someByteValue = §127
+//                }
+//            """
         }
         
     private static func testTokens()
@@ -242,8 +242,8 @@ public struct ArgonTests
         
     public static func testProjectEntries()
         {
-        let entry1 = SourceFileNode(name: "",path: Path(Path.root))
-        let entry2 = SourceFileNode(name: "",path: Path(Path.root))
+//        let entry1 = SourceFileNode(name: "",path: Path(Path.root))
+//        let entry2 = SourceFileNode(name: "",path: Path(Path.root))
         let project = SourceProjectNode(name: "",path: Path(Path.root))
         let data = try? NSKeyedArchiver.archivedData(withRootObject: project, requiringSecureCoding: false)
         if data.isNil
@@ -252,7 +252,7 @@ public struct ArgonTests
             }
         else
             {
-            let newProject = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data!)
+            let newProject = try? NSKeyedUnarchiver.unarchivedObject(ofClass: SourceProjectNode.self,from: data!)
             if newProject.isNil
                 {
                 fatalError("Decoding of project failed")

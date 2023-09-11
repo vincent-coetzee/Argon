@@ -120,11 +120,32 @@ class SourceView: NSTextView
         
     private func toggleIssueDisplay(`for` issue: CompilerIssue)
         {
+        if let annotation = self.activeAnnotations[issue.location.line]
+            {
+            self.hideAnnotation(for: issue)
+            }
+        else
+            {
+            self.showAnnotation(for: issue)
+            }
+        }
+        
+    public func hideAnnotation(`for` issue: CompilerIssue)
+        {
         let line = issue.location.line
         if let layer = self.activeAnnotations[line]
             {
             layer.removeFromSuperlayer()
             self.activeAnnotations[line] = nil
+            return
+            }
+        }
+        
+    public func showAnnotation(`for` issue: CompilerIssue)
+        {
+        let line = issue.location.line
+        if let annotation = self.activeAnnotations[line]
+            {
             return
             }
         let newLayer = CATextLayer()
@@ -150,6 +171,22 @@ class SourceView: NSTextView
         newLayer.frame = layerFrame
         self.layer?.addSublayer(newLayer)
         self.activeAnnotations[line] = newLayer
+        }
+        
+    public func showAllCompilerIssues()
+        {
+        for issue in self.compilerIssues
+            {
+            self.showAnnotation(for: issue)
+            }
+        }
+        
+    public func hideAllCompilerIssues()
+        {
+        for issue in self.compilerIssues
+            {
+            self.hideAnnotation(for: issue)
+            }
         }
         
     private func refreshIssueDisplay()

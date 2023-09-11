@@ -44,6 +44,28 @@ public enum ValueBox
     case time(Argon.Time)
     case dateTime(Argon.DateTime)
     
+    public var isSymbol: Bool
+        {
+        switch(self)
+            {
+            case .symbol:
+                return(true)
+            default:
+                return(false)
+            }
+        }
+        
+    public var symbol: String
+        {
+        switch(self)
+            {
+            case .symbol(let symbol):
+                return(symbol)
+            default:
+                fatalError("symbol called on ValueBox and it's not a symbol.")
+            }
+        }
+        
     public var isInteger: Bool
         {
         switch(self)

@@ -246,7 +246,7 @@ public class ArgonParser
     public func pushCurrentScope(_ node: SyntaxTreeNode)
         {
         self.scopeStack.push(self.currentScope)
-        self.currentScope = node as! Scope
+        self.currentScope = node as Scope
         }
         
     @discardableResult
@@ -297,6 +297,19 @@ public class ArgonParser
         if self.token.isComma
             {
             self.nextToken()
+            }
+        }
+        
+    internal func parseSemicolon()
+        {
+        let location = self.token.location
+        if self.token.isSemicolon
+            {
+            self.nextToken()
+            }
+        else
+            {
+            self.lodgeError(code: .semicolonExpected, location: location)
             }
         }
         
@@ -654,6 +667,8 @@ public class ArgonParser
         {
         switch(self.token.tokenType)
             {
+            case(.identifier):
+                AssignmentExpression.parse(using: self)
             case(.STATIC):
                 StaticStatement.parse(using: self)
             case(.METHOD):
@@ -684,6 +699,10 @@ public class ArgonParser
                 HandleStatement.parse(using: self)
             case(.FORK):
                 ForkStatement.parse(using: self)
+            case(.FOR):
+                ForStatement.parse(using: self)
+            case(.LOOP):
+                LoopStatement.parse(using: self)
             default:
                 self.lodgeError(code: .statementExpected,location: self.token.location)
                 self.nextToken()
@@ -692,25 +711,25 @@ public class ArgonParser
         
     private func parseImportDeclaration()
         {
-        self.nextToken()
-        guard let lastToken = self.expect(tokenType: .identifier, error: .identifierExpected) else
-            {
-            return
-            }
-//        let importedModuleName = lastToken.identifier.lastPart
-        guard self.expect(tokenType: .leftParenthesis,error: .leftParenthesisExpected).isNotNil else
-            {
-            return
-            }
-        guard let middleToken = self.expect(tokenType: .path,error: .pathExpected) else
-            {
-            return
-            }
-//        let importPath = middleToken.pathValue
-        guard self.expect(tokenType: .rightParenthesis,error: .rightParenthesisExpected).isNil else
-            {
-            return
-            }
+//        self.nextToken()
+//        guard let lastToken = self.expect(tokenType: .identifier, error: .identifierExpected) else
+//            {
+//            return
+//            }
+////        let importedModuleName = lastToken.identifier.lastPart
+//        guard self.expect(tokenType: .leftParenthesis,error: .leftParenthesisExpected).isNotNil else
+//            {
+//            return
+//            }
+//        guard let middleToken = self.expect(tokenType: .path,error: .pathExpected) else
+//            {
+//            return
+//            }
+////        let importPath = middleToken.pathValue
+//        guard self.expect(tokenType: .rightParenthesis,error: .rightParenthesisExpected).isNil else
+//            {
+//            return
+//            }
         }
         
     public func lodgeError(code: IssueCode,message: String? = nil,location: Location)

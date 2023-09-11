@@ -47,7 +47,7 @@ class ProjectDocument: NSDocument
             path += ".argonp"
             }
         let viewController = self.windowControllers[0].contentViewController as! ProjectViewController
-        var state = viewController.projectState
+        let state = viewController.projectState
         state.windowFrame = viewController.view.window!.frame
         if let data = try? NSKeyedArchiver.archivedData(withRootObject: state.project, requiringSecureCoding: false)
             {

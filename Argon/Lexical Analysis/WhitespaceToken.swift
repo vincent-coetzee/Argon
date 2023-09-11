@@ -7,6 +7,6 @@
 
 import Foundation
 
-public class WhitespaceToken: Token
-    {
-    }
+//public class WhitespaceToken: Token
+//    {
+//    }

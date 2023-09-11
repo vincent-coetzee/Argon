@@ -43,9 +43,9 @@ public extension Scope
                 }
             else
                 {
-                if let scope = self.lookupNode(atName: identifier.firstPart) as? Scope
+                if let node = self.lookupNode(atName: identifier.firstPart)
                     {
-                    scope.addNode(node,atIdentifier: identifier.remainingPart)
+                    (node as Scope).addNode(node,atIdentifier: identifier.remainingPart)
                     return
                     }
                 else
@@ -55,29 +55,4 @@ public extension Scope
                 }
             }
         }
-        
-//    func lookupNode(atIdentifier identifier: Identifier) -> SyntaxTreeNode?
-//        {
-//        guard !identifier.isEmpty else
-//            {
-//            return(nil)
-//            }
-//        if identifier.isRooted
-//            {
-//            return(self.rootModule.lookupNode(atIdentifier: identifier.remainingPart))
-//            }
-//        let part = identifier.firstPart
-//        let remainder = identifier.remainingPart
-//        let symbol = self.lookupNode(atName: part)
-//        guard symbol.isNotNil else
-//            {
-//            return(nil)
-//            }
-//        if remainder.isEmpty
-//            {
-//            return(symbol)
-//            }
-//        return((symbol as? Scope)?.lookupNode(atIdentifier: remainder))
-//        }
-
     }

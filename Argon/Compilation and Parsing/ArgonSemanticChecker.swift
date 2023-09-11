@@ -51,6 +51,7 @@ public class ArgonSemanticChecker: Visitor
         
     public func enter(method: MethodType)
         {
+        
         }
         
     public func exit(method: MethodType)
@@ -308,6 +309,26 @@ public class ArgonSemanticChecker: Visitor
         }
     
     public func exit(forkStatement: ForkStatement)
+        {
+        
+        }
+        
+    public func enter(forStatement: ForStatement)
+        {
+        
+        }
+    
+    public func exit(forStatement: ForStatement)
+        {
+        
+        }
+        
+    public func enter(loopStatement: LoopStatement)
+        {
+        
+        }
+    
+    public func exit(loopStatement: LoopStatement)
         {
         
         }

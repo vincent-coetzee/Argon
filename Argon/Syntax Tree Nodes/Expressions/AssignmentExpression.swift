@@ -67,13 +67,13 @@ public class AssignmentExpression: Expression
         {
         let location = parser.token.location
         let expression = parser.parseExpression()
-        if let lValue = expression.lValue,let rValue = expression.rValue,lValue.isIdentifierExpression
+        if let lValue = expression.lValue,lValue.isIdentifierExpression
             {
             if let node = parser.currentScope.lookupNode(atName: lValue.identifier.lastPart),node is Variable
                 {
                 if let left = expression.leftSide,let right = expression.rightSide
                     {
-                    let statement = AssignmentStatement(left: left,right: right,variable: node as! Variable)
+                    let statement = AssignmentStatement(left: left,right: right,variable: node as? Variable)
                     parser.currentScope.addNode(statement)
                     return
                     }

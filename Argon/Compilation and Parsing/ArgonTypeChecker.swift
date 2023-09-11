@@ -277,6 +277,26 @@ public class ArgonTypeChecker: Visitor
         
         }
     
+    public func enter(forStatement: ForStatement)
+        {
+        
+        }
+    
+    public func exit(forStatement: ForStatement)
+        {
+        
+        }
+        
+    public func enter(loopStatement: LoopStatement)
+        {
+        
+        }
+    
+    public func exit(loopStatement: LoopStatement)
+        {
+        
+        }
+        
     public func enter(assignmentStatement: AssignmentStatement)
         {
         

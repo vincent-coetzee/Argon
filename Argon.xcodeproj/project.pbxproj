@@ -162,11 +162,14 @@
 		BFE1AD102A8A7CD200402294 /* ArgonSemanticChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE1AD0F2A8A7CD200402294 /* ArgonSemanticChecker.swift */; };
 		BFE6BDA72AA670BA00614F71 /* ProcessingFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE6BDA62AA670BA00614F71 /* ProcessingFlags.swift */; };
 		BFE6BDA92AA6738800614F71 /* ArgonTypeChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE6BDA82AA6738800614F71 /* ArgonTypeChecker.swift */; };
+		BFE89DF12AAF0C1200985186 /* ForStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE89DF02AAF0C1200985186 /* ForStatement.swift */; };
+		BFE89DF32AAF11E300985186 /* LoopStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE89DF22AAF11E300985186 /* LoopStatement.swift */; };
 		BFE99B372A710A690056E700 /* BinaryExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE99B362A710A690056E700 /* BinaryExpression.swift */; };
 		BFE99B392A710A8A0056E700 /* MethodInvocationExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE99B382A710A8A0056E700 /* MethodInvocationExpression.swift */; };
 		BFE99B3B2A710AB30056E700 /* FunctionInvocationExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE99B3A2A710AB30056E700 /* FunctionInvocationExpression.swift */; };
 		BFE99B412A7117300056E700 /* IdentifierExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE99B402A7117300056E700 /* IdentifierExpression.swift */; };
 		BFE99B432A711A3B0056E700 /* PrefixExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE99B422A711A3B0056E700 /* PrefixExpression.swift */; };
+		BFEBF6B22AACD3FB00CF56EC /* SymbolExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEBF6B12AACD3FB00CF56EC /* SymbolExpression.swift */; };
 		BFEE2AE8298EF7960060EE74 /* TypeVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEE2AE7298EF7960060EE74 /* TypeVariable.swift */; };
 		BFF0CD442A1E9EBD00F99EC3 /* ArgonTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF0CD432A1E9EBD00F99EC3 /* ArgonTypes.swift */; };
 		BFF395662A5C1A0D00BCA42F /* FunctionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF395652A5C1A0D00BCA42F /* FunctionType.swift */; };
@@ -366,11 +369,14 @@
 		BFE1AD0F2A8A7CD200402294 /* ArgonSemanticChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgonSemanticChecker.swift; sourceTree = "<group>"; };
 		BFE6BDA62AA670BA00614F71 /* ProcessingFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingFlags.swift; sourceTree = "<group>"; };
 		BFE6BDA82AA6738800614F71 /* ArgonTypeChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgonTypeChecker.swift; sourceTree = "<group>"; };
+		BFE89DF02AAF0C1200985186 /* ForStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForStatement.swift; sourceTree = "<group>"; };
+		BFE89DF22AAF11E300985186 /* LoopStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoopStatement.swift; sourceTree = "<group>"; };
 		BFE99B362A710A690056E700 /* BinaryExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinaryExpression.swift; sourceTree = "<group>"; };
 		BFE99B382A710A8A0056E700 /* MethodInvocationExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MethodInvocationExpression.swift; sourceTree = "<group>"; };
 		BFE99B3A2A710AB30056E700 /* FunctionInvocationExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionInvocationExpression.swift; sourceTree = "<group>"; };
 		BFE99B402A7117300056E700 /* IdentifierExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifierExpression.swift; sourceTree = "<group>"; };
 		BFE99B422A711A3B0056E700 /* PrefixExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefixExpression.swift; sourceTree = "<group>"; };
+		BFEBF6B12AACD3FB00CF56EC /* SymbolExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolExpression.swift; sourceTree = "<group>"; };
 		BFEE2AE7298EF7960060EE74 /* TypeVariable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeVariable.swift; sourceTree = "<group>"; };
 		BFF0CD432A1E9EBD00F99EC3 /* ArgonTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgonTypes.swift; sourceTree = "<group>"; };
 		BFF395652A5C1A0D00BCA42F /* FunctionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionType.swift; sourceTree = "<group>"; };
@@ -451,6 +457,7 @@
 				BF53D1322A72D8D400C2777D /* PostfixExpression.swift */,
 				BF53D13C2A72FDBB00C2777D /* Precedence.swift */,
 				BFE99B422A711A3B0056E700 /* PrefixExpression.swift */,
+				BFEBF6B12AACD3FB00CF56EC /* SymbolExpression.swift */,
 				BF53D1362A72DDA700C2777D /* TernaryExpression.swift */,
 			);
 			path = Expressions;
@@ -471,17 +478,19 @@
 				BF0711662A78381B00981DD1 /* AssignmentStatement.swift */,
 				BF1F4AFD2A554A2700C1F977 /* Block.swift */,
 				BF2423D92A7948C100C5D4E4 /* ForkStatement.swift */,
+				BFE89DF02AAF0C1200985186 /* ForStatement.swift */,
 				BF1F4AF92A5549DF00C1F977 /* HandleStatement.swift */,
 				BF1F4AF52A5549C500C1F977 /* IfStatement.swift */,
 				BF1F4AE82A55481600C1F977 /* LetStatement.swift */,
+				BFE89DF22AAF11E300985186 /* LoopStatement.swift */,
 				BF1F4AF12A55499F00C1F977 /* RepeatStatement.swift */,
 				BF4DB6D52A81122F00A509A4 /* ReturnStatement.swift */,
 				BF1F4AEB2A5548C700C1F977 /* SelectStatement.swift */,
 				BF1F4AF72A5549D400C1F977 /* SignalStatement.swift */,
 				BF1F4AED2A55490100C1F977 /* Statement.swift */,
+				BFBA84952A8E81F0009D488A /* StaticStatement.swift */,
 				BF1F4AEF2A55499400C1F977 /* TimesStatement.swift */,
 				BF1F4AF32A5549B100C1F977 /* WhileStatement.swift */,
-				BFBA84952A8E81F0009D488A /* StaticStatement.swift */,
 			);
 			path = "Statements and Blocks";
 			sourceTree = "<group>";
@@ -967,6 +976,8 @@
 				BF4DB6D62A81122F00A509A4 /* ReturnStatement.swift in Sources */,
 				BFBA84942A8E80BA009D488A /* StaticVariable.swift in Sources */,
 				BF39BA812A9933F30037FB79 /* WhitespaceToken.swift in Sources */,
+				BFE89DF32AAF11E300985186 /* LoopStatement.swift in Sources */,
+				BFE89DF12AAF0C1200985186 /* ForStatement.swift in Sources */,
 				BFD0B50D2968758B00E9ABBD /* SourceProjectNode.swift in Sources */,
 				BF1F4AF82A5549D400C1F977 /* SignalStatement.swift in Sources */,
 				BF53D1332A72D8D400C2777D /* PostfixExpression.swift in Sources */,
@@ -987,6 +998,7 @@
 				BF54B9A829F5C7C600A755DC /* SelectionInListModel.swift in Sources */,
 				BFC4B6CA2A934A1C0098FBB1 /* SubstitutionSet.swift in Sources */,
 				BF174B5B294CC80E0094A6D4 /* ByteToken.swift in Sources */,
+				BFEBF6B22AACD3FB00CF56EC /* SymbolExpression.swift in Sources */,
 				BFAD2C2B2A75509000565B6B /* Parameter.swift in Sources */,
 				BFE99B372A710A690056E700 /* BinaryExpression.swift in Sources */,
 				BF9FB7B02A275D28008F8A75 /* Macro.swift in Sources */,

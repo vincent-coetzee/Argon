@@ -132,6 +132,8 @@ public class OperatorToken: Token
                 return(.modulusAssign)
             case("@("):
                 return(.dateTimeMarker)
+            case(";"):
+                return(.semicolon)
             default:
                 fatalError("Operator for \(self.matchString) is not defined.")
             }
