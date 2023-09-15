@@ -17,6 +17,8 @@ public struct ArgonTests
 //        self.testDateTimeScanning()
         self.testRootModule()
 //        self.testSymbolTables()
+        self.testTypeHashing()
+        self.testIdentity()
         self.testIdentifiers()
         self.testAddingNodes()
         self.testInitialization()
@@ -64,6 +66,49 @@ public struct ArgonTests
         let _ = ArgonModule.shared
         }
         
+    public static func testTypeHashing()
+        {
+        let typeA = ArrayInstanceType(elementType: ArgonModule.integerType, indexType: ArgonModule.uIntegerType)
+        let typeB = ArrayInstanceType(elementType: ArgonModule.stringType, indexType: ArgonModule.uIntegerType)
+        let typeC = ArrayInstanceType(elementType: ArgonModule.integerType, indexType: ArgonModule.uIntegerType)
+        let aliasedTypeA = AliasedType(name: "AliasedTypeA", baseType: typeA)
+        assert(typeA.isIdentical(to: aliasedTypeA.baseType),"TypeA is not identical to AliasedTypeA.baseType and should be.")
+        assert(typeA.isIdentical(to: typeA),"TypeA is not identical to TypeA and should be.")
+        assert(!typeA.isIdentical(to: typeB),"TypeA is identical to TypeB and should not be.")
+        assert(typeA.typeHash == typeC.typeHash,"TypeA.typeHash != TypeC.typeHash and should be.")
+        assert(typeA.typeHash == typeA.typeHash,"TypeA.typeHash != TypeA.typeHash and should be.")
+        assert(typeA.typeHash != typeB.typeHash,"TypeA.typeHash == TypeB.typeHash and should be.")
+        assert(typeA.typeHash == aliasedTypeA.typeHash,"TypeA.typeHash != AliasedTypeA.typeHash and should be.")
+        }
+        
+    public static func testIdentity()
+        {
+//        let typeA = TypeNode(name: "TypeA")
+//        let typeB = TypeNode(name: "TypeB")
+//        let typeC = TypeNode(name: "TypeC")
+//        let typeD = TypeNode(name: "TypeD")
+//        let module1 = Module(name: "Module1")
+//        let module2 = Module(name: "Module2")
+//        module1.addNode(module2)
+//        module2.addNode(typeA)
+//        module2.addNode(typeB)
+//        print(typeA.mangledName)
+//        let methodA = MethodType(name: "someMethod")
+//        methodA.setReturnType(typeB)
+//        methodA.addParameter(Parameter(definedByPosition: false, externalName: "externalNameA", internalName: "internalNameA", type: typeA))
+//        methodA.addParameter(Parameter(definedByPosition: false, externalName: "externalNameB", internalName: "internalNameB", type: typeB))
+//        module2.addNode(methodA)
+//        print(methodA.mangledName)
+//        let enumeration = EnumerationType(name: "SomeEnumeration")
+//        let arrayType = ArrayTypeInstance(elementType: typeA, indexType: Argon.ArrayIndex.enumeration(enumeration))
+//        let methodB = MethodType(name: "methodB")
+//        methodB.setReturnType(arrayType)
+//        methodB.addParameter(Parameter(definedByPosition: false, externalName: "externalNameA", internalName: "internalNameA", type: arrayType))
+//        methodB.addParameter(Parameter(definedByPosition: false, externalName: "externalNameB", internalName: "internalNameB", type: enumeration))
+//        module2.addNode(methodB)
+//        print(methodB.mangledName)
+        }
+        
     public static func testAddingNodes()
         {
         let rootModule = RootModule.newRootModule()
@@ -78,23 +123,24 @@ public struct ArgonTests
         //
         // Define cases for an enumeration
         //
-        let freezing = EnumerationCase(name: "#freezing", associatedTypes: [],instanceValue: .none)
-        let sunny = EnumerationCase(name: "#sunny", associatedTypes: [],instanceValue: .none)
-        let rainy = EnumerationCase(name: "#rainy", associatedTypes: [],instanceValue: .none)
-        let windy = EnumerationCase(name: "#windy", associatedTypes: [],instanceValue: .none)
-        let cloudy = EnumerationCase(name: "#cloudy", associatedTypes: [],instanceValue: .none)
+        let enumeration = EnumerationType(name: "NodeType",rawType: ArgonModule.stringType)
+        let freezing = EnumerationCase(name: "#freezing",enumeration: enumeration, associatedTypes: [],instanceValue: .none)
+        let sunny = EnumerationCase(name: "#sunny",enumeration: enumeration, associatedTypes: [],instanceValue: .none)
+        let rainy = EnumerationCase(name: "#rainy",enumeration: enumeration, associatedTypes: [],instanceValue: .none)
+        let windy = EnumerationCase(name: "#windy",enumeration: enumeration, associatedTypes: [],instanceValue: .none)
+        let cloudy = EnumerationCase(name: "#cloudy",enumeration: enumeration, associatedTypes: [],instanceValue: .none)
+        enumeration.setCases([freezing,sunny,rainy,windy,cloudy])
         //
         // Define an enumeration with cases
         //
-        let enumeration = EnumerationType(name: "NodeType",cases: [freezing,sunny,rainy,windy,cloudy],rawType: ArgonModule.stringType)
         thirdInnerModule.addNode(enumeration)
         let lookupEnumeration = outerModule.lookupNode(atIdentifier: Identifier(string: "//OuterModule/FirstInnerModule/SecondInnerModule/ThirdInnerModule/NodeType"))
         assert(lookupEnumeration == enumeration,"Looked up enumeration should be the same as the original enumeration and it is not")
-        let newClass = ClassType(name: "NewClass")
-        let identifier = Identifier(string: "//OuterModule/FirstInnerModule/SecondInnerModule/NewClass")
-        secondInnerModule.addNode(newClass, atIdentifier: identifier)
-        let lookupClass = secondInnerModule.lookupNode(atIdentifier: identifier)
-        assert(lookupClass == newClass,"NewClass and Looked Up Class should be the same but are not")
+//        let newClass = ClassType(name: "NewClass")
+//        let identifier = Identifier(string: "//OuterModule/FirstInnerModule/SecondInnerModule/NewClass")
+//        secondInnerModule.addNode(newClass, atIdentifier: identifier)
+//        let lookupClass = secondInnerModule.lookupNode(atIdentifier: identifier)
+//        assert(lookupClass == newClass,"NewClass and Looked Up Class should be the same but are not")
         }
         
     @discardableResult
@@ -105,17 +151,18 @@ public struct ArgonTests
         rootModule.addNode(module)
         let innerModule = Module(name: "WeatherType")
         //
-        // Define cases for an enumeration
-        //
-        let freezing = EnumerationCase(name: "#freezing",associatedTypes: [],instanceValue: .none)
-        let sunny = EnumerationCase(name: "#sunny",associatedTypes: [],instanceValue: .none)
-        let rainy = EnumerationCase(name: "#rainy",associatedTypes: [],instanceValue: .none)
-        let windy = EnumerationCase(name: "#windy",associatedTypes: [],instanceValue: .none)
-        let cloudy = EnumerationCase(name: "#cloudy",associatedTypes: [],instanceValue: .none)
-        //
         // Define an enumeration with cases
         //
-        let enumeration = EnumerationType(name: "NodeType",cases: [freezing,sunny,rainy,windy,cloudy],rawType: ArgonModule.stringType)
+        let enumeration = EnumerationType(name: "NodeType",rawType: ArgonModule.stringType)
+        //
+        // Define cases for an enumeration
+        //
+        let freezing = EnumerationCase(name: "#freezing",enumeration: enumeration,associatedTypes: [],instanceValue: .none)
+        let sunny = EnumerationCase(name: "#sunny",enumeration: enumeration,associatedTypes: [],instanceValue: .none)
+        let rainy = EnumerationCase(name: "#rainy",enumeration: enumeration,associatedTypes: [],instanceValue: .none)
+        let windy = EnumerationCase(name: "#windy",enumeration: enumeration,associatedTypes: [],instanceValue: .none)
+        let cloudy = EnumerationCase(name: "#cloudy",enumeration: enumeration,associatedTypes: [],instanceValue: .none)
+        enumeration.setCases([freezing,sunny,rainy,windy,cloudy])
         //
         // Add enumeration to inner module and inner module to base module
         //
@@ -132,14 +179,15 @@ public struct ArgonTests
         let locationClass = ClassType(name: "Location",slots: [latitude,longitude])
         innerModule.addNode(locationClass)
         //
-        // Define cases for WeatherStationType
-        //
-        let manned = EnumerationCase(name: "#manned",associatedTypes: [],instanceValue: .none)
-        let unmanned = EnumerationCase(name: "#unmanned",associatedTypes: [],instanceValue: .none)
-        //
         // Define WeatherStationType enumeration
         //
-        let weatherStationType = EnumerationType(name: "WeatherStationType",cases: [manned,unmanned],rawType: ArgonModule.integerType)
+        let weatherStationType = EnumerationType(name: "WeatherStationType",rawType: ArgonModule.integerType)
+        //
+        // Define cases for WeatherStationType
+        //
+        let manned = EnumerationCase(name: "#manned",enumeration: weatherStationType,associatedTypes: [],instanceValue: .none)
+        let unmanned = EnumerationCase(name: "#unmanned",enumeration: weatherStationType,associatedTypes: [],instanceValue: .none)
+        weatherStationType.setCases([unmanned,manned])
         innerModule.addNode(weatherStationType)
         //
         // Define slots for WeatherStation class
@@ -208,6 +256,7 @@ public struct ArgonTests
                     SLOT floatSlot = 12.567
                     SLOT integerSlot = 5964
                     }
+                :(//This/is/a/path)
                 MACRO someMacro(a1,a2,a3)
                     $
                     this is some `a1 and some more `a2
@@ -252,7 +301,7 @@ public struct ArgonTests
             }
         else
             {
-            let newProject = try? NSKeyedUnarchiver.unarchivedObject(ofClass: SourceProjectNode.self,from: data!)
+            let newProject = NSKeyedUnarchiver.unarchiveObject(with: data!) as? SourceProjectNode
             if newProject.isNil
                 {
                 fatalError("Decoding of project failed")

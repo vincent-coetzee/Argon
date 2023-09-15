@@ -25,11 +25,15 @@ public class CompositeSyntaxTreeNode: SyntaxTreeNode
     
     public override func addNode(_ symbol: SyntaxTreeNode)
         {
-        var entry = self.symbolEntries[symbol.name]
-        if entry.isNil
+        var entry: SymbolEntry!
+        if self.symbolEntries[symbol.name].isNil
             {
             entry = SymbolEntry(name: symbol.name)
             self.symbolEntries[symbol.name] = entry
+            }
+        else
+            {
+            entry = self.symbolEntries[symbol.name]
             }
         if let method = symbol as? MethodType
             {
@@ -49,12 +53,12 @@ public class CompositeSyntaxTreeNode: SyntaxTreeNode
             {
             return(entry.node)
             }
-        return(self.parent?.lookupNode(atName: someName))
+        return(self.parent.lookupNode(atName: someName))
         }
         
     public override func lookupMethods(atName someName: String) -> Methods
         {
-        var methods = self.parent!.lookupMethods(atName: someName)
+        var methods = self.parent.lookupMethods(atName: someName)
         if let entry = self.symbolEntries[someName]
             {
             methods.append(contentsOf: entry.methods)

@@ -9,12 +9,6 @@ import Foundation
 
 public class Module: CompositeSyntaxTreeNode
     {
-    public override var encoding: String
-        {
-        let encodedName = self.parentModules.map{$0.name.base64Hash}.joined(separator: "")
-        return("v\(encodedName)_")
-        }
-        
     public var hasMainMethod: Bool
         {
         self.mainMethod.isNotNil
@@ -52,7 +46,7 @@ public class Module: CompositeSyntaxTreeNode
         
     public override var parentModules: Modules
         {
-        (self.parent.isNil ? Modules() : self.parent!.parentModules).appending(self)
+        self.parent.parentModules.appending(self)
         }
         
     public class func parseModuleDependency(using parser: ArgonParser) -> ModuleNode?

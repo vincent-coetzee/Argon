@@ -7,16 +7,39 @@
 
 import Foundation
 
-public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
+public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable,Comparable
     {
     public static func ==(lhs: SyntaxTreeNode,rhs: SyntaxTreeNode) -> Bool
         {
-        lhs.identifier == rhs.identifier
+        lhs.parent == rhs.parent && lhs.name == rhs.name
         }
         
     public static func isEqual(lhs: SyntaxTreeNode,rhs: SyntaxTreeNode) -> Bool
         {
-        lhs.identifier == rhs.identifier
+        lhs.parent == rhs.parent && lhs.name == rhs.name
+        }
+        
+    public static func <(lhs: SyntaxTreeNode,rhs: SyntaxTreeNode) -> Bool
+        {
+        let types1 = lhs.genericTypes.sorted()
+        let types2 = rhs.genericTypes.sorted()
+        let result = zip(types1,types2).reduce(true) { $0 && $1.0 < $1.1 }
+        if !result
+            {
+            return(false)
+            }
+        return(lhs.name < rhs.name)
+        }
+    //
+    //
+    // This instance variable should always be used to access the generics
+    // of any type nodes to ensure that the correct values are returned.
+    // The generics var may not always be correct.
+    //
+    //
+    public var genericTypes: ArgonTypes
+        {
+        []
         }
         
     public var isType: Bool
@@ -24,14 +47,14 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
         false
         }
         
-    public var parentModules: Modules
+    public var isIntrinsic: Bool
         {
-        self.parent?.parentModules ?? Modules()
+        false
         }
         
-    public var encoding: String
+    public var parentModules: Modules
         {
-        fatalError("Encoding called on SyntaxTreeNode and should not be.")
+        self.parent.parentModules
         }
         
     public override var hash: Int
@@ -41,7 +64,7 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
         
     public var rootModule: RootModule
         {
-        self.parent!.rootModule
+        self.parent.rootModule
         }
         
     public var argonModule: ArgonModule
@@ -71,15 +94,27 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
         
     public var identifier: Identifier
         {
-        self.parent.isNil ? Identifier(string: self.name) : self.parent!.identifier + name
+        return(self.parent.identifier + self.name)
+        }
+    //
+    //
+    // A tag is a string representation of the identity of a node. It is identical to the string form
+    // of the identifier except in the cases where the receiver is a TypeNode and the TypeNode has
+    // generic types. In that case the tag will contain identifier based references to the generic types.
+    // The implementation of TypeNode's tag makes use of this node's implementation.
+    //
+    //
+    public var tag: String
+        {
+        self.identifier.description
         }
         
     public private(set) var references = NodeReferences()
     public private(set) var name: String
     public private(set) var index: Int?
-    public private(set) var parent: Parent?
+    public private(set) var parent: Parent = .none
     public var isSystemNode: Bool = false
-    public private(set) var type: TypeNode!
+    public private(set) var type: ArgonType!
     public private(set) var processingFlags = ProcessingFlags()
     public var location: Location?
     
@@ -97,7 +132,7 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
         
     public required init(coder: NSCoder)
         {
-        self.type = coder.decodeObject(forKey: "type") as? TypeNode
+        self.type = coder.decodeObject(forKey: "type") as? ArgonType
         self.name = coder.decodeObject(forKey: "name") as! String
         self.index = coder.decodeInteger(forKey: "index")
         self.parent = coder.decodeParent(forKey: "parent")
@@ -113,7 +148,8 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
         
     public func removeFromParent()
         {
-        self.parent?.removeNode(self)
+        self.parent.removeNode(self)
+        self.parent = .none
         }
         
     public func encode(with coder: NSCoder)
@@ -134,6 +170,20 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
         return(self)
         }
         
+//    internal func mangleName(_ aName: String) -> String
+//        {
+//        var typeNames = ""
+//        if !self.genericTypes.isEmpty
+//            {
+//            typeNames = "\(self.genericTypes.count)x" + self.genericTypes.map{$0.mangledName}.joined(separator: "")
+//            }
+//        guard let someName = ArgonModule.encoding(for: aName) else
+//            {
+//            return("\(self.name.count)\(self.name)x\(typeNames)")
+//            }
+//        return(someName + typeNames)
+//        }
+        
     public func addReference(_ location: Location)
         {
         self.references.append(.reference(location))
@@ -144,7 +194,7 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
         self.name = name
         }
         
-    public func setType(_ type: TypeNode?)
+    public func setType(_ type: ArgonType?)
         {
         self.type = type
         }
@@ -184,17 +234,12 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
         false
         }
         
-    public var baseType: TypeNode
+    public var baseType: ArgonType
         {
         fatalError("baseType invoked on SyntaxTreeNode which is not allowed.")
         }
         
     public var isMethod: Bool
-        {
-        false
-        }
-        
-    public var isTypeNode: Bool
         {
         false
         }
@@ -216,7 +261,7 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable
         
     public var module: Module
         {
-        self.parent!.module
+        self.parent.module
         }
         
     public func accept(visitor: Visitor)

@@ -88,7 +88,7 @@ public class ArgonSemanticChecker: Visitor
         
         }
     
-    public func visit(type: TypeNode)
+    public func visit(type: ArgonType)
         {
         
         }
@@ -118,37 +118,22 @@ public class ArgonSemanticChecker: Visitor
         
         }
     
-    public func visit(tupleType: TupleType)
+    public func enter(tupleExpression: TupleExpression)
+        {
+        
+        }
+        
+    public func exit(tupleExpression: TupleExpression)
         {
         
         }
     
-    public func visit(genericTypeInstance: GenericTypeInstance)
+    public func visit(genericInstanceType: GenericInstanceType)
         {
         
         }
     
-    public func visit(arrayTypeInstance: ArrayTypeInstance)
-        {
-        
-        }
-    
-    public func visit(dictionaryInstance: DictionaryInstance)
-        {
-        
-        }
-    
-    public func visit(listInstance: ListInstance)
-        {
-        
-        }
-    
-    public func visit(setInstance: SetInstance)
-        {
-        
-        }
-    
-    public func visit(bitSetInstance: BitSetInstance)
+    public func visit(arrayInstanceType: ArrayInstanceType)
         {
         
         }

@@ -94,6 +94,7 @@ public enum TokenType: Int
     case literalSymbol
     case literalTime
     case literalEnumerationCase
+    case literalPath
     case LOOP
     case logicalEquals
     case logicalNot
@@ -123,7 +124,6 @@ public enum TokenType: Int
     case orOrAssign
     case orAssign
     
-    case path
     case percent
     case plus
     case plusAssign
@@ -264,6 +264,11 @@ public class Token: NSObject,NSCoding
         false
         }
         
+    public var isPathValue: Bool
+        {
+        false
+        }
+        
     public var isFork: Bool
         {
         false
@@ -395,11 +400,6 @@ public class Token: NSObject,NSCoding
         }
         
     public var isOperator: Bool
-        {
-        false
-        }
-        
-    public var isPathValue: Bool
         {
         false
         }
@@ -557,12 +557,7 @@ public class Token: NSObject,NSCoding
         {
         false
         }
-        
-    public var isInstanceOfEnumerationBase: Bool
-        {
-        self.isSymbolValue || self.isStringValue || self.isIntegerValue
-        }
-        
+
     public var isKeyword: Bool
         {
         return(false)

@@ -14,6 +14,16 @@ extension String
         return(String(self.dropFirst(0)))
         }
         
+    public var djb2Hash: Int
+        {
+        var hash = UInt64(5381)
+        for character in self
+            {
+            hash = ((hash << 5) + hash) + UInt64(character.asciiValue!) 
+            }
+        return(Int(hash))
+        }
+        
     public var base64Hash: String
         {
         var value = self.polynomialRollingHash
@@ -23,7 +33,7 @@ extension String
         
     public var polynomialRollingHash:Int
         {
-        let p:Int64 = 53   // Use 3 instead of 31 because strings contains uppercase and lowercase characters
+        let p:Int64 = 53   // Use 53 instead of 31 because strings contains uppercase and lowercase characters
         let m:Int64 = Int64(1e9) + 9
         var powerOfP:Int64 = 1
         var hashValue:Int64 = 0

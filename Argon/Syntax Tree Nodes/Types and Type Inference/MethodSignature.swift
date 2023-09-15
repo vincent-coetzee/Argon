@@ -10,10 +10,10 @@ import Foundation
 public class MethodSignature: NSObject,NSCoding
     {
     private(set) var name: String
-    private(set) var parameterTypes: TypeNodes
-    private(set) var returnType: TypeNode?
+    private(set) var parameterTypes: ArgonTypes
+    private(set) var returnType: ArgonType?
     
-    public init(name: String,parameterTypes: TypeNodes = [],returnType: TypeNode? = nil)
+    public init(name: String,parameterTypes: ArgonTypes = [],returnType: ArgonType? = nil)
         {
         self.name = name
         self.parameterTypes = parameterTypes
@@ -23,8 +23,8 @@ public class MethodSignature: NSObject,NSCoding
     public required init(coder: NSCoder)
         {
         self.name = coder.decodeObject(forKey: "name") as! String
-        self.parameterTypes = coder.decodeObject(forKey: "parameterTypes") as! TypeNodes
-        self.returnType = coder.decodeObject(forKey: "returnType") as? TypeNode
+        self.parameterTypes = coder.decodeObject(forKey: "parameterTypes") as! ArgonTypes
+        self.returnType = coder.decodeObject(forKey: "returnType") as? ArgonType
         super.init()
         }
         

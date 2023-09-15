@@ -16,7 +16,7 @@ public class Slot: SyntaxTreeNode
     public private(set) var readBlock: Block?
     public private(set) var writeBlock: Block?
     
-    public init(name: String,type: TypeNode? = nil)
+    public init(name: String,type: ArgonType? = nil)
         {
         super.init(name: name)
         self.setType(type)

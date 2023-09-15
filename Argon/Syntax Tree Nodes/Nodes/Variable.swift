@@ -17,7 +17,7 @@ public class Variable: SyntaxTreeNode
         super.init(name: name)
         }
         
-    public init(name: String,type: TypeNode?,expression: Expression?)
+    public init(name: String,type: ArgonType?,expression: Expression?)
         {
         self.expression = expression
         super.init(name: name)

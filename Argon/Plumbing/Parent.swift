@@ -7,8 +7,36 @@
 
 import Foundation
 
-public enum Parent
+public enum Parent: Hashable,Comparable
     {
+    public static func <(lhs: Parent,rhs: Parent) -> Bool
+        {
+        switch(lhs,rhs)
+            {
+            case(.symbol(let symbol1),.symbol(let symbol2)):
+                return(symbol1 < symbol2)
+            default:
+                return(false)
+            }
+        }
+        
+    public static func ==(lhs: Parent,rhs: Parent) -> Bool
+        {
+        switch(lhs,rhs)
+            {
+            case(.block(let block1),.block(let block2)):
+                return(block1 === block2)
+            case(.none,.none):
+                return(true)
+            case(.symbol(let symbol1),.symbol(let symbol2)):
+                return(symbol1 == symbol2)
+            case(.expression(let expression1),.expression(let expression2)):
+                return(expression1 == expression2)
+            default:
+                return(false)
+            }
+        }
+        
     public var parentModules: Modules
         {
         switch(self)
@@ -61,7 +89,7 @@ public enum Parent
             case(.block(let block)):
                 return(block.identifier)
             case(.none):
-                return(Identifier(string: "//"))
+                return(Identifier(string: "\\"))
             case(.symbol(let symbol)):
                 return(symbol.identifier)
             case(.expression):
@@ -84,6 +112,17 @@ public enum Parent
             }
         }
         
+    public var syntaxTreeNode: SyntaxTreeNode?
+        {
+        switch(self)
+            {
+            case(.symbol(let symbol)):
+                return(symbol)
+            default:
+                return(nil)
+            }
+        }
+        
     public var isNone: Bool
         {
         switch(self)
@@ -94,6 +133,21 @@ public enum Parent
                 return(false)
             }
         }
+        
+//    public var _mangledName: String
+//        {
+//        switch(self)
+//            {
+//            case(.block):
+//                fatalError("This should not occur")
+//            case(.none):
+//                return("")
+//            case(.symbol(let symbol)):
+//                return(symbol.mangledName)
+//            case(.expression):
+//                fatalError("This should not occur")
+//            }
+//        }
         
     case none
     case symbol(SyntaxTreeNode)
@@ -142,6 +196,26 @@ public enum Parent
                 return(symbol.lookupMethods(atName: atName))
             case .expression(let expression):
                 return(expression.lookupMethods(atName: atName))
+            }
+        }
+        
+        
+    public func hash(into hasher:inout Hasher)
+        {
+        hasher.combine("PARENT")
+        switch(self)
+            {
+            case(.none):
+                hasher.combine("NONE")
+            case(.symbol(let symbol)):
+                hasher.combine("SYMBOL")
+                hasher.combine(symbol)
+            case(.expression(let expression)):
+                hasher.combine("EXPRESSION")
+                hasher.combine(expression)
+            case(.block(let block)):
+                hasher.combine("BLOCK")
+                hasher.combine(block)
             }
         }
     }

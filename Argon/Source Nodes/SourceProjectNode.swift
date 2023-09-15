@@ -30,7 +30,6 @@ public class SourceProjectNode: SourceCompositeNode
         
     public required init?(coder: NSCoder)
         {
-        print("SourceProjectNode.init")
         self.moduleSearchPaths = coder.decodePaths(forKey: "moduleSearchPaths")
         self.buildPath = coder.decodePath(forKey: "buildPath")
         super.init(coder: coder)

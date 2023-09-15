@@ -14,7 +14,7 @@ public class ClassType: StructuredType
         true
         }
         
-    public override var elementTypes: TypeNodes
+    public override var elementTypes: ArgonTypes
         {
         self.slots.map{ $0.type }
         }
@@ -24,17 +24,12 @@ public class ClassType: StructuredType
         return(.class)
         }
         
-    public override var encoding: String
-        {
-        return("b\(self.name)_")
-        }
-        
     public private(set) var superclasses: ClassTypes = []
     public private(set) var slots: Slots = []
     public private(set) var forms = Methods()
     public private(set) var deform: MethodType?
     
-    public init(name: String,slots: Slots = [],superclasses: ClassTypes = [],generics: TypeNodes = TypeNodes())
+    public init(name: String,slots: Slots = [],superclasses: ClassTypes = [],generics: ArgonTypes = ArgonTypes())
         {
         self.slots = slots
         self.superclasses = superclasses
@@ -70,6 +65,23 @@ public class ClassType: StructuredType
         self.deform = method
         }
 
+    public override var typeHash: Int
+        {
+        self.hash
+        }
+        
+    public override var hash: Int
+        {
+        var hasher = Hasher()
+        hasher.combine("CLASS")
+        hasher.combine(self.parent)
+        hasher.combine(self.name)
+        for aType in self.genericTypes
+            {
+            hasher.combine(aType)
+            }
+        return(hasher.finalize())
+        }
         
     public override func lookupNode(atName: String) -> SyntaxTreeNode?
         {
@@ -84,7 +96,7 @@ public class ClassType: StructuredType
         }
     
     @discardableResult
-    public func slot(_ name: String,_ type: TypeNode) -> ClassType
+    public func slot(_ name: String,_ type: ArgonType) -> ClassType
         {
         let slot = Slot(name: name,type: type)
         self.slots.append(slot)
@@ -209,6 +221,13 @@ public class ClassType: StructuredType
         return(method)
         }
         
+    //
+    //
+    // A slot is declared as follows
+    //
+    // [ VIRTUAL ] [ DYNAMIC ] [ READ | WRITE ] SLOT identifier ( [ :: type ] | [ = expression ] | [ :: type = expression ] ) [ READ { expressions } ] [ WRITE { expressions } ]
+    //
+    //
     private class func parseSlotDeclaration(using parser: ArgonParser) -> Slot
         {
         let location = parser.token.location
@@ -248,7 +267,7 @@ public class ClassType: StructuredType
             parser.lodgeError(code: .singleIdentifierExpected,message: "An identifier path is not allowed here.",location: location)
             }
         let name = identifier.lastPart
-        var type: TypeNode = SubstitutionSet.newTypeVariable()
+        var type: ArgonType = SubstitutionSet.newTypeVariable()
         if parser.token.isScope
             {
             parser.nextToken()
@@ -256,7 +275,7 @@ public class ClassType: StructuredType
             }
         else if slot.isVirtualSlot
             {
-            parser.lodgeError(code: .vitualSlotMustSpecifyClass,location: location)
+            parser.lodgeError(code: .vitualSlotMustSpecifyType,location: location)
             }
         var initialExpression: Expression?
         if parser.token.isAssign
@@ -316,7 +335,7 @@ public class ClassType: StructuredType
         return(block)
         }
         
-    private class func parseWriteBlock(slotType: TypeNode,using parser: ArgonParser) -> Block
+    private class func parseWriteBlock(slotType: ArgonType,using parser: ArgonParser) -> Block
         {
         let block = Block()
         block.addLocal(PseudoVariable(name: "self"))

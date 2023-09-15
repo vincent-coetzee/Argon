@@ -18,4 +18,24 @@ public class PathToken: Token
         {
         self.matchString
         }
+        
+    public override var styleElement: StyleElement
+        {
+        .colorPath
+        }
+        
+    public override var tokenType: TokenType
+        {
+        .literalPath
+        }
+        
+    public override var tokenName: String
+        {
+        "PathToken"
+        }
+        
+    public override var valueBox: ValueBox
+        {
+        ValueBox.path(matchString)
+        }
     }

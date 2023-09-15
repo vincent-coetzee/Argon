@@ -34,6 +34,11 @@ public class RootModule: Module
         self
         }
         
+//    public override var _mangledName: String
+//        {
+//        ArgonModule.encoding(for: "Root")!
+//        }
+        
     public override var parentModules: Modules
         {
         Modules()

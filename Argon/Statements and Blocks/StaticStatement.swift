@@ -18,7 +18,7 @@ public class StaticStatement: Statement
         parser.nextToken()
         let identifier = parser.parseIdentifier(errorCode: .identifierExpected)
         var expression: Expression?
-        var type: TypeNode?
+        var type: ArgonType?
         if parser.token.isScope
             {
             parser.nextToken()
@@ -41,7 +41,7 @@ public class StaticStatement: Statement
         parser.nextToken()
         let identifier = parser.parseIdentifier(errorCode: .identifierExpected)
         var expression: Expression?
-        var type: TypeNode?
+        var type: ArgonType?
         if parser.token.isScope
             {
             parser.nextToken()
@@ -58,7 +58,7 @@ public class StaticStatement: Statement
         parser.currentScope.addNode(statement)
         }
         
-    public init(name: String,type: TypeNode?,expression: Expression?)
+    public init(name: String,type: ArgonType?,expression: Expression?)
         {
         self.staticVariable = StaticVariable(name: name, type: type, expression: expression)
         self.expression = expression

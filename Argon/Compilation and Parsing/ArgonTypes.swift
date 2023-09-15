@@ -31,7 +31,7 @@ public struct Argon
     public typealias Integer = Swift.Int64
     public typealias Symbol = Swift.String
 
-    public struct Date
+    public struct Date: Hashable
         {
         public static func ==(lhs: Date,rhs: Date) -> Bool
             {
@@ -58,9 +58,17 @@ public struct Argon
             self.month = month
             self.year = year
             }
+            
+        public func hash(into hasher:inout Hasher)
+            {
+            hasher.combine("DATE")
+            hasher.combine(self.day)
+            hasher.combine(self.month)
+            hasher.combine(self.year)
+            }
         }
         
-    public struct Time
+    public struct Time: Hashable
         {
         public static func ==(lhs: Time,rhs: Time) -> Bool
             {
@@ -90,10 +98,24 @@ public struct Argon
             self.second = second
             self.millisecond = millisecond
             }
+            
+        public func hash(into hasher:inout Hasher)
+            {
+            hasher.combine("TIME")
+            hasher.combine(self.hour)
+            hasher.combine(self.minute)
+            hasher.combine(self.second)
+            hasher.combine(self.millisecond)
+            }
         }
         
-    public struct DateTime
+    public struct DateTime: Hashable
         {
+        public static func ==(lhs: DateTime,rhs: DateTime) -> Bool
+            {
+            lhs.date == rhs.date && lhs.time == rhs.time
+            }
+            
         public let date: Date
         public let time: Time
         
@@ -101,6 +123,13 @@ public struct Argon
             {
             self.date = date
             self.time = time
+            }
+            
+        public func hash(into hasher:inout Hasher)
+            {
+            hasher.combine("DATE_TIME")
+            hasher.combine(self.date)
+            hasher.combine(self.time)
             }
         }
         
@@ -125,28 +154,32 @@ public struct Argon
     public enum ArrayIndex
         {
         case none
-        case discreteType(TypeNode)
+        case discreteType(ArgonType)
         case enumeration(EnumerationType)
         case subType(SubType)
         case integer
         
-        public var encoding: String
-            {
-            switch(self)
-                {
-                case(.none):
-                    fatalError()
-                case(.discreteType(let node)):
-                    return("m\(node.encoding)")
-                case(.enumeration(let enumeration)):
-                    return("n\(enumeration.encoding)")
-                case(.integer):
-                    return("q")
-                case(.subType(let subType)):
-                    return("q\(subType.encoding)")
-                    
-                }
-            }
+//        public var _mangledName: String
+//            {
+//            switch(self)
+//                {
+//                case(.none):
+//                    fatalError()
+//                case(.discreteType(let node)):
+//                    let encoding = ArgonModule.encoding(for: "IndexDiscreteType")!
+//                    return("\(encoding)\(node.mangledName)")
+//                case(.enumeration(let enumeration)):
+//                    let encoding = ArgonModule.encoding(for: "IndexEnumeration")!
+//                    return("\(encoding)\(enumeration.mangledName)")
+//                case(.integer):
+//                    let encoding = ArgonModule.encoding(for: "IndexInteger")!
+//                    return(encoding + ArgonModule.encoding(for: "Integer")!)
+//                case(.subType(let subType)):
+//                    let encoding = ArgonModule.encoding(for: "IndexSubType")!
+//                    return("\(encoding)\(subType.mangledName)")
+//                    
+//                }
+//            }
         }
     }
 
@@ -162,7 +195,7 @@ extension NSCoder
             case(0):
                 return(.none)
             case(1):
-                return(.discreteType(self.decodeObject(forKey: key + "discreteType") as! TypeNode))
+                return(.discreteType(self.decodeObject(forKey: key + "discreteType") as! ArgonType))
             case(2):
                 return(.enumeration(self.decodeObject(forKey: key + "enumeration") as! EnumerationType))
             case(3):

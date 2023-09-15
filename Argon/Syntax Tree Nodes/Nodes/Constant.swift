@@ -16,7 +16,7 @@ public class Constant: Variable
         let identifier = parser.parseIdentifier(errorCode: .identifierExpected)
         let name = identifier.lastPart
         var expression: Expression?
-        var type: TypeNode?
+        var type: ArgonType?
         if parser.token.isScope
             {
             parser.nextToken()

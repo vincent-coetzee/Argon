@@ -150,7 +150,7 @@ public class Block: Statement
                 return(local)
                 }
             }
-        return(self.parent?.lookupNode(atName: atName))
+        return(self.parent.lookupNode(atName: atName))
         }
         
     public override func accept(visitor: Visitor)

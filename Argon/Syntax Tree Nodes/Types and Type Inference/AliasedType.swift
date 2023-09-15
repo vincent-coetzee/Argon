@@ -7,14 +7,14 @@
 
 import Foundation
 
-public class AliasedType: StructuredType
+public class AliasedType: ArgonType
     {
     public override var description: String
         {
         self.baseType.name
         }
         
-    public override var baseType: TypeNode
+    public override var baseType: ArgonType
         {
         self._baseType.baseType
         }
@@ -24,29 +24,37 @@ public class AliasedType: StructuredType
         self.baseType.isGenericType
         }
         
-    public override var genericTypes: TypeNodes
+    public override var genericTypes: ArgonTypes
         {
         self.baseType.genericTypes
         }
         
-    private let _baseType: TypeNode
+    private let _baseType: ArgonType
     
-    public init(name: String,baseType: TypeNode)
+    public init(name: String,baseType: ArgonType)
         {
         self._baseType = baseType
-        super.init(name: name,generics: [])
+        super.init(name: name)
         }
         
     public required init(coder: NSCoder)
         {
-        self._baseType = coder.decodeObject(forKey: "_baseType") as! TypeNode
+        self._baseType = coder.decodeObject(forKey: "_parentType") as! ArgonType
         super.init(coder: coder)
         }
         
     public override func encode(with coder: NSCoder)
         {
-        coder.encode(self._baseType,forKey: "_baseType")
+        coder.encode(self._baseType,forKey: "_parentType")
         super.encode(with: coder)
+        }
+        
+    public override var typeHash: Int
+        {
+        var hasher = Hasher()
+        hasher.combine(super.typeHash)
+        hasher.combine(self.baseType.typeHash)
+        return(hasher.finalize())
         }
         
     public override class func parse(using parser: ArgonParser)
@@ -121,7 +129,7 @@ public class AliasedType: StructuredType
                     parser.lodgeError(code: .integerOrIdentifierExpected,location: location)
                     }
                 }
-            let subType = SubType(name: name.lastPart,baseType: type,lowerBound: lowerBound,upperBound: upperBound)
+            let subType = SubType(name: name.lastPart,parentType: type,lowerBound: lowerBound,upperBound: upperBound)
             subType.location = location
             parser.currentScope.addNode(subType)
             return

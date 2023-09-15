@@ -169,17 +169,37 @@ public class GroupParser: PrefixParser
         let location = parser.token.location
         parser.nextToken()
         let expression = parser.parseExpression(precedence: 0)
+        var wasTuple = false
+        var expressions = Expressions()
+        if parser.token.isComma
+            {
+            wasTuple = true
+            expressions.append(expression)
+            repeat
+                {
+                parser.parseComma()
+                expressions.append(parser.parseExpression())
+                }
+            while parser.token.isComma && !parser.token.isEnd
+            }
         if parser.token.isRightParenthesis
             {
             parser.nextToken()
             }
         else
             {
-            parser.lodgeError( code: .rightParenthesisExpected,location: location)
+            parser.lodgeError(code: .rightParenthesisExpected,location: location)
             }
-        let nextExpression = expression.addDeclaration(location)
-        nextExpression.location = location
-        return(nextExpression)
+        if !wasTuple
+            {
+            expression.addDeclaration(location)
+            expression.location = location
+            return(expression)
+            }
+        let tuple = TupleExpression(expressions: expressions)
+        tuple.addDeclaration(location)
+        tuple.location = location
+        return(tuple)
         }
     }
     
@@ -190,7 +210,7 @@ public class MakeParser: PrefixParser
         let location = parser.token.location
         parser.nextToken()
         var arguments = Expressions()
-        var type: TypeNode!
+        var type: ArgonType!
         parser.parseParentheses
             {
             type = parser.parseType()

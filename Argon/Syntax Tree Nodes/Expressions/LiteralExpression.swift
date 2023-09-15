@@ -65,11 +65,11 @@ public class LiteralExpression: Expression
         super.init()
         }
         
-    public init(enumeration: EnumerationType,enumerationCase: EnumerationCase)
-        {
-        self.value = .enumerationInstance(enumeration,enumerationCase)
-        super.init()
-        }
+//    public init(enumeration: EnumerationType,enumerationCase: EnumerationCase)
+//        {
+//        self.value = .enumerationInstance(enumeration,enumerationCase)
+//        super.init()
+//        }
         
     public override func encode(with coder: NSCoder)
         {
@@ -94,13 +94,13 @@ extension NSCoder
             case(.integer(let integer)):
                 self.encode(1,forKey: "\(key)_index")
                 self.encode(integer,forKey: "\(key)_integer")
-            case(.enumerationInstance(let enumeration,let aCase)):
-                self.encode(2,forKey: "\(key)_index")
-                self.encode(enumeration,forKey: "\(key)_enumerationInstance_enumeration")
-                self.encode(aCase,forKey: "\(key)_enumerationInstance_enumerationCase")
-//            case(.object(let object)):
-//                self.encode(3,forKey: "\(key)_index")
-//                self.encode(object,forKey: "\(key)_object")
+//            case(.enumerationInstance(let enumeration,let aCase)):
+//                self.encode(2,forKey: "\(key)_index")
+//                self.encode(enumeration,forKey: "\(key)_enumerationInstance_enumeration")
+//                self.encode(aCase,forKey: "\(key)_enumerationInstance_enumerationCase")
+            case(.path(let string)):
+                self.encode(3,forKey: "\(key)_index")
+                self.encode(string,forKey: "\(key)_path")
             case(.float(let float)):
                 self.encode(4,forKey: "\(key)_index")
                 self.encode(float,forKey: "\(key)_float")
@@ -177,10 +177,10 @@ extension NSCoder
                 return(.none)
             case(1):
                 return(.integer(self.decodeInt64(forKey: "\(key)_integer")))
-            case(2):
-                return(.enumerationInstance(self.decodeObject(forKey: "\(key)_enumerationInstance_enumeration") as! EnumerationType,self.decodeObject(forKey: "\(key)_enumerationInstance_enumerationCase") as! EnumerationCase))
-//            case(3):
-//                return(.object(self.decodeObject(forKey: "\(key)_object") as! ObjectInstance))
+//            case(2):
+//                return(.enumerationInstance(self.decodeObject(forKey: "\(key)_enumerationInstance_enumeration") as! EnumerationType,self.decodeObject(forKey: "\(key)_enumerationInstance_enumerationCase") as! EnumerationCase))
+            case(3):
+                return(.path(self.decodeObject(forKey: "\(key)_path") as! String))
             case(4):
                 return(.float(self.decodeDouble(forKey: "\(key)_float")))
             case(5):

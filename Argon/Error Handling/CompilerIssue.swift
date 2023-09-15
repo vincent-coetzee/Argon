@@ -37,7 +37,7 @@ public enum IssueCode: String
     case identifierExpected                                         = "identifier expected."
     case identifierAlreadyDefined                                   = "identifier already defined."
     case invalidExpression                                          = "invalid expression."
-    case instanceOfEnumerationBaseExpected                          = "instance of EnumerationBase expected."
+    case instanceOfDiscreteTypeExpected                             = "instance of DiscreteType expected."
     case integerExpected                                            = "Integer expected."
     case integerValueExpected                                       = "integer value expected."
     case inExpected                                                 = "'IN' expected."
@@ -62,7 +62,7 @@ public enum IssueCode: String
     case moduleEntryExpected                                        = "module entry expected."
     case moduleExpected                                             = "'MODULE' expected."
     case moduleNameExpected                                         = "module name expected."
-    case mustInheritFromEnumerationBase                             = "must inherit from EnumerationBase."
+    case mustInheritFromDiscreteType                                = "must inherit from DiscreteType."
     case multipleMainMethodsFound                                   = "multiple 'main' methods found."
     
     case none                                                       = "none"
@@ -92,11 +92,11 @@ public enum IssueCode: String
     case undefinedClass                                             = "undefined class."
     case usingGenericClassesOnNonGenericClass                       = "generic classes used on non generic class."
     
-    case vitualSlotMustSpecifyClass                                 = "virtual slot must specify class."
+    case vitualSlotMustSpecifyType                                  = "virtual slot must specify type."
     case virtualSlotNotAllowedInitialExpression                     = "virtual slot not allowed initial value."
     
     case whenExpected                                               = "'WHEN' expected."
-    case whileExpectedAfterRepeatBlock                              = "'WHILE' expected after REPEAT block."
+    case whileExpectedAfterRepeatBlock                              = "'WHILE' expected after 'REPEAT' block."
     case writeBlockExpectedForVirtualSlot                           = "'WRITE' block expected for virtual slot."
     }
     

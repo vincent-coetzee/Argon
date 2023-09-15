@@ -24,7 +24,7 @@ public class Parameter: Variable
         return("\(aName)::\(typeName)")
         }
         
-    init(definedByPosition: Bool,externalName: String?,internalName: String,type: TypeNode)
+    init(definedByPosition: Bool,externalName: String?,internalName: String,type: ArgonType)
         {
         self.definedByPosition = definedByPosition
         self.internalName = internalName

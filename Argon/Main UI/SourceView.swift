@@ -120,7 +120,7 @@ class SourceView: NSTextView
         
     private func toggleIssueDisplay(`for` issue: CompilerIssue)
         {
-        if let annotation = self.activeAnnotations[issue.location.line]
+        if self.activeAnnotations[issue.location.line].isNotNil
             {
             self.hideAnnotation(for: issue)
             }
@@ -144,7 +144,7 @@ class SourceView: NSTextView
     public func showAnnotation(`for` issue: CompilerIssue)
         {
         let line = issue.location.line
-        if let annotation = self.activeAnnotations[line]
+        if self.activeAnnotations[line].isNotNil
             {
             return
             }

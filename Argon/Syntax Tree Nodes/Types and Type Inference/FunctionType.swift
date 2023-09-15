@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class FunctionType: CallableTypeNode
+public class FunctionType: CallableType
     {
     public var signature: MethodSignature
         {
@@ -17,14 +17,6 @@ public class FunctionType: CallableTypeNode
     public override var isFunction: Bool
         {
         return(true)
-        }
-        
-    public override var encoding: String
-        {
-        let inners = self.parameters.map{$0.type.encoding}
-        let string = inners.joined(separator: "_")
-        let returnTypeString = self.returnType.isNil ? ArgonModule.shared.voidType.encoding : self.returnType!.encoding
-        return("a\(self.name)_\(string)_\(returnTypeString)_")
         }
         
     public override func accept(visitor: Visitor)

@@ -7,9 +7,9 @@
 
 import Foundation
 
-public class TypeVariable: TypeNode
+public class TypeVariable: ArgonType
     {
-    public init(name: String)
+    public override init(name: String)
         {
         super.init(name: name)
         }

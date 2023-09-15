@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class MethodType: CallableTypeNode
+public class MethodType: CallableType
     {
     public var signature: MethodSignature
         {
@@ -33,7 +33,7 @@ public class MethodType: CallableTypeNode
             {
             block.addLocal(parameter)
             }
-        var returnType: TypeNode?
+        var returnType: ArgonType?
         if parser.token.isRightArrow
             {
             parser.nextToken()
@@ -48,16 +48,9 @@ public class MethodType: CallableTypeNode
         parser.currentScope.addNode(method)
         }
         
-    public override var encoding: String
-        {
-        let inners = self.parameters.map{$0.type.encoding}.joined(separator: "_")
-        let returnTypeString = self.returnType.isNil ? ArgonModule.shared.voidType.encoding : self.returnType!.encoding
-        return("c\(self.name)_\(inners)_\(returnTypeString)_")
-        }
-        
     public override var description: String
         {
-        let returnName = self.returnType?.name ?? "Void"
+        let returnName = self.returnType.name
         let parameterName = self.parameters.map{$0.description}.joined(separator: ",")
         return("\(self.name)(\(parameterName)) -> \(returnName)")
         }

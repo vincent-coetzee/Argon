@@ -9,7 +9,7 @@ import Foundation
 
 public class PseudoVariable: Variable
     {
-    public static func `self`(type: TypeNode) -> Self
+    public static func `self`(type: ArgonType) -> Self
         {
         let variable = PseudoVariable(name: "self")
         variable.setType(type)

@@ -7,28 +7,30 @@
 
 import Foundation
 
-public class SubType: AliasedType
+public class SubType: ArgonType
     {
-    public override var encoding: String
+    public override var baseType: ArgonType
         {
-        let baseTypeEncoding = self.baseType.encoding
-        return("i\(baseTypeEncoding)_\(self.lowerBound.encoding)_\(self.upperBound.encoding)")
+        self._parentType.baseType
         }
         
+    public let _parentType: ArgonType
     public let upperBound: ValueBox
     public let lowerBound: ValueBox
     
-    public init(name: String,baseType: TypeNode,lowerBound: ValueBox,upperBound: ValueBox)
+    public init(name: String,parentType: ArgonType,lowerBound: ValueBox,upperBound: ValueBox)
         {
         self.upperBound = upperBound
         self.lowerBound = lowerBound
-        super.init(name: name,baseType: baseType)
+        self._parentType = parentType
+        super.init(name: name)
         }
         
     public required init(coder: NSCoder)
         {
         self.lowerBound = coder.decodeValueBox(forKey: "lowerBound")
         self.upperBound = coder.decodeValueBox(forKey: "upperBound")
+        self._parentType = coder.decodeObject(forKey: "_parentType") as! ArgonType
         super.init(coder: coder)
         }
         
@@ -36,6 +38,7 @@ public class SubType: AliasedType
         {
         coder.encode(self.lowerBound,forKey: "lowerBound")
         coder.encode(self.upperBound,forKey: "upperBound")
+        coder.encode(self._parentType,forKey: "_parentType")
         super.encode(with: coder)
         }
     }

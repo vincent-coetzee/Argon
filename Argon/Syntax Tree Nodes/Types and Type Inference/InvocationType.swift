@@ -9,7 +9,7 @@ import Foundation
 
 public class InvocationType: StructuredType
     {
-    public override var elementTypes: TypeNodes
+    public override var elementTypes: ArgonTypes
         {
         get
             {
@@ -21,5 +21,5 @@ public class InvocationType: StructuredType
             }
         }
         
-    private var _elementTypes: TypeNodes = TypeNodes()
+    private var _elementTypes: ArgonTypes = ArgonTypes()
     }

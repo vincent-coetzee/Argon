@@ -47,7 +47,6 @@ public class SourceCompositeNode: SourceNode
         
     public required init?(coder: NSCoder)
         {
-        print("SourceCompositeNode.init")
         self.nodes = coder.decodeObject(forKey: "nodes") as! Array<SourceNode>
         super.init(coder: coder)
         }

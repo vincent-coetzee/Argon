@@ -80,7 +80,7 @@ public class LoopStatement: Block
         {
         let location = parser.token.location
         let identifier = parser.parseIdentifier(errorCode: .identifierExpected)
-        var type: TypeNode?
+        var type: ArgonType?
         var expression: Expression?
         if parser.token.isScope
             {

@@ -19,16 +19,29 @@ public class EnumerationType: StructuredType
         return(.enumeration)
         }
         
-    public override var encoding: String
+    public override var typeHash: Int
         {
-        "d\(self.name)_"
+        self.hash
+        }
+        
+    public override var hash: Int
+        {
+        var hasher = Hasher()
+        hasher.combine("ENUMERATION")
+        hasher.combine(self.parent)
+        hasher.combine(self.name)
+        for aType in self.genericTypes
+            {
+            hasher.combine(aType)
+            }
+        return(hasher.finalize())
         }
         
     public override class func parse(using parser: ArgonParser)
         {
         let location = parser.token.location
         parser.nextToken()
-        var baseType: TypeNode?
+        var baseType: ArgonType?
         let name = parser.parseIdentifier(errorCode: .identifierExpected).lastPart
         let enumeration = EnumerationType(name: name)
         enumeration.location = location
@@ -36,9 +49,9 @@ public class EnumerationType: StructuredType
             {
             parser.nextToken()
             baseType = parser.parseType()
-            if !baseType!.inherits(from: ArgonModule.shared.enumerationBaseType)
+            if !baseType!.inherits(from: ArgonModule.shared.discreteType)
                 {
-                parser.lodgeError(code: .mustInheritFromEnumerationBase,location: location)
+                parser.lodgeError(code: .mustInheritFromDiscreteType,location: location)
                 }
             enumeration.setRawType(baseType!)
             }
@@ -48,7 +61,7 @@ public class EnumerationType: StructuredType
                 {
                 let localLocation = parser.token.location
                 let caseSymbol = parser.token.symbolValue
-                var types = TypeNodes()
+                var types = ArgonTypes()
                 var instanceValue: ValueBox = .none
                 var isDefault = false
                 parser.nextToken()
@@ -66,9 +79,10 @@ public class EnumerationType: StructuredType
                 if parser.token.isAssign
                     {
                     parser.nextToken()
-                    if !parser.token.isInstanceOfEnumerationBase
+                    let type = parser.parseType()
+                    if !type.inherits(from: ArgonModule.shared.discreteType)
                         {
-                        parser.lodgeError(code: .instanceOfEnumerationBaseExpected,location: localLocation)
+                        parser.lodgeError(code: .instanceOfDiscreteTypeExpected,location: localLocation)
                         }
                     else
                         {
@@ -81,7 +95,7 @@ public class EnumerationType: StructuredType
                     parser.nextToken()
                     isDefault = true
                     }
-                let someCase = EnumerationCase(name: caseSymbol, associatedTypes: types,instanceValue:  instanceValue)
+                let someCase = EnumerationCase(name: caseSymbol,enumeration: enumeration,associatedTypes: types,instanceValue:  instanceValue)
                 someCase.location = localLocation
                 enumeration.addCase(someCase)
                 if isDefault
@@ -96,16 +110,16 @@ public class EnumerationType: StructuredType
         
     public private(set) var cases: EnumerationCases = []
     public private(set) var defaultCase: EnumerationCase?
-    public private(set) var rawType: TypeNode?
+    public private(set) var rawType: ArgonType?
     
     public init(name: String)
         {
         super.init(name: name)
         }
         
-    public init(name: String,cases: EnumerationCases,rawType: TypeNode? = nil)
+    public init(name: String,rawType: ArgonType? = nil)
         {
-        self.cases = cases
+        self.cases = []
         self.rawType = rawType
         super.init(name: name)
         }
@@ -114,7 +128,7 @@ public class EnumerationType: StructuredType
         {
         self.cases = coder.decodeObject(forKey: "cases") as! EnumerationCases
         self.defaultCase = coder.decodeObject(forKey: "defaultCase") as? EnumerationCase
-        self.rawType = coder.decodeObject(forKey: "rawType") as? TypeNode
+        self.rawType = coder.decodeObject(forKey: "rawType") as? ArgonType
         super.init(coder: coder)
         }
         
@@ -126,12 +140,17 @@ public class EnumerationType: StructuredType
         super.encode(with: coder)
         }
         
+    public func setCases(_ cases: Array<EnumerationCase>)
+        {
+        self.cases = cases
+        }
+        
     public func addCase(_ someCase: EnumerationCase)
         {
         self.cases.append(someCase)
         }
         
-    public func setRawType(_ type: TypeNode)
+    public func setRawType(_ type: ArgonType)
         {
         self.rawType = type
         }

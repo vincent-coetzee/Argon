@@ -135,17 +135,17 @@ public class ArgonScanner
             return(self.scanToken())
             }
         let prefix = self.sourcePrefix(length: 2)
-        if prefix == "\\"
+        if prefix == ":("
             {
-            print("halt")
-            }
-        if prefix == "/*" || prefix == "//"
-            {
-            return(self.scanComment())
+            return(self.scanPath())
             }
         else if prefix == "@("
             {
             return(self.scanDateOrTime())
+            }
+        else if prefix == "/*" || prefix == "//"
+            {
+            return(self.scanComment())
             }
         else if self.brackets.contains(self.currentCharacter)
             {
@@ -170,10 +170,6 @@ public class ArgonScanner
         else if self.identifierStartCharacters.contains(self.currentCharacter)
             {
             return(self.scanIdentifier())
-            }
-        else if self.currentCharacter == "/"
-            {
-            return(self.scanPath())
             }
         let character = self.currentCharacter
         self.nextCharacter()
@@ -206,11 +202,16 @@ public class ArgonScanner
         
     private func scanPath() -> Token
         {
-        var string = String(self.currentCharacter)
+        var string = String()
+        self.nextCharacter()
         self.nextCharacter()
         while self.pathCharacters.contains(self.currentCharacter) && !self.atEnd
             {
             string.append(self.currentCharacter)
+            self.nextCharacter()
+            }
+        if self.currentCharacter == ")"
+            {
             self.nextCharacter()
             }
         return(PathToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string))
@@ -221,7 +222,7 @@ public class ArgonScanner
         var identifier = String()
         if self.sourcePrefix(length: 2)  == "\\"
             {
-            print("halt")
+            return(self.scanPath())
             }
         while self.identifierCharacters.contains(self.currentCharacter) && !self.atEnd
             {

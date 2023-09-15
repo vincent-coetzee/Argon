@@ -17,10 +17,12 @@ public class EnumerationCase: NSObject,NSCoding
     public var location: Location = .zero
     public let name: String
     public let instanceValue: ValueBox
-    public var associatedTypes = TypeNodes()
+    public var associatedTypes = ArgonTypes()
+    public var enumerationType: EnumerationType
     
-    public init(name: String,associatedTypes: TypeNodes = [],instanceValue: ValueBox)
+    public init(name: String,enumeration: EnumerationType,associatedTypes: ArgonTypes = [],instanceValue: ValueBox)
         {
+        self.enumerationType = enumeration
         self.associatedTypes = associatedTypes
         self.name = name
         self.instanceValue = instanceValue
@@ -29,8 +31,9 @@ public class EnumerationCase: NSObject,NSCoding
     required public init(coder: NSCoder)
         {
         self.name = coder.decodeObject(forKey: "name") as! String
-        self.associatedTypes = coder.decodeObject(forKey: "associatedTypes") as! TypeNodes
+        self.associatedTypes = coder.decodeObject(forKey: "associatedTypes") as! ArgonTypes
         self.instanceValue = coder.decodeValueBox(forKey: "instanceValue")
+        self.enumerationType = coder.decodeObject(forKey: "enumerationType") as! EnumerationType
         }
         
     public func encode(with coder: NSCoder)
@@ -38,6 +41,16 @@ public class EnumerationCase: NSObject,NSCoding
         coder.encode(self.instanceValue,forKey: "instanceValue")
         coder.encode(self.name,forKey: "name")
         coder.encode(self.associatedTypes,forKey: "associatedTypes")
+        coder.encode(self.enumerationType,forKey: "enumerationType")
+        }
+        
+    public override var hash: Int
+        {
+        var hasher = Hasher()
+        hasher.combine("ENUMERATIONCASE")
+        hasher.combine(self.enumerationType)
+        hasher.combine(self.name)
+        return(hasher.finalize())
         }
     }
 
