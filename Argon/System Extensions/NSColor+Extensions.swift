@@ -296,7 +296,7 @@ extension NSColor
         let alpha = colors[3]
         return(Self(red: red, green: green, blue: blue,alpha: alpha))
         }
-        
+
     convenience init(red:Int,green:Int,blue:Int)
         {
         self.init(red: CGFloat(red)/255.0,green: CGFloat(green)/255.0,blue:CGFloat(blue)/255.0,alpha: 1.0)
@@ -317,4 +317,3 @@ extension NSColor
         return(Self(red:components[0],green:components[1],blue:components[2],alpha: alpha))
         }
     }
-

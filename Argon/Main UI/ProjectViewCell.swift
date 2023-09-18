@@ -9,6 +9,19 @@ import Cocoa
 
 public class ProjectViewCell: NSTableCellView
     {
+    private static let fontStyleElement: StyleElement = .fontProjectCell
+    
+    public var cellWidth: CGFloat
+        {
+        guard let field = self.textField else
+            {
+            return(0)
+            }
+        let text = field.attributedStringValue
+        let textWidth = text.size().width
+        return(20 + 8 + textWidth)
+        }
+        
     public var node: SourceNode?
         {
         didSet
@@ -19,7 +32,7 @@ public class ProjectViewCell: NSTableCellView
                 let image = self.node!.projectViewImage
                 self.imageView?.image = image
                 self.imageView?.image?.isTemplate = true
-                self.imageView?.contentTintColor = SourceTheme.shared.color(for: .colorTint)
+                self.imageView?.contentTintColor = StyleTheme.shared.color(for: .colorTint)
                 }
             }
         }
@@ -33,8 +46,12 @@ public class ProjectViewCell: NSTableCellView
         {
         super.layout()
         let theFrame = self.bounds
-        self.imageView!.frame = NSRect(x: 4,y: 2,width: 20,height: theFrame.size.height - 2)
-        self.textField!.frame = NSRect(x: 24,y: 2,width: theFrame.size.width - 24,height: theFrame.size.height - 4)
-        self.textField?.font = SourceTheme.shared.font(for: .fontDefault)
+        let cellFont = StyleTheme.shared.font(for: Self.fontStyleElement)
+        let rowHeight = cellFont.lineHeight + 4 + 4
+        let imageWidth = rowHeight - 4
+        self.imageView!.frame = NSRect(x: 0,y: 2,width: imageWidth,height: imageWidth)
+        let inset = (theFrame.size.height - cellFont.lineHeight) / 2
+        self.textField!.frame = NSRect(x: imageWidth + 4,y: inset,width: theFrame.size.width - imageWidth - 4,height: cellFont.lineHeight)
+        self.textField?.font = cellFont
         }
     }

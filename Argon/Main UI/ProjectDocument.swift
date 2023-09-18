@@ -10,7 +10,7 @@ import Cocoa
 class ProjectDocument: NSDocument
     {
     private var projectState: ProjectState!
-    private var project: SourceProjectNode?
+    private var project: SourceProjectNode = SourceProjectNode(name: "Untitled",path: .homePath(withFileNamed: "Untitled.argonp"))
     
     override init()
         {
@@ -26,16 +26,8 @@ class ProjectDocument: NSDocument
     override func makeWindowControllers()
         {
         let storyboard = NSStoryboard(name: NSStoryboard.Name("Main"), bundle: nil)
-        let windowController = storyboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("ProjectWindowController")) as! NSWindowController
-        if let contentViewController = windowController.contentViewController as? ProjectViewController
-            {
-            contentViewController.windowWasCreated(window: windowController.window!)
-            if let project = self.project
-                {
-                contentViewController.project = project
-//                windowController.window?.setFrame(self.projectState.windowFrame,display: true,animate: true)
-                }
-            }
+        let windowController = storyboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("ProjectWindowController")) as! ProjectWindowController
+        windowController.project = self.project
         self.addWindowController(windowController)
         }
 

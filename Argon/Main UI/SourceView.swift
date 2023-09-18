@@ -48,7 +48,7 @@ class SourceView: NSTextView
             }
         }
         
-    public let theme = SourceTheme.shared
+    public let theme = StyleTheme.shared
     
     private var _tokens = Tokens()
     public private(set) var rulerView: LineNumberRulerView!
@@ -77,9 +77,9 @@ class SourceView: NSTextView
         
     private func initSourceView()
         {
-        self.backgroundColor = SourceTheme.shared.color(for: .colorEditorBackground)
-        self.font = SourceTheme.shared.font(for: .fontEditor)
-        self.textColor = SourceTheme.shared.color(for: .colorEditorText)
+        self.backgroundColor = StyleTheme.shared.color(for: .colorEditorBackground)
+        self.font = StyleTheme.shared.font(for: .fontEditor)
+        self.textColor = StyleTheme.shared.color(for: .colorEditorText)
         self.isAutomaticTextCompletionEnabled = false
         self.isAutomaticLinkDetectionEnabled = false
         self.isGrammarCheckingEnabled = false
@@ -89,8 +89,8 @@ class SourceView: NSTextView
         self.isAutomaticDashSubstitutionEnabled = false
         self.isAutomaticDataDetectionEnabled = false
         self.isAutomaticTextReplacementEnabled = false
-        self.font = SourceTheme.shared.font(for: .fontEditor)
-        self.backgroundColor = SourceTheme.shared.color(for: .colorEditorBackground)
+        self.font = StyleTheme.shared.font(for: .fontEditor)
+        self.backgroundColor = StyleTheme.shared.color(for: .colorEditorBackground)
         self.isEditable = true
         self.wantsLayer = true
         self.isVerticallyResizable = true
@@ -101,7 +101,7 @@ class SourceView: NSTextView
         self.textContainer?.containerSize = NSSize(width: 1000,height: CGFloat.infinity)
         self.textContainer?.widthTracksTextView = true
         self.autoresizingMask = [.width]
-        self.rulerView = LineNumberRulerView(withTextView: self, foregroundColorStyleElement: .colorLineNumber, backgroundColorStyleElement: .colorEditorBackground,annotatedLineColorStyleElement: .colorAnnotatedLineNumber)
+        self.rulerView = LineNumberRulerView(withTextView: self, foregroundColorStyleElement: .colorLineNumber, backgroundColorStyleElement: .colorEditorBackground)
         self.rulerView.clientView = self
         NotificationCenter.default.addObserver(self, selector: #selector(self.textDidEndEditing), name: NSText.didEndEditingNotification, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(self.textDidBeginEditing), name: NSText.didBeginEditingNotification, object: self)
@@ -150,8 +150,8 @@ class SourceView: NSTextView
             }
         let newLayer = CATextLayer()
         newLayer.string = issue.message
-        newLayer.backgroundColor = SourceTheme.shared.color(for: .colorIssue).cgColor
-        newLayer.foregroundColor = SourceTheme.shared.color(for: .colorIssueText).cgColor
+        newLayer.backgroundColor = StyleTheme.shared.color(for: .colorIssue).cgColor
+        newLayer.foregroundColor = StyleTheme.shared.color(for: .colorIssueText).cgColor
         newLayer.frame = self.endOfLineRect(forLine: line)
         var layerFrame = newLayer.frame
         if layerFrame.origin.x + 10 < self.bounds.maxX
@@ -159,8 +159,8 @@ class SourceView: NSTextView
             layerFrame.origin.x += 10
             layerFrame.size.width -= 10
             }
-        let font = SourceTheme.shared.font(for: .fontEditor)
-        let attributes: [NSAttributedString.Key:Any] = [.backgroundColor:SourceTheme.shared.color(for: .colorIssue),.foregroundColor: SourceTheme.shared.color(for: .colorIssueText),.font: font]
+        let font = StyleTheme.shared.font(for: .fontEditor)
+        let attributes: [NSAttributedString.Key:Any] = [.backgroundColor:StyleTheme.shared.color(for: .colorIssue),.foregroundColor: StyleTheme.shared.color(for: .colorIssueText),.font: font]
         let size = NSAttributedString(string: issue.message,attributes: attributes).size()
         newLayer.font = font
         newLayer.fontSize = font.pointSize
@@ -215,7 +215,7 @@ class SourceView: NSTextView
     private func refresh()
         {
         self.textStorage?.beginEditing()
-        let sourceTheme = SourceTheme.shared
+        let sourceTheme = StyleTheme.shared
         let font = sourceTheme.font(for: .fontEditor)
         for token in self._tokens
             {

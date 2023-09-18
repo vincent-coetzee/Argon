@@ -10,6 +10,11 @@ import Path
 
 extension Path
     {
+    public static func homePath(withFileNamed name: String) -> Path
+        {
+        return(Path(self.home.string + "/" + name)!)
+        }
+        
     public var lastPathComponentSansExtension: String
         {
         let string = NSString(string: self.string)

@@ -16,9 +16,9 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
     @IBOutlet weak var sourceView:SourceCodeEditingView!
     @IBOutlet weak var toolbar: NSToolbar!
     @IBOutlet weak var splitView: NSSplitView!
-    @IBOutlet weak var leftView: NSView!
-    @IBOutlet weak var centerView: NSView!
-    @IBOutlet weak var rightView: NSView!
+//    @IBOutlet weak var leftView: NSView!
+//    @IBOutlet weak var centerView: NSView!
+//    @IBOutlet weak var rightView: NSView!
     
     private var _project = SourceProjectNode(name: "Project",path: Path(Path.root))
     private var leftSidebarState = ToggleState.expanded
@@ -29,14 +29,8 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
     private var pathControlWidthConstraint: NSLayoutConstraint!
     private var selectedSourceNode: SourceNode!
     private var issueCountIconLabelView: IconLabelView!
-    private var leftViewFrame: NSRect = .zero
-    private var centerViewFrame: NSRect = .zero
-    private var rightViewFrame: NSRect = .zero
     private var stateWasRestored = false
-    
-    private static let outlinerViewHoldingPriority = NSLayoutConstraint.Priority(rawValue: 500)
-    private static let sourceViewHoldingPriority = NSLayoutConstraint.Priority(rawValue: 1000)
-    private static let rightViewHoldingPriority = NSLayoutConstraint.Priority(rawValue: 600)
+    private var isCollapsingLeftSidebar = false
     
     private static let outlinerViewIndex = 0
     private static let sourceViewIndex = 1
@@ -46,7 +40,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         {
         get
             {
-            return(ProjectState(project: self.project, leftViewFrame: self.leftViewFrame, centerViewFrame: self.centerViewFrame,rightViewFrame: self.rightViewFrame))
+            return(ProjectState(project: self.project, leftViewFrame: .zero, centerViewFrame: .zero,rightViewFrame: .zero))
             }
         set
             {
@@ -76,16 +70,15 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         super.viewDidLoad()
         self.initSourceView()
         self.initOutliner()
-//        self.initSplitView()
+        self.initSplitView()
         self.representedObject = self.project
         }
         
-//    private func initSplitView()
-//        {
-////        self.splitView.setHoldingPriority(NSLayoutConstraint.Priority(rawValue: NSLayoutConstraint.Priority.required.rawValue - 100),forSubviewAt: Self.outlinerViewIndex)
-////        self.splitView.setHoldingPriority(NSLayoutConstraint.Priority(rawValue: NSLayoutConstraint.Priority.required.rawValue - 50),forSubviewAt: Self.rightViewIndex)
-//        self.splitView.delegate = self
-//        }
+    private func initSplitView()
+        {
+        self.splitView.delegate = self
+        self.splitView.setHoldingPriority(NSLayoutConstraint.Priority(rawValue: 199), forSubviewAt: 1)
+        }
         
     public func windowWasCreated(window: NSWindow)
         {
@@ -100,7 +93,6 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         self.rightSidebarController.target = self
         window.addTitlebarAccessoryViewController(self.rightSidebarController)
         NotificationCenter.default.addObserver(self, selector: #selector(self.windowFrameDidChange), name: NSWindow.didResizeNotification, object: window)
-//        NotificationCenter.default.addObserver(self, selector: #selector(self.splitViewDidResizeSubviews), name: NSSplitView.didResizeSubviewsNotification, object: self.splitView)
         window.titleVisibility = .hidden
         if !self.stateWasRestored
             {
@@ -159,15 +151,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         let width = frame.size.width - toolbarWidth
         return(width)
         }
-        
-//    @objc func splitViewDidResizeSubviews(_ notification: NSNotification)
-//        {
-//        let subviews = self.splitView.arrangedSubviews
-//        self.leftViewFrame = subviews[Self.outlinerViewIndex].frame
-//        self.centerViewFrame = subviews[Self.sourceViewIndex].frame
-//        self.rightViewFrame = subviews[Self.rightViewIndex].frame
-//        }
-        
+ 
     public func toolbar(_ toolbar: NSToolbar,itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem?
         {
         if itemIdentifier == NSToolbarItem.Identifier("pathControl")
@@ -179,8 +163,8 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
             let view = NSPathControl()
             toolbarItem.view = view
             view.wantsLayer = true
-            view.layer!.cornerRadius = SourceTheme.shared.metric(for: .metricControlCornerRadius)
-            view.layer!.backgroundColor = SourceTheme.shared.color(for: .colorToolbarBackground).cgColor
+            view.layer!.cornerRadius = StyleTheme.shared.metric(for: .metricControlCornerRadius)
+            view.layer!.backgroundColor = StyleTheme.shared.color(for: .colorToolbarBackground).cgColor
             self.pathControl = view
             toolbarItem.view?.translatesAutoresizingMaskIntoConstraints = false
             let heightConstraint = NSLayoutConstraint(item: view, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 20)
@@ -228,7 +212,10 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         
     private func initOutliner()
         {
-        self.outliner.backgroundColor = SourceTheme.shared.color(for: .colorOutlineBackground)
+        let cellFont = StyleTheme.shared.font(for: .fontDefault)
+        let rowHeight = cellFont.lineHeight + 4 + 4
+        self.outliner.rowHeight = rowHeight
+        self.outliner.backgroundColor = StyleTheme.shared.color(for: .colorOutlineBackground)
         self.outliner.rowSizeStyle = .custom
         self.outliner.intercellSpacing = NSSize(width: 0, height: 4)
         self.outliner.doubleAction = #selector(self.onOutlinerDoubleClicked)
@@ -239,7 +226,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         self.outliner.delegate = self
         self.outliner.dataSource = self
         self.outliner.reloadData()
-        self.outliner.font = SourceTheme.shared.font(for: .fontDefault)
+        self.outliner.font = StyleTheme.shared.font(for: .fontDefault)
         self.outliner.indentationPerLevel = 15
         self.outliner.indentationMarkerFollowsCell = true
         self.outliner.intercellSpacing = NSSize(width: 5,height: 0)
@@ -256,8 +243,8 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         for anItem in node!.pathToProject.reversed()
             {
             let pathControlItem = NSPathControlItem()
-            pathControlItem.attributedTitle = NSAttributedString(string: anItem.name,attributes: [.font: SourceTheme.shared.font(for: .fontDefault),.foregroundColor: SourceTheme.shared.color(for: .colorDefault)])
-            pathControlItem.image = anItem.projectViewImage.image(withTintColor: SourceTheme.shared.color(for: .colorDefault))
+            pathControlItem.attributedTitle = NSAttributedString(string: anItem.name,attributes: [.font: StyleTheme.shared.font(for: .fontDefault),.foregroundColor: StyleTheme.shared.color(for: .colorDefault)])
+            pathControlItem.image = anItem.projectViewImage.image(withTintColor: StyleTheme.shared.color(for: .colorDefault))
             items.append(pathControlItem)
             }
         self.pathControl.pathItems = items
@@ -272,12 +259,14 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
             context.duration = 0.75
             if self.leftSidebarState.isExpanded
                 {
+                self.isCollapsingLeftSidebar = true
                 let amount = self.outliner.bounds.width
                 self.leftSidebarState = self.leftSidebarState.toggledState(amount)
                 self.splitView.setPosition(0, ofDividerAt: 0)
                 }
             else
                 {
+                self.isCollapsingLeftSidebar = false
                 self.splitView.setPosition(self.leftSidebarState.amount,ofDividerAt: 0)
                 self.leftSidebarState = self.leftSidebarState.toggledState()
                 }
@@ -286,25 +275,25 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         
     @objc public func onToggleRightSidebar(_ sender: Any?)
         {
-        NSAnimationContext.runAnimationGroup
-            {
-            context in
-            context.allowsImplicitAnimation = true
-            context.duration = 0.75
-            if self.rightSidebarState.isExpanded
-                {
-                let amount = self.rightView.bounds.width
-                self.rightSidebarState = self.rightSidebarState.toggledState(amount)
-                let offset = self.splitView.bounds.size.width
-                self.splitView.setPosition(offset, ofDividerAt: 1)
-                }
-            else
-                {
-                let offset = self.splitView.bounds.size.width - self.rightSidebarState.amount
-                self.splitView.setPosition(offset,ofDividerAt: 1)
-                self.rightSidebarState = self.rightSidebarState.toggledState()
-                }
-            }
+//        NSAnimationContext.runAnimationGroup
+//            {
+//            context in
+//            context.allowsImplicitAnimation = true
+//            context.duration = 0.75
+//            if self.rightSidebarState.isExpanded
+//                {
+//                let amount = self.rightView.bounds.width
+//                self.rightSidebarState = self.rightSidebarState.toggledState(amount)
+//                let offset = self.splitView.bounds.size.width
+//                self.splitView.setPosition(offset, ofDividerAt: 1)
+//                }
+//            else
+//                {
+//                let offset = self.splitView.bounds.size.width - self.rightSidebarState.amount
+//                self.splitView.setPosition(offset,ofDividerAt: 1)
+//                self.rightSidebarState = self.rightSidebarState.toggledState()
+//                }
+//            }
         }
         
     @IBAction public func textDidGainFocus(_ textView: NSTextView)
@@ -398,13 +387,14 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         }
     }
     
-//extension ProjectViewController: NSSplitViewDelegate
-//    {
-//    @objc func splitView(_ splitView: NSSplitView, constrainMinCoordinate proposedMinimumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat
-//        {
-//        proposedMinimumPosition
-//        }
-//    }
+extension ProjectViewController: NSSplitViewDelegate
+    {
+    @objc func splitView(_ splitView: NSSplitView, constrainMinCoordinate proposedMinimumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat
+        {
+        let maximumRowWidth = self.isCollapsingLeftSidebar ? 0 : self.outliner.widthOfWidestVisibleRow
+        return(max(proposedMinimumPosition,maximumRowWidth))
+        }
+    }
     
 extension ProjectViewController: NSToolbarDelegate
     {
@@ -491,17 +481,17 @@ extension ProjectViewController: NSOutlineViewDataSource
     
 extension ProjectViewController: NSOutlineViewDelegate
     {
-    @MainActor public func outlineViewSelectionDidChange(_ notification: Notification)
-        {
-        let row = self.outliner.selectedRow
-        guard row != -1 else
-            {
-            return
-            }
-        let item = self.outliner.item(atRow: row) as! SourceNode
-        self.setSelected(sourceNode: item)
-        self.updatePathControl(from: item)
-        }
+//    @MainActor public func outlineViewSelectionDidChange(_ notification: Notification)
+//        {
+//        let row = self.outliner.selectedRow
+//        guard row != -1 else
+//            {
+//            return
+//            }
+//        let item = self.outliner.item(atRow: row) as! SourceNode
+//        self.setSelected(sourceNode: item)
+//        self.updatePathControl(from: item)
+//        }
         
     public func outlineView(_ outlineView: NSOutlineView, shouldEdit tableColumn: NSTableColumn?, item: Any) -> Bool
         {

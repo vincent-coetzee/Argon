@@ -27,7 +27,7 @@ public class LineNumberRulerView: NSRulerView
             }
         }
         
-    public var font: NSFont = SourceTheme.shared.font(for: .fontLineNumber)
+    public var font: NSFont = StyleTheme.shared.font(for: .fontLineNumber)
         {
         didSet
             {
@@ -37,7 +37,7 @@ public class LineNumberRulerView: NSRulerView
         
     private var lineNumberOffsets = Array<CGFloat>()
     /// Contains a true value for every line that is annotated or nil otherwise
-    private var annotatedLines = Dictionary<Int,Bool>()
+    private var annotatedLines = Dictionary<Int,NSRulerMarker>()
     /// Holds the height of a line
     internal var lineHeight: CGFloat = 0
     /// Holds the number of lines
@@ -59,15 +59,6 @@ public class LineNumberRulerView: NSRulerView
             self.needsDisplay = true
             }
         }
-        
-    /// Holds the color of the annotated lines.
-    internal var annotatedLineColorStyleElement: StyleElement
-        {
-        didSet
-            {
-            self.needsDisplay = true
-            }
-        }
 
     ///  Initializes a LineNumberGutter with the given attributes.
     ///
@@ -76,18 +67,17 @@ public class LineNumberRulerView: NSRulerView
     ///  - parameter backgroundColor: Defines the background color.
     ///
     ///  - returns: An initialized LineNumberGutter object.
-    init(withTextView textView: NSTextView, foregroundColorStyleElement: StyleElement, backgroundColorStyleElement: StyleElement,annotatedLineColorStyleElement: StyleElement)
+    init(withTextView textView: NSTextView, foregroundColorStyleElement: StyleElement, backgroundColorStyleElement: StyleElement)
         {
         // Set the color preferences.
         self.backgroundColorStyleElement = backgroundColorStyleElement
         self.foregroundColorStyleElement = foregroundColorStyleElement
-        self.annotatedLineColorStyleElement = annotatedLineColorStyleElement
         // Make sure everything's set up properly before initializing properties.
         super.init(scrollView: textView.enclosingScrollView, orientation: .verticalRuler)
         // Set the rulers clientView to the supplied textview.
         self.clientView = textView
         // Define the ruler's width.
-        self.ruleThickness = SourceTheme.shared.metric(for: .metricLineNumberRulerWidth)
+        self.ruleThickness = StyleTheme.shared.metric(for: .metricLineNumberRulerWidth)
 //        self.reservedThicknessForMarkers = 18
         }
 
@@ -103,7 +93,7 @@ public class LineNumberRulerView: NSRulerView
 
         self.lineNumberOffsets = []
         // Set the current background color...
-        SourceTheme.shared.color(for: self.backgroundColorStyleElement).set()
+        StyleTheme.shared.color(for: self.backgroundColorStyleElement).set()
         // ...and fill the given rect.
         rect.fill()
         // Unwrap the clientView, the layoutManager and the textContainer, since we'll
@@ -259,16 +249,17 @@ public class LineNumberRulerView: NSRulerView
             return
             }
         // Define attributes for the attributed string.
-        let color = (self.annotatedLines[number] ?? false) ? SourceTheme.shared.color(for: self.annotatedLineColorStyleElement) : SourceTheme.shared.color(for: self.foregroundColorStyleElement)
+        let marker = self.annotatedLines[number]
+        var color = marker.isNotNil ? marker!.color : StyleTheme.shared.color(for: self.foregroundColorStyleElement)
         let attrs = [NSAttributedString.Key.font: font, NSAttributedString.Key.foregroundColor: color]
         // Define the attributed string.
         let attributedString = NSAttributedString(string: "\(number)", attributes: attrs)
         // Get the NSZeroPoint from the text view.
         let relativePoint    = self.convert(NSZeroPoint, from: textView)
         // Calculate the x position, within the gutter.
-        let xPosition = SourceTheme.shared.metric(for: .metricLineNumberRulerWidth) - (attributedString.size().width)
+        let xPosition = StyleTheme.shared.metric(for: .metricLineNumberRulerWidth) - (attributedString.size().width)
         // Draw the attributed string to the calculated point.
-        attributedString.draw(at: NSPoint(x: xPosition - SourceTheme.shared.metric(for: .metricLineNumberIndent), y: relativePoint.y + yPos + textView.textContainerInset.height))
+        attributedString.draw(at: NSPoint(x: xPosition - StyleTheme.shared.metric(for: .metricLineNumberIndent), y: relativePoint.y + yPos + textView.textContainerInset.height))
         }
         
     public func offset(forLine line: Int) -> CGFloat?
@@ -289,7 +280,7 @@ public class LineNumberRulerView: NSRulerView
         if let marker = self.rulerMarker(from: issue)
             {
             self.addMarker(marker)
-            self.annotatedLines[issue.location.line] = true
+            self.annotatedLines[issue.location.line] = marker
             self.needsDisplay = true
             }
         }
@@ -310,14 +301,14 @@ public class LineNumberRulerView: NSRulerView
         {
         var image = NSImage(named: "IconMarker")!
         image.isTemplate = true
-        image = image.image(withTintColor: SourceTheme.shared.color(for: .colorIssue))
+        image = image.image(withTintColor: StyleTheme.shared.color(for: .colorIssue))
         image.size = NSSize(width: self.lineHeight,height: self.lineHeight)
-        self.annotatedLines[issue.location.line] = true
         guard let offset = self.offset(forLine: issue.location.line) else
             {
             return(nil)
             }
         let marker = NSRulerMarker(rulerView: self, markerLocation: offset, image: image, imageOrigin: NSPoint(x: 0,y: self.lineHeight / 2))
+        self.annotatedLines[issue.location.line] = marker
         marker.representedObject = issue as NSCopying
         return(marker)
         }
@@ -332,7 +323,7 @@ public class LineNumberRulerView: NSRulerView
         
     public func removeAllIssues()
         {
-        self.annotatedLines = Dictionary<Int,Bool>()
+        self.annotatedLines = Dictionary<Int,NSRulerMarker>()
         let some = self.markers ?? []
         for marker in some
             {

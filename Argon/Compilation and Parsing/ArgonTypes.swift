@@ -9,6 +9,10 @@ import Foundation
 
 public struct Argon
     {
+    private static let moduleExtension = "argonm"
+    private static let sourceExtension = "argon"
+    private static let projectExtension = "argonp"
+    
     private static var _nextIndex = 1
     
     public static var nextIndex: Int

@@ -10,13 +10,14 @@ import Cocoa
 
 public enum StyleElement
     {
-    case colorAnnotatedLineNumber
     case colorArray
     
     case colorBitSet
     case colorBarBackground
     case colorBackground
     case colorBoolean
+    case colorBreakpoint
+    case colorBreakpointLine
     case colorByte
     
     case colorCalendrical
@@ -39,6 +40,7 @@ public enum StyleElement
     case colorIdentifier
     case colorInteger
     case colorIssue
+    case colorIssueLine
     case colorIssueText
     
     case colorKeyword
@@ -79,6 +81,7 @@ public enum StyleElement
     case fontLineNumber
     case fontEditor
     case fontToolbarText
+    case fontProjectCell
     
     case metric
     case metricLineNumberRulerWidth
@@ -86,9 +89,9 @@ public enum StyleElement
     case metricControlCornerRadius
     }
     
-public class SourceTheme
+public class StyleTheme
     {
-    public static let shared = SourceTheme()
+    public static let shared = StyleTheme()
     
     public private(set) var styles: Dictionary<StyleElement,Any>
     
@@ -96,17 +99,19 @@ public class SourceTheme
         {
         self.styles = [:]
         self.styles[.fontDefault] = NSFont(name: "SunSans-Demi",size: 11)!
+        self.styles[.fontProjectCell] = self.styles[.fontDefault]
         self.styles[.fontToolbarText] = NSFont(name: "SunSans-Regular",size: 10)!
         self.styles[.fontText] = NSFont(name: "SunSans-Regular",size: 10)!
         self.styles[.fontEditor] = NSFont(name: "Menlo-Regular",size: 11)
         self.styles[.fontLineNumber] = self.styles[.fontEditor]
         
         self.styles[.colorArray] = NSColor.argonYellowSpaghettiSquash
-        self.styles[.colorAnnotatedLineNumber] = NSColor.argonBrightYellowCrayola
         
         self.styles[.colorBackground] = NSColor.black
         self.styles[.colorBarBackground] = NSColor.argonDarkestGray
         self.styles[.colorBitSet] = NSColor.argonDivaPink
+        self.styles[.colorBreakpoint] = NSColor.argonDivaPink
+        self.styles[.colorBreakpointLine] = NSColor.argonDivaPink
         self.styles[.colorBoolean] = NSColor.argonBayside
         self.styles[.colorByte] = NSColor.argonXSmoke
         
@@ -131,6 +136,7 @@ public class SourceTheme
         self.styles[.colorIdentifier] = NSColor.argonThemePink
         self.styles[.colorInteger] = NSColor.argonGreenSea
         self.styles[.colorIssue] = NSColor.argonBrightYellowCrayola
+        self.styles[.colorIssueLine] = NSColor.argonBrightYellowCrayola
         self.styles[.colorIssueText] = NSColor.black
         
         self.styles[.colorKeyword] = NSColor(red: 63,green: 149,blue: 116)

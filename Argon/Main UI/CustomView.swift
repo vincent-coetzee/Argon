@@ -36,7 +36,7 @@ public class CustomView: NSView
         didSet
             {
             self.wantsLayer = true
-            self.layer!.backgroundColor = SourceTheme.shared.color(for: self.backgroundColorElement).cgColor
+            self.layer!.backgroundColor = StyleTheme.shared.color(for: self.backgroundColorElement).cgColor
             }
         }
         

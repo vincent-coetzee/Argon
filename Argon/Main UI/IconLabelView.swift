@@ -28,14 +28,14 @@ public class IconLabelView: CustomView,Control,Dependent
         
     private var textColor: NSColor
         {
-        SourceTheme.shared.color(for: self.textColorElement)
+        StyleTheme.shared.color(for: self.textColorElement)
         }
         
     public override var textFontElement: StyleElement
         {
         didSet
             {
-            let font = SourceTheme.shared.font(for: self.textFontElement)
+            let font = StyleTheme.shared.font(for: self.textFontElement)
             self.textLayer.font = font
             self.textLayer.fontSize = font.pointSize
             self.invalidateIntrinsicContentSize()
@@ -63,7 +63,7 @@ public class IconLabelView: CustomView,Control,Dependent
                 {
                 var image = self.imageValueModel.value as? NSImage
                 image?.isTemplate = true
-                image = image?.image(withTintColor: SourceTheme.shared.color(for: identifier))
+                image = image?.image(withTintColor: StyleTheme.shared.color(for: identifier))
                 self.imageLayer.contents = image
                 }
             }
@@ -71,14 +71,14 @@ public class IconLabelView: CustomView,Control,Dependent
         
     private var textFont: NSFont
         {
-        SourceTheme.shared.font(for: self.textFontElement)
+        StyleTheme.shared.font(for: self.textFontElement)
         }
         
     public var textColorElement: StyleElement = .colorText
         {
         didSet
             {
-            self.textLayer.foregroundColor = SourceTheme.shared.color(for: self.textColorElement).cgColor
+            self.textLayer.foregroundColor = StyleTheme.shared.color(for: self.textColorElement).cgColor
             }
         }
         
@@ -179,7 +179,7 @@ public class IconLabelView: CustomView,Control,Dependent
         var anImage = self.imageValueModel.value as! NSImage
         if self.imageTintElement.isNotNil
             {
-            anImage = anImage.image(withTintColor: SourceTheme.shared.color(for: self.imageTintElement!))
+            anImage = anImage.image(withTintColor: StyleTheme.shared.color(for: self.imageTintElement!))
             }
         self.imageLayer.contents = anImage
         self.textLayer.string = self.valueModel.value as? String

@@ -78,7 +78,7 @@ public struct ArgonTests
         assert(typeA.typeHash == typeC.typeHash,"TypeA.typeHash != TypeC.typeHash and should be.")
         assert(typeA.typeHash == typeA.typeHash,"TypeA.typeHash != TypeA.typeHash and should be.")
         assert(typeA.typeHash != typeB.typeHash,"TypeA.typeHash == TypeB.typeHash and should be.")
-        assert(typeA.typeHash == aliasedTypeA.typeHash,"TypeA.typeHash != AliasedTypeA.typeHash and should be.")
+        assert(typeA.typeHash != aliasedTypeA.typeHash,"TypeA.typeHash == AliasedTypeA.typeHash and should not be.")
         }
         
     public static func testIdentity()
