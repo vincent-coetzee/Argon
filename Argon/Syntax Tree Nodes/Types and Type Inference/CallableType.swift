@@ -24,6 +24,11 @@ public class CallableType: ArgonType
         return(hasher.finalize())
         }
         
+    public var parameterTypes: ArgonTypes
+        {
+        self.parameters.map{$0.type}
+        }
+        
     public private(set) var parameters = Parameters()
     public private(set) var returnType: ArgonType = ArgonModule.shared.voidType
     

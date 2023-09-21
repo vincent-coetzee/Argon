@@ -27,7 +27,6 @@
 		BF1918A52A59AAB00093A765 /* Collection+Exensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF1918A42A59AAB00093A765 /* Collection+Exensions.swift */; };
 		BF19C1E12AA39BC6005DE1A8 /* MessageLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF19C1E02AA39BC6005DE1A8 /* MessageLayer.swift */; };
 		BF19C1E32AA3A55A005DE1A8 /* NSBezierPath+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF19C1E22AA3A55A005DE1A8 /* NSBezierPath+Extensions.swift */; };
-		BF1F4AE32A5527C900C1F977 /* MethodType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF1F4AE22A5527C900C1F977 /* MethodType.swift */; };
 		BF1F4AE92A55481600C1F977 /* LetStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF1F4AE82A55481600C1F977 /* LetStatement.swift */; };
 		BF1F4AEC2A5548C700C1F977 /* SelectStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF1F4AEB2A5548C700C1F977 /* SelectStatement.swift */; };
 		BF1F4AEE2A55490100C1F977 /* Statement.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF1F4AED2A55490100C1F977 /* Statement.swift */; };
@@ -176,8 +175,12 @@
 		BFE99B432A711A3B0056E700 /* PrefixExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE99B422A711A3B0056E700 /* PrefixExpression.swift */; };
 		BFEBF6B22AACD3FB00CF56EC /* SymbolExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEBF6B12AACD3FB00CF56EC /* SymbolExpression.swift */; };
 		BFEE2AE8298EF7960060EE74 /* TypeVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEE2AE7298EF7960060EE74 /* TypeVariable.swift */; };
+		BFEF43622ABC5E940016BD51 /* MethodType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEF43612ABC5E940016BD51 /* MethodType.swift */; };
+		BFEF43642ABC5F6B0016BD51 /* FunctionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEF43632ABC5F6B0016BD51 /* FunctionType.swift */; };
+		BFEF43662ABC73F50016BD51 /* NodeContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEF43652ABC73F50016BD51 /* NodeContainer.swift */; };
+		BFEF43682ABC77C40016BD51 /* SymbolTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEF43672ABC77C40016BD51 /* SymbolTable.swift */; };
+		BFEF436A2ABC996C0016BD51 /* TypeConstructor.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEF43692ABC996C0016BD51 /* TypeConstructor.swift */; };
 		BFF0CD442A1E9EBD00F99EC3 /* ArgonTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF0CD432A1E9EBD00F99EC3 /* ArgonTypes.swift */; };
-		BFF395662A5C1A0D00BCA42F /* FunctionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF395652A5C1A0D00BCA42F /* FunctionType.swift */; };
 		BFF7B53329857CE80075F011 /* RootModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF7B53229857CE80075F011 /* RootModule.swift */; };
 		BFF7B53529857CF60075F011 /* ArgonModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF7B53429857CF60075F011 /* ArgonModule.swift */; };
 		BFFB59222A95E77400E80995 /* NSFont+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB59212A95E77400E80995 /* NSFont+Extensions.swift */; };
@@ -235,7 +238,6 @@
 		BF1918A42A59AAB00093A765 /* Collection+Exensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Exensions.swift"; sourceTree = "<group>"; };
 		BF19C1E02AA39BC6005DE1A8 /* MessageLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageLayer.swift; sourceTree = "<group>"; };
 		BF19C1E22AA3A55A005DE1A8 /* NSBezierPath+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSBezierPath+Extensions.swift"; sourceTree = "<group>"; };
-		BF1F4AE22A5527C900C1F977 /* MethodType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MethodType.swift; sourceTree = "<group>"; };
 		BF1F4AE82A55481600C1F977 /* LetStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetStatement.swift; sourceTree = "<group>"; };
 		BF1F4AEB2A5548C700C1F977 /* SelectStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectStatement.swift; sourceTree = "<group>"; };
 		BF1F4AED2A55490100C1F977 /* Statement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Statement.swift; sourceTree = "<group>"; };
@@ -388,8 +390,12 @@
 		BFE99B422A711A3B0056E700 /* PrefixExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefixExpression.swift; sourceTree = "<group>"; };
 		BFEBF6B12AACD3FB00CF56EC /* SymbolExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolExpression.swift; sourceTree = "<group>"; };
 		BFEE2AE7298EF7960060EE74 /* TypeVariable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeVariable.swift; sourceTree = "<group>"; };
+		BFEF43612ABC5E940016BD51 /* MethodType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MethodType.swift; sourceTree = "<group>"; };
+		BFEF43632ABC5F6B0016BD51 /* FunctionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionType.swift; sourceTree = "<group>"; };
+		BFEF43652ABC73F50016BD51 /* NodeContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeContainer.swift; sourceTree = "<group>"; };
+		BFEF43672ABC77C40016BD51 /* SymbolTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolTable.swift; sourceTree = "<group>"; };
+		BFEF43692ABC996C0016BD51 /* TypeConstructor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeConstructor.swift; sourceTree = "<group>"; };
 		BFF0CD432A1E9EBD00F99EC3 /* ArgonTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgonTypes.swift; sourceTree = "<group>"; };
-		BFF395652A5C1A0D00BCA42F /* FunctionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionType.swift; sourceTree = "<group>"; };
 		BFF7B53229857CE80075F011 /* RootModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootModule.swift; sourceTree = "<group>"; };
 		BFF7B53429857CF60075F011 /* ArgonModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgonModule.swift; sourceTree = "<group>"; };
 		BFFB59212A95E77400E80995 /* NSFont+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSFont+Extensions.swift"; sourceTree = "<group>"; };
@@ -505,19 +511,20 @@
 				BFCB438729845D40001D1CFD /* EnumerationCase.swift */,
 				BFCB438529845D33001D1CFD /* EnumerationType.swift */,
 				BFAC059A2AB34FE9004C3823 /* ErrorType.swift */,
-				BFF395652A5C1A0D00BCA42F /* FunctionType.swift */,
+				BFEF43632ABC5F6B0016BD51 /* FunctionType.swift */,
 				BF2D01E32A7BEBA400887DD7 /* GenericInstanceType.swift */,
 				BF077A092AB4CEA8007F88D3 /* IntrinsicMethodType.swift */,
 				BF0D320C2A6406EF002A2D8D /* InvocationType.swift */,
 				BF4DB6D92A8167D200A509A4 /* MetaclassType.swift */,
 				BFAD0C152A8001AD00FB45B9 /* MethodSignature.swift */,
-				BF1F4AE22A5527C900C1F977 /* MethodType.swift */,
+				BFEF43612ABC5E940016BD51 /* MethodType.swift */,
 				BFCB438329845D07001D1CFD /* Slot.swift */,
 				BF1F4B022A5616B000C1F977 /* StructuredType.swift */,
 				BFC4B6C92A934A1C0098FBB1 /* SubstitutionSet.swift */,
 				BF60D6332A8CCAC400ED3F6B /* SubType.swift */,
 				BFAC05982AB31759004C3823 /* TypeRepository.swift */,
 				BFEE2AE7298EF7960060EE74 /* TypeVariable.swift */,
+				BFEF43692ABC996C0016BD51 /* TypeConstructor.swift */,
 			);
 			path = "Types and Type Inference";
 			sourceTree = "<group>";
@@ -540,6 +547,7 @@
 				BFBA84932A8E80BA009D488A /* StaticVariable.swift */,
 				BFA9DA97292D5C3900C6859D /* SyntaxTreeNode.swift */,
 				BF0711682A78496600981DD1 /* Variable.swift */,
+				BFEF43652ABC73F50016BD51 /* NodeContainer.swift */,
 			);
 			path = Nodes;
 			sourceTree = "<group>";
@@ -644,12 +652,12 @@
 				BFCDC3F12A8579FE00C20746 /* NSImage+Extensions.swift */,
 				BF789A732AB5C6FF0022ED48 /* NSOutlineView+Extensions.swift */,
 				BF3DBC692AB845A9009612B8 /* NSRulerMarker+Extensions.swift */,
+				BF60F4AE2ABB9DC00085700C /* NSToolbar+Extensions.swift */,
 				BF6B052D296209F20097C9A9 /* Optional+Extensions.swift */,
 				BF0E84E32A5D612E003BCC49 /* Path+Extensions.swift */,
 				BFB5E60D2A2664DA0018824E /* String+Extensions.swift */,
 				BF2281CE2AAA1EB200417FCD /* Unicode.Scalar+Extensions.swift */,
 				BF60F4AC2ABB9A3A0085700C /* UTType+Extensions.swift */,
-				BF60F4AE2ABB9DC00085700C /* NSToolbar+Extensions.swift */,
 			);
 			path = "System Extensions";
 			sourceTree = "<group>";
@@ -779,6 +787,7 @@
 				BFCA9341296F43340049B39A /* Scope.swift */,
 				BF57672329EDC0FC007EECA5 /* Stack.swift */,
 				BF0238112AB0DF56001DE9F9 /* NameMangler.swift */,
+				BFEF43672ABC77C40016BD51 /* SymbolTable.swift */,
 			);
 			path = Plumbing;
 			sourceTree = "<group>";
@@ -925,6 +934,7 @@
 				BFCB438629845D33001D1CFD /* EnumerationType.swift in Sources */,
 				BF0238122AB0DF56001DE9F9 /* NameMangler.swift in Sources */,
 				BF2D01E62A7C0E2A00887DD7 /* CallableType.swift in Sources */,
+				BFEF436A2ABC996C0016BD51 /* TypeConstructor.swift in Sources */,
 				BFB5E60E2A2664DA0018824E /* String+Extensions.swift in Sources */,
 				BF1F4AFE2A554A2700C1F977 /* Block.swift in Sources */,
 				BF47CD642A68749700C63D1E /* ModuleBundleViewController.swift in Sources */,
@@ -932,6 +942,7 @@
 				BFE99B432A711A3B0056E700 /* PrefixExpression.swift in Sources */,
 				BF3676D0297329F800E1A5B9 /* NSCoder+Extensions.swift in Sources */,
 				BF789A7C2AB634160022ED48 /* ProjectHierarchyViewController.swift in Sources */,
+				BFEF43682ABC77C40016BD51 /* SymbolTable.swift in Sources */,
 				BF1F4B032A5616B000C1F977 /* StructuredType.swift in Sources */,
 				BFD87E982954A3D200298094 /* CompilerIssue.swift in Sources */,
 				BF6B052E296209F20097C9A9 /* Optional+Extensions.swift in Sources */,
@@ -967,11 +978,13 @@
 				BF836F492A6D84C10085BB9D /* LiteralExpression.swift in Sources */,
 				BF2FBFC72A8777C600CB6145 /* IconLabelView.swift in Sources */,
 				BF95CD502AB7880500792BD6 /* ProjectInspectorView.swift in Sources */,
+				BFEF43622ABC5E940016BD51 /* MethodType.swift in Sources */,
 				BF57672429EDC0FC007EECA5 /* Stack.swift in Sources */,
 				BF31131D298D6FD600BF5D11 /* ArgonType.swift in Sources */,
 				BF53D13D2A72FDBB00C2777D /* Precedence.swift in Sources */,
 				BF789A802AB6362C0022ED48 /* ProjectSourceViewController.swift in Sources */,
 				BF0E84E42A5D612E003BCC49 /* Path+Extensions.swift in Sources */,
+				BFEF43662ABC73F50016BD51 /* NodeContainer.swift in Sources */,
 				BF1F4AE92A55481600C1F977 /* LetStatement.swift in Sources */,
 				BF6B053129620CF10097C9A9 /* ErrorToken.swift in Sources */,
 				BFA9DA96292D5C1A00C6859D /* IdentifierToken.swift in Sources */,
@@ -1005,7 +1018,6 @@
 				BFAC059B2AB34FE9004C3823 /* ErrorType.swift in Sources */,
 				BF1F4AF82A5549D400C1F977 /* SignalStatement.swift in Sources */,
 				BF53D1332A72D8D400C2777D /* PostfixExpression.swift in Sources */,
-				BFF395662A5C1A0D00BCA42F /* FunctionType.swift in Sources */,
 				BF0238102AB0566A001DE9F9 /* TupleExpression.swift in Sources */,
 				BF95CD4E2AB784B500792BD6 /* PathControl.swift in Sources */,
 				BF2C0AED29FB223200CCC384 /* LLVMContext.swift in Sources */,
@@ -1030,6 +1042,7 @@
 				BFCDC3F22A8579FE00C20746 /* NSImage+Extensions.swift in Sources */,
 				BFAD0C142A7FCEA800FB45B9 /* MemberAccessExpression.swift in Sources */,
 				BF0D32112A649D89002A2D8D /* ValueBox.swift in Sources */,
+				BFEF43642ABC5F6B0016BD51 /* FunctionType.swift in Sources */,
 				BF3349252A7064040050F904 /* Expression Parsers.swift in Sources */,
 				BF2423DA2A7948C100C5D4E4 /* ForkStatement.swift in Sources */,
 				BF4DB6DA2A8167D200A509A4 /* MetaclassType.swift in Sources */,
@@ -1041,7 +1054,6 @@
 				BF54B9A329F5C7C600A755DC /* Dependent.swift in Sources */,
 				BFBD0E4729E08521002873C9 /* ArgonCompiler.swift in Sources */,
 				BFCA9342296F43340049B39A /* Scope.swift in Sources */,
-				BF1F4AE32A5527C900C1F977 /* MethodType.swift in Sources */,
 				BFFB59222A95E77400E80995 /* NSFont+Extensions.swift in Sources */,
 				BF077A0A2AB4CEA8007F88D3 /* IntrinsicMethodType.swift in Sources */,
 				BF60D6342A8CCAC400ED3F6B /* SubType.swift in Sources */,

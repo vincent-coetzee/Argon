@@ -177,7 +177,7 @@ extension NSColor
     public static let argonPowerfulYellow = NSColor(red: 254,green: 194,blue: 35)
     public static let argonBrightMarigold = NSColor(red: 239,green: 150,blue: 59)
     public static let argonMustardYellow = NSColor(red: 252,green: 180,blue: 21)
-    public static let argonPiquantYellow = NSColor(red: 231,green: 1471,blue: 36)
+    public static let argonPiquantYellow = NSColor(red: 231,green: 147,blue: 36)
     
     public static let argonTransAirOrange = NSColor(red: 197,green: 76,blue: 33)
     public static let argonActiveOrange = NSColor(red: 254,green: 144,blue: 22)

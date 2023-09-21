@@ -7,6 +7,16 @@
 
 import Foundation
 
+//
+//
+// A PseudoVariable is a value such as "self","nil" or "super"
+// referenced in the code. They need special handling which is why
+// they are uniqued and exported as static constants. Having only a single
+// isntance of the variables in the compiler assists in compiling
+// the references away because that's what needs to happen due
+// to the special handling they need.
+//
+//
 public class PseudoVariable: Variable
     {
     public static func `self`(type: ArgonType) -> Self

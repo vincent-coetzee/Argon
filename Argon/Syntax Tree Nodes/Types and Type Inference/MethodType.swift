@@ -1,8 +1,8 @@
 //
-//  Method.swift
+//  MethodType.swift
 //  Argon
 //
-//  Created by Vincent Coetzee on 05/07/2023.
+//  Created by Vincent Coetzee on 21/09/2023.
 //
 
 import Foundation

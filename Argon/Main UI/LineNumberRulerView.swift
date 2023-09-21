@@ -250,7 +250,7 @@ public class LineNumberRulerView: NSRulerView
             }
         // Define attributes for the attributed string.
         let marker = self.annotatedLines[number]
-        var color = marker.isNotNil ? marker!.color : StyleTheme.shared.color(for: self.foregroundColorStyleElement)
+        let color = marker.isNotNil ? marker!.color : StyleTheme.shared.color(for: self.foregroundColorStyleElement)
         let attrs = [NSAttributedString.Key.font: font, NSAttributedString.Key.foregroundColor: color]
         // Define the attributed string.
         let attributedString = NSAttributedString(string: "\(number)", attributes: attrs)

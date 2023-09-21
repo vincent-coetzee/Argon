@@ -159,11 +159,6 @@ public class ArgonType: SyntaxTreeNode
         self
         }
         
-    public var parentType: ArgonType
-        {
-        fatalError("parentType should not be invoked on an ArgonType.")
-        }
-        
     public override var tag: String
         {
         let inners = "<" + self.genericTypes.map{$0.tag}.joined(separator: ",") + ">"
@@ -208,7 +203,11 @@ public class ArgonType: SyntaxTreeNode
             {
             return(false)
             }
-        return(lhs.parent < rhs.parent && lhs.name < rhs.name)
+        if lhs.parent.isNil || rhs.parent.isNil
+            {
+            return(false)
+            }
+        return(lhs.parent! < rhs.parent! && lhs.name < rhs.name)
          }
         
     //

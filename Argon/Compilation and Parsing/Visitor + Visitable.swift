@@ -31,6 +31,7 @@ public protocol Visitor
     func visit(slot: Slot)
     func visit(genericInstanceType: GenericInstanceType)
     func visit(arrayInstanceType: ArrayInstanceType)
+    func visit(symbolTable: SymbolTable)
     
     func visit(argument: Argument)
     func visit(parameter: Parameter)

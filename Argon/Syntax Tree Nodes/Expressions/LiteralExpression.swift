@@ -65,6 +65,12 @@ public class LiteralExpression: Expression
         super.init()
         }
         
+    public init(value: FunctionType)
+        {
+        self.value = .function(value)
+        super.init()
+        }
+        
 //    public init(enumeration: EnumerationType,enumerationCase: EnumerationCase)
 //        {
 //        self.value = .enumerationInstance(enumeration,enumerationCase)
@@ -165,6 +171,9 @@ extension NSCoder
             case(.enumerationCase(let aCase)):
                 self.encode(21,forKey: "\(key)_index")
                 self.encode(aCase,forKey: "\(key)_enumerationCase")
+            case(.function(let method)):
+                self.encode(22,forKey: "\(key)_index")
+                self.encode(method,forKey: "\(key)_function")
             }
         }
 
@@ -232,6 +241,8 @@ extension NSCoder
                 return(.dateTime(Argon.DateTime(date: Argon.Date(day: day,month: month,year: year),time: Argon.Time(hour: hour,minute: minute,second: second,millisecond: millisecond))))
             case(21):
                 return(.enumerationCase(self.decodeObject(forKey: "_enumerationCase") as! EnumerationCase))
+            case(22):
+                return(.function(self.decodeObject(forKey: "\(key)_function") as! FunctionType))
             default:
                 fatalError()
             }

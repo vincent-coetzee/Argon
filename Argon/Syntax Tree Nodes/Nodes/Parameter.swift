@@ -7,6 +7,13 @@
 
 import Foundation
 
+//
+//
+// Paramaters stores the details associated with a formal parameter
+// of a Function and a Method. The analagous class is "Argument" which
+// stores the details of Arguments to Functions and Methods.
+//
+//
 public class Parameter: Variable
     {
     private let internalName: String

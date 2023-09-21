@@ -76,11 +76,10 @@ public struct BrowserActionSet: OptionSet
             {
             menu.addItem(NSMenuItem.separator())
             }
-        var wasImportAction = false
         if self.contains(.importAction)
             {
             menu.addItem(withTitle: "Import File...", action: #selector(ProjectHierarchyViewController.onImportFile), keyEquivalent: "").isEnabled = true
-        menu.addItem(NSMenuItem.separator())
+            menu.addItem(NSMenuItem.separator())
             }
         if self.contains(.deleteAction)
             {

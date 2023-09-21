@@ -7,6 +7,18 @@
 
 import Foundation
 
+//
+//
+// The SyntaxTreeNode class forms the ultimate root class of semantic classes
+// such as e.g. Modules, Types, Expressions, Constants, Variables and Blocks and Statements.
+// The reason they all descend from this class is so that these things can be
+// type safely inserted anywhere into the ASTs.
+//
+// TODO: Figure out how to encode Modules to allow reuse in separate object files
+// TODO: Ensure name mangling handles unique symbols spread across object fils even if symbols are in different instance of the same Module
+// TODO: Fix name mangling
+//
+//
 public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable,Comparable
     {
     public static func ==(lhs: SyntaxTreeNode,rhs: SyntaxTreeNode) -> Bool
@@ -54,7 +66,7 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable,Comparable
         
     public var parentModules: Modules
         {
-        self.parent.parentModules
+        self.parent!.parentModules
         }
         
     public override var hash: Int
@@ -64,7 +76,7 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable,Comparable
         
     public var rootModule: RootModule
         {
-        self.parent.rootModule
+        self.parent!.rootModule
         }
         
     public var argonModule: ArgonModule
@@ -94,7 +106,7 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable,Comparable
         
     public var identifier: Identifier
         {
-        return(self.parent.identifier + self.name)
+        return(self.parent?.identifier ?? Identifier(string: "\\"))
         }
     //
     //
@@ -112,7 +124,7 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable,Comparable
     public private(set) var references = NodeReferences()
     public private(set) var name: String
     public private(set) var index: Int?
-    public private(set) var parent: Parent = .none
+    public private(set) var parent: SyntaxTreeNode?
     public var isSystemNode: Bool = false
     public private(set) var type: ArgonType!
     public private(set) var processingFlags = ProcessingFlags()
@@ -135,7 +147,7 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable,Comparable
         self.type = coder.decodeObject(forKey: "type") as? ArgonType
         self.name = coder.decodeObject(forKey: "name") as! String
         self.index = coder.decodeInteger(forKey: "index")
-        self.parent = coder.decodeParent(forKey: "parent")
+        self.parent = coder.decodeObject(forKey: "parent") as? SyntaxTreeNode
         self.references = coder.decodeNodeReferences(forKey: "references")
         self.isSystemNode = coder.decodeBool(forKey: "isSystemNode")
         self.processingFlags = ProcessingFlags(rawValue: UInt64(coder.decodeInteger(forKey: "processingFlags")))
@@ -146,11 +158,11 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable,Comparable
         fatalError("removeChildNode called on SyntaxTreeNode and should not be")
         }
         
-    public func removeFromParent()
-        {
-        self.parent.removeNode(self)
-        self.parent = .none
-        }
+//    public func removeFromParent()
+//        {
+//        self.parent.removeNode(self)
+//        self.parent = .none
+//        }
         
     public func encode(with coder: NSCoder)
         {
@@ -201,18 +213,28 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable,Comparable
         
     public func setParent(_ symbol: SyntaxTreeNode?)
         {
-        guard symbol.isNotNil else
-            {
-            self.parent = Parent.none
-            return
-            }
-        self.parent = .symbol(symbol!)
+        self.parent = symbol
         }
         
-    public func setParent(_ expression: Expression)
-        {
-        self.parent = .expression(expression)
-        }
+//    public func setParent(_ symbol: NodeContainer?)
+//        {
+//        guard symbol.isNotNil else
+//            {
+//            self.parent = Parent.none
+//            return
+//            }
+//        if symbol is SyntaxTreeNode
+//            {
+//            self.parent = .symbol(symbol as! SyntaxTreeNode)
+//            return
+//            }
+//        fatalError("Attempt to assign \(symbol!) of type \(Swift.type(of: symbol)) as a parent.")
+//        }
+//        
+//    public func setParent(_ expression: Expression)
+//        {
+//        self.parent = .expression(expression)
+//        }
         
     public func setIndex(_ index: Int)
         {
@@ -261,7 +283,7 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable,Comparable
         
     public var module: Module
         {
-        self.parent.module
+        self.parent!.module
         }
         
     public func accept(visitor: Visitor)
@@ -346,7 +368,6 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable,Comparable
         {
         Methods()
         }
-    
     }
 
 public typealias SyntaxTreeNodes = Array<SyntaxTreeNode>

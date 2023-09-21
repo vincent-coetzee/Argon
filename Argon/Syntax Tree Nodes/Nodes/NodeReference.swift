@@ -7,6 +7,19 @@
 
 import Foundation
 
+//
+//
+// A NodeReference stores where a SyntaxTreeNode is either declared
+// or referenced by some piece of code. A node should only have one
+// declaration reference but can have multiple reference references.
+// These locations are used when generating lookups in the source
+// code editors and when debugging executeable code - I have not
+// yet code the code generation ( i.e. LLVM ) portions of the code
+// yet so I assumed there is some way that LLVM and ELF will allow
+// me to encode these values into the generated object code, but time
+// witl tell.
+//
+//
 public enum NodeReference
     {
     case declaration(Location)

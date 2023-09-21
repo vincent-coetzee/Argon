@@ -37,6 +37,8 @@ public enum ValueBox: Hashable
                 return(integer1 == integer2)
             case(.method(let integer1),.method(let integer2)):
                 return(integer1.identifier == integer2.identifier)
+            case(.function(let integer1),.method(let integer2)):
+                return(integer1.identifier == integer2.identifier)
             case(.class(let integer1),.class(let integer2)):
                 return(integer1.identifier == integer2.identifier)
             case(.enumeration(let integer1),.enumeration(let integer2)):
@@ -73,6 +75,7 @@ public enum ValueBox: Hashable
     case symbol(String)
     case float(Argon.Float)
     case method(MethodType)
+    case function(FunctionType)
     case `class`(ClassType)
     case enumeration(EnumerationType)
     case enumerationCase(EnumerationCase)
@@ -194,6 +197,9 @@ public enum ValueBox: Hashable
             case(.dateTime(let integer1)):
                 hasher.combine("DATETIME")
                 hasher.combine(integer1)
+            case(.function(let integer1)):
+                hasher.combine("FUNCTION")
+                hasher.combine(integer1.typeHash)
             }
         }
     }

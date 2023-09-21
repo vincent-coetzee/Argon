@@ -7,6 +7,12 @@
 
 import Foundation
 
+//
+//
+// These classes are used in dependency analysis when
+// loading dependent and independent modules.
+//
+//
 public class ModuleEdge
     {
     private let from: ModuleNode
