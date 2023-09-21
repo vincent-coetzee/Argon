@@ -260,6 +260,7 @@ public class MethodInvocationParser: InfixParser
         if parser.isNextTokenValid(atOffset: -2),parser.nextToken(atOffset: -2).isIdentifier
             {
             methodName = parser.nextToken(atOffset: -2).identifier
+            parser.nextToken(atOffset: -2).setStyleElement(.colorInvocation)
             }
         else
             {

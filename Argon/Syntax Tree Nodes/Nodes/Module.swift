@@ -165,6 +165,25 @@ public class Module: CompositeSyntaxTreeNode
             }
         visitor.exit(module: self)
         }
+        
+    public func validateMethodUniqueness(semanticChecker: ArgonSemanticChecker)
+        {
+        let methods = self.symbolEntries.values.flatMap{$0.methods}
+        for method in methods
+            {
+            for innerMethod in methods.removing(method)
+                {
+                if innerMethod.signature == method.signature
+                    {
+                    semanticChecker.lodgeError(code: .methodWithDuplicateSignature, location: method.location!,message: "Duplicate method '\(method.name)' with signature \(method.signature)")
+                    }
+                }
+            }
+        for module in self.symbolEntries.values.compactMap({$0.node as? Module})
+            {
+            module.validateMethodUniqueness(semanticChecker: semanticChecker)
+            }
+        }
     }
 
 public typealias Modules = Array<Module>

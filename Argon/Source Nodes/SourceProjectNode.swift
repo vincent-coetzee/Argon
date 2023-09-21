@@ -18,6 +18,11 @@ public class SourceProjectNode: SourceCompositeNode
     public var moduleSearchPaths = Paths()
     public var buildPath:Path?
     
+    public override var actionSet: BrowserActionSet
+        {
+        super.actionSet.enabling(.loadAction,.saveAction,.cleanAction,.runAction,.buildAction,.debugAction)
+        }
+        
     public override var projectViewImage: NSImage
         {
         NSImage(named: "IconProject")!

@@ -64,6 +64,7 @@ public enum IssueCode: String
     case moduleNameExpected                                         = "module name expected."
     case mustInheritFromDiscreteType                                = "must inherit from DiscreteType."
     case multipleMainMethodsFound                                   = "multiple 'main' methods found."
+    case methodWithDuplicateSignature                               = "Duplicate methods with same signature"
     
     case none                                                       = "none"
     case nodeAlreadyDefined                                         = "node already defined."

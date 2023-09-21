@@ -13,6 +13,7 @@ public protocol Model: AnyObject
     var dependents: DependentSet { get }
     func addDependent(_ dependent: Dependent)
     func removeDependent(_ dependent: Dependent)
+    func shake(aspect: String)
     }
 
 extension Model

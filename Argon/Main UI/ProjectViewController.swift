@@ -326,7 +326,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
             let path = node.path.join(name)
             let file = SourceFileNode(name: name,path: path)
             file.setIsNewFile(true)
-            file.setSource(Repository.initialSource)
+            file.setSource(Repository.initialSourceForNewSourceFile)
             self.sourceView.string = file.source
             node.addNode(file)
             self.outliner.reloadItem(node,reloadChildren: true)

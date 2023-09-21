@@ -9,8 +9,8 @@ import Cocoa
 
 class ProjectDocument: NSDocument
     {
-    private var projectState: ProjectState!
-    private var project: SourceProjectNode = SourceProjectNode(name: "Untitled",path: .homePath(withFileNamed: "Untitled.argonp"))
+    private let projectModel = ValueHolder(value: SourceProjectNode(name: "Untitled",path: .homePath(withFileNamed: "Untitled.argonp")))
+    private let selectedNodeModel = ValueHolder(value: nil)
     
     override init()
         {
@@ -27,8 +27,8 @@ class ProjectDocument: NSDocument
         {
         let storyboard = NSStoryboard(name: NSStoryboard.Name("Main"), bundle: nil)
         let windowController = storyboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("ProjectWindowController")) as! ProjectWindowController
-        windowController.project = self.project
         self.addWindowController(windowController)
+        windowController.initWindowController(projectModel: self.projectModel, selectedNodeModel: self.selectedNodeModel)
         }
 
     override func write(to url: URL,ofType: String) throws
@@ -38,10 +38,7 @@ class ProjectDocument: NSDocument
             {
             path += ".argonp"
             }
-        let viewController = self.windowControllers[0].contentViewController as! ProjectViewController
-        let state = viewController.projectState
-        state.windowFrame = viewController.view.window!.frame
-        if let data = try? NSKeyedArchiver.archivedData(withRootObject: state.project, requiringSecureCoding: false)
+        if let data = try? NSKeyedArchiver.archivedData(withRootObject: self.projectModel.value!, requiringSecureCoding: false)
             {
             if (try? data.write(to: url)).isNil
                 {
@@ -72,7 +69,7 @@ class ProjectDocument: NSDocument
                 {
                 throw(CompilerIssue(code: .fileDataIsCorrupt, message: "The file at \(url.path) is corrupt."))
                 }
-            self.project = aProject
+            self.projectModel.value = aProject
             }
         catch let error
             {

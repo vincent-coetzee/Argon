@@ -47,6 +47,34 @@ public class MethodSignature: NSObject,NSCoding
         hasher.combine(returnType)
         return(hasher.finalize())
         }
+        
+    public override func isEqual(_ other: Any?) -> Bool
+        {
+        if let signature = other as? MethodSignature
+            {
+            if signature.name != self.name
+                {
+                return(false)
+                }
+            if signature.parameterTypes.count != self.parameterTypes.count
+                {
+                return(false)
+                }
+            for (this,other) in zip(self.parameterTypes,signature.parameterTypes)
+                {
+                if this != other
+                    {
+                    return(false)
+                    }
+                }
+            if signature.returnType != self.returnType
+                {
+                return(false)
+                }
+            return(true)
+            }
+        return(false)
+        }
     }
 
 public typealias MethodSignatures = Array<MethodSignature>

@@ -87,6 +87,8 @@
 		BF54B9A929F5C7C600A755DC /* ValueModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF54B9A129F5C7C600A755DC /* ValueModel.swift */; };
 		BF57672429EDC0FC007EECA5 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF57672329EDC0FC007EECA5 /* Stack.swift */; };
 		BF60D6342A8CCAC400ED3F6B /* SubType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF60D6332A8CCAC400ED3F6B /* SubType.swift */; };
+		BF60F4AD2ABB9A3A0085700C /* UTType+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF60F4AC2ABB9A3A0085700C /* UTType+Extensions.swift */; };
+		BF60F4AF2ABB9DC00085700C /* NSToolbar+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF60F4AE2ABB9DC00085700C /* NSToolbar+Extensions.swift */; };
 		BF6B052E296209F20097C9A9 /* Optional+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6B052D296209F20097C9A9 /* Optional+Extensions.swift */; };
 		BF6B053129620CF10097C9A9 /* ErrorToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6B053029620CF10097C9A9 /* ErrorToken.swift */; };
 		BF6B053329620E2D0097C9A9 /* EndToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6B053229620E2D0097C9A9 /* EndToken.swift */; };
@@ -292,6 +294,8 @@
 		BF54B9A129F5C7C600A755DC /* ValueModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueModel.swift; sourceTree = "<group>"; };
 		BF57672329EDC0FC007EECA5 /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		BF60D6332A8CCAC400ED3F6B /* SubType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubType.swift; sourceTree = "<group>"; };
+		BF60F4AC2ABB9A3A0085700C /* UTType+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UTType+Extensions.swift"; sourceTree = "<group>"; };
+		BF60F4AE2ABB9DC00085700C /* NSToolbar+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSToolbar+Extensions.swift"; sourceTree = "<group>"; };
 		BF6B052D296209F20097C9A9 /* Optional+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Extensions.swift"; sourceTree = "<group>"; };
 		BF6B053029620CF10097C9A9 /* ErrorToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorToken.swift; sourceTree = "<group>"; };
 		BF6B053229620E2D0097C9A9 /* EndToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndToken.swift; sourceTree = "<group>"; };
@@ -644,6 +648,8 @@
 				BF0E84E32A5D612E003BCC49 /* Path+Extensions.swift */,
 				BFB5E60D2A2664DA0018824E /* String+Extensions.swift */,
 				BF2281CE2AAA1EB200417FCD /* Unicode.Scalar+Extensions.swift */,
+				BF60F4AC2ABB9A3A0085700C /* UTType+Extensions.swift */,
+				BF60F4AE2ABB9DC00085700C /* NSToolbar+Extensions.swift */,
 			);
 			path = "System Extensions";
 			sourceTree = "<group>";
@@ -845,7 +851,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1410;
-				LastUpgradeCheck = 1420;
+				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					BFA93E3A291678AF0001F05D = {
 						CreatedOnToolsVersion = 14.1;
@@ -990,6 +996,7 @@
 				BF2FBFC52A87779000CB6145 /* CustomView.swift in Sources */,
 				BF789A7E2AB635660022ED48 /* ProjectWindowController.swift in Sources */,
 				BFA93E3F291678AF0001F05D /* AppDelegate.swift in Sources */,
+				BF60F4AF2ABB9DC00085700C /* NSToolbar+Extensions.swift in Sources */,
 				BF4DB6D62A81122F00A509A4 /* ReturnStatement.swift in Sources */,
 				BFBA84942A8E80BA009D488A /* StaticVariable.swift in Sources */,
 				BFE89DF32AAF11E300985186 /* LoopStatement.swift in Sources */,
@@ -1056,6 +1063,7 @@
 				BFAD2C2D2A75986A00565B6B /* ArrayAccessExpression.swift in Sources */,
 				BFCB43902984613A001D1CFD /* Module.swift in Sources */,
 				BFCB438E29845F79001D1CFD /* NodeType.swift in Sources */,
+				BF60F4AD2ABB9A3A0085700C /* UTType+Extensions.swift in Sources */,
 				BF1F4AF02A55499400C1F977 /* TimesStatement.swift in Sources */,
 				BF2423DC2A798AC000C5D4E4 /* ClosureExpression.swift in Sources */,
 				BFBA84962A8E81F0009D488A /* StaticStatement.swift in Sources */,
@@ -1160,6 +1168,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1221,6 +1230,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;

@@ -153,11 +153,11 @@ public class LineNumberRulerView: NSRulerView
                     }
                 // Move to the next row.
                 firstGlyphOfRowIndex = NSMaxRange(effectiveRange)
-                lineWrapCount+=1
+                lineWrapCount += 1
                 }
             // Move to the next line.
             firstGlyphOfLineIndex = NSMaxRange(glyphRangeOfLine)
-            lineNumber+=1
+            lineNumber += 1
             }
         // Draw another line number for the extra line fragment.
         if let _ = layoutManager.extraLineFragmentTextContainer
@@ -233,11 +233,11 @@ public class LineNumberRulerView: NSRulerView
                     }
                 // Move to the next row.
                 firstGlyphOfRowIndex = NSMaxRange(effectiveRange)
-                lineWrapCount+=1
+                lineWrapCount += 1
                 }
             // Move to the next line.
             firstGlyphOfLineIndex = NSMaxRange(glyphRangeOfLine)
-            lineNumber+=1
+            lineNumber += 1
             }
         }
     

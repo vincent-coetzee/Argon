@@ -46,7 +46,7 @@ public class ArgonSemanticChecker: Visitor
     
     public func exit(module: Module)
         {
-        print("Exiting module \(module.name)")
+        self.validateMethodUniqueness(in: module)
         }
         
     public func enter(method: MethodType)
@@ -437,6 +437,13 @@ public class ArgonSemanticChecker: Visitor
             self.lodgeError(code: .multipleMainMethodsFound,location: Location(nodeKey: -1, line: -1, start: 0, stop: 0))
             }
         self.hasMainMethod = mainMethodCount == 1
+        }
+        
+    public validateMethodUniqueness(in module: Module)
+        {
+        for method in module.allMethods
+            {
+            }
         }
     
     }

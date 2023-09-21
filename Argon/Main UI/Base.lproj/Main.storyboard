@@ -727,9 +727,9 @@
                 <windowController storyboardIdentifier="ProjectWindowController" id="jGA-0Y-lOj" customClass="ProjectWindowController" customModule="Argon" customModuleProvider="target" sceneMemberID="viewController">
                     <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="Ckk-yw-fiv">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
-                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="-62" y="240" width="1110" height="270"/>
+                        <rect key="contentRect" x="-62" y="240" width="1110" height="500"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+                        <value key="minSize" type="size" width="1000" height="500"/>
                         <toolbar key="toolbar" implicitIdentifier="4B4C3880-E050-4C01-BEAE-5FAA44193770" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="5V9-16-3q1">
                             <allowedToolbarItems>
                                 <toolbarItem implicitItemIdentifier="NSToolbarShowColorsItem" id="K1U-xd-f4F"/>
@@ -799,6 +799,10 @@
                                         <action selector="onImportFileClicked:" target="6f7-a7-6o1" id="K3F-p4-RxS"/>
                                     </connections>
                                 </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="F5386E5B-EC17-4A9A-809C-0E32D5F04050" label="Delete" paletteLabel="Delete" tag="-1" image="delete.left" catalog="system" bordered="YES" id="uDx-1U-VAT">
+                                    <size key="minSize" width="29" height="25"/>
+                                    <size key="maxSize" width="29" height="25"/>
+                                </toolbarItem>
                             </allowedToolbarItems>
                             <defaultToolbarItems>
                                 <toolbarItem reference="vzQ-JE-dYj"/>
@@ -813,6 +817,8 @@
                                 <toolbarItem reference="jog-VP-KpF"/>
                                 <toolbarItem reference="nHW-jx-wnX"/>
                                 <toolbarItem reference="S8k-dN-PQs"/>
+                                <toolbarItem reference="MeC-M0-CzF"/>
+                                <toolbarItem reference="uDx-1U-VAT"/>
                             </defaultToolbarItems>
                         </toolbar>
                         <connections>
@@ -825,7 +831,7 @@
                 </windowController>
                 <customObject id="6f7-a7-6o1" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="557" y="-228"/>
+            <point key="canvasLocation" x="557" y="-659"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="oFp-7j-QSB">
@@ -833,7 +839,7 @@
                 <splitViewController id="mUF-ha-gPH" sceneMemberID="viewController">
                     <splitViewItems>
                         <splitViewItem holdingPriority="260" id="5Q1-Eb-N8b"/>
-                        <splitViewItem behavior="contentList" id="glk-2r-RER"/>
+                        <splitViewItem holdingPriority="255" behavior="contentList" id="glk-2r-RER"/>
                         <splitViewItem holdingPriority="255" id="F6v-Jr-Yba"/>
                     </splitViewItems>
                     <splitView key="splitView" dividerStyle="thin" vertical="YES" id="e6d-DV-CA5">
@@ -888,9 +894,8 @@
                                                     <rect key="frame" x="8" y="0.0" width="431" height="24"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6gB-ja-hMR">
+                                                        <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="6gB-ja-hMR">
                                                             <rect key="frame" x="0.0" y="4" width="431" height="16"/>
-                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="oaF-3G-9UU">
                                                                 <font key="font" usesAppearanceFont="YES"/>
                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -898,6 +903,11 @@
                                                             </textFieldCell>
                                                         </textField>
                                                     </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="6gB-ja-hMR" firstAttribute="centerY" secondItem="WKR-2y-hJ2" secondAttribute="centerY" id="GCJ-tQ-re1"/>
+                                                        <constraint firstItem="6gB-ja-hMR" firstAttribute="centerX" secondItem="WKR-2y-hJ2" secondAttribute="centerX" id="VHs-W8-cWx"/>
+                                                        <constraint firstItem="6gB-ja-hMR" firstAttribute="leading" secondItem="WKR-2y-hJ2" secondAttribute="leading" constant="2" id="oto-B6-09p"/>
+                                                    </constraints>
                                                     <connections>
                                                         <outlet property="textField" destination="6gB-ja-hMR" id="iYE-WU-2qU"/>
                                                     </connections>
@@ -909,19 +919,35 @@
                             </subviews>
                         </clipView>
                         <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="Bg0-5J-VyH">
-                            <rect key="frame" x="1" y="118" width="238" height="16"/>
+                            <rect key="frame" x="1" y="283" width="428" height="16"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="yOZ-hj-8Hn">
                             <rect key="frame" x="224" y="17" width="15" height="102"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
+                        <connections>
+                            <outlet property="menu" destination="YgI-gG-ZyJ" id="JF6-uh-FT7"/>
+                        </connections>
                     </scrollView>
                     <connections>
                         <outlet property="outlineView" destination="mqv-Ge-Meh" id="FaU-lJ-su2"/>
                     </connections>
                 </viewController>
                 <customObject id="djx-FJ-gbl" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <menu id="YgI-gG-ZyJ">
+                    <items>
+                        <menuItem title="Item 1" id="FHZ-4U-Bz7">
+                            <modifierMask key="keyEquivalentModifierMask"/>
+                        </menuItem>
+                        <menuItem title="Item 2" id="e1N-dR-50h">
+                            <modifierMask key="keyEquivalentModifierMask"/>
+                        </menuItem>
+                        <menuItem title="Item 3" id="gkF-UO-maa">
+                            <modifierMask key="keyEquivalentModifierMask"/>
+                        </menuItem>
+                    </items>
+                </menu>
             </objects>
             <point key="canvasLocation" x="155.5" y="974"/>
         </scene>
@@ -971,6 +997,9 @@
                             <constraint firstItem="SO7-n8-2i0" firstAttribute="leading" secondItem="lKj-Jf-L2h" secondAttribute="leading" id="xmo-8q-WaL"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="sourceView" destination="SO7-n8-2i0" id="YkA-92-DIO"/>
+                    </connections>
                 </viewController>
                 <customObject id="b7b-GR-1Fz" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1017,6 +1046,7 @@
     </scenes>
     <resources>
         <image name="bolt.fill" catalog="system" width="13" height="17"/>
+        <image name="delete.left" catalog="system" width="17" height="14"/>
         <image name="eye" catalog="system" width="21" height="13"/>
         <image name="hammer.fill" catalog="system" width="19" height="18"/>
         <image name="ladybug.fill" catalog="system" width="18" height="18"/>

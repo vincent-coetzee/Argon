@@ -42,6 +42,7 @@ public enum StyleElement
     case colorIssue
     case colorIssueLine
     case colorIssueText
+    case colorInvocation
     
     case colorKeyword
     
@@ -138,6 +139,7 @@ public class StyleTheme
         self.styles[.colorIssue] = NSColor.argonBrightYellowCrayola
         self.styles[.colorIssueLine] = NSColor.argonBrightYellowCrayola
         self.styles[.colorIssueText] = NSColor.black
+        self.styles[.colorInvocation] = NSColor.argonWhite90
         
         self.styles[.colorKeyword] = NSColor(red: 63,green: 149,blue: 116)
         

@@ -17,11 +17,10 @@ public enum InterfaceAction: Int
     case buildAction = 16
     case hideIssuesAction = 32
     case showIssuesAction = 64
-    case compilerNodeAction = 128
+    case importAction = 128
     case cleanAction = 256
     case runAction = 512
     case debugAction = 1024
-    case importAction = 2048
     case exportAction = 4096
     }
     
@@ -59,40 +58,148 @@ public struct InterfaceActionSet
     
 public struct BrowserActionSet: OptionSet
     {
-    public static let browserActionMenu =
+    public var hierarchyActionMenu: NSMenu
         {
-        () -> NSMenu in
         let menu = NSMenu()
-        menu.addItem(withTitle: "New Folder", action: #selector(ProjectViewController.onNewFolder), keyEquivalent: "")
-        menu.addItem(withTitle: "New Argon File", action: #selector(ProjectViewController.onNewArgonFile), keyEquivalent: "")
+        var wasFileAction = false
+        if self.contains(.newFolderAction)
+            {
+            menu.addItem(withTitle: "New Folder", action: #selector(ProjectHierarchyViewController.onNewFolder), keyEquivalent: "").isEnabled = true
+            wasFileAction = true
+            }
+        if self.contains(.newFileAction)
+            {
+            menu.addItem(withTitle: "New Argon File", action: #selector(ProjectHierarchyViewController.onNewArgonFile), keyEquivalent: "").isEnabled = true
+            wasFileAction = true
+            }
+        if wasFileAction
+            {
+            menu.addItem(NSMenuItem.separator())
+            }
+        var wasImportAction = false
+        if self.contains(.importAction)
+            {
+            menu.addItem(withTitle: "Import File...", action: #selector(ProjectHierarchyViewController.onImportFile), keyEquivalent: "").isEnabled = true
         menu.addItem(NSMenuItem.separator())
-        menu.addItem(withTitle: "Delete", action: #selector(ProjectViewController.onDeleteElement), keyEquivalent: "")
+            }
+        if self.contains(.deleteAction)
+            {
+            menu.addItem(withTitle: "Delete", action: #selector(ProjectHierarchyViewController.onDeleteNode), keyEquivalent: "").isEnabled = true
+            }
         return(menu)
-        }()
+        }
         
+    public static let none = BrowserActionSet([])
     public static let leftSidebarAction = BrowserActionSet(rawValue: 1 )
     public static let rightSidebarAction  = BrowserActionSet(rawValue: 1 << 2)
     public static let loadAction = BrowserActionSet(rawValue: 1 << 3)
     public static let saveAction  = BrowserActionSet(rawValue: 1 << 4)
     public static let buildAction = BrowserActionSet(rawValue: 1 << 5)
-    public static let newSymbolAction = BrowserActionSet(rawValue: 1 << 6)
-    public static let newGroupAction  = BrowserActionSet(rawValue: 1 << 7)
-    public static let newModuleAction = BrowserActionSet(rawValue: 1 << 8)
-    public static let deleteItemAction = BrowserActionSet(rawValue: 1 << 9)
-    public static let searchAction = BrowserActionSet(rawValue: 1 << 10)
-    public static let settingsAction = BrowserActionSet(rawValue: 1 << 11)
-    public static let newCommentAction = BrowserActionSet(rawValue: 1 << 11)
-    public static let newImportAction = BrowserActionSet(rawValue: 1 << 12)
-    public static let colorsAction = BrowserActionSet(rawValue: 1 << 13)
-    public static let fontsAction = BrowserActionSet(rawValue: 1 << 14)
-    public static let printAction = BrowserActionSet(rawValue: 1 << 15)
-    public static let runAction = BrowserActionSet(rawValue: 1 << 16)
+    public static let importAction = BrowserActionSet(rawValue: 1 << 6)
+    public static let deleteAction = BrowserActionSet(rawValue: 1 << 7)
+    public static let searchAction = BrowserActionSet(rawValue: 1 << 8)
+    public static let settingsAction = BrowserActionSet(rawValue: 1 << 9)
+    public static let runAction = BrowserActionSet(rawValue: 1 << 10)
+    public static let debugAction = BrowserActionSet(rawValue: 1 << 11)
+    public static let hideIssuesAction = BrowserActionSet(rawValue: 1 << 12)
+    public static let showIssuesAction = BrowserActionSet(rawValue: 1 << 13)
+    public static let cleanAction = BrowserActionSet(rawValue: 1 << 14)
+    public static let newFileAction = BrowserActionSet(rawValue: 1 << 15)
+    public static let newFolderAction = BrowserActionSet(rawValue: 1 << 16)
+    
+    public static let `default` = BrowserActionSet(withEnabled: .loadAction,.leftSidebarAction,.rightSidebarAction,.buildAction,.cleanAction,.runAction,.debugAction)
     
     public let rawValue: Int
     
     public init(rawValue: Int)
         {
         self.rawValue = rawValue
+        }
+        
+    public init(withEnabled actions: BrowserActionSet...)
+        {
+        self.rawValue = 0
+        for action in actions
+            {
+            self.insert(action)
+            }
+        }
+        
+    internal func enabling(_ actions: BrowserActionSet...) -> Self
+        {
+        var newActions = self
+        for action in actions
+            {
+            newActions.insert(action)
+            }
+        return(newActions)
+        }
+        
+    @discardableResult
+    internal func disabling(_ actions: BrowserActionSet...) -> Self
+        {
+        var newActions = self
+        for action in actions
+            {
+            newActions.remove(action)
+            }
+        return(newActions)
+        }
+        
+    internal func isActionEnabled(label: String) -> Bool
+        {
+        switch(label)
+            {
+            case("LeftSidebar"):
+                return(self.contains(.leftSidebarAction))
+            case("RightSidebar"):
+                return(self.contains(.rightSidebarAction))
+            case("Load"):
+                return(self.contains(.loadAction))
+            case("Save"):
+                return(self.contains(.saveAction))
+            case("Import"):
+                return(self.contains(.importAction))
+            case("Build"):
+                return(self.contains(.buildAction))
+            case("Clean"):
+                return(self.contains(.cleanAction))
+            case("Run"):
+                return(self.contains(.runAction))
+            case("Debug"):
+                return(self.contains(.debugAction))
+            case("Hide"):
+                return(self.contains(.hideIssuesAction))
+            case("Show"):
+                return(self.contains(.showIssuesAction))
+            case("Delete"):
+                return(self.contains(.deleteAction))
+            case("NewFile"):
+                return(self.contains(.newFileAction))
+            case("NewFolder"):
+                return(self.contains(.newFolderAction))
+            default:
+                return(false)
+            }
+        }
+        
+    internal func update(windowController controller: ProjectWindowController)
+        {
+        controller.setLeftSidebarAction(enabled: self.contains(.leftSidebarAction))
+        controller.setRightSidebarAction(enabled: self.contains(.leftSidebarAction))
+        if let toolbar = controller.window?.toolbar
+            {
+            toolbar.setItem(at: "Load",enabled: self.contains(.loadAction))
+            toolbar.setItem(at: "Save",enabled: self.contains(.saveAction))
+            toolbar.setItem(at: "Build",enabled: self.contains(.buildAction))
+            toolbar.setItem(at: "Import",enabled: self.contains(.importAction))
+            toolbar.setItem(at: "Delete",enabled: self.contains(.deleteAction))
+            toolbar.setItem(at: "Run",enabled: self.contains(.runAction))
+            toolbar.setItem(at: "Debug",enabled: self.contains(.debugAction))
+            toolbar.setItem(at: "Show",enabled: self.contains(.showIssuesAction))
+            toolbar.setItem(at: "Hide",enabled: self.contains(.hideIssuesAction))
+            toolbar.setItem(at: "Clean",enabled: self.contains(.cleanAction))
+            }
         }
         
     public func adjustBrowserActionMenu(_ menu: NSMenu)

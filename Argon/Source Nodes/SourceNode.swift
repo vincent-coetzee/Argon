@@ -15,6 +15,11 @@ public class SourceNode: NSObject,NSCoding,Comparable,Dependent
         lhs.name < rhs.name
         }
     
+    public var actionSet: BrowserActionSet
+        {
+        BrowserActionSet(withEnabled: .deleteAction)
+        }
+        
     public var filename: String
         {
         self.name

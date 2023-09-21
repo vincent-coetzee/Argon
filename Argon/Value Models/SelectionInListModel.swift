@@ -65,6 +65,12 @@ public class SelectionInListModel: AspectModel,Dependent
             }
         return(nil)
         }
+        
+        
+    public func shake(aspect: String)
+        {
+        self.changed(aspect: aspect,with: self.value,from: self)
+        }
     
     public func setValue(_ value: Any?,forAspect: String)
         {

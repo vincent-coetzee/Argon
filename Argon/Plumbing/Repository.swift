@@ -9,7 +9,7 @@ import Foundation
 
 public class Repository
     {
-    public class var initialSource: String
+    public class var initialSourceForNewSourceFile: String
         {
         let dateFormatter = DateFormatter()
         let format = "dd/MM/yyyy"
@@ -20,7 +20,7 @@ public class Repository
         let string = """
             //
             //
-            // Argon File created by Vincent Coetzee on \(date) \(time)
+            // Argon File created by \(NSUserName()) on \(date) \(time)
             //
             IMPORT Argon
             

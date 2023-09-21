@@ -33,4 +33,9 @@ extension ValueModel
         {
         self.value as? NSColor
         }
+        
+    public func shake(aspect: String)
+        {
+        self.changed(aspect: aspect,with: self.value,from: self)
+        }
     }

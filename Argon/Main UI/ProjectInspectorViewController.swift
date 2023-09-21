@@ -12,8 +12,8 @@ class ProjectInspectorViewController: NSViewController
     private weak var issueView: NSTableView!
     private weak var classView: NSOutlineView!
     @IBOutlet weak var inspectorView: ProjectInspectorView!
-    public var sharedNodeHolder: ValueHolder!
-    public var sharedProjectHolder: ValueHolder!
+    public var projectModel: ValueHolder!
+    public var selectedNodeModel: ValueHolder!
     
     override func viewDidLoad()
         {

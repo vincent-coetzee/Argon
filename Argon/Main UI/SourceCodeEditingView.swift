@@ -137,5 +137,9 @@ public class SourceCodeEditingView: NSView,NSTextViewDelegate,Model
         {
         self.textView.hideAllCompilerIssues()
         }
+        
+    public func shake(aspect: String)
+        {
+        }
     }
 

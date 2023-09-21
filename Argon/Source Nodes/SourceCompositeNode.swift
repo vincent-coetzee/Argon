@@ -24,6 +24,11 @@ public class SourceCompositeNode: SourceNode
         return(someElements)
         }
         
+    public override var actionSet: BrowserActionSet
+        {
+        super.actionSet.enabling(.newFileAction,.newFolderAction,.importAction)
+        }
+        
     public override var isCompositeNode: Bool
         {
         true

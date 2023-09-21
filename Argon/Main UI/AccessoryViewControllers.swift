@@ -9,6 +9,14 @@ import Cocoa
 
 class LeftSidebarButtonController: NSTitlebarAccessoryViewController
     {
+    public var isEnabled: Bool = true
+        {
+        didSet
+            {
+            (self.view as! TitlebarButton).isEnabled = self.isEnabled
+            }
+        }
+        
     public var rightOffset: CGFloat = 0
         {
         didSet
@@ -56,6 +64,14 @@ class LeftSidebarButtonController: NSTitlebarAccessoryViewController
 
 class RightSidebarButtonController: NSTitlebarAccessoryViewController
     {
+    public var isEnabled: Bool = true
+        {
+        didSet
+            {
+            (self.view as! TitlebarButton).isEnabled = self.isEnabled
+            }
+        }
+        
     public var target: Any!
     
     public override func viewDidLoad()
@@ -76,6 +92,18 @@ class RightSidebarButtonController: NSTitlebarAccessoryViewController
 
 fileprivate class TitlebarButton: NSView
     {
+    var isEnabled: Bool
+        {
+        get
+            {
+            self.button.isEnabled
+            }
+        set
+            {
+            self.button.isEnabled = newValue
+            }
+        }
+        
     private let button: NSButton
     private let attribute: NSLayoutConstraint.Attribute
     
