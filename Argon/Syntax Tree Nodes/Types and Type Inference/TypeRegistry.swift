@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class TypeRepository
+public class TypeRegistry
     {
     private static var registeredTypes = Dictionary<Int,ArgonType>()
     

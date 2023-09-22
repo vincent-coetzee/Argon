@@ -89,6 +89,8 @@ public enum IssueCode: String
     case statementExpected                                          = "statement expected."
     case semicolonExpected                                          = "';' expected."
     
+    case typeVariableGenericMismatch                                = "Type variable / generic mismatch."
+    
     case undefinedSymbol                                            = "undefined symbol."
     case undefinedClass                                             = "undefined class."
     case usingGenericClassesOnNonGenericClass                       = "generic classes used on non generic class."

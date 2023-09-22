@@ -6,14 +6,24 @@
 //
 
 import Foundation
-
-public struct Location
+    
+public struct Location: Hashable
     {
+    public static func ==(lhs: Location,rhs: Location) -> Bool
+        {
+        lhs.line == rhs.line && lhs.start == rhs.start && lhs.stop == rhs.stop
+        }
+        
     public static var zero = Location(nodeKey: 0,line: 0)
         
     public var range: NSRange
         {
         NSRange(location: self.start,length: self.stop - self.start)
+        }
+        
+    public var locationRange: Range<Int>
+        {
+        Range<Int>(uncheckedBounds: (self.start,self.stop))
         }
         
     public var nodeKey: Int
@@ -35,6 +45,11 @@ public struct Location
         self.line = line
         self.start = start
         self.stop = stop
+        }
+
+    public func overlaps(_ location: Location) -> Bool
+        {
+        self.locationRange.overlaps(location.locationRange)
         }
     }
 

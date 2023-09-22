@@ -563,6 +563,21 @@ public class Token: NSObject,NSCoding
         return(false)
         }
         
+    public var isKindOfLeftBracket: Bool
+        {
+        self.isLeftParenthesis || self.isLeftBracket || self.isLeftBrocket || self.isLeftBrace
+        }
+        
+    public var isKindOfRightBracket: Bool
+        {
+        self.isRightParenthesis || self.isRightBracket || self.isRightBrocket || self.isRightBrace
+        }
+        
+    public var isKindOfBracket: Bool
+        {
+        self.isLeftParenthesis || self.isLeftBracket || self.isLeftBrocket || self.isLeftBrace || self.isRightParenthesis || self.isRightBracket || self.isRightBrocket || self.isRightBrace
+        }
+        
     public var identifier: Identifier
         {
         fatalError("Should not be called on this type of token.")

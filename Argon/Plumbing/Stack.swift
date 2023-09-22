@@ -56,7 +56,16 @@ public class Stack<T>:Collection
         return(self.elements.popLast()!)
         }
         
-    
+    @discardableResult
+    public func popOrNil() -> T?
+        {
+        if self.elements.isEmpty
+            {
+            return(nil)
+            }
+        return(self.elements.popLast()!)
+        }
+        
     @discardableResult
     public func peek() -> T
         {

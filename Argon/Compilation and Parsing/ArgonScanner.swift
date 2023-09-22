@@ -27,7 +27,8 @@ public class ArgonScanner
     private let symbolCharacters = CharacterSet.letters.union(.decimalDigits).union(CharacterSet(charactersIn: "-_"))
     private let pathCharacters = CharacterSet.letters.union(.decimalDigits).union(CharacterSet(charactersIn: "-_/~"))
     public var currentCharacter = Unicode.Scalar(0)!
-
+    public let bracketMatcher = BracketMatcher()
+    
     public init(source: String)
         {
         self.source = source
@@ -117,6 +118,7 @@ public class ArgonScanner
             {
             let token = self.scanToken()
             tokens.append(token)
+            bracketMatcher.processToken(token)
             print(token)
             }
         return(tokens)

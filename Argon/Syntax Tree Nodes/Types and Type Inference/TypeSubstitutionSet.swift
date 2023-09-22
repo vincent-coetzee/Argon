@@ -7,9 +7,9 @@
 
 import Foundation
 
-public class SubstitutionSet
+public class TypeSubstitutionSet
     {
-    public static let initialSet = SubstitutionSet()
+    public static let initialSet = TypeSubstitutionSet()
     
     public static func newTypeVariable(named: String) -> TypeVariable
         {
@@ -31,5 +31,10 @@ public class SubstitutionSet
         variable.setIndex(index)
         self.typeVariables.insert(variable)
         return(variable)
+        }
+        
+    public func setValue(of: TypeVariable,to: ArgonType)
+        {
+        fatalError("This needs to be implemented.")
         }
     }

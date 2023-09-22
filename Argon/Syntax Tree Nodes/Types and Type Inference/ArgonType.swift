@@ -277,6 +277,11 @@ public class ArgonType: SyntaxTreeNode
         {
         fatalError("Should not be invoked on a TypeNode")
         }
+        
+    public func instanciate(withTypes: ArgonTypes) throws -> ArgonType
+        {
+        self
+        }
     }
 
 public typealias ArgonTypes = Array<ArgonType>

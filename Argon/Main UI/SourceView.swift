@@ -56,6 +56,7 @@ class SourceView: NSTextView
     public var sourceEditorDelegate: SourceEditorDelegate?
     private var _compilerIssues = CompilerIssues()
     private var activeAnnotations = Dictionary<Int,CALayer>()
+    private var bracketMatcher: BracketMatcher!
     
     public override init(frame: NSRect)
         {
@@ -198,7 +199,9 @@ class SourceView: NSTextView
     @objc func textDidChange(_ sender: Any?)
         {
         let theString = self.string
-        let someTokens = ArgonScanner(source: theString).allTokens()
+        let scanner = ArgonScanner(source: theString)
+        let someTokens = scanner.allTokens()
+        self.bracketMatcher = scanner.bracketMatcher
         self._tokens = someTokens
         self.sourceEditorDelegate?.sourceEditor(self, changedSource: theString,tokens: someTokens)
         self.refresh()

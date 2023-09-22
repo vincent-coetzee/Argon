@@ -33,12 +33,9 @@ public class TypeConstructor: ArgonType
         super.encode(with: coder)
         }
         
-    public func instanciate(with concreteTypes: ArgonTypes) -> ArgonType
+    public func instanciate(with concreteTypes: ArgonTypes) throws -> ArgonType
         {
-        if self.parentType.isEnumeration
-            {
-            parentType.instamciate(with:
-            }
+        try parentType.instanciate(withTypes: concreteTypes)
         }
     }
 
@@ -80,3 +77,39 @@ Lookups in ConcreteTypes moves up parent ( i.e. slots + case + tupleEntry lookup
 
 
 
+Values:
+    SIGN BIT    4 TAG BITS     TYPE
+    ===============================
+            1   0000     Integer
+            0   0001     Object
+            0   0010     Tuple
+            0   0100     Boolean
+            0   1000     String
+            0   0011     Float16
+            0   0110     Float32
+            0   1001     Float64
+            0   1010     Emnumeration
+            0   0101     Pointer/Address
+            0   1011     Array
+            0   0111     Bits
+            0   1110     Symbol
+            0   1111     Forwarded
+            
+            
+Object Structure
+
+            Header 64 Bits           Sign ( 1 bit )      0                                                                                      1
+                                     Tag ( 4 bits )       0000                                                                                  5
+                                     SizeInWords ( 36 bits )  000 00000000 00000000 00000000 000000000 0000                                    41
+                                     HasBytes ( 1 bit )                                                    0                                   42
+                                     FlipCount ( 8 bits = 256 )                                             000 00000                          50
+                                     IsForwarded ( 1 bit )                                                           0                         51
+                                     Kind ( 8 bits = 256 )                                                            00 000000                59
+                                     Reserved ( 5 bits )                                                                       00              64
+                                     
+            Class Pointer                                00000000 00000000 00000000 00000000 000000000 00000000 00000000 00000000
+            Slot 0                                       00000000 00000000 00000000 00000000 000000000 00000000 00000000 00000000
+            
+            Slot N                                       00000000 00000000 00000000 00000000 000000000 00000000 00000000 00000000
+            Bytes
+                        
