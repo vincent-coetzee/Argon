@@ -71,11 +71,11 @@ public class LiteralParser: PrefixParser
         parser.nextToken()
         if parser.token.isLeftParenthesis
             {
-            return(self.parseSymbolExpression(parser: parser,symbol: valueBox.symbol))
+            return(self.parseSymbolExpression(parser: parser,atom: valueBox.atom))
             }
-        if valueBox.isSymbol
+        if valueBox.isAtom
             {
-            let expression = SymbolExpression(symbol: valueBox.symbol)
+            let expression = SymbolExpression(atom: valueBox.atom)
             expression.location = location
             return(expression)
             }
@@ -84,7 +84,7 @@ public class LiteralParser: PrefixParser
         return(expression)
         }
         
-    private func parseSymbolExpression(parser: ArgonParser,symbol: String) -> Expression
+    private func parseSymbolExpression(parser: ArgonParser,atom: String) -> Expression
         {
         let location = parser.token.location
         var values = Expressions()
@@ -99,7 +99,7 @@ public class LiteralParser: PrefixParser
             {
             parser.nextToken()
             }
-        let expression = SymbolExpression(symbol: symbol,values: values)
+        let expression = SymbolExpression(atom: atom,values: values)
         expression.location = location
         return(expression)
         }

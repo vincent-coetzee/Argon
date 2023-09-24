@@ -18,7 +18,7 @@ public class StructuredType: ArgonType
     //
     public override var genericTypes: ArgonTypes
         {
-        self.generics
+        self._genericTypes
         }
     //
     //
@@ -36,38 +36,54 @@ public class StructuredType: ArgonType
     //
     //
     //
-    private var generics = ArgonTypes()
+    private var _genericTypes = ArgonTypes()
         
     public var elementTypes: ArgonTypes
         {
         fatalError("This should have been overridden")
         }
         
-    public init(name: String,generics: ArgonTypes = [])
+    public init(name: String,genericTypes: ArgonTypes = [])
         {
-        self.generics = generics
+        self._genericTypes = genericTypes
         super.init(name: name)
+        self.symbolTable = SymbolTable()
         }
         
     public required init(coder: NSCoder)
         {
-        self.generics = coder.decodeObject(forKey: "generics") as! ArgonTypes
+        self._genericTypes = coder.decodeObject(forKey: "_genericTypes") as! ArgonTypes
         super.init(coder: coder)
         }
         
     public override func encode(with coder: NSCoder)
         {
-        coder.encode(self.generics,forKey: "generics")
+        coder.encode(self._genericTypes,forKey: "_genericTypes")
         super.encode(with: coder)
         }
         
     public override func setGenericTypes(_ types: ArgonTypes)
         {
-        self.generics = types
+        self._genericTypes = types
         }
         
     public override func addGenericType(_ type: ArgonType)
         {
-        self.generics.append(type)
+        self._genericTypes.append(type)
+        }
+        
+    public override func addSymbol(_ symbol: SyntaxTreeNode)
+        {
+        self.symbolTable?.addSymbol(symbol)
+        }
+        
+    public override func addNode(_ symbol: SyntaxTreeNode)
+        {
+        fatalError("Invoke addSymbol instead of addNode.")
+        }
+        
+    public override func instanciate(withTypes types: ArgonTypes) -> ArgonType
+        {
+        fatalError()
         }
     }

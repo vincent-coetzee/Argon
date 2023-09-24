@@ -16,7 +16,7 @@ public class ClassType: StructuredType
         
     public override var elementTypes: ArgonTypes
         {
-        self.slots.map{ $0.type }
+        self.slots.map{ $0.symbolType }
         }
         
     public override var nodeType: NodeType
@@ -25,18 +25,15 @@ public class ClassType: StructuredType
         }
         
     public private(set) var superclasses: ClassTypes = []
-    public private(set) var slots: Slots = []
-    public private(set) var forms = Methods()
-    public private(set) var deform: MethodType?
-    private var symbolTable: SymbolTable!
+    public private(set) var initializers = Methods()
+    public private(set) var deinitializer: MethodType?
     
-    public init(name: String,slots: Slots = [],superclasses: ClassTypes = [],generics: ArgonTypes = ArgonTypes())
+    public init(name: String,slots: Slots = [],superclasses: ClassTypes = [],genericTypes: ArgonTypes = ArgonTypes())
         {
-        self.slots = slots
         self.superclasses = superclasses
         super.init(name: name)
-        self.setGenericTypes(generics)
-        self.symbolTable = SymbolTable(parent: self)
+        self.setGenericTypes(genericTypes)
+        self.symbolTable = SymbolTable(with: slots)
         }
         
     public init(name: String)
@@ -46,7 +43,9 @@ public class ClassType: StructuredType
         
     public required init(coder: NSCoder)
         {
-        self.slots = coder.decodeObject(forKey: "slots") as! Slots
+        self.superclasses = coder.decodeObject(forKey: "superclasses") as! ClassTypes
+        self.initializers = coder.decodeObject(forKey: "initializers") as! Methods
+        self.deinitializer = coder.decodeObject(forKey: "deinitializer") as? MethodType
         super.init(coder: coder)
         }
         
@@ -56,15 +55,14 @@ public class ClassType: StructuredType
         super.encode(with: coder)
         }
         
-    
-    public func addForm(_ method: MethodType)
+    public func addInitializer(_ method: MethodType)
         {
-        self.forms.append(method)
+        self.initializers.append(method)
         }
         
-    public func setDeform(_ method: MethodType)
+    public func setDeinitializer(_ method: MethodType)
         {
-        self.deform = method
+        self.deinitializer = method
         }
 
     public override var typeHash: Int
@@ -85,23 +83,16 @@ public class ClassType: StructuredType
         return(hasher.finalize())
         }
         
-    public override func lookupNode(atName: String) -> SyntaxTreeNode?
+    public var slots: Slots
         {
-        for slot in self.slots
-            {
-            if slot.name == atName
-                {
-                return(slot)
-                }
-            }
-        return(nil)
+        self.symbolTable!.slots
         }
-    
+        
     @discardableResult
     public func slot(_ name: String,_ type: ArgonType) -> ClassType
         {
         let slot = Slot(name: name,type: type)
-        self.slots.append(slot)
+        self.symbolTable?.addSymbol(slot)
         return(self)
         }
         
@@ -110,11 +101,15 @@ public class ClassType: StructuredType
         print("\(indent)Class(\(self.name))")
         }
         
-    public override func addNode(_ node: SyntaxTreeNode)
-        {
-        let slot = node as! Slot
-        self.slots.append(slot)
-        }
+//    public override func addNode(_ node: SyntaxTreeNode)
+//        {
+//        if let slot = node as? Slot
+//            {
+//            self.slots.append(slot)
+//            return
+//            }
+//        self.symbolTable.addNode(node)
+//        }
         
     public override var valueBox: ValueBox
         {
@@ -141,7 +136,7 @@ public class ClassType: StructuredType
             parser.nextToken()
             }
         let scope = ClassType(name: name)
-        parser.currentScope.addNode(scope)
+        parser.currentContext.addNode(scope)
         var superclasses = ClassTypes()
         var typeVariables = TypeVariables()
         if parser.token.isLeftBrocket
@@ -153,7 +148,7 @@ public class ClassType: StructuredType
                     parser.parseComma()
                     if parser.token.isIdentifier
                         {
-                        typeVariables.append(SubstitutionSet.newTypeVariable(named: parser.token.identifier.lastPart))
+                        typeVariables.append(TypeSubstitutionSet.newTypeVariable(named: parser.token.identifier.lastPart))
                         }
                     parser.nextToken()
                     }
@@ -180,11 +175,11 @@ public class ClassType: StructuredType
             while parser.token.isForm
                 {
                 let form = self.parseForm(in: scope,using: parser)
-                scope.addForm(form)
+                scope.addInitializer(form)
                 }
             if parser.token.isDeform
                 {
-                scope.setDeform(self.parseDeform(in: scope,using: parser))
+                scope.setDeinitializer(self.parseDeform(in: scope,using: parser))
                 }
             }
         scope.setSlots(slots)
@@ -273,7 +268,7 @@ public class ClassType: StructuredType
             parser.lodgeError(code: .singleIdentifierExpected,message: "An identifier path is not allowed here.",location: location)
             }
         let name = identifier.lastPart
-        var type: ArgonType = SubstitutionSet.newTypeVariable()
+        var type: ArgonType = TypeSubstitutionSet.newTypeVariable()
         if parser.token.isScope
             {
             parser.nextToken()
@@ -389,7 +384,10 @@ public class ClassType: StructuredType
         
     public func setSlots(_ slots: Slots)
         {
-        self.slots = slots
+        for slot in slots
+            {
+            self.addSymbol(slot)
+            }
         }
         
     public override func inherits(from someClass: ClassType) -> Bool
@@ -407,63 +405,27 @@ public class ClassType: StructuredType
             }
         return(false)
         }
-        
-    public override func accept(visitor: Visitor)
-        {
-        visitor.enter(class: self)
-        for slot in self.slots
-            {
-            slot.accept(visitor: visitor)
-            }
-        visitor.exit(class: self)
-        }
-        
 
-    
     init(name: String,parent: SyntaxTreeNode? = nil)
         {
         super.init(name: name)
         self.symbolTable = SymbolTable(parent: self)
         }
         
-    public required init(coder: NSCoder)
-        {
-        self.symbolTable = coder.decodeObject(forKey: "symbolTable") as? SymbolTable
-        super.init(coder: coder)
-        }
-        
-    public override func addNode(_ symbol: SyntaxTreeNode)
-        {
-        self.symbolTable.addNode(symbol)
-        }
-        
-    public override func lookupNode(atName someName: String) -> SyntaxTreeNode?
-        {
-        self.symbolTable.lookupNode(atName: someName)
-        }
-        
-    public override func lookupMethods(atName someName: String) -> Methods
-        {
-        self.symbolTable.lookupMethods(atName: someName)
-        }
-        
     public override func accept(visitor: Visitor)
         {
-        self.symbolTable.forEach
+        visitor.enter(class: self)
+        self.symbolTable?.forEach
             {
             (symbol:SyntaxTreeNode) in
             symbol.accept(visitor: visitor)
             }
+        visitor.exit(class: self)
         }
         
-    public func flush()
+    public override func instanciate(with types: ArgonTypes,parser: ArgonParser) -> ArgonType
         {
-        self.symbolTable.flush()
-        }
-        
-    public override func dump(indent: String)
-        {
-        fatalError()
+        if self.
         }
     }
 

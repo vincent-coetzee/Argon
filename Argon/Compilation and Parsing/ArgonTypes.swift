@@ -33,7 +33,7 @@ public struct Argon
     public typealias String = Swift.String
     public typealias Float = Swift.Double
     public typealias Integer = Swift.Int64
-    public typealias Symbol = Swift.String
+    public typealias Atom = Swift.String
 
     public struct Date: Hashable
         {
@@ -187,7 +187,7 @@ public struct Argon
         }
     }
 
-public typealias Symbols = Array<Argon.Symbol>
+public typealias Atoms = Array<Argon.Atom>
 
 extension NSCoder
     {

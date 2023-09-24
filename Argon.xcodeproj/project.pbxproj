@@ -108,6 +108,9 @@
 		BF8CB1862A8FE8380056F145 /* ProjectState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8CB1852A8FE8380056F145 /* ProjectState.swift */; };
 		BF8CB1882A8FF90B0056F145 /* MakeExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8CB1872A8FF90B0056F145 /* MakeExpression.swift */; };
 		BF9076352969803B00995CB8 /* ArgonParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9076342969803B00995CB8 /* ArgonParser.swift */; };
+		BF92E2C72AC092B500D1FDE2 /* SymbolContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF92E2C62AC092B500D1FDE2 /* SymbolContainer.swift */; };
+		BF92E2C92AC0CAC200D1FDE2 /* TupleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF92E2C82AC0CAC200D1FDE2 /* TupleType.swift */; };
+		BF92E2CB2AC0CC3A00D1FDE2 /* PrimitiveClassType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF92E2CA2AC0CC3A00D1FDE2 /* PrimitiveClassType.swift */; };
 		BF95CD4E2AB784B500792BD6 /* PathControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF95CD4D2AB784B500792BD6 /* PathControl.swift */; };
 		BF95CD502AB7880500792BD6 /* ProjectInspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF95CD4F2AB7880500792BD6 /* ProjectInspectorView.swift */; };
 		BF96903C29F55BF400A7ED65 /* LineNumberRulerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF96903B29F55BF400A7ED65 /* LineNumberRulerView.swift */; };
@@ -321,6 +324,9 @@
 		BF8CB1852A8FE8380056F145 /* ProjectState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectState.swift; sourceTree = "<group>"; };
 		BF8CB1872A8FF90B0056F145 /* MakeExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeExpression.swift; sourceTree = "<group>"; };
 		BF9076342969803B00995CB8 /* ArgonParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgonParser.swift; sourceTree = "<group>"; };
+		BF92E2C62AC092B500D1FDE2 /* SymbolContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolContainer.swift; sourceTree = "<group>"; };
+		BF92E2C82AC0CAC200D1FDE2 /* TupleType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TupleType.swift; sourceTree = "<group>"; };
+		BF92E2CA2AC0CC3A00D1FDE2 /* PrimitiveClassType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimitiveClassType.swift; sourceTree = "<group>"; };
 		BF95CD4D2AB784B500792BD6 /* PathControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathControl.swift; sourceTree = "<group>"; };
 		BF95CD4F2AB7880500792BD6 /* ProjectInspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectInspectorView.swift; sourceTree = "<group>"; };
 		BF96903B29F55BF400A7ED65 /* LineNumberRulerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineNumberRulerView.swift; sourceTree = "<group>"; };
@@ -436,6 +442,7 @@
 		BF174B66294CC9D50094A6D4 /* Lexical Analysis */ = {
 			isa = PBXGroup;
 			children = (
+				BF738C0A2ABE3EC000FE269C /* BracketMatcher.swift */,
 				BF174B64294CC8A50094A6D4 /* CommentToken.swift */,
 				BFDC80142A7D42D7008118FF /* CalendricalToken.swift */,
 				BF6B053229620E2D0097C9A9 /* EndToken.swift */,
@@ -523,9 +530,11 @@
 				BF4DB6D92A8167D200A509A4 /* MetaclassType.swift */,
 				BFAD0C152A8001AD00FB45B9 /* MethodSignature.swift */,
 				BFEF43612ABC5E940016BD51 /* MethodType.swift */,
+				BF92E2CA2AC0CC3A00D1FDE2 /* PrimitiveClassType.swift */,
 				BFCB438329845D07001D1CFD /* Slot.swift */,
 				BF1F4B022A5616B000C1F977 /* StructuredType.swift */,
 				BF60D6332A8CCAC400ED3F6B /* SubType.swift */,
+				BF92E2C82AC0CAC200D1FDE2 /* TupleType.swift */,
 				BFEF43692ABC996C0016BD51 /* TypeConstructor.swift */,
 				BFAC05982AB31759004C3823 /* TypeRegistry.swift */,
 				BFC4B6C92A934A1C0098FBB1 /* TypeSubstitutionSet.swift */,
@@ -553,6 +562,7 @@
 				BFA9DA97292D5C3900C6859D /* SyntaxTreeNode.swift */,
 				BF0711682A78496600981DD1 /* Variable.swift */,
 				BFEF43652ABC73F50016BD51 /* NodeContainer.swift */,
+				BF92E2C62AC092B500D1FDE2 /* SymbolContainer.swift */,
 			);
 			path = Nodes;
 			sourceTree = "<group>";
@@ -767,7 +777,6 @@
 				BFDC80162A7D5CFF008118FF /* NodeChangeSet.swift */,
 				BFE6BDA62AA670BA00614F71 /* ProcessingFlags.swift */,
 				BFE1AD0D2A8A78BF00402294 /* Visitor + Visitable.swift */,
-				BF738C0A2ABE3EC000FE269C /* BracketMatcher.swift */,
 			);
 			path = "Compilation and Parsing";
 			sourceTree = "<group>";
@@ -938,6 +947,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BFCB438629845D33001D1CFD /* EnumerationType.swift in Sources */,
+				BF92E2C72AC092B500D1FDE2 /* SymbolContainer.swift in Sources */,
 				BF0238122AB0DF56001DE9F9 /* NameMangler.swift in Sources */,
 				BF2D01E62A7C0E2A00887DD7 /* CallableType.swift in Sources */,
 				BFEF436A2ABC996C0016BD51 /* TypeConstructor.swift in Sources */,
@@ -960,6 +970,7 @@
 				BF174B65294CC8A50094A6D4 /* CommentToken.swift in Sources */,
 				BF0D320D2A6406EF002A2D8D /* InvocationType.swift in Sources */,
 				BF0711692A78496600981DD1 /* Variable.swift in Sources */,
+				BF92E2C92AC0CAC200D1FDE2 /* TupleType.swift in Sources */,
 				BF174B57294CC7D30094A6D4 /* FloatToken.swift in Sources */,
 				BFE99B392A710A8A0056E700 /* MethodInvocationExpression.swift in Sources */,
 				BF3B430129A14CC6009C269F /* SourceCompositeNode.swift in Sources */,
@@ -1050,6 +1061,7 @@
 				BFAD0C142A7FCEA800FB45B9 /* MemberAccessExpression.swift in Sources */,
 				BF0D32112A649D89002A2D8D /* ValueBox.swift in Sources */,
 				BFEF43642ABC5F6B0016BD51 /* FunctionType.swift in Sources */,
+				BF92E2CB2AC0CC3A00D1FDE2 /* PrimitiveClassType.swift in Sources */,
 				BF3349252A7064040050F904 /* Expression Parsers.swift in Sources */,
 				BF2423DA2A7948C100C5D4E4 /* ForkStatement.swift in Sources */,
 				BF4DB6DA2A8167D200A509A4 /* MetaclassType.swift in Sources */,

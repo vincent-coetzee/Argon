@@ -18,7 +18,7 @@ public struct ProcessingFlags: OptionSet
         self.rawValue = 0
         }
 
-    public static let kSemanticsChecked = ProcessingFlags(rawValue: 1 << 0)
-    public static let kTypeInferenced = ProcessingFlags(rawValue: 1 << 1)
-    public static let kTypeChecked = ProcessingFlags(rawValue: 1 << 2)
+    public static let semanticsChecked = ProcessingFlags(rawValue: 1 << 0)
+    public static let typesInferenced = ProcessingFlags(rawValue: 1 << 1)
+    public static let typesChecked = ProcessingFlags(rawValue: 1 << 2)
     }

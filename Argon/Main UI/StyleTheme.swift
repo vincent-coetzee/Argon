@@ -19,6 +19,7 @@ public enum StyleElement
     case colorBreakpoint
     case colorBreakpointLine
     case colorByte
+    case colorBracketHighlight
     
     case colorCalendrical
     case colorClass
@@ -115,6 +116,7 @@ public class StyleTheme
         self.styles[.colorBreakpointLine] = NSColor.argonDivaPink
         self.styles[.colorBoolean] = NSColor.argonBayside
         self.styles[.colorByte] = NSColor.argonXSmoke
+        self.styles[.colorBracketHighlight] = NSColor.argonIvory
         
         self.styles[.colorComment] = NSColor.argonSolidPlum
         self.styles[.colorClass] = NSColor.argonLime

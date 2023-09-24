@@ -70,6 +70,7 @@ public enum IssueCode: String
     case nodeAlreadyDefined                                         = "node already defined."
                 
     case pathExpected                                               = "path expected."
+    case primitiveTypeNotAGenericType                               = "A primitive type can not be used as a generic type."
     
     case rangeOperatorExpected                                      = "'..' expected."
     case returnExpectedInReadBlock                                  = "'RETURN' expected in READ block."
@@ -85,7 +86,7 @@ public enum IssueCode: String
     case slotExpectedAfterRead                                      = "'SLOT' expected after READ keyword."
     case superclassIdentifierExpected                               = "superclass identifier expected."
     case superclassExpected                                         = "superclass expected."
-    case symbolExpected                                             = "symbol expected."
+    case atomExpected                                               = "atom expected."
     case statementExpected                                          = "statement expected."
     case semicolonExpected                                          = "';' expected."
     

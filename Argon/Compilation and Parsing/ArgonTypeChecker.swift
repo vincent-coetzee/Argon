@@ -13,7 +13,7 @@ public class ArgonTypeChecker: Visitor
     
     public var processingFlag: ProcessingFlags
         {
-        .kTypeChecked
+        .typesChecked
         }
         
     public func enter(rootModule: RootModule)

@@ -19,7 +19,7 @@ import Foundation
 // TODO: Fix name mangling
 //
 //
-public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable,Comparable
+public class SyntaxTreeNode: NSObject,NSCoding,Context,Visitable,Comparable
     {
     public static func ==(lhs: SyntaxTreeNode,rhs: SyntaxTreeNode) -> Bool
         {
@@ -126,9 +126,10 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable,Comparable
     public private(set) var index: Int?
     public private(set) var parent: SyntaxTreeNode?
     public var isSystemNode: Bool = false
-    public private(set) var type: ArgonType!
+    public private(set) var symbolType: ArgonType!
     public private(set) var processingFlags = ProcessingFlags()
     public var location: Location?
+    public var symbolTable: SymbolTable?
     
     init(index: Int? = nil,name: String)
         {
@@ -144,7 +145,8 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable,Comparable
         
     public required init(coder: NSCoder)
         {
-        self.type = coder.decodeObject(forKey: "type") as? ArgonType
+        self.symbolTable = coder.decodeObject(forKey: "symbolTable") as? SymbolTable
+        self.symbolType = coder.decodeObject(forKey: "type") as? ArgonType
         self.name = coder.decodeObject(forKey: "name") as! String
         self.index = coder.decodeInteger(forKey: "index")
         self.parent = coder.decodeObject(forKey: "parent") as? SyntaxTreeNode
@@ -153,10 +155,10 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable,Comparable
         self.processingFlags = ProcessingFlags(rawValue: UInt64(coder.decodeInteger(forKey: "processingFlags")))
         }
         
-    public func removeChildNode(_ node: SyntaxTreeNode)
-        {
-        fatalError("removeChildNode called on SyntaxTreeNode and should not be")
-        }
+//    public func removeChildNode(_ node: SyntaxTreeNode)
+//        {
+//        fatalError("removeChildNode called on SyntaxTreeNode and should not be")
+//        }
         
 //    public func removeFromParent()
 //        {
@@ -166,7 +168,8 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable,Comparable
         
     public func encode(with coder: NSCoder)
         {
-        coder.encode(self.type,forKey: "type")
+        coder.encode(self.symbolTable,forKey: "symbolTable")
+        coder.encode(self.symbolType,forKey: "type")
         coder.encode(self.name,forKey: "name")
         coder.encode(self.index,forKey: "indeX")
         coder.encode(self.parent,forKey: "parent")
@@ -206,35 +209,16 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable,Comparable
         self.name = name
         }
         
-    public func setType(_ type: ArgonType?)
+    public func setSymbolType(_ type: ArgonType?)
         {
-        self.type = type
+        self.symbolType = type
         }
         
-    public func setParent(_ symbol: SyntaxTreeNode?)
+    public func setParent(_ node: SyntaxTreeNode?)
         {
-        self.parent = symbol
+        self.parent = node
+        self.symbolTable?.parent = node
         }
-        
-//    public func setParent(_ symbol: NodeContainer?)
-//        {
-//        guard symbol.isNotNil else
-//            {
-//            self.parent = Parent.none
-//            return
-//            }
-//        if symbol is SyntaxTreeNode
-//            {
-//            self.parent = .symbol(symbol as! SyntaxTreeNode)
-//            return
-//            }
-//        fatalError("Attempt to assign \(symbol!) of type \(Swift.type(of: symbol)) as a parent.")
-//        }
-//        
-//    public func setParent(_ expression: Expression)
-//        {
-//        self.parent = .expression(expression)
-//        }
         
     public func setIndex(_ index: Int)
         {
@@ -289,8 +273,8 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable,Comparable
     public func accept(visitor: Visitor)
         {
         self.processingFlags.insert(visitor.processingFlag)
+        self.symbolTable?.accept(visitor: visitor)
         }
-        
         
     public func become<T>(_ newKind: T.Type) -> T?
         {
@@ -306,67 +290,19 @@ public class SyntaxTreeNode: NSObject,NSCoding,Scope,Visitable,Comparable
         fatalError("This should not be called on SyntaxTreeNode")
         }
         
-    public func lookupNode(atIdentifier identifier: Identifier) -> SyntaxTreeNode?
+    public func makeMetaclass(named: String,inModule: Module)
         {
-        if identifier.isEmpty
-            {
-            return(nil)
-            }
-        if identifier.isRooted
-            {
-            return(self.rootModule.lookupNode(atIdentifier: identifier.cdr))
-            }
-        if let node = self.lookupNode(atName: identifier.car!)
-            {
-            if identifier.cdr.isEmpty
-                {
-                return(node)
-                }
-            else
-                {
-                return(node.lookupNode(atIdentifier: identifier.cdr))
-                }
-            }
-        return(nil)
+        let objectClass = inModule.argonModule.lookupSymbol(atName: "Object") as! ClassType
+        let metaclass = MetaclassType(name: named,superclasses: [objectClass],genericTypes: [])
+        self.symbolType = metaclass
+        metaclass.setSymbolType(objectClass)
+        inModule.addSymbol(metaclass)
         }
         
-    public func addNode(_ node: SyntaxTreeNode)
+    public func setMetaclass(named: String,fromModule: Module)
         {
-        fatalError("Attempt to add node to a SyntaxTreeNode whihc is not permissable.")
-        }
-        
-    public func lookupMethods(atIdentifier identifier: Identifier) -> Methods
-        {
-        if identifier.isEmpty
-            {
-            return(Methods())
-            }
-        if identifier.isRooted
-            {
-            return(self.rootModule.lookupMethods(atIdentifier: identifier.cdr))
-            }
-        if let node = self.lookupNode(atName: identifier.car!)
-            {
-            if identifier.cdr.count == 1
-                {
-                return(node.lookupMethods(atName: identifier.lastPart))
-                }
-            else
-                {
-                return(node.lookupMethods(atIdentifier: identifier.cdr))
-                }
-            }
-        return(Methods())
-        }
-        
-    public func lookupNode(atName: String) -> SyntaxTreeNode?
-        {
-        nil
-        }
-        
-    public func lookupMethods(atName: String) -> Methods
-        {
-        Methods()
+        let metaclass = fromModule.lookupSymbol(atName: "Object") as! ClassType
+        self.symbolType = metaclass
         }
     }
 

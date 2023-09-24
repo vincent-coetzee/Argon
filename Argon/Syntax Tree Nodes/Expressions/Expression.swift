@@ -64,10 +64,6 @@ public class Expression: SyntaxTreeNode
         super.encode(with: coder)
         }
         
-    public override func removeChildNode(_ node: SyntaxTreeNode)
-        {
-        }
-        
     public override func accept(visitor: Visitor)
         {
         visitor.visit(expression: self)

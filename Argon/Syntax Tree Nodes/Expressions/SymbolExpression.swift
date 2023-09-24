@@ -12,9 +12,9 @@ public class SymbolExpression: Expression
     private let symbol: String
     private let values: Expressions
     
-    public init(symbol: String,values: Expressions = Expressions())
+    public init(atom: String,values: Expressions = Expressions())
         {
-        self.symbol = symbol
+        self.symbol = atom
         self.values = values
         super.init()
         }

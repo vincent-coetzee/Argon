@@ -24,10 +24,10 @@ public class Parameter: Variable
         {
         if self.definedByPosition
             {
-            return(self.type.name)
+            return(self.symbolType.name)
             }
         let aName = self.externalName.isNil ? "-\(self.internalName)" : "\(self.externalName!)"
-        let typeName = self.type.name
+        let typeName = self.symbolType.name
         return("\(aName)::\(typeName)")
         }
         

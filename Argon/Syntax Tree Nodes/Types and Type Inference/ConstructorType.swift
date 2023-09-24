@@ -47,6 +47,6 @@ public class ConstructorType: ArgonType
             throw(CompilerError(code: .typeVariableGenericMismatch, message: message, location: .zero))
             }
             let instanciatedTypes = zip(self.typeVariables,withTypes).map{ set.mapTypeVariable($0.0,toType: $0.1)}
-        TypeRegistry.registerType(self.instanceType.instanciate(withTypes: withTypes))
+        TypeRegistry.registerType(try self.instanceType.instanciate(withTypes: withTypes))
         }
     }

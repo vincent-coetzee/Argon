@@ -110,9 +110,9 @@ extension NSCoder
             case(.float(let float)):
                 self.encode(4,forKey: "\(key)_index")
                 self.encode(float,forKey: "\(key)_float")
-            case(.symbol(let string)):
+            case(.atom(let string)):
                 self.encode(5,forKey: "\(key)_index")
-                self.encode(string,forKey: "\(key)_symbol")
+                self.encode(string,forKey: "\(key)_atom")
             case(.string(let string)):
                 self.encode(6,forKey: "\(key)_index")
                 self.encode(string,forKey: "\(key)_string")
@@ -193,7 +193,7 @@ extension NSCoder
             case(4):
                 return(.float(self.decodeDouble(forKey: "\(key)_float")))
             case(5):
-                return(.symbol(self.decodeObject(forKey: "\(key)_symbol") as! String))
+                return(.atom(self.decodeObject(forKey: "\(key)_atom") as! String))
             case(6):
                 return(.string(self.decodeObject(forKey: "\(key)_string") as! String))
             case(7):

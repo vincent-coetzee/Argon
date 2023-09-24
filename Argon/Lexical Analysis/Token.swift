@@ -369,7 +369,7 @@ public class Token: NSObject,NSCoding
         false
         }
         
-    public var isSymbolValue: Bool
+    public var isAtomValue: Bool
         {
         false
         }
@@ -429,7 +429,7 @@ public class Token: NSObject,NSCoding
         fatalError("This should have been invoked on Token")
         }
         
-    public var symbolValue: Argon.Symbol
+    public var atomValue: Argon.Atom
         {
         fatalError("This should not have been invoked on Token")
         }

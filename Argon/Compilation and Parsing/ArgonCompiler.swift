@@ -44,8 +44,8 @@ public struct ArgonCompiler
     public init(nodes: SourceFileNodes)
         {
         self.sourceFileNodes = nodes
-        self.rootModule = RootModule.newRootModule()
-        self.rootModule.flush()
+        RootModule.reset()
+        self.rootModule = RootModule.shared
         }
         
     public mutating func initialize() // STEP 1
@@ -66,7 +66,7 @@ public struct ArgonCompiler
         
     public mutating func parse() // STEP 3
         {
-        let parser = ArgonParser(rootModule: self.rootModule)
+        let parser = ArgonParser(rootModule: RootModule.shared)
         for node in self.sourceFileNodes
             {
             parser.resetParser()

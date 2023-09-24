@@ -25,20 +25,20 @@ public class NodeChangeSet
         self.nodes.insert(node)
         }
         
-    public func remove(_ node: SyntaxTreeNode)
-        {
-        self.nodes.remove(node)
-        node.removeFromParent()
-        }
-        
-    public func removeAll()
-        {
-        var nodesToBeRemoved = Array<SyntaxTreeNode>()
-        for node in self.nodes
-            {
-            node.removeFromParent()
-            nodesToBeRemoved.append(node)
-            }
-        self.nodes = Set<SyntaxTreeNode>()
-        }
+//    public func remove(_ node: SyntaxTreeNode)
+//        {
+//        self.nodes.remove(node)
+////        node.removeFromParent()
+//        }
+//        
+//    public func removeAll()
+//        {
+//        var nodesToBeRemoved = Array<SyntaxTreeNode>()
+//        for node in self.nodes
+//            {
+//            node.removeFromParent()
+//            nodesToBeRemoved.append(node)
+//            }
+//        self.nodes = Set<SyntaxTreeNode>()
+//        }
     }

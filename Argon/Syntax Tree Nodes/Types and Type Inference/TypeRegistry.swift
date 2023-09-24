@@ -11,6 +11,7 @@ public class TypeRegistry
     {
     private static var registeredTypes = Dictionary<Int,ArgonType>()
     
+    @discardableResult
     public class func registerType(_ someType: ArgonType) -> ArgonType
         {
         guard let oldType = Self.registeredTypes[someType.typeHash] else

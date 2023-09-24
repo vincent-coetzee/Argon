@@ -111,11 +111,11 @@ public class Block: Statement
         }
         
     private var statements = Statements()
-    private var locals = Variables()
 
     public override init()
         {
         super.init()
+        self.symbolTable = SymbolTable()
         }
         
     public required init(coder: NSCoder)
@@ -138,19 +138,7 @@ public class Block: Statement
         
     public func addLocal(_ variable: Variable)
         {
-        self.locals.append(variable)
-        }
-        
-    public override func lookupNode(atName: String) -> SyntaxTreeNode?
-        {
-        for local in self.locals
-            {
-            if local.name == atName
-                {
-                return(local)
-                }
-            }
-        return(self.parent.lookupNode(atName: atName))
+        self.symbolTable?.addSymbol(variable)
         }
         
     public override func accept(visitor: Visitor)

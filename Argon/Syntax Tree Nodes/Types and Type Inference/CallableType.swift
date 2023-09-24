@@ -18,7 +18,7 @@ public class CallableType: ArgonType
         hasher.combine(self.name)
         for parameter in self.parameters
             {
-            hasher.combine(parameter.type.typeHash)
+            hasher.combine(parameter.symbolType.typeHash)
             }
         hasher.combine(returnType.typeHash)
         return(hasher.finalize())
@@ -26,7 +26,7 @@ public class CallableType: ArgonType
         
     public var parameterTypes: ArgonTypes
         {
-        self.parameters.map{$0.type}
+        self.parameters.map{$0.symbolType}
         }
         
     public private(set) var parameters = Parameters()

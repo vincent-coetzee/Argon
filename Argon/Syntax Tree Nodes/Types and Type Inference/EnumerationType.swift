@@ -24,6 +24,11 @@ public class EnumerationType: StructuredType
         self.hash
         }
         
+    public var cases: EnumerationCases
+        {
+        self.symbolTable!.enumerationCases
+        }
+        
     public override var hash: Int
         {
         var hasher = Hasher()
@@ -57,10 +62,10 @@ public class EnumerationType: StructuredType
             }
         parser.parseBraces
             {
-            while parser.token.isSymbolValue && !parser.token.isRightBrace
+            while parser.token.isAtomValue && !parser.token.isRightBrace
                 {
                 let localLocation = parser.token.location
-                let caseSymbol = parser.token.symbolValue
+                let caseSymbol = parser.token.atomValue
                 var types = ArgonTypes()
                 var instanceValue: ValueBox = .none
                 var isDefault = false
@@ -108,25 +113,23 @@ public class EnumerationType: StructuredType
         enumeration.setType(.enumerationType)
         }
         
-    public private(set) var cases: EnumerationCases = []
     public private(set) var defaultCase: EnumerationCase?
     public private(set) var rawType: ArgonType?
     
     public init(name: String)
         {
         super.init(name: name)
+        self.symbolTable = SymbolTable()
         }
         
     public init(name: String,rawType: ArgonType? = nil)
         {
-        self.cases = []
         self.rawType = rawType
         super.init(name: name)
         }
         
     public required init(coder: NSCoder)
         {
-        self.cases = coder.decodeObject(forKey: "cases") as! EnumerationCases
         self.defaultCase = coder.decodeObject(forKey: "defaultCase") as? EnumerationCase
         self.rawType = coder.decodeObject(forKey: "rawType") as? ArgonType
         super.init(coder: coder)
@@ -142,12 +145,15 @@ public class EnumerationType: StructuredType
         
     public func setCases(_ cases: Array<EnumerationCase>)
         {
-        self.cases = cases
+        for aCase in cases
+            {
+            self.addSymbol(aCase)
+            }
         }
         
     public func addCase(_ someCase: EnumerationCase)
         {
-        self.cases.append(someCase)
+        self.addSymbol(someCase)
         }
         
     public func setRawType(_ type: ArgonType)
@@ -165,16 +171,9 @@ public class EnumerationType: StructuredType
         true
         }
         
-    public func `case`(atSymbol symbol: Argon.Symbol) -> EnumerationCase?
+    public func `case`(atAtom atom: Argon.Atom) -> EnumerationCase?
         {
-        for aCase in self.cases
-            {
-            if aCase.name == symbol
-                {
-                return(aCase)
-                }
-            }
-        return(nil)
+        self.symbolTable?.lookupSymbol(atName: atom) as? EnumerationCase
         }
         
     public override func dump(indent: String)

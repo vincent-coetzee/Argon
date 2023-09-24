@@ -9,9 +9,9 @@ import Foundation
 
 public class SignalStatement: Statement
     {
-    private let symbol: Argon.Symbol
+    private let symbol: Argon.Atom
     
-    public init(symbol: Argon.Symbol)
+    public init(symbol: Argon.Atom)
         {
         self.symbol = symbol
         super.init()
@@ -19,7 +19,7 @@ public class SignalStatement: Statement
         
     public required init(coder: NSCoder)
         {
-        self.symbol = coder.decodeObject(forKey: "symbol") as! Argon.Symbol
+        self.symbol = coder.decodeObject(forKey: "symbol") as! Argon.Atom
         super.init(coder: coder)
         }
         
@@ -33,17 +33,17 @@ public class SignalStatement: Statement
         {
         let location = parser.token.location
         parser.nextToken()
-        var symbol: Argon.Symbol!
+        var symbol: Argon.Atom!
         parser.parseParentheses
             {
-            if !parser.token.isSymbolValue
+            if !parser.token.isAtomValue
                 {
-                parser.lodgeError( code: .symbolExpected, location: location)
+                parser.lodgeError( code: .atomExpected, location: location)
                 symbol = Argon.nextIndex(named: "SYMBOL")
                 }
             else
                 {
-                symbol = parser.token.symbolValue
+                symbol = parser.token.atomValue
                 parser.nextToken()
                 }
             }

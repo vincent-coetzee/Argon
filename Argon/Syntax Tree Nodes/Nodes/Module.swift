@@ -35,17 +35,11 @@ public class Module: CompositeSyntaxTreeNode
         
     public var mainMethod: MethodType?
         {
-        for entry in self.symbolEntries.values
+        (self.symbolTable?.detect
             {
-            for method in entry.methods
-                {
-                if method.name == "main"
-                    {
-                    return(method)
-                    }
-                }
-            }
-        return(nil)
+            symbol in
+            symbol.name == "main" && symbol.isMethod
+            }) as? MethodType
         }
         
     public override var module: Module
@@ -65,7 +59,7 @@ public class Module: CompositeSyntaxTreeNode
         
     public override var parentModules: Modules
         {
-        self.parent.parentModules.appending(self)
+        self.parent?.parentModules.appending(self) ?? Modules()
         }
         
     public class func parseModuleDependency(using parser: ArgonParser) -> ModuleNode?
@@ -174,20 +168,17 @@ public class Module: CompositeSyntaxTreeNode
     public override func accept(visitor: Visitor)
         {
         visitor.enter(module: self)
-        for entry in self.symbolEntries.values
+        self.symbolTable?.forEach
             {
-            entry.node?.accept(visitor: visitor)
-            for method in entry.methods
-                {
-                method.accept(visitor: visitor)
-                }
+            symbol in
+            symbol.accept(visitor: visitor)
             }
         visitor.exit(module: self)
         }
         
     public func validateMethodUniqueness(semanticChecker: ArgonSemanticChecker)
         {
-        let methods = self.symbolEntries.values.flatMap{$0.methods}
+        let methods = self.symbolTable!.methods
         for method in methods
             {
             for innerMethod in methods.removing(method)
@@ -198,7 +189,7 @@ public class Module: CompositeSyntaxTreeNode
                     }
                 }
             }
-        for module in self.symbolEntries.values.compactMap({$0.node as? Module})
+        for module in self.symbolTable!.modules
             {
             module.validateMethodUniqueness(semanticChecker: semanticChecker)
             }

@@ -22,6 +22,8 @@ public protocol SourceEditorDelegate
     
 class SourceView: NSTextView
     {
+    public var matchBrackets: Bool = true
+        
     public var compilerIssues: CompilerIssues
         {
         get
@@ -312,7 +314,39 @@ class SourceView: NSTextView
             line += 1
             }
         location = self.selectedRanges.first!.rangeValue.location
+        if self.matchBrackets
+            {
+            if let bracketKind = event.characters?.bracketKind,let locations = self.bracketMatcher.locateMatch(for: bracketKind, at: location)
+                {
+                self.highlightCharacters(atLocations: locations,forMilliseconds: 1000,inColor: StyleTheme.shared.color(for: .colorBracketHighlight))
+                }
+            }
         self.sourceEditorDelegate?.sourceEditor(self,changedLine: line + 1,offset: location - offset)
+        }
+        
+    private func highlightCharacters(atLocations locations: (Location,Location),forMilliseconds: Int,inColor: NSColor)
+        {
+        self.textStorage?.beginEditing()
+        let styleTheme = StyleTheme.shared
+        let font = styleTheme.font(for: .fontEditor)
+        let boldFont = NSFontManager.shared.convert(font,toHaveTrait: .boldFontMask)
+        var attributes = Dictionary<NSAttributedString.Key,Any>()
+        attributes[.backgroundColor] = inColor
+        attributes[.font] = boldFont
+        self.textStorage?.setAttributes(attributes, range: locations.0.range)
+        self.textStorage?.setAttributes(attributes, range: locations.1.range)
+        self.textStorage?.endEditing()
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(forMilliseconds))
+            {
+            [weak self] in
+            self?.textStorage?.beginEditing()
+            var attributes = Dictionary<NSAttributedString.Key,Any>()
+            attributes[.backgroundColor] = self?.backgroundColor
+            attributes[.font] = font
+            self?.textStorage?.setAttributes(attributes, range: locations.0.range)
+            self?.textStorage?.setAttributes(attributes, range: locations.1.range)
+            self?.textStorage?.endEditing()
+            }
         }
         
     public override func rulerView(_ rulerView: NSRulerView,handleMouseDownWith event: NSEvent)

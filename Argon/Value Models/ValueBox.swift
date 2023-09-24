@@ -31,7 +31,7 @@ public enum ValueBox: Hashable
                 return(integer1 == integer2)
             case(.byte(let integer1),.byte(let integer2)):
                 return(integer1 == integer2)
-            case(.symbol(let integer1),.symbol(let integer2)):
+            case(.atom(let integer1),.atom(let integer2)):
                 return(integer1 == integer2)
             case(.float(let integer1),.float(let integer2)):
                 return(integer1 == integer2)
@@ -72,7 +72,7 @@ public enum ValueBox: Hashable
     case void
     case character(UInt16)
     case byte(UInt8)
-    case symbol(String)
+    case atom(String)
     case float(Argon.Float)
     case method(MethodType)
     case function(FunctionType)
@@ -86,25 +86,25 @@ public enum ValueBox: Hashable
     case time(Argon.Time)
     case dateTime(Argon.DateTime)
     
-    public var isSymbol: Bool
+    public var isAtom: Bool
         {
         switch(self)
             {
-            case .symbol:
+            case .atom:
                 return(true)
             default:
                 return(false)
             }
         }
         
-    public var symbol: String
+    public var atom: String
         {
         switch(self)
             {
-            case .symbol(let symbol):
+            case .atom(let symbol):
                 return(symbol)
             default:
-                fatalError("symbol called on ValueBox and it's not a symbol.")
+                fatalError("atom called on ValueBox and it's not an atom.")
             }
         }
         
@@ -161,8 +161,8 @@ public enum ValueBox: Hashable
             case(.byte(let integer1)):
                 hasher.combine("BYTE")
                 hasher.combine(integer1)
-            case(.symbol(let integer1)):
-                hasher.combine("SYMBOL")
+            case(.atom(let integer1)):
+                hasher.combine("ATOM")
                 hasher.combine(integer1)
             case(.float(let integer1)):
                 hasher.combine("FLOAT")

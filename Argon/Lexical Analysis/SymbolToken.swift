@@ -9,12 +9,12 @@ import Foundation
 
 public class SymbolToken: Token
     {
-    public override var symbolValue: Argon.Symbol
+    public override var atomValue: Argon.Atom
         {
         self.matchString
         }
         
-    public override var isSymbolValue: Bool
+    public override var isAtomValue: Bool
         {
         true
         }
@@ -50,6 +50,6 @@ public class SymbolToken: Token
         
     public override var valueBox: ValueBox
         {
-        ValueBox.symbol(matchString)
+        ValueBox.atom(matchString)
         }
     }

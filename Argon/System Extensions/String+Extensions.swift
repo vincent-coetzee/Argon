@@ -31,6 +31,42 @@ extension String
         return(data.base64EncodedString())
         }
         
+//    public var isKindOfBracket: Bool
+//        {
+//        self == "{" || self == "}" || self == "(" || self == ")" || self == "<" || self == ">" || self == "[" || self == "]"
+//        }
+//        
+//    public var isSquareBracket: Bool
+//        {
+//        self == "[" || self == "]"
+//        }
+//        
+//    public var isParenthesis: Bool
+//        {
+//        self == "(" || self == ")"
+//        }
+        
+    public var bracketKind: BracketMatcher.BracketKind?
+        {
+        if self == "[" || self == "]"
+            {
+            return(.square)
+            }
+        if self == "(" || self == ")"
+            {
+            return(.parenthesis)
+            }
+        if self == "<" || self == ">"
+            {
+            return(.brocket)
+            }
+        if self == "{" || self == "}"
+            {
+            return(.brace)
+            }
+        return(nil)
+        }
+        
     public var polynomialRollingHash:Int
         {
         let p:Int64 = 53   // Use 53 instead of 31 because strings contains uppercase and lowercase characters

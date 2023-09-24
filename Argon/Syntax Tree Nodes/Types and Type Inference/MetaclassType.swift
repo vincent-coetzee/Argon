@@ -22,9 +22,9 @@ public class MetaclassType: ClassType
         return(hasher.finalize())
         }
         
-    public init(`class`: ClassType)
+    public init(name: String,superclasses: ClassTypes,genericTypes: ArgonTypes)
         {
-        super.init(name: `class`.name + "Class")
+        super.init(name: name,superclasses: superclasses,genericTypes: genericTypes)
         }
         
     public required init(coder: NSCoder)
@@ -36,4 +36,6 @@ public class MetaclassType: ClassType
         {
         super.encode(with: coder)
         }
+        
+    public func 
     }

@@ -7,15 +7,15 @@
 
 import Foundation
 
-public class EnumerationCase: NSObject,NSCoding
+public class EnumerationCase: SyntaxTreeNode
     {
     public var encoding: String
         {
         "p\(self.name.symbolString)_"
         }
         
-    public var location: Location = .zero
-    public let name: String
+//    public var location: Location = .zero
+//    public let name: String
     public let instanceValue: ValueBox
     public var associatedTypes = ArgonTypes()
     public var enumerationType: EnumerationType
@@ -24,24 +24,24 @@ public class EnumerationCase: NSObject,NSCoding
         {
         self.enumerationType = enumeration
         self.associatedTypes = associatedTypes
-        self.name = name
         self.instanceValue = instanceValue
+        super.init(name: name)
         }
         
     required public init(coder: NSCoder)
         {
-        self.name = coder.decodeObject(forKey: "name") as! String
         self.associatedTypes = coder.decodeObject(forKey: "associatedTypes") as! ArgonTypes
         self.instanceValue = coder.decodeValueBox(forKey: "instanceValue")
         self.enumerationType = coder.decodeObject(forKey: "enumerationType") as! EnumerationType
+        super.init(coder: coder)
         }
         
-    public func encode(with coder: NSCoder)
+    public override func encode(with coder: NSCoder)
         {
         coder.encode(self.instanceValue,forKey: "instanceValue")
-        coder.encode(self.name,forKey: "name")
         coder.encode(self.associatedTypes,forKey: "associatedTypes")
         coder.encode(self.enumerationType,forKey: "enumerationType")
+        super.encode(with: coder)
         }
         
     public override var hash: Int

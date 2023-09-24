@@ -166,7 +166,7 @@ extension Stack where T:Equatable
         }
     }
 
-extension Stack where T == Scope
+extension Stack where T == SymbolContainer
     {
     public func lookupSymbol(atIdentifier identifier: Identifier) -> SyntaxTreeNode?
         {

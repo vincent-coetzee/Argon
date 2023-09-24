@@ -21,33 +21,37 @@ import Foundation
 //
 public class RootModule: Module
     {
-//    public static var shared: RootModule
-//        {
-//        Self._rootModule!
-//        }
-//        
+    public private(set) static var shared: RootModule!
+    
     public override var argonModule: ArgonModule
         {
-        self._argonModule
+        self.parent as! ArgonModule
         }
         
-    private static var _rootModule: RootModule?
-        
-    public var _argonModule: ArgonModule!
+    public static func reset()
+        {
+        ArgonModule.shared.reset()
+        RootModule.initializeRootModule(argonModule: ArgonModule.shared)
+        }
+
     private var globallyInitialisedNodes = SyntaxTreeNodes()
     
-    public init(name: String)
+    public init(argonModule: ArgonModule)
         {
-        let someModule = ArgonModule(name: "Argon")
-        super.init(name: name,parent: someModule)
-        self._argonModule = someModule
+        super.init(name: "")
+        self.symbolTable?.parent = argonModule
+        Self.shared = self
+        }
+        
+    public static func initializeRootModule(argonModule: ArgonModule)
+        {
+        let rootModule = RootModule(argonModule: argonModule)
+        Self.shared = rootModule
         }
         
     public required init(coder: NSCoder)
         {
-        self._argonModule = ArgonModule(name: "Argon")
         super.init(coder: coder)
-        self.setParent(self._argonModule)
         }
         
     public override var isRootModule: Bool
@@ -64,56 +68,37 @@ public class RootModule: Module
         {
         self
         }
-
-    public override var parentModules: Modules
-        {
-        Modules()
-        }
         
     public override var rootModule: RootModule
         {
         self
         }
-//    
-//    public override func lookupNode(atName someName: String) -> SyntaxTreeNode?
+        
+    public override var parentModules: Modules
+        {
+        Modules()
+        }
+        
+//    @discardableResult
+//    public static func newRootModule() -> RootModule
 //        {
+//        if self._rootModule.isNil
+//            {
+//            let rootModule = RootModule()
+////            let module = ArgonModule.shared
+////            rootModule.setParent(nil)
+////            rootModule._argonModule = module
+////            rootModule.addNode(module)
+////            self._rootModule = rootModule
+//            rootModule.argonModule.initializeSystemMetaclasses()
+//            rootModule.argonModule.initializeSystemMethods()
+//            return(rootModule)
+//            }
+//        else
+//            {
+//            return(self._rootModule!)
+//            }
 //        }
-        
-    public func flush()
-        {
-        self.symbolTable.flush()
-        }
-        
-    public override func lookupMethods(atName name: String) -> Methods
-        {
-        return(self.argonModule.lookupMethods(atName: name))
-        }
-        
-    public static func resetRootModule()
-        {
-        self._rootModule = nil
-        }
-        
-    @discardableResult
-    public static func newRootModule() -> RootModule
-        {
-        if self._rootModule.isNil
-            {
-            let rootModule = RootModule(name: "")
-//            let module = ArgonModule.shared
-//            rootModule.setParent(nil)
-//            rootModule._argonModule = module
-//            rootModule.addNode(module)
-//            self._rootModule = rootModule
-            rootModule.argonModule.initializeSystemMetaclasses()
-            rootModule.argonModule.initializeSystemMethods()
-            return(rootModule)
-            }
-        else
-            {
-            return(self._rootModule!)
-            }
-        }
         
     public func addGloballyInitialisedNode(_ node: SyntaxTreeNode)
         {
@@ -123,9 +108,10 @@ public class RootModule: Module
     public override func accept(visitor: Visitor)
         {
         visitor.enter(rootModule: self)
-        for entry in self.symbolEntries.values
+        self.symbolTable?.forEach
             {
-            entry.node?.accept(visitor: visitor)
+            symbol in
+            symbol.accept(visitor: visitor)
             }
         visitor.exit(rootModule: self)
         }

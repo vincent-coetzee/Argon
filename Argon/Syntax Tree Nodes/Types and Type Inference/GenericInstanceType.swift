@@ -33,14 +33,14 @@ public class GenericInstanceType: StructuredType
         {
         var hasher = Hasher()
         hasher.combine(super.typeHash)
-        hasher.combine(self.parentType.typeHash)
+        hasher.combine(self._parentType.typeHash)
         return(hasher.finalize())
         }
         
-    public override var parentType: ArgonType
-        {
-        self._parentType
-        }
+//    public override var parentType: ArgonType
+//        {
+//        self._parentType
+//        }
         
     public override var isGenericType: Bool
         {

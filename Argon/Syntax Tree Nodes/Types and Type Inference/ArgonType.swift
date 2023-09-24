@@ -151,7 +151,7 @@ public class ArgonType: SyntaxTreeNode
         
     public static func newTypeVariable(named name: String) -> TypeVariable
         {
-        SubstitutionSet.newTypeVariable(named: name)
+        TypeSubstitutionSet.newTypeVariable(named: name)
         }
         
     public override var baseType: ArgonType
@@ -282,6 +282,7 @@ public class ArgonType: SyntaxTreeNode
         {
         self
         }
+    
     }
 
 public typealias ArgonTypes = Array<ArgonType>

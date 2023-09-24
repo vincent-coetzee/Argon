@@ -41,20 +41,20 @@ public class HandleStatement: Statement
         {
         let location = parser.token.location
         parser.nextToken()
-        var symbols = Symbols()
+        var symbols = Atoms()
         parser.parseParentheses
             {
             repeat
                 {
                 parser.parseComma()
-                if parser.token.isSymbolValue
+                if parser.token.isAtomValue
                     {
-                    symbols.append(parser.token.symbolValue)
+                    symbols.append(parser.token.atomValue)
                     parser.nextToken()
                     }
                 else
                     {
-                    parser.lodgeError( code: .symbolExpected, location: location)
+                    parser.lodgeError( code: .atomExpected, location: location)
                     }
                 }
             while parser.token.isComma && !parser.token.isEnd

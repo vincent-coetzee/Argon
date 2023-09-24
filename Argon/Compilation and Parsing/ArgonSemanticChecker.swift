@@ -14,7 +14,7 @@ public class ArgonSemanticChecker: Visitor
     
     public var processingFlag: ProcessingFlags
         {
-        .kSemanticsChecked
+        .semanticsChecked
         }
         
     public func lodgeError(code: IssueCode,location: Location,message: String? = nil)

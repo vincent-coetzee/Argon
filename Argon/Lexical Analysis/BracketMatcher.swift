@@ -7,6 +7,19 @@
 
 import Foundation
 
+//
+//
+// BracketMatcher is used by the source code editor to display matching brackets ( square, parentheses, brockets and braces ) as
+// the cursor traverses them. When processing the tokens BracketMatcher assumes it is receiving tokens in the same order
+// as they appear in the source. Bracket locations are stored as bracketKind(startLocation,stopLocation). A BracketMatcher is
+// created as the ArgonScanner traverses the source and is passed out to the SourceView which hangs on to the instance of
+// BracketMatcher and uses it to locate brackets until a new BracketMatcher is received from the next traversal of the
+// source by a fresh ArgonScanner. Internally the BracketMatcher stores the matches in a Dictionary keyed by offset (i.e. the start
+// position of a Location ). The Dictionary is keyed on both the start and stop locations so that the match can be found from
+// both the start and stop offsets.
+//
+//
+
 public class BracketMatcher
     {
     public enum BracketKind
@@ -161,7 +174,7 @@ public class BracketMatcher
             }
         }
         
-    public func locateMatch(at offset: Int,for kind: BracketKind) -> (Location,Location)?
+    public func locateMatch(for kind: BracketKind,at offset: Int) -> (Location,Location)?
         {
         if let match = self.matches[offset],match.isKind(kind)
             {
