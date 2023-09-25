@@ -7,6 +7,13 @@
 
 import Foundation
 
+public enum OperatorNotation
+    {
+    case prefix
+    case infix
+    case postfix
+    }
+    
 public class MethodType: CallableType
     {
     public var signature: MethodSignature
@@ -45,7 +52,7 @@ public class MethodType: CallableType
         method.setParameters(parameters)
         method.setBlock(block)
         method.setReturnType(returnType)
-        parser.currentScope.addNode(method)
+        parser.currentContext.addSymbol(method)
         }
         
     public override var description: String
@@ -56,6 +63,8 @@ public class MethodType: CallableType
         }
         
     public private(set) var block = Block()
+    public var operatorNotation: OperatorNotation = .infix
+    public var isOperator = false
     
     public override var isMethod: Bool
         {
@@ -75,19 +84,23 @@ public class MethodType: CallableType
     public required init(coder: NSCoder)
         {
         self.block = coder.decodeObject(forKey: "block") as! Block
+        self.operatorNotation = coder.decodeOperatorNotation(forKey: "operatorNotation")
+        self.isOperator = coder.decodeBool(forKey: "isOperator")
         super.init(coder: coder)
         }
         
     public override func encode(with coder: NSCoder)
         {
         coder.encode(self.block,forKey: "block")
+        coder.encode(self.operatorNotation,forKey: "operatorNotation")
+        coder.encode(self.isOperator,forKey: "isOperator")
         super.encode(with: coder)
         }
 
     public func setBlock(_ block: Block)
         {
         self.block = block
-        block.setParent(self)
+        block.setContainer(self)
         }
         
     public override func accept(visitor: Visitor)
@@ -119,5 +132,36 @@ extension Methods
             newMethods.append(method)
             }
         return(newMethods)
+        }
+    }
+
+extension NSCoder
+    {
+    public func encode(_ notation: OperatorNotation,forKey key: String)
+        {
+        switch(notation)
+            {
+            case .infix:
+                self.encode(0,forKey: key + "notation")
+            case .prefix:
+                self.encode(1,forKey: key + "notation")
+            case .postfix:
+                self.encode(2,forKey: key + "notation")
+            }
+        }
+        
+    public func decodeOperatorNotation(forKey key: String) -> OperatorNotation
+        {
+        switch(self.decodeInteger(forKey: key + "notation"))
+            {
+            case(0):
+                return(.infix)
+            case(1):
+                return(.prefix)
+            case(2):
+                return(.postfix)
+            default:
+                fatalError("This should never happen.")
+            }
         }
     }

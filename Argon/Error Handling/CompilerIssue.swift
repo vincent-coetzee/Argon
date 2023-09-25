@@ -90,6 +90,7 @@ public enum IssueCode: String
     case statementExpected                                          = "statement expected."
     case semicolonExpected                                          = "';' expected."
     
+    case textExpectedInSection                                      = "Text expected in section."
     case typeVariableGenericMismatch                                = "Type variable / generic mismatch."
     
     case undefinedSymbol                                            = "undefined symbol."

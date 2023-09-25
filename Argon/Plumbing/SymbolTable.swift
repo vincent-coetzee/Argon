@@ -10,11 +10,10 @@ import Foundation
 public class SymbolTable: NSObject,NSCoding
     {
     private var symbols = SyntaxTreeNodes()
-    private var _parent: SyntaxTreeNode?
     
     private var rootModule: RootModule
         {
-        self._parent!.rootModule
+        self.owner.rootModule
         }
         
     public var slots: Slots
@@ -26,25 +25,19 @@ public class SymbolTable: NSObject,NSCoding
         {
         self.symbols.compactMap{$0 as? EnumerationCase}
         }
-        
-    public var parent: SyntaxTreeNode?
-        {
-        get
-            {
-            return(self._parent)
-            }
-        set
-            {
-            self._parent = newValue
-            for symbol in self.symbols
-                {
-                symbol.setParent(newValue)
-                }
-            }
-        }
-        
+                
+    private let owner: SyntaxTreeNode?
+    private let supertypes: ArgonTypes
+    
     public override init()
         {
+        super.init()
+        }
+        
+    public init(owner: SyntaxTreeNode? = nil,supertypes: ArgonTypes = ArgonTypes())
+        {
+        self.owner = owner
+        self.supertypes = supertypes
         super.init()
         }
         
@@ -60,41 +53,22 @@ public class SymbolTable: NSObject,NSCoding
     public required init(coder: NSCoder)
         {
         self.symbols = coder.decodeObject(forKey: "symbols") as! SyntaxTreeNodes
+        self.owner = coder.decodeObject(forKey: "owner") as? SyntaxTreeNode
+        self.supertypes = coder.decodeObject(forKey: "supertypes") as! ArgonTypes
         super.init()
         }
         
     public func encode(with coder: NSCoder)
         {
+        coder.encode(self.owner,forKey: "owner")
         coder.encode(self.symbols,forKey: "symbols")
-        }
-        
-    public init(parent: SyntaxTreeNode?)
-        {
-        self._parent = parent
-        }
-        
-    public func addNode(_ node: SyntaxTreeNode)
-        {
-        self.symbols.append(node)
-        node.setParent(self._parent)
+        coder.encode(self.supertypes,forKey: "supertypes")
         }
         
     public func addSymbol(_ node: SyntaxTreeNode)
         {
         self.symbols.append(node)
-        node.setParent(self._parent)
-        }
-        
-    public func lookupNode(atName: String) -> SyntaxTreeNode?
-        {
-        for node in self.symbols
-            {
-            if node.name == atName && !(node.isMethod || node.isFunction)
-                {
-                return(node)
-                }
-            }
-        return(self._parent?.lookupNode(atName: atName))
+        node.setContainer(self.owner)
         }
         
     public func lookupSymbol(atName: String) -> SyntaxTreeNode?
@@ -106,12 +80,19 @@ public class SymbolTable: NSObject,NSCoding
                 return(node)
                 }
             }
-        return(self._parent?.lookupNode(atName: atName))
+        for someClass in self.supertypes
+            {
+            if let symbol = someClass.lookupSymbol(atName: atName)
+                {
+                return(symbol)
+                }
+            }
+        return(self.container?.lookupSymbol(atName: atName))
         }
         
     public func lookupMethods(atName name: String) -> Methods
         {
-        var methods = self._parent?.lookupMethods(atName: name) ?? Methods()
+        var methods = self.container?.lookupMethods(atName: name) ?? Methods()
         for node in self.symbols
             {
             if node.name == name && (node.isMethod || node.isFunction)  
@@ -172,11 +153,11 @@ public class SymbolTable: NSObject,NSCoding
             }
         }
         
-    public func lookupNode(atIdentifier identifier: Identifier) -> SyntaxTreeNode?
-        {
-        self.lookupSymbol(atIdentifier: identifier)
-        }
-        
+//    public func lookupNode(atIdentifier identifier: Identifier) -> SyntaxTreeNode?
+//        {
+//        self.lookupSymbol(atIdentifier: identifier)
+//        }
+//        
         
     public func lookupSymbol(atIdentifier identifier: Identifier) -> SyntaxTreeNode?
         {
@@ -186,9 +167,9 @@ public class SymbolTable: NSObject,NSCoding
             }
         if identifier.isRooted
             {
-            return(self.rootModule.lookupNode(atIdentifier: identifier.cdr))
+            return(self.rootModule.lookupSymbol(atIdentifier: identifier.cdr))
             }
-        if let node = self.lookupNode(atName: identifier.car!)
+        if let node = self.lookupSymbol(atName: identifier.car!)
             {
             if identifier.cdr.isEmpty
                 {
@@ -196,7 +177,7 @@ public class SymbolTable: NSObject,NSCoding
                 }
             else
                 {
-                return(node.lookupNode(atIdentifier: identifier.cdr))
+                return(node.lookupSymbol(atIdentifier: identifier.cdr))
                 }
             }
         return(nil)
@@ -212,7 +193,7 @@ public class SymbolTable: NSObject,NSCoding
             {
             return(self.rootModule.lookupMethods(atIdentifier: identifier.cdr))
             }
-        if let node = self.lookupNode(atName: identifier.car!)
+        if let node = self.lookupSymbol(atName: identifier.car!)
             {
             if identifier.cdr.count == 1
                 {

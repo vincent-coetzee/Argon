@@ -11,19 +11,19 @@ public class ArgonModule: Module
     {
     public private(set) static var shared: ArgonModule!
     
-    public static var classType: ArgonType { ArgonModule.shared.lookupNode(atName: "Class") as! ArgonType}
-    public static var voidType: ArgonType { ArgonModule.shared.lookupNode(atName: "Void") as! ArgonType}
-    public static var objectType: ArgonType { ArgonModule.shared.lookupNode(atName: "Object") as! ArgonType}
-    public static var objectClass: ClassType { ArgonModule.shared.lookupNode(atName: "Object") as! ClassType}
-    public static var stringType: ArgonType { ArgonModule.shared.lookupNode(atName: "String") as! ArgonType}
-    public static var floatType: ArgonType { ArgonModule.shared.lookupNode(atName: "Float") as! ArgonType}
-    public static var integerType: ArgonType { ArgonModule.shared.lookupNode(atName: "Integer") as! ArgonType}
-    public static var booleanType: ArgonType { ArgonModule.shared.lookupNode(atName: "Boolean") as! ArgonType}
-    public static var arrayType: ArgonType { ArgonModule.shared.lookupNode(atName: "Array") as! ArgonType}
-    public static var byteType: ArgonType { ArgonModule.shared.lookupNode(atName: "Byte") as! ArgonType}
-    public static var characterType: ArgonType { ArgonModule.shared.lookupNode(atName: "Character") as! ArgonType}
-    public static var atomType: ArgonType { ArgonModule.shared.lookupNode(atName: "Atom") as! ArgonType}
-    public static var uIntegerType: ArgonType { ArgonModule.shared.lookupNode(atName: "UInteger") as! ArgonType}
+    public static var classType: ArgonType { ArgonModule.shared.lookupType(atName: "Class")! }
+    public static var voidType: ArgonType { ArgonModule.shared.lookupType(atName: "Void")!}
+    public static var objectType: ArgonType { ArgonModule.shared.lookupType(atName: "Object")!}
+    public static var objectClass: ArgonType { ArgonModule.shared.lookupType(atName: "Object")!}
+    public static var stringType: ArgonType { ArgonModule.shared.lookupType(atName: "String")!}
+    public static var floatType: ArgonType { ArgonModule.shared.lookupType(atName: "Float")!}
+    public static var integerType: ArgonType { ArgonModule.shared.lookupType(atName: "Integer")!}
+    public static var booleanType: ArgonType { ArgonModule.shared.lookupType(atName: "Boolean")!}
+    public static var arrayType: ArgonType { ArgonModule.shared.lookupType(atName: "Array")!}
+    public static var byteType: ArgonType { ArgonModule.shared.lookupType(atName: "Byte")!}
+    public static var characterType: ArgonType { ArgonModule.shared.lookupType(atName: "Character")!}
+    public static var atomType: ArgonType { ArgonModule.shared.lookupType(atName: "Atom")!}
+    public static var uIntegerType: ArgonType { ArgonModule.shared.lookupType(atName: "UInteger")!}
     
     private static func systemClass(named name: String,superclassesNamed: Array<String> = [],slots: Slots = Slots(),generics: ArgonTypes = ArgonTypes()) -> ClassType
         {
@@ -69,11 +69,9 @@ public class ArgonModule: Module
         {
         super.init(name: "Argon")
         Self.shared = self
-        self.symbolTable?.parent = nil
         RootModule.initializeRootModule(argonModule: self)
         self.initializeSystemClasses()
         self.initializeSystemMethods()
-        self.symbolTable?.addSymbol(self)
         }
         
     public required init(coder: NSCoder)
@@ -93,158 +91,182 @@ public class ArgonModule: Module
         
     public var discreteType: ClassType
         {
-        return(self.lookupNode(atName: "DiscreteType") as! ClassType)
+        return(self.lookupType(atName: "DiscreteType") as! ClassType)
         }
         
     public var enumerationType: ClassType
         {
-        return(self.lookupNode(atName: "Enumeration") as! ClassType)
+        return(self.lookupType(atName: "Enumeration") as! ClassType)
         }
         
     public var objectType: ClassType
         {
-        return(self.lookupNode(atName: "Object") as! ClassType)
+        return(self.lookupType(atName: "Object") as! ClassType)
         }
         
     public var floatType: ArgonType
         {
-        return(self.lookupNode(atName: "Float") as! ArgonType)
+        return(self.lookupType(atName: "Float")!)
         }
         
     public var atomType: ArgonType
         {
-        return(self.lookupNode(atName: "Atom") as! ArgonType)
+        return(self.lookupType(atName: "Atom")!)
         }
         
     public var dateType: ArgonType
         {
-        return(self.lookupNode(atName: "Date") as! ArgonType)
+        return(self.lookupType(atName: "Date")!)
         }
         
     public var timeType: ArgonType
         {
-        return(self.lookupNode(atName: "Time") as! ArgonType)
+        return(self.lookupType(atName: "Time")!)
         }
         
     public var dateTimeType: ArgonType
         {
-        return(self.lookupNode(atName: "DateTime") as! ArgonType)
+        return(self.lookupType(atName: "DateTime")!)
         }
         
     public var stringType: ArgonType
         {
-        return(self.lookupNode(atName: "String") as! ArgonType)
+        return(self.lookupType(atName: "String")!)
         }
         
     public var booleanType: ArgonType
         {
-        return(self.lookupNode(atName: "Boolean") as! ArgonType)
+        return(self.lookupType(atName: "Boolean")!)
         }
         
     public var byteType: ArgonType
         {
-        return(self.lookupNode(atName: "Byte") as! ArgonType)
+        return(self.lookupType(atName: "Byte")!)
         }
         
     public var characterType: ArgonType
         {
-        return(self.lookupNode(atName: "Character") as! ArgonType)
+        return(self.lookupType(atName: "Character")!)
         }
         
     public var metaclassType: ArgonType
         {
-        return(self.lookupNode(atName: "Metaclass") as! ArgonType)
+        return(self.lookupType(atName: "Metaclass")!)
         }
         
     public var classType: ArgonType
         {
-        return(self.lookupNode(atName: "Class") as! ArgonType)
+        return(self.lookupType(atName: "Class")!)
         }
         
     public var integerType: ArgonType
         {
-        return(self.lookupNode(atName: "Integer") as! ArgonType)
+        return(self.lookupType(atName: "Integer")!)
         }
         
     public var integer8Type: ArgonType
         {
-        return(self.lookupNode(atName: "Integer8") as! ArgonType)
+        return(self.lookupType(atName: "Integer8")!)
         }
         
     public var integer16Type: ArgonType
         {
-        return(self.lookupNode(atName: "Integer16") as! ArgonType)
+        return(self.lookupType(atName: "Integer16")!)
         }
         
     public var integer32Type: ArgonType
         {
-        return(self.lookupNode(atName: "Integer32") as! ArgonType)
+        return(self.lookupType(atName: "Integer32")!)
         }
         
     public var integer64Type: ArgonType
         {
-        return(self.lookupNode(atName: "Integer64") as! ArgonType)
+        return(self.lookupType(atName: "Integer64")!)
         }
         
     public var uIntegerType: ArgonType
         {
-        return(self.lookupNode(atName: "UInteger") as! ArgonType)
+        return(self.lookupType(atName: "UInteger")!)
         }
         
     public var uInteger8Type: ArgonType
         {
-        return(self.lookupNode(atName: "UInteger8") as! ArgonType)
+        return(self.lookupType(atName: "UInteger8")!)
         }
         
     public var uInteger16Type: ArgonType
         {
-        return(self.lookupNode(atName: "UInteger16") as! ArgonType)
+        return(self.lookupType(atName: "UInteger16")!)
         }
         
     public var uInteger32Type: ArgonType
         {
-        return(self.lookupNode(atName: "UInteger32") as! ArgonType)
+        return(self.lookupType(atName: "UInteger32")!)
         }
         
     public var uInteger64Type: ArgonType
         {
-        return(self.lookupNode(atName: "UInteger64") as! ArgonType)
+        return(self.lookupType(atName: "UInteger64")!)
         }
         
     public var monthType: ArgonType
         {
-        return(self.lookupNode(atName: "Month") as! ArgonType)
+        return(self.lookupType(atName: "Month")!)
         }
         
     public var voidType: ClassType
         {
-        return(self.lookupNode(atName: "Void") as! ClassType)
+        return(self.lookupType(atName: "Void") as! ClassType)
         }
         
     public var fileType: ClassType
         {
-        return(self.lookupNode(atName: "File") as! ClassType)
+        return(self.lookupType(atName: "File") as! ClassType)
         }
         
     public var bufferType: ArgonType
         {
-        return(self.lookupNode(atName: "Buffer") as! ArgonType)
+        return(self.lookupType(atName: "Buffer")!)
+        }
+        
+    public var typeType: ArgonType
+        {
+        return(self.lookupType(atName: "Type")!)
+        }
+        
+    public var dateOffsetType: ArgonType
+        {
+        return(self.lookupType(atName: "DateOffset")!)
+        }
+        
+    public var timeOffsetType: ArgonType
+        {
+        return(self.lookupType(atName: "TimeOffset")!)
+        }
+        
+    public var primitiveType: ArgonType
+        {
+        return(self.lookupType(atName: "PrimitiveType")!)
         }
     
     private func initializeSystemClasses()
         {
-        self.addSystemClass(named: "Object",superclassesNamed: [])
+        let theObjectType = self.addSystemClass(named: "Object",superclassesNamed: [])
+        self.addSystemClass(named: "Type",superclassesNamed: ["Object"]).slot("name",.stringType).slot("bitWidth",.integerType).slot("strideBitWidth",.integerType)
+        self.lookupSymbol(atName: "Type")!.makeMetaclass(named: "Type class",inModule: self)
+        self.addSystemClass(named: "Class",superclassesNamed: ["Type"])
+        self.addSystemClass(named: "Metaclass",superclassesNamed: ["Class"])
         self.addSystemClass(named: "State",superclassesNamed: ["Object"])
         self.lookupSymbol(atName: "State")!.makeMetaclass(named: "State class",inModule: self)
-        self.addSystemClass(named: "Type",superclassesNamed: ["Object"]).setMetaclass(named: "State class",fromModule: self)
-        self.lookupSymbol(atName: "Type")!.makeMetaclass(named: "Type class",inModule: self)
-        self.addSystemClass(named: "InvokableType",superclassesNamed: ["Type"]).setMetaclass(named: "Type class",fromModule: self)
-        self.addSystemClass(named: "Function",superclassesNamed: ["InvokableType"]).setMetaclass(named: "Type class",fromModule: self)
-        self.addSystemClass(named: "Method",superclassesNamed: ["InvokableType"]).setMetaclass(named: "Type class",fromModule: self)
-        self.addSystemClass(named: "DiscreteType",superclassesNamed: ["Object"]).setMetaclass(named: "Type class",fromModule: self)
-        self.addSystemClass(named: "String",superclassesNamed: ["Type","DiscreteType"]).setMetaclass(named: "Type class",fromModule: self)
-        self.addSystemClass(named: "Atom",superclassesNamed: ["Type"]).setMetaclass(named: "Type class",fromModule: self)
-        self.addSystemClass(named: "Boolean",superclassesNamed:["Type"]).setMetaclass(named: "Type class",fromModule: self)
+        theObjectType.slot("type",.typeType).slot("hasBits",.booleanType).slot("class",.classType).slot("hash",.integerType).slot("flipCount",.integerType).slot("sizeInBytes",.integerType)
+        self.addSystemClass(named: "PrimitiveType",superclassesNamed: ["Type"])
+        self.lookupSymbol(atName: "PrimitiveType")!.makeMetaclass(named: "PrimitiveType class",inModule: self)
+        self.addSystemClass(named: "Function",superclassesNamed: ["Invokable"]).setMetaclass(named: "Type",fromModule: self)
+        self.addSystemClass(named: "Method",superclassesNamed: ["Invokable"]).setMetaclass(named: "Type",fromModule: self)
+        self.addSystemClass(named: "DiscreteType",superclassesNamed: ["Object"]).setMetaclass(named: "Type",fromModule: self)
+        self.addSystemClass(named: "String",superclassesNamed: ["Object","DiscreteType"]).setMetaclass(named: "Type",fromModule: self)
+        self.addSystemClass(named: "Atom",superclassesNamed: ["Object"]).setMetaclass(named: "Type",fromModule: self)
+        self.addSystemClass(named: "Boolean",superclassesNamed:["Object"]).setMetaclass(named: "Type",fromModule: self)
         self.addSystemClass(named: "Void",superclassesNamed:["Type"])
         self.addSystemClass(named: "Stream",superclassesNamed: ["Object"])
         self.addSystemClass(named: "ReadStream",superclassesNamed: ["Stream"])
@@ -257,28 +279,27 @@ public class ArgonModule: Module
         self.addSystemClass(named: "Number",superclassesNamed:["Magnitude"])
         self.addSystemClass(named: "FixedPointNumber",superclassesNamed:["Number","DiscreteType"])
         self.addSystemClass(named: "FloatingPointNumber",superclassesNamed:["Number"])
-        self.addSystemClass(named: "Integer8",superclassesNamed:["FixedPointNumber"])
-        self.addSystemClass(named: "Integer16",superclassesNamed:["FixedPointNumber"])
-        self.addSystemClass(named: "Integer32",superclassesNamed:["FixedPointNumber"])
-        self.addSystemClass(named: "Integer64",superclassesNamed:["FixedPointNumber"])
-        self.addSystemClass(named: "UInteger8",superclassesNamed:["FixedPointNumber"])
-        self.addSystemClass(named: "UInteger16",superclassesNamed:["FixedPointNumber"])
-        self.addSystemClass(named: "UInteger32",superclassesNamed:["FixedPointNumber"])
-        self.addSystemClass(named: "UInteger64",superclassesNamed:["FixedPointNumber"])
-        self.addSystemClass(named: "Float16",superclassesNamed:["FloatingPointNumber"])
-        self.addSystemClass(named: "Float32",superclassesNamed:["FloatingPointNumber"])
-        self.addSystemClass(named: "Float64",superclassesNamed:["FloatingPointNumber"])
+        self.addPrimitiveType(named: "Integer8",superclassesNamed:["FixedPointNumber"])
+        self.addPrimitiveType(named: "Integer16",superclassesNamed:["FixedPointNumber"])
+        self.addPrimitiveType(named: "Integer32",superclassesNamed:["FixedPointNumber"])
+        self.addPrimitiveType(named: "Integer64",superclassesNamed:["FixedPointNumber"])
+        self.addPrimitiveType(named: "UInteger8",superclassesNamed:["FixedPointNumber"])
+        self.addPrimitiveType(named: "UInteger16",superclassesNamed:["FixedPointNumber"])
+        self.addPrimitiveType(named: "UInteger32",superclassesNamed:["FixedPointNumber"])
+        self.addPrimitiveType(named: "UInteger64",superclassesNamed:["FixedPointNumber"])
+        self.addPrimitiveType(named: "Float16",superclassesNamed:["FloatingPointNumber"])
+        self.addPrimitiveType(named: "Float32",superclassesNamed:["FloatingPointNumber"])
+        self.addPrimitiveType(named: "Float64",superclassesNamed:["FloatingPointNumber"])
         self.addSystemClass(named: "Date",superclassesNamed:["Magnitude"])
         self.addSystemClass(named: "Time",superclassesNamed:["Magnitude"])
         self.addSystemClass(named: "DateTime",superclassesNamed:["Date","Time"])
         self.addSystemClass(named: "Slot",superclassesNamed: ["Object"]).slot("name",self.stringType)
-        self.addSystemClass(named: "Class",superclassesNamed: ["Object"]).slot("name",self.stringType)
-        self.addSystemClass(named: "Metaclass",superclassesNamed: ["Class"]).slot("name",self.stringType)
         self.addSystemClass(named: "EnumerationCase",superclassesNamed: ["Object"],genericTypes: [.newTypeVariable(named: "Base")]).slot("name",self.stringType)
-        self.addSystemClass(named: "Enumeration",superclassesNamed: ["Type"],genericTypes: [.newTypeVariable(named: "Base")]).slot("name",self.stringType)
-        self.addSystemClass(named: "Collection",superclassesNamed: ["Object"],genericTypes: [.newTypeVariable(named: "Element")]).slot("count",self.integer64Type)
-        self.addSystemMetaclass(named: "Collection class",superclassesNamed: ["Object"],genericTypes: [.newTypeVariable(named: "Element")]).slot("count",self.integer64Type)
+        self.addSystemClass(named: "Enumeration",superclassesNamed: ["Type"],genericTypes: [.newTypeVariable(named: "Base")])
+        self.addSystemClass(named: "Collection",superclassesNamed: ["Object"],genericTypes: [.newTypeVariable(named: "Element")]).slot("count",self.integer64Type).slot("size",.integerType)
+        self.addSystemClass(named: "Collection class",superclassesNamed: ["Object"],genericTypes: [.newTypeVariable(named: "Element")])
         self.addSystemMetaclass(named: "Array",superclassesNamed: ["Collection"],genericTypes: [.newTypeVariable(named: "Index")])
+        self.addSystemMetaclass(named: "Vector",superclassesNamed: ["Collection"])
         self.addSystemMetaclass(named: "Set",superclassesNamed: ["Collection"])
         self.addSystemMetaclass(named: "List",superclassesNamed: ["Collection"])
         self.addSystemMetaclass(named: "Dictionary",superclassesNamed: ["Collection"],genericTypes: [.newTypeVariable(named: "Key")])
@@ -289,9 +310,17 @@ public class ArgonModule: Module
         self.addSystemAliasedType(named: "Integer",toTypeNamed: "Integer64")
         self.addSystemAliasedType(named: "UInteger",toTypeNamed: "UInteger64")
         self.addSystemAliasedType(named: "Float",toTypeNamed: "Float64")
-        
+        //
+        // Date and Time related types
+        //
         self.addSystemEnumeration(named: "Month", cases: ["#January","#February","#March","#April","#May","#June","#July","#August","#September","#October","#November","#December"])
-        
+        var enumeration = self.addSystemEnumeration(named: "DateOffset", cases: ["#days","#months","#years"])
+        enumeration.setAssociatedTypes(forAtom: "#days",.integerType).setAssociatedTypes(forAtom: "#months",.integerType).setAssociatedTypes(forAtom: "#years",.integerType)
+        enumeration = self.addSystemEnumeration(named: "TimeOffset", cases: ["#hours","#minutes","#seconds","#milliseconds","#microseconds"])
+        enumeration.setAssociatedTypes(forAtom: "#hours",.integerType).setAssociatedTypes(forAtom: "#minutes",.integerType).setAssociatedTypes(forAtom: "#seconds",.integerType).setAssociatedTypes(forAtom: "#milliseconds",.integerType).setAssociatedTypes(forAtom: "#microseconds",.integerType)
+        //
+        // System constants
+        //
         self.addSystemConstant(named: "$today",ofTypeNamed: "Date")
         self.addSystemConstant(named: "$now",ofTypeNamed: "Time")
         self.addSystemConstant(named: "$pi",ofTypeNamed: "Float")
@@ -325,6 +354,35 @@ public class ArgonModule: Module
         
     public func initializeSystemMethods()
         {
+        self.addSystemOperator(notation: .infix,named: "+").parameter(.stringType).parameter(.stringType).returnType(.stringType)
+        self.addSystemOperator(notation: .infix,named: "+").parameter(.integerType).parameter(.integerType).returnType(.integerType)
+        self.addSystemOperator(notation: .infix,named: "+").parameter(.floatType).parameter(.floatType).returnType(.floatType)
+        self.addSystemOperator(notation: .infix,named: "+").parameter(.dateType).parameter(.dateOffsetType).returnType(.dateType)
+        self.addSystemOperator(notation: .infix,named: "+").parameter(.timeType).parameter(.timeOffsetType).returnType(.dateType)
+        self.addSystemOperator(notation: .infix,named: "+").parameter(.dateType).parameter(.dateOffsetType).returnType(.dateType)
+        self.addSystemOperator(notation: .infix,named: "+").parameter(.dateTimeType).parameter(.timeOffsetType).returnType(.dateTimeType)
+        self.addSystemOperator(notation: .infix,named: "+").parameter(.dateTimeType).parameter(.dateOffsetType).returnType(.dateTimeType)
+        
+        self.addSystemOperator(notation: .infix,named: "-").parameter(.stringType).parameter(.stringType).returnType(.stringType)
+        self.addSystemOperator(notation: .infix,named: "-").parameter(.integerType).parameter(.integerType).returnType(.integerType)
+        self.addSystemOperator(notation: .infix,named: "-").parameter(.floatType).parameter(.floatType).returnType(.floatType)
+        self.addSystemOperator(notation: .infix,named: "-").parameter(.dateType).parameter(.dateOffsetType).returnType(.dateType)
+        self.addSystemOperator(notation: .infix,named: "-").parameter(.timeType).parameter(.timeOffsetType).returnType(.dateType)
+        self.addSystemOperator(notation: .infix,named: "-").parameter(.dateType).parameter(.dateOffsetType).returnType(.dateType)
+        self.addSystemOperator(notation: .infix,named: "-").parameter(.dateTimeType).parameter(.timeOffsetType).returnType(.dateTimeType)
+        self.addSystemOperator(notation: .infix,named: "-").parameter(.dateTimeType).parameter(.dateOffsetType).returnType(.dateTimeType)
+        
+        self.addSystemOperator(notation: .infix,named: "*").parameter(.integerType).parameter(.integerType).returnType(.integerType)
+        self.addSystemOperator(notation: .infix,named: "*").parameter(.floatType).parameter(.floatType).returnType(.floatType)
+        
+        self.addSystemOperator(notation: .infix,named: "/").parameter(.integerType).parameter(.integerType).returnType(.integerType)
+        self.addSystemOperator(notation: .infix,named: "/").parameter(.floatType).parameter(.floatType).returnType(.floatType)
+        
+        self.addSystemOperator(notation: .infix,named: "%").parameter(.integerType).parameter(.integerType).returnType(.integerType)
+        
+        self.addSystemOperator(notation: .infix,named: "**").parameter(.integerType).parameter(.integerType).returnType(.integerType)
+        self.addSystemOperator(notation: .infix,named: "**").parameter(.floatType).parameter(.floatType).returnType(.floatType)
+                
         self.addSystemMethod(named: "string").parameter(.integerType).returnType(.stringType)
         self.addSystemMethod(named: "string").parameter(.uIntegerType).returnType(.stringType)
         self.addSystemMethod(named: "string").parameter(.characterType).returnType(.stringType)
@@ -454,19 +512,13 @@ public class ArgonModule: Module
         
     public func dumpMethods()
         {
-        self.symbolTable?.forEach
+        for symbol in self.symbols
             {
-            node in
-            if node.isMethod
+            if symbol.isMethod
                 {
-                print(node.description)
+                print(symbol.description)
                 }
             }
-        }
-        
-    public func reset()
-        {
-        self.symbolTable?.removeRootModule()
         }
         
     @discardableResult
@@ -478,23 +530,35 @@ public class ArgonModule: Module
     @discardableResult
     private func addSystemClass(named name: String,superclassesNamed: Array<String>,genericTypes: ArgonTypes = []) -> ClassType
         {
-        let classes = superclassesNamed.map{self.lookupNode(atName: $0) as! ClassType}
+        let classes = superclassesNamed.map{self.lookupSymbol(atName: $0) as! ClassType}
         let aClass = ClassType(name: name,superclasses: classes,genericTypes: genericTypes)
         self.addSymbol(aClass)
         aClass.isSystemNode = true
+        aClass.setSymbolType(self.lookupType(atName: "Class"))
         return(aClass)
+        }
+        
+    @discardableResult
+    private func addPrimitiveType(named name: String,superclassesNamed: Array<String>) -> PrimitiveType
+        {
+        let classes = superclassesNamed.map{self.lookupSymbol(atName: $0) as! ClassType}
+        let aType = PrimitiveType(name: name,superclasses: classes)
+        self.addSymbol(aType)
+        aType.isSystemNode = true
+        aType.setSymbolType(self.lookupType(atName: "PrimitiveType"))
+        return(aType)
         }
         
     @discardableResult
     private func addSystemMetaclass(named name: String,superclassesNamed: Array<String>,genericTypes: ArgonTypes = []) -> ClassType
         {
-        let classes = superclassesNamed.map{self.lookupNode(atName: $0) as! ClassType}
+        let classes = superclassesNamed.map{self.lookupSymbol(atName: $0) as! ClassType}
         let theClass = self.lookupSymbol(atName: name) as! ClassType
-        let aClass = MetaclassType(name: name,superclasses: classes,genericTypes: genericTypes)
-        theClass.setSymbolType(aClass)
-        self.addSymbol(aClass)
-        aClass.isSystemNode = true
-        return(aClass)
+        let metaclass = MetaclassType(name: name,superclasses: classes,genericTypes: genericTypes)
+        theClass.setSymbolType(metaclass)
+        self.addSymbol(metaclass)
+        metaclass.isSystemNode = true
+        return(metaclass)
         }
         
     @discardableResult
@@ -515,8 +579,8 @@ public class ArgonModule: Module
         
     private func addGenericSystemClass(named name: String,superclassesNamed: Array<String>,generics: Array<String>)
         {
-        let generics = generics.map{self.lookupNode(atName: $0) as! ArgonType}
-        let classes = superclassesNamed.map{self.lookupNode(atName: $0) as! ClassType}
+        let generics = generics.map{self.lookupType(atName: $0)!}
+        let classes = superclassesNamed.map{self.lookupType(atName: $0) as! ClassType}
         let aClass = ClassType(name: name,superclasses: classes,genericTypes: generics)
         aClass.isSystemNode = true
         self.addSymbol(aClass)
@@ -524,7 +588,7 @@ public class ArgonModule: Module
         
     private func addSystemAliasedType(named name: String,toTypeNamed typeName: String)
         {
-        let baseType = self.lookupNode(atName: typeName) as! ArgonType
+        let baseType = self.lookupType(atName: typeName)!
         let typeAlias = AliasedType(name: name,baseType: baseType)
         typeAlias.isSystemNode = true
         self.addSymbol(typeAlias)
@@ -539,7 +603,7 @@ public class ArgonModule: Module
         
     private func addSystemConstant(named name: String,ofTypeNamed typeName: String)
         {
-        let baseType = self.lookupNode(atName: typeName) as! ArgonType
+        let baseType = self.lookupType(atName: typeName)!
         let constant = Constant(name: name,type: baseType,expression: nil)
         constant.isSystemNode = true
         self.addSymbol(constant)
@@ -554,9 +618,19 @@ public class ArgonModule: Module
         return(method)
         }
         
+    public func addSystemOperator(notation: OperatorNotation,named: String) -> MethodType
+        {
+        let method = MethodType(name: named)
+        method.operatorNotation = notation
+        method.isOperator = true
+        method.isSystemNode = true
+        self.addSymbol(method)
+        return(method)
+        }
+        
     public func isSystemClass(named: String) -> Bool
         {
-        if let aClass = self.lookupNode(atName: named)
+        if let aClass = self.lookupType(atName: named)
             {
             if aClass.isSystemNode,aClass is ClassType
                 {
@@ -568,7 +642,7 @@ public class ArgonModule: Module
         
     public func isSystemEnumeration(named: String) -> Bool
         {
-        if let enumeration = self.lookupNode(atName: named)
+        if let enumeration = self.lookupType(atName: named)
             {
             if enumeration.isSystemNode,enumeration is EnumerationType
                 {
@@ -580,7 +654,7 @@ public class ArgonModule: Module
         
     public func isSystemAliasedType(named: String) -> Bool
         {
-        if let type = self.lookupNode(atName: named)
+        if let type = self.lookupType(atName: named)
             {
             if type.isSystemNode,type is AliasedType
                 {

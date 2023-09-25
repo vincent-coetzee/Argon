@@ -7,23 +7,21 @@
 
 import Foundation
 
-public class PrimitiveClassType: ClassType
+public class PrimitiveType: ArgonType
     {
     public required init(name: String,superclasses: ClassTypes)
         {
-        super.init(name: name,superclasses: superclasses)
-        self.symbolTable = nil
+        super.init(name: name)
+        self.setSymbolType(ArgonModule.shared.primitiveType)
         }
         
     public required init(coder: NSCoder)
         {
         super.init(coder: coder)
-        self.symbolTable = nil
         }
         
     public override func encode(with coder: NSCoder)
         {
-        self.symbolTable = nil
         super.encode(with: coder)
         }
         

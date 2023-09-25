@@ -9,6 +9,11 @@ import Foundation
 
 public class EnumerationCase: SyntaxTreeNode
     {
+    public override var isEnumerationCase: Bool
+        {
+        true
+        }
+        
     public var encoding: String
         {
         "p\(self.name.symbolString)_"

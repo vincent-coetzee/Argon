@@ -100,10 +100,9 @@ extension NSCoder
             case(.integer(let integer)):
                 self.encode(1,forKey: "\(key)_index")
                 self.encode(integer,forKey: "\(key)_integer")
-//            case(.enumerationInstance(let enumeration,let aCase)):
-//                self.encode(2,forKey: "\(key)_index")
-//                self.encode(enumeration,forKey: "\(key)_enumerationInstance_enumeration")
-//                self.encode(aCase,forKey: "\(key)_enumerationInstance_enumerationCase")
+            case(.text(let text)):
+                self.encode(2,forKey: "\(key)_index")
+                self.encode(text,forKey: "\(key)_text")
             case(.path(let string)):
                 self.encode(3,forKey: "\(key)_index")
                 self.encode(string,forKey: "\(key)_path")
@@ -186,8 +185,8 @@ extension NSCoder
                 return(.none)
             case(1):
                 return(.integer(self.decodeInt64(forKey: "\(key)_integer")))
-//            case(2):
-//                return(.enumerationInstance(self.decodeObject(forKey: "\(key)_enumerationInstance_enumeration") as! EnumerationType,self.decodeObject(forKey: "\(key)_enumerationInstance_enumerationCase") as! EnumerationCase))
+            case(2):
+                return(.text(self.decodeObject(forKey: "\(key)_text") as! String))
             case(3):
                 return(.path(self.decodeObject(forKey: "\(key)_path") as! String))
             case(4):

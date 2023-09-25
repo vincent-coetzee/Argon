@@ -49,7 +49,7 @@ public class WhileStatement: Block
             }
         let whileBlock = Block()
         whileBlock.location = location
-        whileBlock.setParent(block)
+        whileBlock.setContainer(block)
         Block.parseBlockInner(block: whileBlock, using: parser)
         let statement = WhileStatement(expression: expression,block: whileBlock)
         statement.location = location

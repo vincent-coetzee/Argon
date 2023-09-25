@@ -95,6 +95,22 @@ public class ArgonScanner
         return(string)
         }
         
+    public func scanUntilRightParenthesis() -> String
+        {
+        self.nextDirtyCharacter()
+        var string = ""
+        while self.currentCharacter.isNotNewLine && !self.atEnd && self.currentCharacter != ")"
+            {
+            string += String(self.currentCharacter)
+            self.nextDirtyCharacter()
+            }
+        if self.currentCharacter.isNewLine
+            {
+            self.nextCharacter()
+            }
+        return(string)
+        }
+        
     public func scanUntilEndOfMultilineComment() -> String
         {
         self.nextDirtyCharacter()
@@ -116,25 +132,28 @@ public class ArgonScanner
         var tokens = Tokens()
         while !self.atEnd
             {
-            let token = self.scanToken()
-            tokens.append(token)
-            bracketMatcher.processToken(token)
-            print(token)
+            let someTokens = self.scanTokens()
+            tokens.append(contentsOf: someTokens)
+            for token in someTokens
+                {
+                bracketMatcher.processToken(token)
+                print(token)
+                }
             }
         return(tokens)
         }
         
-    private func scanToken() -> Token
+    private func scanTokens() -> Tokens
         {
         if self.atEnd
             {
-            return(EndToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: ""))
+            return([EndToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: "")])
             }
         self.startOffset = offset - 1
         if CharacterSet.whitespacesAndNewlines.contains(self.currentCharacter)
             {
             self.scanWhitespace()
-            return(self.scanToken())
+            return(self.scanTokens())
             }
         let prefix = self.sourcePrefix(length: 2)
         if prefix == ":("
@@ -163,7 +182,7 @@ public class ArgonScanner
             }
         else if self.currentCharacter == Unicode.Scalar("#")
             {
-            return(self.scanSymbol())
+            return(self.scanAtom())
             }
         else if self.operatorCharacters.contains(self.currentCharacter)
             {
@@ -175,10 +194,10 @@ public class ArgonScanner
             }
         let character = self.currentCharacter
         self.nextCharacter()
-        return(ErrorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: "Unknown character '\(character)'"))
+        return([ErrorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: "Unknown character '\(character)'")])
         }
         
-    private func scanDateOrTime() -> Token
+    private func scanDateOrTime() -> Tokens
         {
         self.nextCharacter()
         self.nextCharacter()
@@ -192,17 +211,17 @@ public class ArgonScanner
             {
             self.nextCharacter()
             }
-        return(CalendricalToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string))
+        return([CalendricalToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string)])
         }
         
-    private func scanBracket() -> Token
+    private func scanBracket() -> Tokens
         {
         let character = self.currentCharacter
         self.nextCharacter()
-        return(OperatorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset), string: String(character)))
+        return([OperatorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset), string: String(character))])
         }
         
-    private func scanPath() -> Token
+    private func scanPath() -> Tokens
         {
         var string = String()
         self.nextCharacter()
@@ -216,10 +235,10 @@ public class ArgonScanner
             {
             self.nextCharacter()
             }
-        return(PathToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string))
+        return([PathToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string)])
         }
         
-    private func scanIdentifier() -> Token
+    private func scanIdentifier() -> Tokens
         {
         var identifier = String()
         if self.sourcePrefix(length: 2)  == "\\"
@@ -234,12 +253,26 @@ public class ArgonScanner
         let location = Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset)
         if KeywordToken.isKeyword(identifier)
             {
-            return(KeywordToken(location: location,string: identifier))
+            if KeywordToken.isSectionKeyword(identifier)
+                {
+                // should look like: SECTION(This is some sexy section)
+                var tokens = Tokens()
+                tokens.append(KeywordToken(location: location,string: identifier))
+                // should be a '('
+                tokens.append(contentsOf: self.scanTokens())
+                // should be unquoted string
+                let string = self.scanUntilRightParenthesis()
+                tokens.append(TextToken(location: location,string: string))
+                // should be ')'
+                tokens.append(contentsOf: self.scanTokens())
+                return(tokens)
+                }
+            return([KeywordToken(location: location,string: identifier)])
             }
-        return(IdentifierToken(location: location, string: identifier))
+        return([IdentifierToken(location: location, string: identifier)])
         }
         
-    private func scanOperator() -> Token
+    private func scanOperator() -> Tokens
         {
         var string = String()
         while self.operatorCharacters.contains(self.currentCharacter) && !self.atEnd
@@ -247,10 +280,10 @@ public class ArgonScanner
             string.append(self.currentCharacter)
             self.nextCharacter()
             }
-        return(OperatorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string))
+        return([OperatorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string)])
         }
         
-    private func scanSymbol() -> Token
+    private func scanAtom() -> Tokens
         {
         self.nextCharacter()
         var string = "#"
@@ -259,10 +292,10 @@ public class ArgonScanner
             string.append(self.currentCharacter)
             self.nextCharacter()
             }
-        return(SymbolToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string))
+        return([AtomToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string)])
         }
         
-    private func scanString() -> Token
+    private func scanString() -> Tokens
         {
         self.nextCharacter()
         var string = ""
@@ -275,10 +308,10 @@ public class ArgonScanner
             {
             self.nextCharacter()
             }
-        return(StringToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string))
+        return([StringToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string)])
         }
         
-    private func scanNumber() -> Token
+    private func scanNumber() -> Tokens
         {
         if self.currentCharacter == Unicode.Scalar("0")
             {
@@ -307,27 +340,27 @@ public class ArgonScanner
         return(self.scanDecimalNumber())
         }
 
-    private func scanBinaryNumber() -> Token
+    private func scanBinaryNumber() -> Tokens
         {
         fatalError()
         }
         
-    private func scanTernaryNumber() -> Token
+    private func scanTernaryNumber() -> Tokens
         {
         fatalError()
         }
         
-    private func scanOctalNumber() -> Token
+    private func scanOctalNumber() -> Tokens
         {
         fatalError()
         }
         
-    private func scanHexadecimalNumber() -> Token
+    private func scanHexadecimalNumber() -> Tokens
         {
         fatalError()
         }
         
-    private func scanDecimalNumber() -> Token
+    private func scanDecimalNumber() -> Tokens
         {
         var string = String()
         while CharacterSet.decimalDigits.contains(self.currentCharacter) && !self.atEnd
@@ -337,7 +370,7 @@ public class ArgonScanner
             }
         if self.sourcePrefix(length: 2) == ".."
             {
-            return(IntegerToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string))
+            return([IntegerToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string)])
             }
         if self.currentCharacter == Unicode.Scalar(".")
             {
@@ -348,12 +381,12 @@ public class ArgonScanner
                 string.append(String(self.currentCharacter))
                 self.nextCharacter()
                 }
-            return(FloatToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string))
+            return([FloatToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string)])
             }
-        return(IntegerToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string))
+        return([IntegerToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string)])
         }
         
-    private func scanComment() -> Token
+    private func scanComment() -> Tokens
         {
         let prefix = self.sourcePrefix(length: 2)
         if prefix == String("/*")
@@ -363,16 +396,16 @@ public class ArgonScanner
         return(self.scanSinglelineComment())
         }
         
-    private func scanMultilineComment() -> Token
+    private func scanMultilineComment() -> Tokens
         {
         let string = self.scanUntilEndOfMultilineComment()
-        return(CommentToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string))
+        return([CommentToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string)])
         }
         
-    private func scanSinglelineComment() -> Token
+    private func scanSinglelineComment() -> Tokens
         {
         let string = self.scanUntilEndOfLine()
-        return(CommentToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string))
+        return([CommentToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string)])
         }
         
     private func scanWhitespace()

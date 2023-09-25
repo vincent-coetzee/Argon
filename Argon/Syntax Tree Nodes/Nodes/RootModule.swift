@@ -25,7 +25,7 @@ public class RootModule: Module
     
     public override var argonModule: ArgonModule
         {
-        self.parent as! ArgonModule
+        self.container as! ArgonModule
         }
         
     public static func reset()
@@ -39,7 +39,7 @@ public class RootModule: Module
     public init(argonModule: ArgonModule)
         {
         super.init(name: "")
-        self.symbolTable?.parent = argonModule
+        self.symbolTable.owner = argonModule
         Self.shared = self
         }
         

@@ -13,7 +13,7 @@ public class MetaclassType: ClassType
         {
         var hasher = Hasher()
         hasher.combine("CLASS")
-        hasher.combine(self.parent)
+        hasher.combine(self.container)
         hasher.combine(self.name)
         for aType in self.genericTypes
             {
@@ -37,5 +37,15 @@ public class MetaclassType: ClassType
         super.encode(with: coder)
         }
         
-    public func 
+    public override func instanciate(withTypes types: ArgonTypes) throws -> ArgonType
+        {
+        guard self.genericTypes.count == types.count else
+            {
+            throw(CompilerError(code: .typeVariableGenericMismatch, message: "The type constructor for '\(self.name)' expected \(self.genericTypes.count) generic types but found \(types.count).", location: .zero))
+            }
+        for (typeVariable,genericType) in zip(self.genericTypes,types)
+            {
+            
+            }
+        }
     }

@@ -35,11 +35,14 @@ public class Module: CompositeSyntaxTreeNode
         
     public var mainMethod: MethodType?
         {
-        (self.symbolTable?.detect
+        for symbol in self.lookupMethods(atName: "main")
             {
-            symbol in
-            symbol.name == "main" && symbol.isMethod
-            }) as? MethodType
+            if symbol.isMethod
+                {
+                return(symbol)
+                }
+            }
+        return(nil)
         }
         
     public override var module: Module
@@ -59,7 +62,7 @@ public class Module: CompositeSyntaxTreeNode
         
     public override var parentModules: Modules
         {
-        self.parent?.parentModules.appending(self) ?? Modules()
+        self.container?.parentModules.appending(self) ?? Modules()
         }
         
     public class func parseModuleDependency(using parser: ArgonParser) -> ModuleNode?

@@ -14,7 +14,7 @@ public class CallableType: ArgonType
         var hasher = Hasher()
         let kind = Swift.type(of: self) == MethodType.self ? "METHOD" : "FUNCTION"
         hasher.combine(kind)
-        hasher.combine(self.parent)
+        hasher.combine(self.container)
         hasher.combine(self.name)
         for parameter in self.parameters
             {

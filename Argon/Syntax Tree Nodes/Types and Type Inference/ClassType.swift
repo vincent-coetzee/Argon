@@ -24,16 +24,17 @@ public class ClassType: StructuredType
         return(.class)
         }
         
-    public private(set) var superclasses: ClassTypes = []
     public private(set) var initializers = Methods()
     public private(set) var deinitializer: MethodType?
+    private var poolVariables = Dictionary<String,Variable>()
+    private var symbols = SyntaxTreeNodes()
+    private var superclasses = ArgonTypes()
     
     public init(name: String,slots: Slots = [],superclasses: ClassTypes = [],genericTypes: ArgonTypes = ArgonTypes())
         {
         self.superclasses = superclasses
         super.init(name: name)
         self.setGenericTypes(genericTypes)
-        self.symbolTable = SymbolTable(with: slots)
         }
         
     public init(name: String)
@@ -44,26 +45,30 @@ public class ClassType: StructuredType
     public required init(coder: NSCoder)
         {
         self.superclasses = coder.decodeObject(forKey: "superclasses") as! ClassTypes
-        self.initializers = coder.decodeObject(forKey: "initializers") as! Methods
-        self.deinitializer = coder.decodeObject(forKey: "deinitializer") as? MethodType
+//        self.initializers = coder.decodeObject(forKey: "initializers") as! Methods
+//        self.deinitializer = coder.decodeObject(forKey: "deinitializer") as? MethodType
+        self.symbols = coder.decodeObject(forKey: "symbols") as! SyntaxTreeNodes
         super.init(coder: coder)
         }
         
     public override func encode(with coder: NSCoder)
         {
-        coder.encode(self.slots,forKey: "slots")
+//        coder.encode(self.initializers,forKey: "initializers")
+//        coder.encode(self.deinitializer,forKey: "deinitializer")
+        coder.encode(self.symbols,forKey: "symbols")
+        coder.encode(self.superclasses,forKey: "superclasses")
         super.encode(with: coder)
         }
         
-    public func addInitializer(_ method: MethodType)
-        {
-        self.initializers.append(method)
-        }
-        
-    public func setDeinitializer(_ method: MethodType)
-        {
-        self.deinitializer = method
-        }
+//    public func addInitializer(_ method: MethodType)
+//        {
+//        self.initializers.append(method)
+//        }
+//        
+//    public func setDeinitializer(_ method: MethodType)
+//        {
+//        self.deinitializer = method
+//        }
 
     public override var typeHash: Int
         {
@@ -74,8 +79,10 @@ public class ClassType: StructuredType
         {
         var hasher = Hasher()
         hasher.combine("CLASS")
-        hasher.combine(self.parent)
+        hasher.combine(self.container)
         hasher.combine(self.name)
+        hasher.combine(self.superclasses)
+        hasher.combine(self.slots)
         for aType in self.genericTypes
             {
             hasher.combine(aType)
@@ -85,14 +92,15 @@ public class ClassType: StructuredType
         
     public var slots: Slots
         {
-        self.symbolTable!.slots
+        self.symbols.compactMap{$0 as? Slot}
         }
         
     @discardableResult
-    public func slot(_ name: String,_ type: ArgonType) -> ClassType
+    public override func slot(_ name: String,_ type: ArgonType) -> ArgonType
         {
         let slot = Slot(name: name,type: type)
-        self.symbolTable?.addSymbol(slot)
+        self.symbols.append(slot)
+        slot.setContainer(self)
         return(self)
         }
         
@@ -101,15 +109,11 @@ public class ClassType: StructuredType
         print("\(indent)Class(\(self.name))")
         }
         
-//    public override func addNode(_ node: SyntaxTreeNode)
-//        {
-//        if let slot = node as? Slot
-//            {
-//            self.slots.append(slot)
-//            return
-//            }
-//        self.symbolTable.addNode(node)
-//        }
+    public override func addSymbol(_ symbol: SyntaxTreeNode)
+        {
+        self.symbols.append(symbol)
+        symbol.setContainer(self)
+        }
         
     public override var valueBox: ValueBox
         {
@@ -136,7 +140,7 @@ public class ClassType: StructuredType
             parser.nextToken()
             }
         let scope = ClassType(name: name)
-        parser.currentContext.addNode(scope)
+        parser.currentContext.addSymbol(scope)
         var superclasses = ClassTypes()
         var typeVariables = TypeVariables()
         if parser.token.isLeftBrocket
@@ -158,7 +162,7 @@ public class ClassType: StructuredType
         scope.setGenericTypes(typeVariables)
         for node in typeVariables
             {
-            scope.addNode(node)
+            scope.addSymbol(node)
             }
         if parser.token.isScope
             {
@@ -172,19 +176,113 @@ public class ClassType: StructuredType
                 {
                 slots.append(self.parseSlotDeclaration(using: parser))
                 }
-            while parser.token.isForm
-                {
-                let form = self.parseForm(in: scope,using: parser)
-                scope.addInitializer(form)
-                }
-            if parser.token.isDeform
-                {
-                scope.setDeinitializer(self.parseDeform(in: scope,using: parser))
-                }
+//            while parser.token.isForm
+//                {
+//                let form = self.parseForm(in: scope,using: parser)
+//                scope.addInitializer(form)
+//                }
+//            if parser.token.isDeform
+//                {
+//                scope.setDeinitializer(self.parseDeform(in: scope,using: parser))
+//                }
+            self.parsePool(in: scope,using: parser)
+            self.parseSection(in: scope,using: parser)
             }
         scope.setSlots(slots)
-        let metaclass = MetaclassType(class: scope)
-        scope.setType(metaclass)
+        scope.setSymbolType(ArgonModule.shared.classType)
+        }
+    //
+    //
+    // Parse a POOL declaration in a Class
+    // e.g.
+    //
+    // CLASS SomeClass
+    //      {
+    //      ...
+    //      POOL(variableA::Integer,someVariable1::String,thisClass::Class = MAKE(SomeClass))
+    //      }
+    //
+    //
+    private static func parsePool(in scope: ClassType,using parser: ArgonParser)
+        {
+        let location = parser.token.location
+        guard parser.token.isPool else
+            {
+            return
+            }
+        parser.nextToken()
+        parser.parseParentheses
+            {
+            repeat
+                {
+                parser.parseComma()
+                if !parser.token.isRightParenthesis && !parser.token.isEnd
+                    {
+                    var name: String = Argon.nextIndex(named: "POOLVAR")
+                    if !parser.token.isIdentifier
+                        {
+                        parser.lodgeError(code: .identifierExpected,location: location)
+                        }
+                    else
+                        {
+                        name = parser.token.identifier.lastPart
+                        parser.nextToken()
+                        }
+                    if !parser.token.isScope
+                        {
+                        parser.lodgeError(code: .scopeOperatorExpected,location: location)
+                        }
+                    else
+                        {
+                        parser.nextToken()
+                        }
+                    var expression:Expression?
+                    if parser.token.isAssign
+                        {
+                        parser.nextToken()
+                        expression = parser.parseExpression()
+                        }
+                    let variable = Variable(name: name, type: parser.parseType(), expression: expression)
+                    variable.location = location
+                    variable.addDeclaration(location)
+                    scope.addPoolVariable(variable)
+                    }
+                }
+            while parser.token.isComma && !parser.token.isEnd
+            }
+        }
+    //
+    //
+    // A SECTION contains the name of a group that this Class belongs to. e.g. if you
+    // have several classes that form part of the list of all  Client classes in the module
+    // SECTION would be declared as
+    //
+    // SECTION(Weather Clients)
+    //
+    // SECTION contents i.e. "Weather Clients" in this case are scanned as a continuous string
+    // contained between parentheses. Any legitimate character - including whitespace - can be placed in the content field and
+    // will be scanned into the content portion of the section. SECTION contents are scanned like this so that
+    // there is no need to constantly quote the SECTION contents. Each Class can be a member of one and only
+    // one SECTION.
+    //
+    //
+    private static func parseSection(in scope: ClassType,using parser: ArgonParser)
+        {
+        guard parser.token.isSection else
+            {
+            return
+            }
+        let location = parser.token.location
+        parser.nextToken()
+        parser.parseParentheses
+            {
+            if !parser.token.isTextToken
+                {
+                parser.lodgeError(code: .textExpectedInSection,location: location)
+                }
+            scope.section = parser.token.textValue
+            parser.nextToken()
+            }
         }
         
     private class func parseForm(`in` aClass: ClassType,using parser: ArgonParser) -> MethodType
@@ -318,7 +416,7 @@ public class ClassType: StructuredType
                 }
             }
         slot.setName(name)
-        slot.setType(type)
+        slot.setSymbolType(type)
         slot.setInitialExpression(initialExpression)
         slot.setReadBlock(readBlock)
         slot.setWriteBlock(writeBlock)
@@ -409,23 +507,57 @@ public class ClassType: StructuredType
     init(name: String,parent: SyntaxTreeNode? = nil)
         {
         super.init(name: name)
-        self.symbolTable = SymbolTable(parent: self)
         }
         
     public override func accept(visitor: Visitor)
         {
         visitor.enter(class: self)
-        self.symbolTable?.forEach
+        for symbol in self.symbols
             {
-            (symbol:SyntaxTreeNode) in
             symbol.accept(visitor: visitor)
             }
         visitor.exit(class: self)
         }
         
-    public override func instanciate(with types: ArgonTypes,parser: ArgonParser) -> ArgonType
+    public override func lookupSymbol(atName: String) -> SyntaxTreeNode?
         {
-        if self.
+        for node in self.symbols
+            {
+            if node.name == atName && !(node.isMethod || node.isFunction)
+                {
+                return(node)
+                }
+            }
+        for someClass in self.superclasses
+            {
+            if let symbol = someClass.lookupSymbol(atName: atName)
+                {
+                return(symbol)
+                }
+            }
+        for (key,variable) in self.poolVariables
+            {
+            if key == atName
+                {
+                return(variable)
+                }
+            }
+        return(self.container?.lookupSymbol(atName: atName))
+        }
+        
+    public override func lookupMethods(atName name: String) -> Methods
+        {
+        self.container?.lookupMethods(atName: name) ?? Methods()
+        }
+        
+    public func addPoolVariable(_ variable: Variable)
+        {
+        self.poolVariables[variable.name] = variable
+        }
+        
+    public override func instanciate(withTypes types: ArgonTypes) throws -> ArgonType
+        {
+        fatalError()
         }
     }
 

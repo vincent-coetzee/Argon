@@ -36,7 +36,6 @@ public enum TokenType: Int
     
     case dateTimeMarker
     case DYNAMIC
-    case DEFORM
     case decrement
     case dictionary
     case divide
@@ -53,7 +52,6 @@ public enum TokenType: Int
     case FALSE
     case Float
     case FOR
-    case FORM
     case FORK
     case FROM
     case FUNCTION
@@ -83,6 +81,7 @@ public enum TokenType: Int
     case leftParenthesis
     case LET
     case list
+    case literalAtom
     case literalByte
     case literalBoolean
     case literalCharacter
@@ -91,10 +90,10 @@ public enum TokenType: Int
     case literalFloat
     case literalInteger
     case literalString
-    case literalSymbol
     case literalTime
     case literalEnumerationCase
     case literalPath
+    case literalText
     case LOOP
     case logicalEquals
     case logicalNot
@@ -128,6 +127,7 @@ public enum TokenType: Int
     case plus
     case plusAssign
     case power
+    case POOL
     
     case rightArrow
     case rightBrace
@@ -139,6 +139,7 @@ public enum TokenType: Int
     case RETURN
     
     case SELECT
+    case SECTION
     case separator
     case semicolon
     case set
@@ -184,6 +185,11 @@ public class Token: NSObject,NSCoding
         fatalError("This should not be called on Token")
         }
         
+    public var textValue: String
+        {
+        self.matchString
+        }
+        
     public var range: NSRange
         {
         self.location.range
@@ -210,6 +216,16 @@ public class Token: NSObject,NSCoding
         }
         
     public var isCommentToken: Bool
+        {
+        false
+        }
+        
+    public var isTextToken: Bool
+        {
+        false
+        }
+        
+    public var isTextValue: Bool
         {
         false
         }
@@ -496,6 +512,16 @@ public class Token: NSObject,NSCoding
     public var isLoop: Bool
         {
         self.matchString == "LOOP"
+        }
+        
+    public var isSection: Bool
+        {
+        self.matchString == "SECTION"
+        }
+        
+    public var isPool: Bool
+        {
+        self.matchString == "POOL"
         }
         
     public var isIn: Bool

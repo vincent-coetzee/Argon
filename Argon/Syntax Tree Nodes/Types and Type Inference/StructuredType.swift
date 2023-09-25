@@ -72,18 +72,8 @@ public class StructuredType: ArgonType
         self._genericTypes.append(type)
         }
         
-    public override func addSymbol(_ symbol: SyntaxTreeNode)
+    public override func instanciate(with types: ArgonTypes,in set: TypeSubstitutionSet) throws -> ArgonType
         {
-        self.symbolTable?.addSymbol(symbol)
-        }
-        
-    public override func addNode(_ symbol: SyntaxTreeNode)
-        {
-        fatalError("Invoke addSymbol instead of addNode.")
-        }
-        
-    public override func instanciate(withTypes types: ArgonTypes) -> ArgonType
-        {
-        fatalError()
+        self
         }
     }

@@ -36,6 +36,26 @@ import Foundation
 
 public class ArgonType: SyntaxTreeNode
     {
+    public static var typeType: ArgonType
+        {
+        ArgonModule.shared.typeType
+        }
+        
+    public static var dateOffsetType: ArgonType
+        {
+        ArgonModule.shared.dateOffsetType
+        }
+        
+    public static var timeOffsetType: ArgonType
+        {
+        ArgonModule.shared.timeOffsetType
+        }
+        
+    public static var classType: ArgonType
+        {
+        ArgonModule.shared.classType
+        }
+        
     public static var floatType: ArgonType
         {
         ArgonModule.shared.floatType
@@ -165,6 +185,8 @@ public class ArgonType: SyntaxTreeNode
         return(super.tag + inners)
         }
         
+    public var section: String?
+    
 //    public private(set) var instanceType: GenericInstanceType.Type?
     
     public override init(index: Int? = nil,name: String)
@@ -203,11 +225,11 @@ public class ArgonType: SyntaxTreeNode
             {
             return(false)
             }
-        if lhs.parent.isNil || rhs.parent.isNil
+        if lhs.container.isNil || rhs.container.isNil
             {
             return(false)
             }
-        return(lhs.parent! < rhs.parent! && lhs.name < rhs.name)
+        return(lhs.container! < rhs.container! && lhs.name < rhs.name)
          }
         
     //
@@ -224,7 +246,7 @@ public class ArgonType: SyntaxTreeNode
         {
         if lhs.genericTypes.isEmpty && rhs.genericTypes.isEmpty
             {
-            return(lhs.parent == rhs.parent && lhs.name == rhs.name)
+            return(lhs.container == rhs.container && lhs.name == rhs.name)
             }
         if lhs.genericTypes.count != rhs.genericTypes.count
             {
@@ -235,7 +257,7 @@ public class ArgonType: SyntaxTreeNode
             {
             return(false)
             }
-        return(lhs.parent == rhs.parent && lhs.name == rhs.name)
+        return(lhs.container == rhs.container && lhs.name == rhs.name)
         }
     //
     //
@@ -263,6 +285,12 @@ public class ArgonType: SyntaxTreeNode
         false
         }
         
+    @discardableResult
+    public func slot(_ name: String,_ type: ArgonType) -> ArgonType
+        {
+        fatalError("This should not be invoked on ArgonType.")
+        }
+        
 //    public func setInstanceType(_ instanceType: GenericInstanceType.Type?)
 //        {
 //        self.instanceType = instanceType
@@ -278,11 +306,10 @@ public class ArgonType: SyntaxTreeNode
         fatalError("Should not be invoked on a TypeNode")
         }
         
-    public func instanciate(withTypes: ArgonTypes) throws -> ArgonType
+    public func instanciate(with types: ArgonTypes,in set: TypeSubstitutionSet) throws -> ArgonType
         {
         self
         }
-    
     }
 
 public typealias ArgonTypes = Array<ArgonType>

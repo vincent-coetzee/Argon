@@ -26,14 +26,14 @@ public class EnumerationType: StructuredType
         
     public var cases: EnumerationCases
         {
-        self.symbolTable!.enumerationCases
+        self.symbols.compactMap{$0 as? EnumerationCase}
         }
         
     public override var hash: Int
         {
         var hasher = Hasher()
         hasher.combine("ENUMERATION")
-        hasher.combine(self.parent)
+        hasher.combine(self.container)
         hasher.combine(self.name)
         for aType in self.genericTypes
             {
@@ -109,17 +109,17 @@ public class EnumerationType: StructuredType
                     }
                 }
             }
-        parser.currentScope.addNode(enumeration)
-        enumeration.setType(.enumerationType)
+        parser.currentContext.addSymbol(enumeration)
+        enumeration.setSymbolType(.enumerationType)
         }
         
     public private(set) var defaultCase: EnumerationCase?
     public private(set) var rawType: ArgonType?
+    private var symbols = SyntaxTreeNodes()
     
     public init(name: String)
         {
         super.init(name: name)
-        self.symbolTable = SymbolTable()
         }
         
     public init(name: String,rawType: ArgonType? = nil)
@@ -130,6 +130,7 @@ public class EnumerationType: StructuredType
         
     public required init(coder: NSCoder)
         {
+        self.symbols = coder.decodeObject(forKey: "symbols") as! SyntaxTreeNodes
         self.defaultCase = coder.decodeObject(forKey: "defaultCase") as? EnumerationCase
         self.rawType = coder.decodeObject(forKey: "rawType") as? ArgonType
         super.init(coder: coder)
@@ -137,6 +138,7 @@ public class EnumerationType: StructuredType
         
     public override func encode(with coder: NSCoder)
         {
+        coder.encode(self.symbols,forKey: "symbols")
         coder.encode(self.cases,forKey: "cases")
         coder.encode(self.defaultCase,forKey: "defaultCase")
         coder.encode(self.rawType,forKey: "rawType")
@@ -173,12 +175,53 @@ public class EnumerationType: StructuredType
         
     public func `case`(atAtom atom: Argon.Atom) -> EnumerationCase?
         {
-        self.symbolTable?.lookupSymbol(atName: atom) as? EnumerationCase
+        self.lookupSymbol(atName: atom) as? EnumerationCase
         }
         
     public override func dump(indent: String)
         {
         print("\(indent)Enumeration(\(self.name))")
+        }
+        
+    public override func addSymbol(_ symbol: SyntaxTreeNode)
+        {
+        self.symbols.append(symbol)
+        symbol.setContainer(self)
+        }
+        
+    public override func lookupSymbol(atName: String) -> SyntaxTreeNode?
+        {
+        for node in self.symbols
+            {
+            if node.name == atName && node.isEnumerationCase
+                {
+                return(node)
+                }
+            }
+        return(self.container?.lookupSymbol(atName: atName))
+        }
+        
+    public override func lookupMethods(atName name: String) -> Methods
+        {
+        self.container?.lookupMethods(atName: name) ?? Methods()
+        }
+        
+    public override func accept(visitor: Visitor)
+        {
+        for symbol in self.symbols
+            {
+            symbol.accept(visitor: visitor)
+            }
+        }
+        
+    @discardableResult
+    public func setAssociatedTypes(forAtom: String,_ types: ArgonType...) -> Self
+        {
+        if let someCase = self.case(atAtom: forAtom)
+            {
+            someCase.associatedTypes = types
+            }
+        return(self)
         }
     }
 

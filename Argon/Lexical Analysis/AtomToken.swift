@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class SymbolToken: Token
+public class AtomToken: Token
     {
     public override var atomValue: Argon.Atom
         {
@@ -40,12 +40,12 @@ public class SymbolToken: Token
             {
             return(.literalBoolean)
             }
-        return(.literalSymbol)
+        return(.literalAtom)
         }
         
     public override var tokenName: String
         {
-        "SymbolToken"
+        "AtomToken"
         }
         
     public override var valueBox: ValueBox

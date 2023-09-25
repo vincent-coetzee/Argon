@@ -14,9 +14,9 @@ public class ConcreteType: StructuredType
 public class ConstructorType: ArgonType
     {
     private let typeVariables: TypeVariables
-    private let instanceType: ConcreteType
+    private let instanceType: ArgonType
     
-    init(name: String,instanceType: ConcreteType,typeVariables: TypeVariables)
+    init(name: String,instanceType: ArgonType,typeVariables: TypeVariables)
         {
         self.instanceType = instanceType
         self.typeVariables = typeVariables
@@ -37,16 +37,19 @@ public class ConstructorType: ArgonType
         super.encode(with: coder)
         }
         
-    public override func instanciate(withTypes: ArgonTypes,in set: TypeSubstitutionSet) throws -> ArgonType
+    public override func instanciate(with types: ArgonTypes,in set: TypeSubstitutionSet) throws -> ArgonType
         {
-        if withTypes.count != self.typeVariables.count
+        if types.count != self.typeVariables.count
             {
             let variableNames = "<" + self.typeVariables.map{$0.name}.joined(separator: ",") + ">"
-            let genericNames = "<" + withTypes.map{$0.name}.joined(separator: ",") + ">"
-            let message = "Type Variables and generic types mismatch. Expected \(variableNames) found \(genericNames)."
+            let genericNames = "<" + types.map{$0.name}.joined(separator: ",") + ">"
+            let message = "Type variables and generic types mismatch. Expected \(variableNames) found \(genericNames)."
             throw(CompilerError(code: .typeVariableGenericMismatch, message: message, location: .zero))
             }
-            let instanciatedTypes = zip(self.typeVariables,withTypes).map{ set.mapTypeVariable($0.0,toType: $0.1)}
-        TypeRegistry.registerType(try self.instanceType.instanciate(withTypes: withTypes))
+        for (typeVariable,solution) in zip(self.typeVariables,types)
+            {
+            set.setValue(of: typeVariable, to: solution)
+            }
+        return(TypeRegistry.registerType(try self.instanceType.instanciate(with: types,in: set)))
         }
     }

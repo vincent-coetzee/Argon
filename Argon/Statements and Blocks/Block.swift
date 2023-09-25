@@ -133,7 +133,7 @@ public class Block: Statement
     public func addStatement(_ statement: Statement)
         {
         self.statements.append(statement)
-        statement.setParent(self)
+        statement.setContainer(self)
         }
         
     public func addLocal(_ variable: Variable)

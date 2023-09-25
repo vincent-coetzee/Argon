@@ -85,6 +85,7 @@ public enum ValueBox: Hashable
     case date(Argon.Date)
     case time(Argon.Time)
     case dateTime(Argon.DateTime)
+    case text(String)
     
     public var isAtom: Bool
         {
@@ -200,6 +201,9 @@ public enum ValueBox: Hashable
             case(.function(let integer1)):
                 hasher.combine("FUNCTION")
                 hasher.combine(integer1.typeHash)
+            case(.text(let integer1)):
+                hasher.combine("TEXT")
+                hasher.combine(integer1)
             }
         }
     }

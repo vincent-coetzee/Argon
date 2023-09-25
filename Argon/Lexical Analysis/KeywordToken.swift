@@ -9,12 +9,17 @@ import Foundation
 
 fileprivate let _Keywords = ["CLASS","CONSTANT","DEFORM","DYNAMIC","ELSE","ENTRY","ENUMERATION","EXIT",
                             "FALSE","FOR","FROM","FREE","FORM","FUNCTION","IF","IN","HANDLE","IMPORT","INTO",
-                            "IS","KEY","LET","LOOP","MAKE","METHOD","MODULE","OTHERWISE","READ","REPEAT",
-                            "RETURN","SELECT","SLOT","SIGNAL","THEN","TIMES","TRUE","TYPE","USES",
+                            "IS","KEY","LET","LOOP","MAKE","METHOD","MODULE","OTHERWISE","POOL","READ","REPEAT",
+                            "RETURN","SECTION","SELECT","SLOT","SIGNAL","THEN","TIMES","TRUE","TYPE","USES",
                             "VIRTUAL","WHEN","WHILE","WRAPPER","WRITE"]
                             
 public class KeywordToken: Token
     {
+    public static func isSectionKeyword(_ string: String) -> Bool
+        {
+        string == "SECTION"
+        }
+        
     public override var styleElement: StyleElement
         {
         .colorKeyword
@@ -175,14 +180,14 @@ public class KeywordToken: Token
                 return(.LET)
             case "MAKE":
                 return(.MAKE)
-            case "FORM":
-                return(.FORM)
             case "METHOD":
                 return(.METHOD)
             case "MODULE":
                 return(.MODULE)
             case "OTHERWISE":
                 return(.OTHERWISE)
+            case "POOL":
+                return(.POOL)
             case "READ":
                 return(.READ)
             case "REPEAT":
@@ -191,8 +196,8 @@ public class KeywordToken: Token
                 return(.RETURN)
             case "SELECT":
                 return(.SELECT)
-            case "DEFORM":
-                return(.DEFORM)
+            case "SECTION":
+                return(.SECTION)
             case "SLOT":
                 return(.SLOT)
             case "SIGNAL":
