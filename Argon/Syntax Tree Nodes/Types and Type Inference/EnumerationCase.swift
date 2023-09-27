@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class EnumerationCase: SyntaxTreeNode
+public class EnumerationCase: Symbol
     {
     public override var isEnumerationCase: Bool
         {

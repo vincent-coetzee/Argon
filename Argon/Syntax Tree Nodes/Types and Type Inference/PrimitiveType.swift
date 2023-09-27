@@ -9,10 +9,30 @@ import Foundation
 
 public class PrimitiveType: ArgonType
     {
+    public override var baseType: ArgonType
+        {
+        self
+        }
+        
+    public override var isPrimitiveType: Bool
+        {
+        true
+        }
+        
+    public override var symbolType: ArgonType
+        {
+        get
+            {
+            ArgonModule.shared.primitiveType
+            }
+        set
+            {
+            }
+        }
+        
     public required init(name: String,superclasses: ClassTypes)
         {
         super.init(name: name)
-        self.setSymbolType(ArgonModule.shared.primitiveType)
         }
         
     public required init(coder: NSCoder)
@@ -25,14 +45,13 @@ public class PrimitiveType: ArgonType
         super.encode(with: coder)
         }
         
-    public override func instanciate(withTypes: ArgonTypes) throws -> ArgonType
-        {
-        let message = "A primitive type '\(self.name)' can not be used as a generic type."
-        throw(CompilerError(code: .primitiveTypeNotAGenericType, message: message))
-        }
-        
-    public override func addSymbol(_ symbol: SyntaxTreeNode)
+    public override func addSymbol(_ symbol: Symbol)
         {
         fatalError("addSymbol should never be invoked on a SimpleType.")
+        }
+        
+    public override func typeConstructor() -> ArgonType
+        {
+        self
         }
     }

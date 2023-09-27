@@ -7,11 +7,11 @@
 
 import Foundation
 
-public class CompositeSyntaxTreeNode: SyntaxTreeNode
+public class CompositeSyntaxTreeNode: Symbol
     {
-    internal var symbols = SyntaxTreeNodes()
+    internal var symbols = Symbols()
     
-    init(name: String,parent: SyntaxTreeNode? = nil)
+    init(name: String,parent: Symbol? = nil)
         {
         super.init(name: name)
         }
@@ -26,13 +26,13 @@ public class CompositeSyntaxTreeNode: SyntaxTreeNode
         fatalError()
         }
         
-    public override func addSymbol(_ symbol: SyntaxTreeNode)
+    public override func addSymbol(_ symbol: Symbol)
         {
         self.symbols.append(symbol)
         symbol.setContainer(self)
         }
         
-    public override func lookupSymbol(atName: String) -> SyntaxTreeNode?
+    public override func lookupSymbol(atName: String) -> Symbol?
         {
         for node in self.symbols
             {
@@ -44,16 +44,10 @@ public class CompositeSyntaxTreeNode: SyntaxTreeNode
         return(self.container?.lookupSymbol(atName: atName))
         }
         
-    public override func lookupMethods(atName name: String) -> Methods
+    public override func lookupMethods(atName someName: String) -> Methods
         {
-        var methods = self.container?.lookupMethods(atName: name) ?? Methods()
-        for node in self.symbols
-            {
-            if node.name == name && (node.isMethod || node.isFunction)
-                {
-                methods.append(node as! MethodType)
-                }
-            }
+        var methods = self.container?.lookupMethods(atName: someName) ?? Methods()
+        methods.append(contentsOf: self.symbols.filter{$0.name == someName && ($0.isMethod || $0.isFunction)}.map{$0 as! MethodType})
         return(methods)
         }
         

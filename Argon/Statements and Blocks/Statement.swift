@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class Statement: SyntaxTreeNode
+public class Statement: Symbol
     {
     public var containsReturnStatement: Bool
         {

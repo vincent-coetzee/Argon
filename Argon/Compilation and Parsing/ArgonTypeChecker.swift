@@ -112,16 +112,6 @@ public class ArgonTypeChecker: Visitor
         
         }
     
-    public func visit(genericInstanceType: GenericInstanceType)
-        {
-        
-        }
-    
-    public func visit(arrayInstanceType: ArrayInstanceType)
-        {
-        
-        }
-    
     public func visit(argument: Argument)
         {
         

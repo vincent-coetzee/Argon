@@ -34,8 +34,23 @@ import Foundation
 //
 //
 
-public class ArgonType: SyntaxTreeNode
+public class ArgonType: Symbol
     {
+    public var isClassType: Bool
+        {
+        false
+        }
+        
+    public var isPrimitiveType: Bool
+        {
+        false
+        }
+        
+    public static var tupleType: ArgonType
+        {
+        ArgonModule.shared.tupleType
+        }
+        
     public static var typeType: ArgonType
         {
         ArgonModule.shared.typeType
@@ -106,9 +121,9 @@ public class ArgonType: SyntaxTreeNode
         ArgonModule.shared.characterType
         }
         
-    public static var symbolType: ArgonType
+    public static var atomType: ArgonType
         {
-        ArgonModule.shared.symbolType
+        ArgonModule.shared.atomType
         }
         
     public static var byteType: ArgonType
@@ -144,6 +159,17 @@ public class ArgonType: SyntaxTreeNode
     public var instanceSizeInBytes: Int
         {
         MemoryLayout<UInt64>.size
+        }
+        
+    public override var symbolType: ArgonType
+        {
+        get
+            {
+            self
+            }
+        set
+            {
+            }
         }
         
     public var typeHash: Int
@@ -306,9 +332,39 @@ public class ArgonType: SyntaxTreeNode
         fatalError("Should not be invoked on a TypeNode")
         }
         
-    public func instanciate(with types: ArgonTypes,in set: TypeSubstitutionSet) throws -> ArgonType
+    public func instanciate(with types: ArgonTypes) throws -> ArgonType
         {
         self
+        }
+        
+    public func typeConstructor() -> ArgonType
+        {
+        self
+        }
+        
+    public override func clone() -> Self
+        {
+        ArgonType(name: self.name) as! Self
+        }
+        
+    public func setSymbol(_ symbol: Symbol,atName: String)
+        {
+        fatalError("setSymbol(_,atName:) should notbe called on an ArgonType.")
+        }
+        
+    public func constructType(from: ArgonTypes) throws -> ArgonType
+        {
+        fatalError("constructType(from:) should not be invoked on an ArgonType.")
+        }
+        
+    public func constructType(map typeParameters: TypeParameters,to types: ArgonTypes) throws -> ArgonType
+        {
+        self
+        }
+        
+    public func setTypeParameters(_ types: TypeParameters)
+        {
+        fatalError("This should not be called on ArgonType.")
         }
     }
 

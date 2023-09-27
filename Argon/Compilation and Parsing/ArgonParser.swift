@@ -16,9 +16,9 @@ public class ArgonParser
     private var lastIdentifierToken = Token(location: .zero)
     private var tokenIndex = 0
     public private(set) var token: Token
-    private var contextStack = Stack<Context>()
-    public private(set) var currentContext: Context
-    private var rootModule: RootModule
+    private var scopeStack = Stack<Scope>()
+    public private(set) var currentScope: Scope
+    public private(set) var rootModule: RootModule
     private var initialModule: Module!
     public var nodeKey = 0
     private var prefixParsers = Dictionary<TokenType,PrefixParser>()
@@ -28,7 +28,7 @@ public class ArgonParser
     init(rootModule: RootModule)
         {
         self.rootModule = rootModule
-        self.currentContext = self.rootModule
+        self.currentScope = self.rootModule
         self.token = EndToken(location: .zero)
         self.initParsers()
         }
@@ -41,7 +41,7 @@ public class ArgonParser
         self.register(tokenType: .literalInteger,parser: LiteralParser())
         self.register(tokenType: .literalFloat,parser: LiteralParser())
         self.register(tokenType: .literalString,parser: LiteralParser())
-        self.register(tokenType: .literalSymbol,parser: LiteralParser())
+        self.register(tokenType: .literalAtom,parser: LiteralParser())
         self.register(tokenType: .literalBoolean,parser: LiteralParser())
         self.register(tokenType: .literalCharacter,parser: LiteralParser())
         self.register(tokenType: .literalDate,parser: LiteralParser())
@@ -107,8 +107,8 @@ public class ArgonParser
         self.issues = CompilerIssues()
         self.tokenIndex = 0
         self.lastIdentifierToken = Token(location: .zero)
-        self.contextStack = Stack<Context>()
-        self.currentContext = self.rootModule
+        self.scopeStack = Stack<Scope>()
+        self.currentScope = self.rootModule
         self.token = EndToken(location: .zero)
         }
         
@@ -156,8 +156,8 @@ public class ArgonParser
     public func parse(sourceFileNode: SourceFileNode)
         {
         sourceFileNode.compilerIssues = CompilerIssues()
-        self.contextStack = Stack<Context>()
-        self.currentContext = self.rootModule
+        self.scopeStack = Stack<Scope>()
+        self.currentScope = self.rootModule
         self.tokens = sourceFileNode.tokens.filter{!$0.isCommentToken}
         self.tokenIndex = 0
         self.token = self.tokens[self.tokenIndex]
@@ -201,6 +201,16 @@ public class ArgonParser
         return(self.token)
         }
         
+    public func lookupSymbol(atName: String) -> Symbol?
+        {
+        self.currentScope.lookupSymbol(atName: atName)
+        }
+        
+    public func lookupSymbol(atIdentifier someIdentifier: Identifier) -> Symbol?
+        {
+        self.currentScope.lookupSymbol(atIdentifier: someIdentifier)
+        }
+        
     @discardableResult
     public func expect(tokenType: TokenType,error: IssueCode) -> Token?
         {
@@ -227,33 +237,18 @@ public class ArgonParser
         self.nextToken()
         return(identifier)
         }
-        
-//    public func addNode(_ node: SyntaxTreeNode,atIdentifier: Identifier)
-//        {
-//        self.currentContext.addNode(node,atIdentifier: atIdentifier)
-//        }
-        
-    public func lookupNode(atIdentifier: Identifier) -> SyntaxTreeNode?
+    
+    public func pushCurrentScope(_ node: Symbol)
         {
-        self.currentContext.lookupSymbol(atIdentifier: atIdentifier)
-        }
-        
-    public func lookupNode(atName: String) -> SyntaxTreeNode?
-        {
-        self.symbolContainerStack.lookupSymbol(atName: atName)
-        }
-        
-    public func pushCurrentScope(_ node: SyntaxTreeNode)
-        {
-        self.scopeStack.push(self.currentContext)
-        self.currentContext = node as Scope
+        self.scopeStack.push(self.currentScope)
+        self.currentScope = node as Scope
         }
         
     @discardableResult
     public func popCurrentScope() -> Scope?
         {
-        self.currentContext = self.symbolContainerStack.pop()
-        return(self.currentContext)
+        self.currentScope = self.scopeStack.pop()
+        return(self.currentScope)
         }
         
     private func parseInitialModule()
@@ -271,14 +266,14 @@ public class ArgonParser
             return
             }
         let name = self.token.identifier.lastPart
-        if let someModule = RootModule.shared.lookupNode(atName: name) as? Module
+        if let someModule = RootModule.shared.lookupSymbol(atName: name) as? Module
             {
             initialModule = someModule
             }
         else
             {
             initialModule = Module(name: name)
-            self.currentContext.addNode(initialModule)
+            self.currentScope.addSymbol(initialModule)
             }
         self.nextToken()
         self.pushCurrentScope(initialModule)
@@ -319,119 +314,79 @@ public class ArgonParser
         self.token.setStyleElement(.colorType)
         let identifier = self.parseIdentifier(errorCode: .identifierExpected)
         let typeName = identifier.lastPart
-        var type: ArgonType = ArgonType(name: "")
-        if typeName == "Array"
-            {
-            self.lastIdentifierToken.setStyleElement(.colorArray)
-            return(self.parseArrayInstanceType(location: location))
-            }
-        else
-            {
-            if typeName == "Set"
-                {
-                self.lastIdentifierToken.setStyleElement(.colorSet)
-                }
-            else if typeName == "List"
-                {
-                self.lastIdentifierToken.setStyleElement(.colorList)
-                }
-            else if typeName == "Dictionary"
-                {
-                self.lastIdentifierToken.setStyleElement(.colorDictionary)
-                }
-            else if typeName == "BitSet"
-                {
-                self.lastIdentifierToken.setStyleElement(.colorBitSet)
-                }
-            if self.token.isLeftBrocket
-                {
-                return(self.parseGenericInstanceType(typeName: typeName,location: location))
-                }
-            }
-        if let node = self.currentContext.lookupNode(atIdentifier: identifier) as? ArgonType
-            {
-            type = node
-            }
-        else
-            {
-            self.lodgeError(code: .undefinedClass,message: "Class '\(identifier.description)' is undefined.",location: location)
-            }
-        return(type)
-        }
-        
-    private func parseGenericInstanceType(typeName: String,location: Location) -> ArgonType
-        {
+        var type: ArgonType = ArgonType(name: typeName)
         var typeValues = ArgonTypes()
-        self.nextToken()
-        repeat
+        if self.token.isLeftBrocket
             {
-            self.parseComma()
-            typeValues.append(self.parseType())
-            }
-        while self.token.isComma && !self.token.isRightBrocket && !self.token.isEnd
-        if self.token.isRightBrocket
-            {
-            self.nextToken()
-            }
-        if let type = (self.currentContext.lookupNode(atName: typeName) as? ArgonType)?.baseType
-            {
-            if type.isGenericType
+            repeat
                 {
-                if type.genericTypes.count != typeValues.count
-                    {
-                    self.lodgeError(code: .invalidGenericArguments,message: "Class '\(typeName)' expects \(type.genericTypes.count) types but \(typeValues.count) were found.",location:location)
-                    }
-                return(GenericInstanceType(parentType: type,types: typeValues))
+                self.parseComma()
+                typeValues.append(self.parseType())
                 }
-            else
+            while self.token.isComma && !self.token.isEnd
+            if self.token.isRightBrocket
                 {
-                self.lodgeError(code: .usingGenericClassesOnNonGenericClass,message: "The class '\(typeName)' does not have generic parameters so it can't be instantiated.",location: location)
+                self.nextToken()
                 }
-            return(type)
+            }
+        if let node = self.currentScope.lookupType(atIdentifier: identifier)
+            {
+            do
+                {
+                type = try node.constructType(from: typeValues)
+                }
+            catch let issue as CompilerError
+                {
+                self.lodgeError(issue,location: location)
+                }
+            catch
+                {
+                fatalError("Completely unexpected error in ArgonParser.parseType.")
+                }
             }
         else
             {
-            self.lodgeError(code: .undefinedClass,message: "The class '\(typeName)' is not defined.",location: location)
-            return(ArgonType(name: typeName))
+            self.lodgeError(code: .typeUndefined,message: "Type '\(identifier.description)' is undefined.",location: location)
             }
+        return(TypeRegistry.registerType(type))
         }
         
-    public func parseArrayInstanceType(location: Location) -> ArgonType
-        {
-        if !self.token.isLeftBrocket
-            {
-            self.lodgeError(code: .leftBrocketExpected,location: location)
-            }
-        else
-            {
-            self.nextToken()
-            }
-        let elementType = self.parseType()
-        if !self.token.isComma
-            {
-            self.lodgeError(code: .commaExpected,location: location)
-            }
-        else
-            {
-            self.nextToken()
-            }
-        var index = ArgonModule.shared.errorType
-        if self.token.isIdentifier
-            {
-            index = self.parseDiscreteTypeIndex(location: location)
-            }
-        if !self.token.isRightBrocket
-            {
-            self.lodgeError(code: .rightBrocketExpected,location: location)
-            }
-        else
-            {
-            self.nextToken()
-            }
-        let arrayTypeInstance = ArrayInstanceType(elementType: elementType,indexType: index)
-        arrayTypeInstance.addGenericType(elementType)
-        return(arrayTypeInstance)
-        }
+//    private func parseTypeParameters(typeName: String,location: Location) -> ArgonType
+//        {
+//        var typeValues = ArgonTypes()
+//        self.nextToken()
+//        repeat
+//            {
+//            self.parseComma()
+//            typeValues.append(self.parseType())
+//            }
+//        while self.token.isComma && !self.token.isRightBrocket && !self.token.isEnd
+//        if self.token.isRightBrocket
+//            {
+//            self.nextToken()
+//            }
+//        if let type = (self.currentScope.lookupSymbol(atName: typeName) as? ArgonType)?.baseType
+//            {
+//            if type.isGenericType
+//                {
+//                if type.genericTypes.count != typeValues.count
+//                    {
+//                    self.lodgeError(code: .invalidGenericArguments,message: "Class '\(typeName)' expects \(type.genericTypes.count) types but \(typeValues.count) were found.",location:location)
+//                    }
+//                return(GenericInstanceType(parentType: type,types: typeValues))
+//                }
+//            else
+//                {
+//                self.lodgeError(code: .usingGenericClassesOnNonGenericClass,message: "The class '\(typeName)' does not have generic parameters so it can't be instantiated.",location: location)
+//                }
+//            return(type)
+//            }
+//        else
+//            {
+//            self.lodgeError(code: .undefinedClass,message: "The class '\(typeName)' is not defined.",location: location)
+//            return(ArgonType(name: typeName))
+//            }
+//        }
         
     private func parseDiscreteTypeIndex(location: Location) -> ArgonType
         {
@@ -460,7 +415,7 @@ public class ArgonParser
                 return(ArgonModule.shared.integerType)
                 }
             }
-        else if let enumeration = self.currentContext.lookupNode(atIdentifier: identifier) as? EnumerationType
+        else if let enumeration = self.currentScope.lookupSymbol(atIdentifier: identifier) as? EnumerationType
             {
             let newLocation = self.token.location
             if self.token.isLeftBracket
@@ -469,7 +424,7 @@ public class ArgonParser
                 var upperBound: Argon.Atom = Argon.Atom("#UPPER")
                 self.parseBrackets
                     {
-                    lowerBound = self.parseSymbolValue(code: .symbolExpected)
+                    lowerBound = self.parseAtomValue(code: .atomExpected)
                     if self.token.isRangeOperator
                         {
                         self.nextToken()
@@ -478,9 +433,9 @@ public class ArgonParser
                         {
                         self.lodgeError(code: .rangeOperatorExpected,location: location)
                         }
-                    upperBound = self.parseSymbolValue(code: .symbolExpected)
+                    upperBound = self.parseAtomValue(code: .atomExpected)
                     }
-                if let lowerCase = enumeration.case(atSymbol: lowerBound),let upperCase = enumeration.case(atSymbol: upperBound)
+                if let lowerCase = enumeration.case(atAtom: lowerBound),let upperCase = enumeration.case(atAtom: upperBound)
                     {
                     let subType = SubType(name: Argon.nextIndex(named: "enumerationSubType"), parentType: enumeration, lowerBound: .enumerationCase(lowerCase), upperBound: .enumerationCase(upperCase))
                     return(subType)
@@ -498,7 +453,7 @@ public class ArgonParser
             }
         else
             {
-            if let type = self.currentContext.lookupNode(atIdentifier: identifier) as? ArgonType,type.inherits(from: ArgonModule.shared.discreteType)
+            if let type = self.currentScope.lookupSymbol(atIdentifier: identifier) as? ArgonType,type.inherits(from: ArgonModule.shared.discreteType)
                 {
                 return(type)
                 }
@@ -523,17 +478,17 @@ public class ArgonParser
         return(Argon.Integer(Argon.nextIndex))
         }
         
-    private func parseSymbolValue(code: IssueCode) -> Argon.Atom
+    private func parseAtomValue(code: IssueCode) -> Argon.Atom
         {
         let location = self.token.location
-        if self.token.isSymbolValue
+        if self.token.isAtomValue
             {
-            let symbol = self.token.symbolValue
+            let symbol = self.token.atomValue
             self.nextToken()
             return(symbol)
             }
         self.lodgeError(code: code,location: location)
-        return(Argon.Atom(Argon.nextIndex(named: "#SYM")))
+        return(Argon.Atom(Argon.nextIndex(named: "#ATOM")))
         }
         
     private func parseRange(location: Location) -> Argon.Range
@@ -626,9 +581,9 @@ public class ArgonParser
         fatalError()
         }
         
-    public func addNode(_ node: SyntaxTreeNode)
+    public func addSymbol(_ node: Symbol)
         {
-        self.currentContext.addNode(node)
+        self.currentScope.addSymbol(node)
         }
         
     private func parseModuleEntries()
@@ -733,6 +688,13 @@ public class ArgonParser
         var newLocation = location
         newLocation.nodeKey = self.nodeKey
         self.issues.append(CompilerError(code: code, message: message,location: newLocation))
+        }
+        
+    public func lodgeError(_ error: CompilerError,location: Location)
+        {
+        var newLocation = location
+        newLocation.nodeKey = self.nodeKey
+        self.issues.append(CompilerError(code: error.code, message: error.message,location: newLocation))
         }
         
     public func lodgeWarning(code: IssueCode,message: String? = nil,location: Location)

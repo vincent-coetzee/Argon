@@ -2,44 +2,138 @@
 //  TypeConstructor.swift
 //  Argon
 //
-//  Created by Vincent Coetzee on 21/09/2023.
+//  Created by Vincent Coetzee on 27/09/2023.
 //
 
 import Foundation
 
 public class TypeConstructor: ArgonType
     {
-    private let types: ArgonTypes
-    private let parentType: ArgonType
-    
-    public init(parentType: ArgonType,types: ArgonTypes = ArgonTypes())
+    public override var baseType: ArgonType
         {
-        self.types = types
-        self.parentType = parentType
-        super.init(name: parentType.name)
+        self.constructedType.typeValue.baseType
+        }
+        
+    public enum ConstructedType
+        {
+        public var typeValue: ArgonType
+            {
+            switch(self)
+                {
+                case .class(let someClass):
+                    return(someClass)
+                case .tuple(let tuple):
+                    return(tuple)
+                case .enumeration(let enumeration):
+                    return(enumeration)
+                }
+            }
+            
+        public var constructedTypeType: ArgonType
+            {
+            switch(self)
+                {
+                case .class:
+                    return(ArgonType.classType)
+                case .tuple:
+                    return(ArgonType.tupleType)
+                case .enumeration:
+                    return(ArgonType.enumerationType)
+                }
+            }
+            
+        case `class`(ClassType)
+        case tuple(TupleType)
+        case enumeration(EnumerationType)
+        
+        func cloneInstance() -> ArgonType
+            {
+            switch(self)
+                {
+                case .class(let someClass):
+                    return(someClass.clone())
+                case .tuple(let tuple):
+                    return(tuple.clone())
+                case .enumeration(let enumeration):
+                    return(enumeration.clone())
+                }
+            }
+        }
+        
+    private let constructedType: ConstructedType
+    private var typeParameters: TypeParameters!
+    
+    public init(name: String,constructedType: ConstructedType)
+        {
+        self.constructedType = constructedType
+        super.init(name: name)
         }
         
     public required init(coder: NSCoder)
         {
-        self.types = coder.decodeObject(forKey: "types") as! ArgonTypes
-        self.parentType = coder.decodeObject(forKey: "parentType") as! ArgonType
+        self.constructedType = coder.decodeConstructedType(forKey: "constructedType")
+        self.typeParameters = coder.decodeObject(forKey: "typeParameters") as? TypeParameters
         super.init(coder: coder)
         }
         
-    public override func encode(with coder: NSCoder)
+    public override func setTypeParameters(_ parameters: TypeParameters)
         {
-        coder.encode(self.types,forKey: "types")
-        coder.encode(self.parentType,forKey: "parentTypes")
-        super.encode(with: coder)
+        self.typeParameters = parameters
         }
         
-    public func instanciate(with concreteTypes: ArgonTypes) throws -> ArgonType
+    public override func constructType(from types: ArgonTypes) throws -> ArgonType
         {
-        try parentType.instanciate(withTypes: concreteTypes)
+        let newType = self.constructedType.cloneInstance()
+        guard self.typeParameters.count == types.count else
+            {
+            throw(CompilerError(code: .typeParameterMismatch, message: "Expected \(self.typeParameters.count) types but found \(types.count)."))
+            }
+        var genericTypes = ArgonTypes()
+        for (parameter,typeValue) in zip(self.typeParameters,types)
+            {
+            newType.setSymbol(typeValue,atName: parameter.name)
+            newType.addGenericType(typeValue)
+            }
+        newType.symbolType = self.constructedType.constructedTypeType
+        return(newType)
+        }
+    }
+    
+extension NSCoder
+    {
+    public func encode(_ type: TypeConstructor.ConstructedType,forKey key: String)
+        {
+        switch(type)
+            {
+            case .class(let someClass):
+                self.encode(0,forKey: key + "_index")
+                self.encode(someClass,forKey: key + "_class")
+            case .tuple(let someTuple):
+                self.encode(1,forKey: key + "_index")
+                self.encode(someTuple,forKey: key + "_tuple")
+            case .enumeration(let someEnumeration):
+                self.encode(2,forKey: key + "_index")
+                self.encode(someEnumeration,forKey: key + "_enumeration")
+            }
+        }
+        
+    public func decodeConstructedType(forKey key: String) -> TypeConstructor.ConstructedType
+        {
+        switch(self.decodeInteger(forKey: key + "_index"))
+            {
+            case(0):
+                return(.class(self.decodeObject(forKey: key + "_class") as! ClassType))
+            case(1):
+                return(.tuple(self.decodeObject(forKey: key + "_tuple") as! TupleType))
+            case(2):
+                return(.enumeration(self.decodeObject(forKey: key + "_enumeration") as! EnumerationType))
+            default:
+                fatalError("This should NEVER happen.")
+            }
         }
     }
 
-
+    
 //In parseType, lookup the type if it's found register it ( to make sure it's canonicalised ) and use it
 //If not found then generated a TypeVariable with that name and return that.
 //Last step in every parseType is to instanciate(with: Types) -> Type,TypeConstructor return a

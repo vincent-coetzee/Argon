@@ -7,26 +7,48 @@
 
 import Foundation
 
-public class Slot: SyntaxTreeNode
+public struct SlotFlags: OptionSet
     {
-    public var isReadWriteSlot = false
-    public var isDynamicSlot = false
+    public static let virtual = SlotFlags(rawValue: 1 << 0)
+    public static let dynmaic = SlotFlags(rawValue: 1 << 1)
+    public static let read = SlotFlags(rawValue: 1 << 2)
+    public static let write = SlotFlags(rawValue: 1 << 3)
+    
+    public var rawValue: Int
+    
+    public init(rawValue: Int)
+        {
+        self.rawValue = rawValue
+        }
+    }
+    
+public class Slot: Symbol
+    {
+    public override var hash: Int
+        {
+        var hasher = Hasher()
+        hasher.combine("SLOT")
+        hasher.combine(self.container!.identifier)
+        hasher.combine(self.name)
+        hasher.combine(self.symbolType)
+        return(hasher.finalize())
+        }
+        
+    public var slotFlags = SlotFlags(rawValue: 0)
+    
     public private(set) var initialExpression: Expression?
-    public var isVirtualSlot = false
     public private(set) var readBlock: Block?
     public private(set) var writeBlock: Block?
     
     public init(name: String,type: ArgonType? = nil)
         {
         super.init(name: name)
-        self.setType(type)
+        self.symbolType = type ?? TypeSubstitutionSet.newTypeVariable()
         }
         
     required public init(coder: NSCoder)
         {
-        self.isReadWriteSlot = coder.decodeBool(forKey: "isReadWriteSlot")
-        self.isDynamicSlot = coder.decodeBool(forKey: "isDynamicSlot")
-        self.isVirtualSlot = coder.decodeBool(forKey: "isVirtualSlot")
+        self.slotFlags = SlotFlags(rawValue: coder.decodeInteger(forKey: "slotFlags"))
         self.initialExpression = coder.decodeObject(forKey: "initialExpression") as? Expression
         self.readBlock = coder.decodeObject(forKey: "readBlock") as? Block
         self.writeBlock = coder.decodeObject(forKey: "writeBlock") as? Block
@@ -35,9 +57,7 @@ public class Slot: SyntaxTreeNode
         
     public override func encode(with coder: NSCoder)
         {
-        coder.encode(self.isReadWriteSlot,forKey: "isReadWriteSlot")
-        coder.encode(self.isDynamicSlot,forKey: "isDynamicSlot")
-        coder.encode(self.isVirtualSlot,forKey: "isVirtualSlot")
+        coder.encode(self.slotFlags.rawValue,forKey: "slotFlags")
         coder.encode(self.initialExpression,forKey: "initialExpression")
         coder.encode(self.readBlock,forKey: "readBlock")
         coder.encode(self.writeBlock,forKey: "writeBlock")

@@ -23,7 +23,7 @@ public class LetStatement: Statement
             if lValue.isIdentifierExpression
                 {
                 let identifier = (lValue as! IdentifierExpression).identifier
-                parser.currentScope.addNode(Variable(name: identifier.lastPart, type: nil, expression: rValue))
+                parser.currentScope.addSymbol(Variable(name: identifier.lastPart, type: nil, expression: rValue))
                 return
                 }
             }
@@ -37,13 +37,13 @@ public class LetStatement: Statement
         let expression = parser.parseExpression()
         let statement = LetStatement(expression: expression)
         statement.location = location
-        parser.currentScope.addNode(statement)
+        parser.currentScope.addSymbol(statement)
         if let lValue = expression.lValue,let rValue = expression.rValue
             {
             if lValue.isIdentifierExpression
                 {
                 let identifier = (lValue as! IdentifierExpression).identifier
-                parser.currentScope.addNode(Variable(name: identifier.lastPart, type: nil, expression: rValue))
+                parser.currentScope.addSymbol(Variable(name: identifier.lastPart, type: nil, expression: rValue))
                 return
                 }
             }

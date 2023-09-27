@@ -9,6 +9,10 @@ import Foundation
 
 public class StructuredType: ArgonType
     {
+    public override var baseType: ArgonType
+        {
+        self
+        }
     //
     //
     // This instance variable should always be used to access the generics
@@ -37,17 +41,16 @@ public class StructuredType: ArgonType
     //
     //
     private var _genericTypes = ArgonTypes()
-        
+    
     public var elementTypes: ArgonTypes
         {
         fatalError("This should have been overridden")
         }
         
-    public init(name: String,genericTypes: ArgonTypes = [])
+    public required init(name: String,genericTypes: ArgonTypes = [])
         {
         self._genericTypes = genericTypes
         super.init(name: name)
-        self.symbolTable = SymbolTable()
         }
         
     public required init(coder: NSCoder)
@@ -72,8 +75,9 @@ public class StructuredType: ArgonType
         self._genericTypes.append(type)
         }
         
-    public override func instanciate(with types: ArgonTypes,in set: TypeSubstitutionSet) throws -> ArgonType
+    public override func clone() -> Self
         {
-        self
+        let aType = Self(name: self.name,genericTypes: self._genericTypes)
+        return(aType)
         }
     }

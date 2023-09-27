@@ -21,26 +21,25 @@ import Foundation
 //
 public class RootModule: Module
     {
+    public static func reset()
+        {
+        Self.shared = RootModule(argonModule: ArgonModule.shared)
+        }
+        
     public private(set) static var shared: RootModule!
     
     public override var argonModule: ArgonModule
         {
         self.container as! ArgonModule
         }
-        
-    public static func reset()
-        {
-        ArgonModule.shared.reset()
-        RootModule.initializeRootModule(argonModule: ArgonModule.shared)
-        }
 
-    private var globallyInitialisedNodes = SyntaxTreeNodes()
+    private var globallyInitialisedNodes = Symbols()
     
     public init(argonModule: ArgonModule)
         {
         super.init(name: "")
-        self.symbolTable.owner = argonModule
         Self.shared = self
+        self.setContainer(argonModule)
         }
         
     public static func initializeRootModule(argonModule: ArgonModule)
@@ -100,7 +99,7 @@ public class RootModule: Module
 //            }
 //        }
         
-    public func addGloballyInitialisedNode(_ node: SyntaxTreeNode)
+    public func addGloballyInitialisedSymbol(_ node: Symbol)
         {
         self.globallyInitialisedNodes.append(node)
         }
@@ -108,9 +107,8 @@ public class RootModule: Module
     public override func accept(visitor: Visitor)
         {
         visitor.enter(rootModule: self)
-        self.symbolTable?.forEach
+        for symbol in self.symbols
             {
-            symbol in
             symbol.accept(visitor: visitor)
             }
         visitor.exit(rootModule: self)

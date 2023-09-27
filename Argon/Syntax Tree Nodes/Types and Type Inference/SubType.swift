@@ -11,10 +11,10 @@ public class SubType: ArgonType
     {
     public override var baseType: ArgonType
         {
-        self._parentType.baseType
+        self._baseType.baseType
         }
         
-    public let _parentType: ArgonType
+    public let _baseType: ArgonType
     public let upperBound: ValueBox
     public let lowerBound: ValueBox
     
@@ -22,7 +22,7 @@ public class SubType: ArgonType
         {
         self.upperBound = upperBound
         self.lowerBound = lowerBound
-        self._parentType = parentType
+        self._baseType = parentType
         super.init(name: name)
         }
         
@@ -30,7 +30,7 @@ public class SubType: ArgonType
         {
         self.lowerBound = coder.decodeValueBox(forKey: "lowerBound")
         self.upperBound = coder.decodeValueBox(forKey: "upperBound")
-        self._parentType = coder.decodeObject(forKey: "_parentType") as! ArgonType
+        self._baseType = coder.decodeObject(forKey: "_baseType") as! ArgonType
         super.init(coder: coder)
         }
         
@@ -38,7 +38,7 @@ public class SubType: ArgonType
         {
         coder.encode(self.lowerBound,forKey: "lowerBound")
         coder.encode(self.upperBound,forKey: "upperBound")
-        coder.encode(self._parentType,forKey: "_parentType")
+        coder.encode(self._baseType,forKey: "_baseType")
         super.encode(with: coder)
         }
     }

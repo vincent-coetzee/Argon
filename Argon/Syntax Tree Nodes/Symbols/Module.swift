@@ -50,7 +50,7 @@ public class Module: CompositeSyntaxTreeNode
         self
         }
         
-    public override var isModule: Bool
+    public override var isModuleType: Bool
         {
         true
         }
@@ -96,9 +96,9 @@ public class Module: CompositeSyntaxTreeNode
         if let lastToken = parser.expect(tokenType: .identifier,error: .moduleNameExpected)
             {
             let moduleName = lastToken.identifier.lastPart
-            if let node = parser.lookupNode(atName: moduleName)
+            if let node = parser.lookupSymbol(atName: moduleName)
                 {
-                if node.isModule
+                if node.isModuleType
                     {
                     return(node as! Module)
                     }
@@ -111,7 +111,7 @@ public class Module: CompositeSyntaxTreeNode
             else
                 {
                 let module = Module(name: moduleName)
-                parser.addNode(module)
+                parser.addSymbol(module)
                 if lastToken.identifier.isCompoundIdentifier
                     {
                     parser.lodgeError(code: .moduleNameExpected,location: location)
@@ -171,9 +171,8 @@ public class Module: CompositeSyntaxTreeNode
     public override func accept(visitor: Visitor)
         {
         visitor.enter(module: self)
-        self.symbolTable?.forEach
+        for symbol in self.symbols
             {
-            symbol in
             symbol.accept(visitor: visitor)
             }
         visitor.exit(module: self)
@@ -181,7 +180,7 @@ public class Module: CompositeSyntaxTreeNode
         
     public func validateMethodUniqueness(semanticChecker: ArgonSemanticChecker)
         {
-        let methods = self.symbolTable!.methods
+        let methods = self.symbols.compactMap{$0 as? MethodType}
         for method in methods
             {
             for innerMethod in methods.removing(method)
@@ -192,7 +191,7 @@ public class Module: CompositeSyntaxTreeNode
                     }
                 }
             }
-        for module in self.symbolTable!.modules
+        for module in self.symbols.compactMap{$0 as? Module}
             {
             module.validateMethodUniqueness(semanticChecker: semanticChecker)
             }

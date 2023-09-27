@@ -19,6 +19,17 @@ public class EnumerationType: StructuredType
         return(.enumeration)
         }
         
+    public override var symbolType: ArgonType
+        {
+        get
+            {
+            ArgonType.enumerationType
+            }
+        set
+            {
+            }
+        }
+        
     public override var typeHash: Int
         {
         self.hash
@@ -26,15 +37,14 @@ public class EnumerationType: StructuredType
         
     public var cases: EnumerationCases
         {
-        self.symbols.compactMap{$0 as? EnumerationCase}
+        self.symbols.values.compactMap{$0 as? EnumerationCase}
         }
         
     public override var hash: Int
         {
         var hasher = Hasher()
         hasher.combine("ENUMERATION")
-        hasher.combine(self.container)
-        hasher.combine(self.name)
+        hasher.combine(self.identifier)
         for aType in self.genericTypes
             {
             hasher.combine(aType)
@@ -49,7 +59,9 @@ public class EnumerationType: StructuredType
         var baseType: ArgonType?
         let name = parser.parseIdentifier(errorCode: .identifierExpected).lastPart
         let enumeration = EnumerationType(name: name)
+        parser.currentScope.addSymbol(enumeration.typeConstructor())
         enumeration.location = location
+        // TODO: Check here for brockets and parse type parameters if you find them and remember to add them to the constructor
         if parser.token.isScope
             {
             parser.nextToken()
@@ -109,13 +121,12 @@ public class EnumerationType: StructuredType
                     }
                 }
             }
-        parser.currentContext.addSymbol(enumeration)
-        enumeration.setSymbolType(.enumerationType)
+        parser.currentScope.addSymbol(enumeration)
         }
         
     public private(set) var defaultCase: EnumerationCase?
     public private(set) var rawType: ArgonType?
-    private var symbols = SyntaxTreeNodes()
+    private var symbols = SymbolDictionary()
     
     public init(name: String)
         {
@@ -130,10 +141,15 @@ public class EnumerationType: StructuredType
         
     public required init(coder: NSCoder)
         {
-        self.symbols = coder.decodeObject(forKey: "symbols") as! SyntaxTreeNodes
+        self.symbols = coder.decodeObject(forKey: "symbols") as! SymbolDictionary
         self.defaultCase = coder.decodeObject(forKey: "defaultCase") as? EnumerationCase
         self.rawType = coder.decodeObject(forKey: "rawType") as? ArgonType
         super.init(coder: coder)
+        }
+        
+    public required init(name: String,genericTypes: ArgonTypes)
+        {
+        super.init(name: name,genericTypes: genericTypes)
         }
         
     public override func encode(with coder: NSCoder)
@@ -183,20 +199,17 @@ public class EnumerationType: StructuredType
         print("\(indent)Enumeration(\(self.name))")
         }
         
-    public override func addSymbol(_ symbol: SyntaxTreeNode)
+    public override func addSymbol(_ symbol: Symbol)
         {
-        self.symbols.append(symbol)
+        self.symbols[symbol.name] = symbol
         symbol.setContainer(self)
         }
         
-    public override func lookupSymbol(atName: String) -> SyntaxTreeNode?
+    public override func lookupSymbol(atName: String) -> Symbol?
         {
-        for node in self.symbols
+        if let node = self.symbols[atName]
             {
-            if node.name == atName && node.isEnumerationCase
-                {
-                return(node)
-                }
+            return(node)
             }
         return(self.container?.lookupSymbol(atName: atName))
         }
@@ -208,7 +221,7 @@ public class EnumerationType: StructuredType
         
     public override func accept(visitor: Visitor)
         {
-        for symbol in self.symbols
+        for symbol in self.symbols.values
             {
             symbol.accept(visitor: visitor)
             }
@@ -222,6 +235,23 @@ public class EnumerationType: StructuredType
             someCase.associatedTypes = types
             }
         return(self)
+        }
+        
+    public override func typeConstructor() -> ArgonType
+        {
+        return(TypeConstructor(name: self.name,constructedType: .enumeration(self)))
+        }
+        
+    public override func clone() -> Self
+        {
+        let someClass = EnumerationType(name: self.name,rawType: self.rawType)
+        var newSymbols = SymbolDictionary()
+        for (key,symbol) in self.symbols
+            {
+            newSymbols[key] = symbol
+            }
+        someClass.symbols = newSymbols
+        return(someClass as! Self)
         }
     }
 

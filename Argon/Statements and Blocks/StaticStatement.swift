@@ -31,8 +31,8 @@ public class StaticStatement: Statement
             }
         let statement = StaticStatement(name: identifier.lastPart,type: type,expression: expression)
         statement.location = location
-        block.rootModule.addGloballyInitialisedNode(statement.staticVariable)
-        block.addNode(statement)
+        block.rootModule.addGloballyInitialisedSymbol(statement.staticVariable)
+        block.addSymbol(statement)
         }
         
     public class override func parse(using parser: ArgonParser)
@@ -53,9 +53,9 @@ public class StaticStatement: Statement
             expression = parser.parseExpression()
             }
         let statement = StaticStatement(name: identifier.lastPart,type: type,expression: expression)
-        parser.currentScope.rootModule.addGloballyInitialisedNode(statement.staticVariable)
+        parser.rootModule.addGloballyInitialisedSymbol(statement.staticVariable)
         statement.location = location
-        parser.currentScope.addNode(statement)
+        parser.currentScope.addSymbol(statement)
         }
         
     public init(name: String,type: ArgonType?,expression: Expression?)

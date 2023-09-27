@@ -52,7 +52,7 @@ public class MethodType: CallableType
         method.setParameters(parameters)
         method.setBlock(block)
         method.setReturnType(returnType)
-        parser.currentContext.addSymbol(method)
+        parser.currentScope.addSymbol(method)
         }
         
     public override var description: String

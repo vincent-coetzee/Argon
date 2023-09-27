@@ -22,7 +22,7 @@ public class PseudoVariable: Variable
     public static func `self`(type: ArgonType) -> Self
         {
         let variable = PseudoVariable(name: "self")
-        variable.setType(type)
+        variable.symbolType = type
         return(variable as! Self)
         }
         

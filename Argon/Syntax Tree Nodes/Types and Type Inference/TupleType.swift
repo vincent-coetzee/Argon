@@ -9,14 +9,37 @@ import Foundation
 
 public class TupleType: StructuredType
     {
-    public init(associatedTypes: ArgonTypes)
+    public override var symbolType: ArgonType
         {
-        super.init(name: Argon.nextIndex(named: "TUPLE"),genericTypes: associatedTypes)
+        get
+            {
+            ArgonType.tupleType
+            }
+        set
+            {
+            }
+        }
+        
+    public override var hash: Int
+        {
+        var hasher = Hasher()
+        hasher.combine("TUPLE")
+        hasher.combine(self.identifier)
+        for aType in self.genericTypes
+            {
+            hasher.combine(aType)
+            }
+        return(hasher.finalize())
         }
         
     public required init(coder: NSCoder)
         {
         super.init(coder: coder)
+        }
+        
+    public required init(name: String,genericTypes: ArgonTypes)
+        {
+        super.init(name: name,genericTypes: genericTypes)
         }
         
     public override func encode(with coder: NSCoder)
@@ -28,4 +51,15 @@ public class TupleType: StructuredType
         {
         self.genericTypes[at]
         }
+        
+    public override func typeConstructor() -> ArgonType
+        {
+        return(TypeConstructor(name: self.name,constructedType: .tuple(self)))
+        }
+        
+    public override func clone() -> Self
+        {
+        TupleType(name: self.name,genericTypes: self.genericTypes) as! Self
+        }
+    
     }

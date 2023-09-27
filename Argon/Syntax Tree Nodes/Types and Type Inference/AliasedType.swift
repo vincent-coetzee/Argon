@@ -9,6 +9,16 @@ import Foundation
 
 public class AliasedType: ArgonType
     {
+    public override var isClassType: Bool
+        {
+        self.baseType.isClassType
+        }
+        
+    public override var isPrimitiveType: Bool
+        {
+        self.baseType.isPrimitiveType
+        }
+        
     public override var description: String
         {
         self.baseType.name
@@ -27,6 +37,15 @@ public class AliasedType: ArgonType
     public override var genericTypes: ArgonTypes
         {
         self.baseType.genericTypes
+        }
+        
+    public override var hash: Int
+        {
+        var hasher = Hasher()
+        hasher.combine("ALIAS")
+        hasher.combine(self.identifier)
+        hasher.combine(self.baseType.hash)
+        return(hasher.finalize())
         }
         
     private let _baseType: ArgonType
@@ -51,10 +70,7 @@ public class AliasedType: ArgonType
         
     public override var typeHash: Int
         {
-        var hasher = Hasher()
-        hasher.combine(super.typeHash)
-        hasher.combine(self.baseType.typeHash)
-        return(hasher.finalize())
+        self.hash
         }
         
     public override class func parse(using parser: ArgonParser)
@@ -131,12 +147,12 @@ public class AliasedType: ArgonType
                 }
             let subType = SubType(name: name.lastPart,parentType: type,lowerBound: lowerBound,upperBound: upperBound)
             subType.location = location
-            parser.currentScope.addNode(subType)
+            parser.currentScope.addSymbol(subType)
             return
             }
         let alias = AliasedType(name: name.lastPart, baseType: type)
         alias.location = location
-        parser.currentScope.addNode(alias)
+        parser.currentScope.addSymbol(alias)
         }
         
     public override func accept(visitor: Visitor)

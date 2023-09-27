@@ -16,6 +16,7 @@ public enum IssueCode: String
         
     case assignExpected                                             = "'=' expected."
     case argumentNameExpected                                       = "argument name expected."
+    case atomExpected                                               = "atom expected."
     
     case constantMustBeInitialised                                  = "a constant must be initialised."
     case classNameExpected                                          = "class name expected."
@@ -86,12 +87,13 @@ public enum IssueCode: String
     case slotExpectedAfterRead                                      = "'SLOT' expected after READ keyword."
     case superclassIdentifierExpected                               = "superclass identifier expected."
     case superclassExpected                                         = "superclass expected."
-    case atomExpected                                               = "atom expected."
     case statementExpected                                          = "statement expected."
     case semicolonExpected                                          = "';' expected."
     
     case textExpectedInSection                                      = "Text expected in section."
     case typeVariableGenericMismatch                                = "Type variable / generic mismatch."
+    case typeParameterMismatch                                      = "Type parameter mismatch."
+    case typeUndefined                                              = "Type is undefined."
     
     case undefinedSymbol                                            = "undefined symbol."
     case undefinedClass                                             = "undefined class."

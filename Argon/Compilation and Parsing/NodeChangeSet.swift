@@ -18,9 +18,9 @@ public class NodeChangeSet
         return(newSet)
         }
         
-    private var nodes = Set<SyntaxTreeNode>()
+    private var nodes = Set<Symbol>()
     
-    public func insert(_ node: SyntaxTreeNode)
+    public func insert(_ node: Symbol)
         {
         self.nodes.insert(node)
         }

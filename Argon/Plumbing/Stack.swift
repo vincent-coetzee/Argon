@@ -166,23 +166,23 @@ extension Stack where T:Equatable
         }
     }
 
-extension Stack where T == SymbolContainer
+extension Stack where T == Scope
     {
-    public func lookupSymbol(atIdentifier identifier: Identifier) -> SyntaxTreeNode?
+    public func lookupSymbol(atIdentifier identifier: Identifier) -> Symbol?
         {
         if self.count == 0
             {
             return(nil)
             }
-        return(self.top?.lookupNode(atIdentifier: identifier))
+        return(self.top?.lookupSymbol(atIdentifier: identifier))
         }
         
-    public func lookupSymbol(atName name: String) -> SyntaxTreeNode?
+    public func lookupSymbol(atName name: String) -> Symbol?
         {
         if self.count == 0
             {
             return(nil)
             }
-        return(self.top?.lookupNode(atName: name))
+        return(self.top?.lookupSymbol(atName: name))
         }
     }

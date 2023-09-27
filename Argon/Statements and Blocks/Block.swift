@@ -12,7 +12,7 @@ public class Block: Statement
     public static override func parse(using parser: ArgonParser)
         {
         let block = Block()
-        parser.currentScope.addNode(block)
+        parser.currentScope.addSymbol(block)
         parser.pushCurrentScope(block)
         defer
             {
@@ -111,11 +111,11 @@ public class Block: Statement
         }
         
     private var statements = Statements()
+    private var symbols = Symbols()
 
     public override init()
         {
         super.init()
-        self.symbolTable = SymbolTable()
         }
         
     public required init(coder: NSCoder)
@@ -138,7 +138,7 @@ public class Block: Statement
         
     public func addLocal(_ variable: Variable)
         {
-        self.symbolTable?.addSymbol(variable)
+        self.symbols.append(variable)
         }
         
     public override func accept(visitor: Visitor)

@@ -27,7 +27,7 @@ public class MacroParameter:NSObject,NSCoding
         }
     }
     
-public class Macro: SyntaxTreeNode
+public class Macro: Symbol
     {
     public private(set) var parameters = Array<MacroParameter>()
     public let text: String

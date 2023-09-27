@@ -63,12 +63,19 @@ public class Identifier: NSObject,NSCoding
         
     public override var hash: Int
         {
-        var hashValue = 0
+        var hasher = Hasher()
+        hasher.combine("Identifier")
         for part in self.parts
             {
-            hashValue = hashValue << 13 ^ part.hash
+            switch(part)
+                {
+                case .root:
+                    hasher.combine("ROOT")
+                case .part(let string):
+                    hasher.combine(string)
+                }
             }
-        return(hashValue)
+        return(hasher.finalize())
         }
         
     public static let empty = Identifier(parts: [])
@@ -118,7 +125,7 @@ public class Identifier: NSObject,NSCoding
             switch(self)
                 {
                 case(.root):
-                    return(0)
+                    return(1)
                 case(.part(let string)):
                     return(string.polynomialRollingHash)
                 }

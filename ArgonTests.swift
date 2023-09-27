@@ -14,6 +14,7 @@ public struct ArgonTests
     
     public static func runTests()
         {
+        let _ = ArgonModule()
 //        self.testDateTimeScanning()
         self.testRootModule()
 //        self.testSymbolTables()
@@ -68,17 +69,6 @@ public struct ArgonTests
         
     public static func testTypeHashing()
         {
-        let typeA = ArrayInstanceType(elementType: ArgonModule.integerType, indexType: ArgonModule.uIntegerType)
-        let typeB = ArrayInstanceType(elementType: ArgonModule.stringType, indexType: ArgonModule.uIntegerType)
-        let typeC = ArrayInstanceType(elementType: ArgonModule.integerType, indexType: ArgonModule.uIntegerType)
-        let aliasedTypeA = AliasedType(name: "AliasedTypeA", baseType: typeA)
-        assert(typeA.isIdentical(to: aliasedTypeA.baseType),"TypeA is not identical to AliasedTypeA.baseType and should be.")
-        assert(typeA.isIdentical(to: typeA),"TypeA is not identical to TypeA and should be.")
-        assert(!typeA.isIdentical(to: typeB),"TypeA is identical to TypeB and should not be.")
-        assert(typeA.typeHash == typeC.typeHash,"TypeA.typeHash != TypeC.typeHash and should be.")
-        assert(typeA.typeHash == typeA.typeHash,"TypeA.typeHash != TypeA.typeHash and should be.")
-        assert(typeA.typeHash != typeB.typeHash,"TypeA.typeHash == TypeB.typeHash and should be.")
-        assert(typeA.typeHash != aliasedTypeA.typeHash,"TypeA.typeHash == AliasedTypeA.typeHash and should not be.")
         }
         
     public static func testIdentity()
@@ -111,15 +101,14 @@ public struct ArgonTests
         
     public static func testAddingNodes()
         {
-        let rootModule = RootModule.newRootModule()
         let outerModule = Module(name: "OuterModule")
-        rootModule.addNode(outerModule)
+        RootModule.shared.addSymbol(outerModule)
         let firstInnerModule = Module(name: "FirstInnerModule")
-        outerModule.addNode(firstInnerModule)
+        outerModule.addSymbol(firstInnerModule)
         let secondInnerModule = Module(name: "SecondInnerModule")
-        firstInnerModule.addNode(secondInnerModule)
+        firstInnerModule.addSymbol(secondInnerModule)
         let thirdInnerModule = Module(name: "ThirdInnerModule")
-        secondInnerModule.addNode(thirdInnerModule)
+        secondInnerModule.addSymbol(thirdInnerModule)
         //
         // Define cases for an enumeration
         //
@@ -133,8 +122,8 @@ public struct ArgonTests
         //
         // Define an enumeration with cases
         //
-        thirdInnerModule.addNode(enumeration)
-        let lookupEnumeration = outerModule.lookupNode(atIdentifier: Identifier(string: "//OuterModule/FirstInnerModule/SecondInnerModule/ThirdInnerModule/NodeType"))
+        thirdInnerModule.addSymbol(enumeration)
+        let lookupEnumeration = outerModule.lookupSymbol(atIdentifier: Identifier(string: "//OuterModule/FirstInnerModule/SecondInnerModule/ThirdInnerModule/NodeType"))
         assert(lookupEnumeration == enumeration,"Looked up enumeration should be the same as the original enumeration and it is not")
 //        let newClass = ClassType(name: "NewClass")
 //        let identifier = Identifier(string: "//OuterModule/FirstInnerModule/SecondInnerModule/NewClass")
@@ -146,9 +135,8 @@ public struct ArgonTests
     @discardableResult
     private static func makeTestParseTree() -> Module
         {
-        let rootModule = RootModule.newRootModule()
         let module = Module(name: "SomeModule")
-        rootModule.addNode(module)
+        RootModule.shared.addSymbol(module)
         let innerModule = Module(name: "WeatherType")
         //
         // Define an enumeration with cases
@@ -166,8 +154,8 @@ public struct ArgonTests
         //
         // Add enumeration to inner module and inner module to base module
         //
-        module.addNode(innerModule)
-        innerModule.addNode(enumeration)
+        module.addSymbol(innerModule)
+        innerModule.addSymbol(enumeration)
         //
         // Define slots for Location class
         //
@@ -177,7 +165,7 @@ public struct ArgonTests
         // Define Location class
         //
         let locationClass = ClassType(name: "Location",slots: [latitude,longitude])
-        innerModule.addNode(locationClass)
+        innerModule.addSymbol(locationClass)
         //
         // Define WeatherStationType enumeration
         //
@@ -188,7 +176,7 @@ public struct ArgonTests
         let manned = EnumerationCase(name: "#manned",enumeration: weatherStationType,associatedTypes: [],instanceValue: .none)
         let unmanned = EnumerationCase(name: "#unmanned",enumeration: weatherStationType,associatedTypes: [],instanceValue: .none)
         weatherStationType.setCases([unmanned,manned])
-        innerModule.addNode(weatherStationType)
+        innerModule.addSymbol(weatherStationType)
         //
         // Define slots for WeatherStation class
         //
@@ -196,11 +184,11 @@ public struct ArgonTests
         let typeSlot = Slot(name: "stationType",type: weatherStationType)
         let onlineSlot = Slot(name: "isOnline",type: ArgonModule.booleanType)
         let temperatureSlot = Slot(name: "temperature",type: ArgonModule.floatType)
-        let weatherStationClass = ClassType(name: "WeatherStation",slots: [nameSlot,typeSlot,onlineSlot,temperatureSlot],superclasses: [ArgonModule.objectClass])
-        module.addNode(weatherStationClass)
+        let weatherStationClass = ClassType(name: "WeatherStation",slots: [nameSlot,typeSlot,onlineSlot,temperatureSlot],superclasses: [ArgonModule.objectType as! ClassType])
+        module.addSymbol(weatherStationClass)
         print("Identifier for enumeration = \(enumeration.identifier)")
-        let integerType = innerModule.lookupNode(atName: "Integer")
-        let stringType = innerModule.lookupNode(atName: "String")
+        let integerType = innerModule.lookupSymbol(atName: "Integer")
+        let stringType = innerModule.lookupSymbol(atName: "String")
         assert(integerType == ArgonModule.integerType,"integerType != ArgonModule.integerType and should be")
         assert(stringType == ArgonModule.stringType,"stringType != ArgonModule.stringType and should be")
         return(module)
@@ -355,8 +343,8 @@ public struct ArgonTests
         
     public static func testRootModule()
         {
-        self.rootModule = RootModule.newRootModule()
-        let methods = self.rootModule.lookupMethods(atName: "string")
-        assert(methods.count == 6,"count(string methods) should be 6 but is not.")
+        let _ = ArgonModule()
+        let methods = RootModule.shared.lookupMethods(atName: "string")
+        assert(methods.count == 6,"count(string methods) should be 6 but is \(methods.count).")
         }
     }

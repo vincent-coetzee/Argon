@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class Variable: SyntaxTreeNode
+public class Variable: Symbol
     {
     public let expression: Expression?
     
@@ -21,7 +21,7 @@ public class Variable: SyntaxTreeNode
         {
         self.expression = expression
         super.init(name: name)
-        self.setType(type) 
+        self.symbolType = type ?? TypeSubstitutionSet.newTypeVariable()
         }
         
     public required init(coder: NSCoder)

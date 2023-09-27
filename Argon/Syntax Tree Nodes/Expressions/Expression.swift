@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class Expression: SyntaxTreeNode
+public class Expression: Symbol
     {
     public var isRValue: Bool
         {

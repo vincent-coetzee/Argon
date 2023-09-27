@@ -40,7 +40,7 @@ public class Constant: Variable
         expression?.location = location
         let constant = Constant(name: name,type: type,expression: expression!)
         constant.location = location
-        parser.currentScope.addNode(constant)
+        parser.currentScope.addSymbol(constant)
         }
         
     public override func accept(visitor: Visitor)
