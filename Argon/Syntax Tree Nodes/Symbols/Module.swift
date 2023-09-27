@@ -55,10 +55,10 @@ public class Module: CompositeSyntaxTreeNode
         true
         }
         
-    public override var nodeType: NodeType
-        {
-        return(.module)
-        }
+//    public override var nodeType: NodeType
+//        {
+//        return(.module)
+//        }
         
     public override var parentModules: Modules
         {

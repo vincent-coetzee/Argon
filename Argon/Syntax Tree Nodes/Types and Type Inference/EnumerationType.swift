@@ -14,10 +14,10 @@ public class EnumerationType: StructuredType
         .enumeration(self)
         }
         
-    public override var nodeType: NodeType
-        {
-        return(.enumeration)
-        }
+//    public override var nodeType: NodeType
+//        {
+//        return(.enumeration)
+//        }
         
     public override var symbolType: ArgonType
         {

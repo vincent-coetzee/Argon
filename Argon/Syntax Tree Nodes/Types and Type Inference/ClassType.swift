@@ -40,10 +40,10 @@ public class ClassType: StructuredType
         self.slots.map{ $0.symbolType }
         }
         
-    public override var nodeType: NodeType
-        {
-        return(.class)
-        }
+//    public override var nodeType: NodeType
+//        {
+//        return(.class)
+//        }
         
     public override var symbolType: ArgonType
         {
@@ -66,6 +66,7 @@ public class ClassType: StructuredType
         self.superclasses = superclasses
         super.init(name: name)
         self.setGenericTypes(genericTypes)
+        self.setSlots(slots)
         }
         
     public init(name: String)

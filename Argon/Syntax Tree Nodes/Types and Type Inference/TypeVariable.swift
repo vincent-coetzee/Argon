@@ -9,6 +9,20 @@ import Foundation
 
 public class TypeVariable: ArgonType
     {
+    public enum TypeVariableValue
+        {
+        case unbound
+        case bound(ArgonType)
+        case linked(TypeVariable)
+        }
+        
+    public override var hash: Int
+        {
+        var hasher = Hasher()
+        hasher.combine(self.name)
+        return(hasher.finalize())
+        }
+        
     public override init(name: String)
         {
         super.init(name: name)

@@ -7,12 +7,12 @@
 
 import Foundation
 
-public enum NodeType: Int
-    {
-    case none           = 0
-    case `class`        = 1
-    case enumeration    = 2
-    case module         = 3
-    case method         = 4
-    case function       = 5
-    }
+//public enum NodeType: Int
+//    {
+//    case none           = 0
+//    case `class`        = 1
+//    case enumeration    = 2
+//    case module         = 3
+//    case method         = 4
+//    case function       = 5
+//    }

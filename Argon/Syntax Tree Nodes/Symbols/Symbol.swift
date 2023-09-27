@@ -84,10 +84,10 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
         self.rootModule.argonModule
         }
         
-    public var nodeType: NodeType
-        {
-        return(.none)
-        }
+//    public var nodeType: NodeType
+//        {
+//        return(.none)
+//        }
         
     public var valueBox: ValueBox
         {
@@ -106,7 +106,7 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
         
     public var identifier: Identifier
         {
-        return(self.container?.identifier ?? Identifier(string: "\\"))
+        return(self.container?.identifier ?? Identifier(string: self.name))
         }
     //
     //

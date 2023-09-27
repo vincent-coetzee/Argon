@@ -247,6 +247,11 @@ public class ArgonModule: Module
         {
         return(self.lookupType(atName: "TupleType")!)
         }
+        
+    public var numberType: ArgonType
+        {
+        return(self.lookupType(atName: "Number")!)
+        }
     
     private func initializeSystemClasses()
         {
@@ -540,6 +545,7 @@ public class ArgonModule: Module
         let aType = PrimitiveType(name: name,superclasses: classes)
         self.addSymbol(aType)
         aType.isSystemNode = true
+        aType.symbolType = self.primitiveType
         return(aType)
         }
         

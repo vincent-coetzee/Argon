@@ -43,6 +43,8 @@ public class Identifier: NSObject,NSCoding
         return(true)
         }
         
+    public static let rootIdentifier = Identifier(parts: .root)
+        
     public var car: String?
         {
         if self.parts.count > 0
@@ -209,6 +211,11 @@ public class Identifier: NSObject,NSCoding
         {
         self .parts = []
         super.init()
+        }
+        
+    internal init(parts: IdentifierPart...)
+        {
+        self.parts = parts
         }
         
     public init(string: String)

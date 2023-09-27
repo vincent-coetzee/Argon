@@ -60,7 +60,7 @@ public class RootModule: Module
 
     public override var identifier: Identifier
         {
-        Identifier(parts: [Identifier.IdentifierPart.root])
+        Identifier.rootIdentifier
         }
         
     public override var module: Module

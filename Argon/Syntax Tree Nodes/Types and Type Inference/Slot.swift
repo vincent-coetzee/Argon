@@ -28,8 +28,7 @@ public class Slot: Symbol
         {
         var hasher = Hasher()
         hasher.combine("SLOT")
-        hasher.combine(self.container!.identifier)
-        hasher.combine(self.name)
+        hasher.combine(self.identifier)
         hasher.combine(self.symbolType)
         return(hasher.finalize())
         }
@@ -43,7 +42,7 @@ public class Slot: Symbol
     public init(name: String,type: ArgonType? = nil)
         {
         super.init(name: name)
-        self.symbolType = type ?? TypeSubstitutionSet.newTypeVariable()
+        self.symbolType = type ?? ArgonModule.shared.errorType
         }
         
     required public init(coder: NSCoder)
