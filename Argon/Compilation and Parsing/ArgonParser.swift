@@ -407,7 +407,7 @@ public class ArgonParser
                         }
                     upperBound = self.parseIntegerValue(code: .integerValueExpected)
                     }
-                let subType = SubType(name: Argon.nextIndex(named: "subType"), parentType: ArgonModule.shared.integerType, lowerBound: .integer(lowerBound), upperBound: .integer(upperBound))
+                let subType = Subtype(name: Argon.nextIndex(named: "subType"), parentType: ArgonModule.shared.integerType, lowerBound: .integer(lowerBound), upperBound: .integer(upperBound))
                 return(subType)
                 }
             else
@@ -437,7 +437,7 @@ public class ArgonParser
                     }
                 if let lowerCase = enumeration.case(atAtom: lowerBound),let upperCase = enumeration.case(atAtom: upperBound)
                     {
-                    let subType = SubType(name: Argon.nextIndex(named: "enumerationSubType"), parentType: enumeration, lowerBound: .enumerationCase(lowerCase), upperBound: .enumerationCase(upperCase))
+                    let subType = Subtype(name: Argon.nextIndex(named: "enumerationSubType"), parentType: enumeration, lowerBound: .enumerationCase(lowerCase), upperBound: .enumerationCase(upperCase))
                     return(subType)
                     }
                 else
@@ -446,7 +446,7 @@ public class ArgonParser
                     }
                 let lowerCase = EnumerationCase(name: "#LOWER",enumeration: enumeration,associatedTypes: [],instanceValue: .none)
                 let upperCase = EnumerationCase(name: "#UPPER",enumeration: enumeration,associatedTypes: [],instanceValue: .none)
-                let subType = SubType(name: Argon.nextIndex(named: "enumerationSubType"), parentType: enumeration, lowerBound: .enumerationCase(lowerCase), upperBound: .enumerationCase(upperCase))
+                let subType = Subtype(name: Argon.nextIndex(named: "enumerationSubType"), parentType: enumeration, lowerBound: .enumerationCase(lowerCase), upperBound: .enumerationCase(upperCase))
                 return(subType)
                 }
             return(enumeration)

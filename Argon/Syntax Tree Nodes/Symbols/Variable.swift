@@ -21,7 +21,7 @@ public class Variable: Symbol
         {
         self.expression = expression
         super.init(name: name)
-        self.symbolType = type ?? TypeSubstitutionSet.newTypeVariable()
+        self.symbolType = type ?? TypeSubstitutionSet.initialSet.newTypeVariable()
         }
         
     public required init(coder: NSCoder)

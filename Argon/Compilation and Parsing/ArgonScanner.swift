@@ -22,10 +22,11 @@ public class ArgonScanner
     private var sourceLine: Int = 1
     private let operatorCharacters = CharacterSet(charactersIn: "!$%^&*-+=:;|<>?/.,~@")
     private let brackets = CharacterSet(charactersIn: "()[]{}")
-    private let identifierStartCharacters = CharacterSet.letters.union(CharacterSet(charactersIn: "\\"))
-    private let identifierCharacters = CharacterSet.letters.union(CharacterSet.decimalDigits).union(CharacterSet(charactersIn: "_!?\\"))
+    private let identifierStartCharacters = CharacterSet.letters.union(CharacterSet(charactersIn: "/"))
+    private let identifierCharacters = CharacterSet.letters.union(CharacterSet.decimalDigits).union(CharacterSet(charactersIn: "_!?/"))
     private let symbolCharacters = CharacterSet.letters.union(.decimalDigits).union(CharacterSet(charactersIn: "-_"))
     private let pathCharacters = CharacterSet.letters.union(.decimalDigits).union(CharacterSet(charactersIn: "-_/~"))
+    private let identifierPattern = try! NSRegularExpression(pattern: "(//)? ( [A-Za-z]{1}[A-Za-z0-9_]* )? (/[A-Za-z0-9_]*)* (!?)?",options: .anchorsMatchLines)
     public var currentCharacter = Unicode.Scalar(0)!
     public let bracketMatcher = BracketMatcher()
     
@@ -82,7 +83,7 @@ public class ArgonScanner
     public func scanUntilEndOfLine() -> String
         {
         self.nextDirtyCharacter()
-        var string = "//"
+        var string = ";;"
         while self.currentCharacter.isNotNewLine && !self.atEnd
             {
             string += String(self.currentCharacter)
@@ -142,7 +143,7 @@ public class ArgonScanner
             }
         return(tokens)
         }
-        
+    
     private func scanTokens() -> Tokens
         {
         if self.atEnd
@@ -155,6 +156,12 @@ public class ArgonScanner
             self.scanWhitespace()
             return(self.scanTokens())
             }
+        if let match = self.identifierPattern.firstMatch(in: self.source, options: .anchored, range: NSRange(location: self.offset, length: self.source.count - self.offset))
+            {
+            let string = self.source.suffix(self.offset).prefix(match.range.length)
+            let location = Location(nodeKey: 0, line: self.sourceLine, start: match.range.location, stop: match.range.location + match.range.length)
+            return([IdentifierToken(location: location, string: String(string))])
+            }
         let prefix = self.sourcePrefix(length: 2)
         if prefix == ":("
             {
@@ -164,10 +171,14 @@ public class ArgonScanner
             {
             return(self.scanDateOrTime())
             }
-        else if prefix == "/*" || prefix == "//"
+        else if prefix == ";;"
             {
             return(self.scanComment())
             }
+//        else if prefix == "//"
+//            {
+//            return(self.scanIdentifier())
+//            }
         else if self.brackets.contains(self.currentCharacter)
             {
             return(self.scanBracket())
@@ -188,10 +199,10 @@ public class ArgonScanner
             {
             return(self.scanOperator())
             }
-        else if self.identifierStartCharacters.contains(self.currentCharacter)
-            {
-            return(self.scanIdentifier())
-            }
+//        else if self.identifierStartCharacters.contains(self.currentCharacter)
+//            {
+//            return(self.scanIdentifier())
+//            }
         let character = self.currentCharacter
         self.nextCharacter()
         return([ErrorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: "Unknown character '\(character)'")])
@@ -238,39 +249,35 @@ public class ArgonScanner
         return([PathToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string)])
         }
         
-    private func scanIdentifier() -> Tokens
-        {
-        var identifier = String()
-        if self.sourcePrefix(length: 2)  == "\\"
-            {
-            return(self.scanPath())
-            }
-        while self.identifierCharacters.contains(self.currentCharacter) && !self.atEnd
-            {
-            identifier.append(self.currentCharacter)
-            self.nextDirtyCharacter()
-            }
-        let location = Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset)
-        if KeywordToken.isKeyword(identifier)
-            {
-            if KeywordToken.isSectionKeyword(identifier)
-                {
-                // should look like: SECTION(This is some sexy section)
-                var tokens = Tokens()
-                tokens.append(KeywordToken(location: location,string: identifier))
-                // should be a '('
-                tokens.append(contentsOf: self.scanTokens())
-                // should be unquoted string
-                let string = self.scanUntilRightParenthesis()
-                tokens.append(TextToken(location: location,string: string))
-                // should be ')'
-                tokens.append(contentsOf: self.scanTokens())
-                return(tokens)
-                }
-            return([KeywordToken(location: location,string: identifier)])
-            }
-        return([IdentifierToken(location: location, string: identifier)])
-        }
+//    private func scanIdentifier() -> Tokens
+//        {
+//        var identifier = String()
+//        while self.identifierCharacters.contains(self.currentCharacter) && !self.atEnd
+//            {
+//            identifier.append(self.currentCharacter)
+//            self.nextDirtyCharacter()
+//            }
+//        let location = Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset)
+//        if KeywordToken.isKeyword(identifier)
+//            {
+//            if KeywordToken.isSectionKeyword(identifier)
+//                {
+//                // should look like: SECTION(This is some sexy section)
+//                var tokens = Tokens()
+//                tokens.append(KeywordToken(location: location,string: identifier))
+//                // should be a '('
+//                tokens.append(contentsOf: self.scanTokens())
+//                // should be unquoted string
+//                let string = self.scanUntilRightParenthesis()
+//                tokens.append(TextToken(location: location,string: string))
+//                // should be ')'
+//                tokens.append(contentsOf: self.scanTokens())
+//                return(tokens)
+//                }
+//            return([KeywordToken(location: location,string: identifier)])
+//            }
+//        return([IdentifierToken(location: location, string: identifier)])
+//        }
         
     private func scanOperator() -> Tokens
         {
@@ -388,11 +395,6 @@ public class ArgonScanner
         
     private func scanComment() -> Tokens
         {
-        let prefix = self.sourcePrefix(length: 2)
-        if prefix == String("/*")
-            {
-            return(self.scanMultilineComment())
-            }
         return(self.scanSinglelineComment())
         }
         

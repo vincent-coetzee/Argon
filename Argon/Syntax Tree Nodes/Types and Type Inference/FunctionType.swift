@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class FunctionType: CallableType
+public class FunctionType: InvokableType
     {
     public override var baseType: ArgonType
         {

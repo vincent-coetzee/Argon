@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class SubType: ArgonType
+public class Subtype: ArgonType
     {
     public override var baseType: ArgonType
         {

@@ -160,7 +160,7 @@ public struct Argon
         case none
         case discreteType(ArgonType)
         case enumeration(EnumerationType)
-        case subType(SubType)
+        case subType(Subtype)
         case integer
         
 //        public var _mangledName: String
@@ -203,7 +203,7 @@ extension NSCoder
             case(2):
                 return(.enumeration(self.decodeObject(forKey: key + "enumeration") as! EnumerationType))
             case(3):
-                let type = self.decodeObject(forKey: key + "subType") as! SubType
+                let type = self.decodeObject(forKey: key + "subType") as! Subtype
                 return(.subType(type))
             case(4):
                 return(.integer)

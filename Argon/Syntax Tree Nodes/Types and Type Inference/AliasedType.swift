@@ -145,7 +145,7 @@ public class AliasedType: ArgonType
                     parser.lodgeError(code: .integerOrIdentifierExpected,location: location)
                     }
                 }
-            let subType = SubType(name: name.lastPart,parentType: type,lowerBound: lowerBound,upperBound: upperBound)
+            let subType = Subtype(name: name.lastPart,parentType: type,lowerBound: lowerBound,upperBound: upperBound)
             subType.location = location
             parser.currentScope.addSymbol(subType)
             return

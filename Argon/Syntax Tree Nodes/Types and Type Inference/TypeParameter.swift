@@ -10,24 +10,24 @@ import Foundation
 //
 //
 // A TypeParameter is an ArgonType that is used when declaring a generic type in Argon. The
-// class, tuple or enumeration being declared creates a TypeParameter for each of the "hollow"
-// placeholder values in the class, tuple or enumeration declaration. In class declarations
+// class or enumeration being declared creates a TypeParameter for each of the "hollow"
+// placeholder values in the class or enumeration declaration. In class and enumeration declarations
 // TypeParameters appear between brockets ( < and > )to the left of the scope ( :: ) operator
-// in the class/tuple/enumeration declaration. For example
+// in the class/enumeration declaration. For example
 //
 //
-// CLASS NewClass<X,Y,Z> :: OlderClass1<A,B>, OldClass2<C,D>
+// CLASS NewClass<X,Y,Z> :: OlderClass1<Integer,String>, OldClass2<Float>
 //      {
 //      SLOT someSlot :: X
-//      SLOT secondSlot :: A
-//      SLOT thirdSlot :: D
+//      SLOT secondSlot :: Y
+//      SLOT thirdSlot :: Z
 //      }
 //
 // In this example X,Y,Z are TypeParameters and will be "grounded" when NewClass is used
-// either directly as a type or as the superclass of another class. A and B, as well as C and D
-// are all ordinary or concrete types. When a generic class like NewClass is instanciated or used
-// it is necessary for the TypeParameters to be instanciated in which case they are given a
-// concrete type in their typeValue ( i.e. symbolType ) instance variable.
+// either directly as a type or as the superclass of another class. When a generic class
+// like NewClass is instanciated or used it is necessary for the TypeParameters
+// to be instanciated in which case they are given a concrete type at the
+// corresponding index in their genericTypes array.
 //
 //
 //

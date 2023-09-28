@@ -83,6 +83,10 @@ public class TypeConstructor: ArgonType
         
     public override func constructType(from types: ArgonTypes) throws -> ArgonType
         {
+        guard !self.typeParameters.isEmpty else
+            {
+            return(self.constructedType.typeValue)
+            }
         let newType = self.constructedType.cloneInstance()
         guard self.typeParameters.count == types.count else
             {

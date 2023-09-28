@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class CallableType: ArgonType
+public class InvokableType: ArgonType
     {
     public override var hash: Int
         {

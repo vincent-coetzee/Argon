@@ -16,6 +16,7 @@ public struct ArgonTests
         {
         let _ = ArgonModule()
 //        self.testDateTimeScanning()
+        self.testSymbolTree()
         self.testRootModule()
 //        self.testSymbolTables()
         self.testTypeHashing()
@@ -69,6 +70,18 @@ public struct ArgonTests
         
     public static func testTypeHashing()
         {
+        }
+        
+    public static func testSymbolTree()
+        {
+        let tree = SymbolTreeNode(key: "/")
+        tree.insert(symbol: Module(name: "ModuleA"))
+        tree.insert(symbol: MultimethodType(name: "methodA"))
+        let class1 = ClassType(name: "ClassA")
+        let newNode = tree.insert(symbol: class1,at: Identifier(string: "//Module1/Module2/Module3/ClassA"))
+        let symbol1 = newNode.lookupSymbol(at: "ClassA")
+        assert(symbol1 == class1,"symbol1 != class1 but it should be.")
+        print("Path of //Module1/Module2/Module3 is \(newNode.path.description)")
         }
         
     public static func testIdentity()

@@ -14,7 +14,7 @@ public enum OperatorNotation
     case postfix
     }
     
-public class MethodType: CallableType
+public class MethodType: InvokableType
     {
     public var signature: MethodSignature
         {
@@ -116,6 +116,12 @@ public typealias Methods = Array<MethodType>
 
 extension Methods
     {
+    public init(_ method: MethodType)
+        {
+        self.init()
+        self.append(method)
+        }
+        
     public func accept(visitor: Visitor)
         {
         for method in self
@@ -124,9 +130,13 @@ extension Methods
             }
         }
     
-    public func appending(_ methods: Methods) -> Self
+    public func appending(contentsOf methods: Methods?) -> Self
         {
-        var newMethods = Methods()
+        guard let methods = methods else
+            {
+            return(self)
+            }
+        var newMethods = self
         for method in methods
             {
             newMethods.append(method)

@@ -11,30 +11,18 @@ public class TypeSubstitutionSet
     {
     public static let initialSet = TypeSubstitutionSet()
     
-    public static func newTypeVariable(named: String) -> TypeVariable
-        {
-        Self.initialSet.newTypeVariable(named: named)
-        }
-        
-    public static func newTypeVariable() -> TypeVariable
-        {
-        Self.initialSet.newTypeVariable(named: Argon.nextIndex(named: "TYPEVAR"))
-        }
-        
-    private var typeVariables = Set<TypeVariable>()
+    public let index = Argon.nextIndex
     
-    public func newTypeVariable(named: String) -> TypeVariable
+    private var typeVariables = Dictionary<String,TypeVariable>()
+    private var bindings = Dictionary<Int,ArgonType>()
+    
+    public func bindValue(_ value: ArgonType,to variable: TypeVariable)
         {
-        let index = Argon.nextIndex
-        let name = "\(named)\(index)"
-        let variable = TypeVariable(name: name)
-        variable.setIndex(index)
-        self.typeVariables.insert(variable)
-        return(variable)
+        self.bindings[variable.index] = value
         }
         
-    public func setValue(of: TypeVariable,to: ArgonType)
+    public func setTypeVariable(_ typeVariable: TypeVariable,atName: String)
         {
-        fatalError("This needs to be implemented.")
+        self.typeVariables[atName] = typeVariable
         }
     }

@@ -36,6 +36,11 @@ import Foundation
 
 public class ArgonType: Symbol
     {
+    public static func newTypeVariable(named: String) -> TypeVariable
+        {
+        TypeSubstitutionSet.initialSet.newTypeVariable(named: named)
+        }
+        
     public var isClassType: Bool
         {
         false
@@ -195,11 +200,6 @@ public class ArgonType: Symbol
         true
         }
         
-    public static func newTypeVariable(named name: String) -> TypeVariable
-        {
-        TypeSubstitutionSet.newTypeVariable(named: name)
-        }
-        
     public override var baseType: ArgonType
         {
         self
@@ -215,9 +215,9 @@ public class ArgonType: Symbol
     
 //    public private(set) var instanceType: GenericInstanceType.Type?
     
-    public override init(index: Int? = nil,name: String)
+    public override init(name: String,index: Int)
         {
-        super.init(index: index,name: name)
+        super.init(name: name,index: index)
         }
         
     public override init(name: String)

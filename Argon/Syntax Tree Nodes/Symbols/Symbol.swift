@@ -144,17 +144,17 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
         
     public private(set) var references = NodeReferences()
     public private(set) var name: String
-    public private(set) var index: Int?
+    public private(set) var index: Int
     public private(set) var container: Symbol?
     public var isSystemNode: Bool = false
     public private(set) var _symbolType: ArgonType!
     public private(set) var processingFlags = ProcessingFlags()
     public var location: Location?
     
-    init(index: Int? = nil,name: String)
+    init(name: String,index: Int)
         {
         self.name = name
-        self.index = index.isNil ? Argon.nextIndex : index!
+        self.index = index
         }
     
     public init(name: String)

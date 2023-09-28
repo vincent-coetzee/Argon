@@ -47,7 +47,7 @@
 		BF27FCFC2A76821C000C78F1 /* NodeReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF27FCFB2A76821C000C78F1 /* NodeReference.swift */; };
 		BF2C0AEB29FB215500CCC384 /* LLVMModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2C0AEA29FB215500CCC384 /* LLVMModule.swift */; };
 		BF2C0AED29FB223200CCC384 /* LLVMContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2C0AEC29FB223200CCC384 /* LLVMContext.swift */; };
-		BF2D01E62A7C0E2A00887DD7 /* CallableType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2D01E52A7C0E2A00887DD7 /* CallableType.swift */; };
+		BF2D01E62A7C0E2A00887DD7 /* InvokableType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2D01E52A7C0E2A00887DD7 /* InvokableType.swift */; };
 		BF2FBFC52A87779000CB6145 /* CustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2FBFC42A87779000CB6145 /* CustomView.swift */; };
 		BF2FBFC72A8777C600CB6145 /* IconLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2FBFC62A8777C600CB6145 /* IconLabelView.swift */; };
 		BF31131D298D6FD600BF5D11 /* ArgonType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF31131C298D6FD600BF5D11 /* ArgonType.swift */; };
@@ -85,7 +85,9 @@
 		BF54B9A829F5C7C600A755DC /* SelectionInListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF54B9A029F5C7C500A755DC /* SelectionInListModel.swift */; };
 		BF54B9A929F5C7C600A755DC /* ValueModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF54B9A129F5C7C600A755DC /* ValueModel.swift */; };
 		BF57672429EDC0FC007EECA5 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF57672329EDC0FC007EECA5 /* Stack.swift */; };
-		BF60D6342A8CCAC400ED3F6B /* SubType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF60D6332A8CCAC400ED3F6B /* SubType.swift */; };
+		BF5EB1452AC590B6002A4E4B /* SymbolTreeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5EB1442AC590B6002A4E4B /* SymbolTreeNode.swift */; };
+		BF5EB1472AC5D2E1002A4E4B /* MultimethodType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5EB1462AC5D2E1002A4E4B /* MultimethodType.swift */; };
+		BF60D6342A8CCAC400ED3F6B /* Subtype.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF60D6332A8CCAC400ED3F6B /* Subtype.swift */; };
 		BF60F4AD2ABB9A3A0085700C /* UTType+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF60F4AC2ABB9A3A0085700C /* UTType+Extensions.swift */; };
 		BF60F4AF2ABB9DC00085700C /* NSToolbar+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF60F4AE2ABB9DC00085700C /* NSToolbar+Extensions.swift */; };
 		BF6B052E296209F20097C9A9 /* Optional+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6B052D296209F20097C9A9 /* Optional+Extensions.swift */; };
@@ -257,7 +259,7 @@
 		BF27FCFB2A76821C000C78F1 /* NodeReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeReference.swift; sourceTree = "<group>"; };
 		BF2C0AEA29FB215500CCC384 /* LLVMModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLVMModule.swift; sourceTree = "<group>"; };
 		BF2C0AEC29FB223200CCC384 /* LLVMContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLVMContext.swift; sourceTree = "<group>"; };
-		BF2D01E52A7C0E2A00887DD7 /* CallableType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallableType.swift; sourceTree = "<group>"; };
+		BF2D01E52A7C0E2A00887DD7 /* InvokableType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvokableType.swift; sourceTree = "<group>"; };
 		BF2FBFC42A87779000CB6145 /* CustomView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomView.swift; sourceTree = "<group>"; };
 		BF2FBFC62A8777C600CB6145 /* IconLabelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IconLabelView.swift; sourceTree = "<group>"; };
 		BF31131C298D6FD600BF5D11 /* ArgonType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgonType.swift; sourceTree = "<group>"; };
@@ -295,7 +297,9 @@
 		BF54B9A029F5C7C500A755DC /* SelectionInListModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectionInListModel.swift; sourceTree = "<group>"; };
 		BF54B9A129F5C7C600A755DC /* ValueModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueModel.swift; sourceTree = "<group>"; };
 		BF57672329EDC0FC007EECA5 /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
-		BF60D6332A8CCAC400ED3F6B /* SubType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubType.swift; sourceTree = "<group>"; };
+		BF5EB1442AC590B6002A4E4B /* SymbolTreeNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolTreeNode.swift; sourceTree = "<group>"; };
+		BF5EB1462AC5D2E1002A4E4B /* MultimethodType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultimethodType.swift; sourceTree = "<group>"; };
+		BF60D6332A8CCAC400ED3F6B /* Subtype.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subtype.swift; sourceTree = "<group>"; };
 		BF60F4AC2ABB9A3A0085700C /* UTType+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UTType+Extensions.swift"; sourceTree = "<group>"; };
 		BF60F4AE2ABB9DC00085700C /* NSToolbar+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSToolbar+Extensions.swift"; sourceTree = "<group>"; };
 		BF6B052D296209F20097C9A9 /* Optional+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Extensions.swift"; sourceTree = "<group>"; };
@@ -507,7 +511,7 @@
 			children = (
 				BFBD79762A576CFB0038EEEA /* AliasedType.swift */,
 				BF31131C298D6FD600BF5D11 /* ArgonType.swift */,
-				BF2D01E52A7C0E2A00887DD7 /* CallableType.swift */,
+				BF2D01E52A7C0E2A00887DD7 /* InvokableType.swift */,
 				BFCB438929845D5D001D1CFD /* ClassType.swift */,
 				BFCB438729845D40001D1CFD /* EnumerationCase.swift */,
 				BFCB438529845D33001D1CFD /* EnumerationType.swift */,
@@ -521,13 +525,14 @@
 				BF92E2CA2AC0CC3A00D1FDE2 /* PrimitiveType.swift */,
 				BFCB438329845D07001D1CFD /* Slot.swift */,
 				BF1F4B022A5616B000C1F977 /* StructuredType.swift */,
-				BF60D6332A8CCAC400ED3F6B /* SubType.swift */,
+				BF60D6332A8CCAC400ED3F6B /* Subtype.swift */,
 				BF92E2C82AC0CAC200D1FDE2 /* TupleType.swift */,
 				BF4177362AC38FDA00DBAA01 /* TypeConstructor.swift */,
 				BF4177342AC2E30200DBAA01 /* TypeParameter.swift */,
 				BFAC05982AB31759004C3823 /* TypeRegistry.swift */,
 				BFC4B6C92A934A1C0098FBB1 /* TypeSubstitutionSet.swift */,
 				BFEE2AE7298EF7960060EE74 /* TypeVariable.swift */,
+				BF5EB1462AC5D2E1002A4E4B /* MultimethodType.swift */,
 			);
 			path = "Types and Type Inference";
 			sourceTree = "<group>";
@@ -788,6 +793,7 @@
 				BFCA9341296F43340049B39A /* Scope.swift */,
 				BF57672329EDC0FC007EECA5 /* Stack.swift */,
 				BF0238112AB0DF56001DE9F9 /* NameMangler.swift */,
+				BF5EB1442AC590B6002A4E4B /* SymbolTreeNode.swift */,
 			);
 			path = Plumbing;
 			sourceTree = "<group>";
@@ -934,7 +940,7 @@
 				BF4177372AC38FDA00DBAA01 /* TypeConstructor.swift in Sources */,
 				BFCB438629845D33001D1CFD /* EnumerationType.swift in Sources */,
 				BF0238122AB0DF56001DE9F9 /* NameMangler.swift in Sources */,
-				BF2D01E62A7C0E2A00887DD7 /* CallableType.swift in Sources */,
+				BF2D01E62A7C0E2A00887DD7 /* InvokableType.swift in Sources */,
 				BFB5E60E2A2664DA0018824E /* String+Extensions.swift in Sources */,
 				BF1F4AFE2A554A2700C1F977 /* Block.swift in Sources */,
 				BF47CD642A68749700C63D1E /* ModuleBundleViewController.swift in Sources */,
@@ -1012,6 +1018,7 @@
 				BFA93E3F291678AF0001F05D /* AppDelegate.swift in Sources */,
 				BF60F4AF2ABB9DC00085700C /* NSToolbar+Extensions.swift in Sources */,
 				BF4DB6D62A81122F00A509A4 /* ReturnStatement.swift in Sources */,
+				BF5EB1452AC590B6002A4E4B /* SymbolTreeNode.swift in Sources */,
 				BFBA84942A8E80BA009D488A /* StaticVariable.swift in Sources */,
 				BFE89DF32AAF11E300985186 /* LoopStatement.swift in Sources */,
 				BFE89DF12AAF0C1200985186 /* ForStatement.swift in Sources */,
@@ -1058,7 +1065,7 @@
 				BFCA9342296F43340049B39A /* Scope.swift in Sources */,
 				BFFB59222A95E77400E80995 /* NSFont+Extensions.swift in Sources */,
 				BF077A0A2AB4CEA8007F88D3 /* IntrinsicMethodType.swift in Sources */,
-				BF60D6342A8CCAC400ED3F6B /* SubType.swift in Sources */,
+				BF60D6342A8CCAC400ED3F6B /* Subtype.swift in Sources */,
 				BF1F4AEE2A55490100C1F977 /* Statement.swift in Sources */,
 				BF3676CE2972DE4400E1A5B9 /* Expression.swift in Sources */,
 				BF9BAD482965F33500608266 /* ArgonTests.swift in Sources */,
@@ -1084,6 +1091,7 @@
 				BFBD79772A576CFB0038EEEA /* AliasedType.swift in Sources */,
 				BF3B430929A15319009C269F /* StyleTheme.swift in Sources */,
 				BF53D13B2A72DFAF00C2777D /* Argument.swift in Sources */,
+				BF5EB1472AC5D2E1002A4E4B /* MultimethodType.swift in Sources */,
 				BF96903C29F55BF400A7ED65 /* LineNumberRulerView.swift in Sources */,
 				BF54B9A729F5C7C600A755DC /* AspectModel.swift in Sources */,
 				BFA9DA98292D5C3900C6859D /* Symbol.swift in Sources */,

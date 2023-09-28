@@ -341,7 +341,7 @@ public class ClassType: StructuredType
             parser.lodgeError(code: .singleIdentifierExpected,message: "An identifier path is not allowed here.",location: location)
             }
         let name = identifier.lastPart
-        var type: ArgonType = TypeSubstitutionSet.newTypeVariable()
+        var type: ArgonType = TypeSubstitutionSet.initialSet.newTypeVariable()
         if parser.token.isScope
             {
             parser.nextToken()
