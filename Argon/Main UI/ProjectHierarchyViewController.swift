@@ -53,15 +53,14 @@ class ProjectHierarchyViewController: NSViewController,Dependent
     private func initOutlineView()
         {
         let cellFont = StyleTheme.shared.font(for: .fontDefault)
-        let rowHeight = cellFont.lineHeight + 4 + 4
+        let rowHeight = cellFont.lineHeight + 2 + 2
         self.outlineView.rowHeight = rowHeight
-        self.outlineView.backgroundColor = StyleTheme.shared.color(for: .colorOutlineBackground)
+        self.outlineView.backgroundColor = StyleTheme.shared.color(for: .colorOutlinerBackground)
         self.outlineView.rowSizeStyle = .custom
-        self.outlineView.intercellSpacing = NSSize(width: 5, height: 2)
+        self.outlineView.intercellSpacing = NSSize(width: 0, height: 0)
         self.outlineView.target = self
         self.outlineView.style = .plain
         self.outlineView.columnAutoresizingStyle = .lastColumnOnlyAutoresizingStyle
-        self.outlineView.register(NSNib(nibNamed: "ProjectViewCell", bundle: nil), forIdentifier: NSUserInterfaceItemIdentifier(rawValue: "ProjectViewCell"))
         self.outlineView.delegate = self
         self.outlineView.dataSource = self
         self.outlineView.reloadData()
@@ -122,7 +121,7 @@ extension ProjectHierarchyViewController: NSOutlineViewDelegate
         
     public func outlineView(_ outlineView: NSOutlineView, shouldEdit tableColumn: NSTableColumn?, item: Any) -> Bool
         {
-        return(true)
+        return(false)
         }
         
     @objc func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int
@@ -137,14 +136,11 @@ extension ProjectHierarchyViewController: NSOutlineViewDelegate
         
     @objc func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView?
         {
-        if let view = self.outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "ProjectViewCell"), owner: nil) as? ProjectViewCell
-            {
-            view.node = item as? SourceNode
-            view.textField?.target = self
-            view.textField?.action = #selector(projectElementTitleChanged)
-            return(view)
-            }
-        return(nil)
+        let view = ProjectViewCell(frame: .zero)
+        view.node = item as? SourceNode
+        view.textPane.target = self
+        view.textPane.action = #selector(self.projectElementTitleChanged)
+        return(view)
         }
         
     @objc public func projectElementTitleChanged(_ sender: Any?)

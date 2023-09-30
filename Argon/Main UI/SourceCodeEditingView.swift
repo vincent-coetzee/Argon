@@ -24,17 +24,17 @@ public class SourceCodeEditingView: NSView,NSTextViewDelegate,Model
             }
         }
         
-    public var tokens: Tokens
-        {
-        get
-            {
-            self.textView.tokens
-            }
-        set
-            {
-            self.textView.tokens = newValue
-            }
-        }
+//    public var tokens: Tokens
+//        {
+//        get
+//            {
+//            self.textView.tokens
+//            }
+//        set
+//            {
+//            self.textView.tokens = newValue
+//            }
+//        }
         
     public var compilerIssues: CompilerIssues
         {

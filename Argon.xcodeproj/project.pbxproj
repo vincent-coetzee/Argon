@@ -93,7 +93,6 @@
 		BF6B052E296209F20097C9A9 /* Optional+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6B052D296209F20097C9A9 /* Optional+Extensions.swift */; };
 		BF6B053129620CF10097C9A9 /* ErrorToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6B053029620CF10097C9A9 /* ErrorToken.swift */; };
 		BF6B053329620E2D0097C9A9 /* EndToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6B053229620E2D0097C9A9 /* EndToken.swift */; };
-		BF71EEC629F02C15009356E0 /* ProjectViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BF71EEC529F02C15009356E0 /* ProjectViewCell.xib */; };
 		BF71EEC829F02F96009356E0 /* ProjectViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF71EEC729F02F96009356E0 /* ProjectViewCell.swift */; };
 		BF71EECA29F03531009356E0 /* SourceFolderNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF71EEC929F03531009356E0 /* SourceFolderNode.swift */; };
 		BF71EECC29F06E33009356E0 /* BrowserActionSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF71EECB29F06E33009356E0 /* BrowserActionSet.swift */; };
@@ -174,6 +173,7 @@
 		BFE1AD102A8A7CD200402294 /* ArgonSemanticChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE1AD0F2A8A7CD200402294 /* ArgonSemanticChecker.swift */; };
 		BFE6BDA72AA670BA00614F71 /* ProcessingFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE6BDA62AA670BA00614F71 /* ProcessingFlags.swift */; };
 		BFE6BDA92AA6738800614F71 /* ArgonTypeChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE6BDA82AA6738800614F71 /* ArgonTypeChecker.swift */; };
+		BFE731AB2AC8355D0081A042 /* Character+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE731AA2AC8355D0081A042 /* Character+Extensions.swift */; };
 		BFE89DF12AAF0C1200985186 /* ForStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE89DF02AAF0C1200985186 /* ForStatement.swift */; };
 		BFE89DF32AAF11E300985186 /* LoopStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE89DF22AAF11E300985186 /* LoopStatement.swift */; };
 		BFE99B372A710A690056E700 /* BinaryExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE99B362A710A690056E700 /* BinaryExpression.swift */; };
@@ -308,7 +308,6 @@
 		BF6B052D296209F20097C9A9 /* Optional+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Extensions.swift"; sourceTree = "<group>"; };
 		BF6B053029620CF10097C9A9 /* ErrorToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorToken.swift; sourceTree = "<group>"; };
 		BF6B053229620E2D0097C9A9 /* EndToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndToken.swift; sourceTree = "<group>"; };
-		BF71EEC529F02C15009356E0 /* ProjectViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProjectViewCell.xib; sourceTree = "<group>"; };
 		BF71EEC729F02F96009356E0 /* ProjectViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectViewCell.swift; sourceTree = "<group>"; };
 		BF71EEC929F03531009356E0 /* SourceFolderNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceFolderNode.swift; sourceTree = "<group>"; };
 		BF71EECB29F06E33009356E0 /* BrowserActionSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserActionSet.swift; sourceTree = "<group>"; };
@@ -394,6 +393,7 @@
 		BFE1AD0F2A8A7CD200402294 /* ArgonSemanticChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgonSemanticChecker.swift; sourceTree = "<group>"; };
 		BFE6BDA62AA670BA00614F71 /* ProcessingFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingFlags.swift; sourceTree = "<group>"; };
 		BFE6BDA82AA6738800614F71 /* ArgonTypeChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgonTypeChecker.swift; sourceTree = "<group>"; };
+		BFE731AA2AC8355D0081A042 /* Character+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Character+Extensions.swift"; sourceTree = "<group>"; };
 		BFE89DF02AAF0C1200985186 /* ForStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForStatement.swift; sourceTree = "<group>"; };
 		BFE89DF22AAF11E300985186 /* LoopStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoopStatement.swift; sourceTree = "<group>"; };
 		BFE99B362A710A690056E700 /* BinaryExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinaryExpression.swift; sourceTree = "<group>"; };
@@ -608,7 +608,6 @@
 				BF789A7F2AB6362C0022ED48 /* ProjectSourceViewController.swift */,
 				BF8CB1852A8FE8380056F145 /* ProjectState.swift */,
 				BF71EEC729F02F96009356E0 /* ProjectViewCell.swift */,
-				BF71EEC529F02C15009356E0 /* ProjectViewCell.xib */,
 				BFA93E40291678AF0001F05D /* ProjectViewController.swift */,
 				BF789A7D2AB635660022ED48 /* ProjectWindowController.swift */,
 				BF96903D29F57FA200A7ED65 /* SourceCodeEditingView.swift */,
@@ -674,6 +673,7 @@
 				BFB5E60D2A2664DA0018824E /* String+Extensions.swift */,
 				BF2281CE2AAA1EB200417FCD /* Unicode.Scalar+Extensions.swift */,
 				BF60F4AC2ABB9A3A0085700C /* UTType+Extensions.swift */,
+				BFE731AA2AC8355D0081A042 /* Character+Extensions.swift */,
 			);
 			path = "System Extensions";
 			sourceTree = "<group>";
@@ -918,7 +918,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BF71EEC629F02C15009356E0 /* ProjectViewCell.xib in Resources */,
 				BFA93E45291678B00001F05D /* Assets.xcassets in Resources */,
 				BF0E84E02A5D4EA8003BCC49 /* Weather.argon in Resources */,
 				BFA93E48291678B00001F05D /* Main.storyboard in Resources */,
@@ -958,6 +957,7 @@
 				BFE99B432A711A3B0056E700 /* PrefixExpression.swift in Sources */,
 				BF3676D0297329F800E1A5B9 /* NSCoder+Extensions.swift in Sources */,
 				BF789A7C2AB634160022ED48 /* ProjectHierarchyViewController.swift in Sources */,
+				BFE731AB2AC8355D0081A042 /* Character+Extensions.swift in Sources */,
 				BF1F4B032A5616B000C1F977 /* StructuredType.swift in Sources */,
 				BFD87E982954A3D200298094 /* CompilerIssue.swift in Sources */,
 				BF6B052E296209F20097C9A9 /* Optional+Extensions.swift in Sources */,

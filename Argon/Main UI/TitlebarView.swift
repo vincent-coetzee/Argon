@@ -55,7 +55,7 @@ public class TitlebarView: NSView
         control.imageTintElement = .colorIssue
         control.textColorElement = .colorToolbarText
         self.addSubview(control)
-        control.leadingAnchor.constraint(equalTo: self.pathControl.trailingAnchor, constant: 10).isActive = true
+        control.trailingAnchor.constraint(equalTo: self.pathControl.trailingAnchor, constant: -10).isActive = true
         control.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         self.needsLayout = true
         }

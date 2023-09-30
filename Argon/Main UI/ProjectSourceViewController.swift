@@ -43,7 +43,7 @@ class ProjectSourceViewController: NSViewController,Dependent
                 {
                 self.sourceView.string = node.expandedSource
                 node.tokens = ArgonScanner(source: node.expandedSource).allTokens()
-                self.sourceView.tokens = node.tokens
+//                self.sourceView.tokens = node.tokens
                 return
                 }
             }

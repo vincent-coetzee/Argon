@@ -9,6 +9,16 @@ import Foundation
 
 extension Unicode.Scalar
     {
+    public var isEOF: Bool
+        {
+        self.value == 0
+        }
+        
+    public var isNotEOF: Bool
+        {
+        self.value != 0
+        }
+        
     public var isNewLine: Bool
         {
         self == "\n"

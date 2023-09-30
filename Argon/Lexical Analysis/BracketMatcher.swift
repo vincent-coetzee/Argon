@@ -157,7 +157,7 @@ public class BracketMatcher
             {
             if let lastLocation = self.braces.popOrNil()
                 {
-                let match = BracketMatch.square(lastLocation,token.location)
+                let match = BracketMatch.brace(lastLocation,token.location)
                 self.matches[lastLocation.start] = match
                 self.matches[token.location.start] = match
                 }

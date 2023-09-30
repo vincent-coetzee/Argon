@@ -66,12 +66,13 @@ internal class ProjectWindowController: NSWindowController,Dependent
         {
         NotificationCenter.default.addObserver(self, selector: #selector(self.windowFrameDidChange), name: NSWindow.didResizeNotification, object: window)
         self.window!.titleVisibility = .hidden
-        let width = self.window!.frame.size.width
+        let width = self.splitViewController.splitView.frame.size.width
         var size = width * 2.0 / 11.0
-        (self.window!.contentViewController as! NSSplitViewController).splitView.setPosition(size, ofDividerAt: 0)
-        size = size + width * 6.0 / 11.0
-        (self.window!.contentViewController as! NSSplitViewController).splitView.setPosition(size, ofDividerAt: 1)
+        self.splitViewController.splitView.setPosition(size, ofDividerAt: 0)
+        size += width * 6.0 / 11.0
+        self.splitViewController.splitView.setPosition(size, ofDividerAt: 1)
         self.window!.toolbar = nil
+        self.resizeLeftAccessoryView()
         }
         
     public func saveContents()

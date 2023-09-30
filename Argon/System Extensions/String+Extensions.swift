@@ -96,6 +96,16 @@ extension String
         return(nil)
         }
         
+    public func character(at: Int) -> Character?
+        {
+        guard at < self.count else
+            {
+            return(nil)
+            }
+        let index = self.index(self.startIndex, offsetBy: at)
+        return(self[index])
+        }
+        
     public mutating func append(_ scalar: Unicode.Scalar)
         {
         self.append(String(scalar))

@@ -57,6 +57,7 @@ public class ArgonScanner
         {
         if self.offset >= self.sourceCharacterCount
             {
+            self.currentCharacter = Unicode.Scalar(0)
             return(self.currentCharacter)
             }
         self.currentCharacter = self.source.unicodeScalars[self.sourceIndex]
@@ -74,6 +75,7 @@ public class ArgonScanner
         {
         if self.offset >= self.sourceCharacterCount
             {
+            self.currentCharacter = Unicode.Scalar(0)
             return(self.currentCharacter)
             }
         self.currentCharacter = self.source.unicodeScalars[self.sourceIndex]
@@ -92,7 +94,7 @@ public class ArgonScanner
         self.nextDirtyCharacter()
         self.nextDirtyCharacter()
         var string = ";;"
-        while self.currentCharacter.isNotNewLine && !self.atEnd
+        while self.currentCharacter.isNotNewLine && self.currentCharacter.isNotEOF
             {
             string += String(self.currentCharacter)
             self.nextDirtyCharacter()
@@ -108,7 +110,7 @@ public class ArgonScanner
         {
         self.nextDirtyCharacter()
         var string = ""
-        while self.currentCharacter.isNotNewLine && !self.atEnd && self.currentCharacter != ")"
+        while self.currentCharacter.isNotNewLine && self.currentCharacter.isNotEOF && self.currentCharacter != ")"
             {
             string += String(self.currentCharacter)
             self.nextDirtyCharacter()
@@ -125,7 +127,7 @@ public class ArgonScanner
         self.nextDirtyCharacter()
         self.nextDirtyCharacter()
         var string = "/*"
-        while self.sourcePrefix(length: 2) != "*/" && !self.atEnd
+        while self.sourcePrefix(length: 2) != "*/" && self.currentCharacter.isNotEOF
             {
             string += String(self.currentCharacter)
             self.nextDirtyCharacter()
@@ -139,7 +141,7 @@ public class ArgonScanner
     public func allTokens() -> Tokens
         {
         var tokens = Tokens()
-        while !self.atEnd
+        while self.currentCharacter.isNotEOF && !self.atEnd
             {
             let someTokens = self.scanTokens()
             tokens.append(contentsOf: someTokens)
@@ -207,7 +209,7 @@ public class ArgonScanner
         self.nextCharacter()
         self.nextCharacter()
         var string = String()
-        while self.currentCharacter != ")" && !self.atEnd
+        while self.currentCharacter != ")" && self.currentCharacter.isNotEOF
             {
             string.append(self.currentCharacter)
             self.nextCharacter()
@@ -216,21 +218,21 @@ public class ArgonScanner
             {
             self.nextCharacter()
             }
-        return([CalendricalToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string)])
+        return([CalendricalToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.startOffset + string.count),string: string)])
         }
         
     private func scanBracket() -> Tokens
         {
         let character = self.currentCharacter
         self.nextCharacter()
-        return([OperatorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset), string: String(character))])
+        return([OperatorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.startOffset + 1), string: String(character))])
         }
         
     private func scanIdentifier() -> Tokens
         {
         var string = String(self.currentCharacter)
         self.nextCharacter()
-        while self.identifierCharacters.contains(self.currentCharacter) && !self.atEnd
+        while self.identifierCharacters.contains(self.currentCharacter) && self.currentCharacter.isNotEOF
             {
             string.append(self.currentCharacter)
             self.nextCharacter()
@@ -240,7 +242,7 @@ public class ArgonScanner
             string.append(self.currentCharacter)
             self.nextCharacter()
             }
-        let location = Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset)
+        let location = Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.startOffset + string.count)
         if KeywordToken.isKeyword(string)
             {
             return([KeywordToken(location: location,string: string)])
@@ -251,31 +253,31 @@ public class ArgonScanner
     private func scanOperator() -> Tokens
         {
         var string = String()
-        while self.operatorCharacters.contains(self.currentCharacter) && !self.atEnd
+        while self.operatorCharacters.contains(self.currentCharacter) && self.currentCharacter.isNotEOF
             {
             string.append(self.currentCharacter)
             self.nextCharacter()
             }
-        return([OperatorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string)])
+        return([OperatorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.startOffset + string.count),string: string)])
         }
         
     private func scanAtom() -> Tokens
         {
         self.nextCharacter()
         var string = "#"
-        while self.symbolCharacters.contains(self.currentCharacter) && !self.atEnd
+        while self.symbolCharacters.contains(self.currentCharacter) && self.currentCharacter.isNotEOF
             {
             string.append(self.currentCharacter)
             self.nextCharacter()
             }
-        return([AtomToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string)])
+        return([AtomToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.startOffset + string.count),string: string)])
         }
         
     private func scanString() -> Tokens
         {
         self.nextCharacter()
         var string = ""
-        while self.currentCharacter != Unicode.Scalar("\"") && !self.atEnd
+        while self.currentCharacter != Unicode.Scalar("\"") && self.currentCharacter.isNotEOF
             {
             string.append(self.currentCharacter)
             self.nextCharacter()
@@ -284,7 +286,7 @@ public class ArgonScanner
             {
             self.nextCharacter()
             }
-        return([StringToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string)])
+        return([StringToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.startOffset + string.count),string: string)])
         }
         
     private func scanNumber() -> Tokens
@@ -314,7 +316,7 @@ public class ArgonScanner
     private func scanBinaryNumber() -> Tokens
         {
         var string = String()
-        while self.binaryCharacters.contains(self.currentCharacter) && !self.atEnd
+        while self.binaryCharacters.contains(self.currentCharacter) && self.currentCharacter.isNotEOF
             {
             if self.currentCharacter != Unicode.Scalar("_")
                 {
@@ -325,15 +327,15 @@ public class ArgonScanner
         if let integer = Int(string,radix: 2)
             {
             let number = "\(integer)"
-            return([IntegerToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: number)])
+            return([IntegerToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.startOffset + string.count),string: number)])
             }
-        return([ErrorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset), code: .invalidBinaryNumber, message: "The binary number can not be represented by an Argon Integer.")])
+        return([ErrorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.startOffset + string.count), code: .invalidBinaryNumber, message: "The binary number can not be represented by an Argon Integer.")])
         }
         
     private func scanOctalNumber() -> Tokens
         {
         var string = String()
-        while self.octalCharacters.contains(self.currentCharacter) && !self.atEnd
+        while self.octalCharacters.contains(self.currentCharacter) && self.currentCharacter.isNotEOF
             {
             if self.currentCharacter != Unicode.Scalar("_")
                 {
@@ -344,15 +346,15 @@ public class ArgonScanner
         if let integer = Int(string,radix: 8)
             {
             let number = "\(integer)"
-            return([IntegerToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: number)])
+            return([IntegerToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.startOffset + string.count),string: number)])
             }
-        return([ErrorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset), code: .invalidOctalNumber, message: "The octal number can not be represented by an Argon Integer.")])
+        return([ErrorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.startOffset + string.count), code: .invalidOctalNumber, message: "The octal number can not be represented by an Argon Integer.")])
         }
         
     private func scanHexadecimalNumber() -> Tokens
         {
         var string = String()
-        while self.hexadecimalCharacters.contains(self.currentCharacter) && !self.atEnd
+        while self.hexadecimalCharacters.contains(self.currentCharacter) && self.currentCharacter.isNotEOF
             {
             if self.currentCharacter != Unicode.Scalar("_")
                 {
@@ -363,15 +365,15 @@ public class ArgonScanner
         if let integer = Int(string,radix: 16)
             {
             let number = "\(integer)"
-            return([IntegerToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: number)])
+            return([IntegerToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.startOffset + string.count),string: number)])
             }
-        return([ErrorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset), code: .invalidHexadecimalNumber, message: "The hexadecimal number can not be represented by an Argon Integer.")])
+        return([ErrorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.startOffset + string.count), code: .invalidHexadecimalNumber, message: "The hexadecimal number can not be represented by an Argon Integer.")])
         }
         
     private func scanDecimalNumber() -> Tokens
         {
         var string = String()
-        while self.decimalCharacters.contains(self.currentCharacter) && !self.atEnd
+        while self.decimalCharacters.contains(self.currentCharacter) && self.currentCharacter.isNotEOF
             {
             if self.currentCharacter != Unicode.Scalar("_")
                 {
@@ -381,13 +383,13 @@ public class ArgonScanner
             }
         if self.sourcePrefix(length: 2) == ".."
             {
-            return([IntegerToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string)])
+            return([IntegerToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.startOffset + string.count),string: string)])
             }
         if self.currentCharacter == Unicode.Scalar(".")
             {
             string.append(".")
             self.nextCharacter()
-            while self.decimalCharacters.contains(self.currentCharacter) && !self.atEnd
+            while self.decimalCharacters.contains(self.currentCharacter) && self.currentCharacter.isNotEOF
                 {
                 if self.currentCharacter != Unicode.Scalar("_")
                     {
@@ -395,9 +397,9 @@ public class ArgonScanner
                     }
                 self.nextCharacter()
                 }
-            return([FloatToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string)])
+            return([FloatToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.startOffset + string.count),string: string)])
             }
-        return([IntegerToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string)])
+        return([IntegerToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.startOffset + string.count),string: string)])
         }
         
     private func scanComment() -> Tokens
@@ -408,18 +410,18 @@ public class ArgonScanner
     private func scanMultilineComment() -> Tokens
         {
         let string = self.scanUntilEndOfMultilineComment()
-        return([CommentToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string)])
+        return([CommentToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.startOffset + string.count),string: string)])
         }
         
     private func scanSinglelineComment() -> Tokens
         {
         let string = self.scanUntilEndOfLine()
-        return([CommentToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string)])
+        return([CommentToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.startOffset + string.count),string: string)])
         }
         
     private func scanWhitespace()
         {
-        while CharacterSet.whitespacesAndNewlines.contains(self.currentCharacter) && !self.atEnd
+        while CharacterSet.whitespacesAndNewlines.contains(self.currentCharacter) && self.currentCharacter.isNotEOF
             {
             self.nextCharacter()
             }

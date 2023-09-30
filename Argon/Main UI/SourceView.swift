@@ -24,6 +24,14 @@ class SourceView: NSTextView
     {
     public var matchBrackets: Bool = true
         
+    public override var string: String
+        {
+        didSet
+            {
+            self.textDidChange(self)
+            }
+        }
+        
     public var compilerIssues: CompilerIssues
         {
         get
@@ -324,12 +332,45 @@ class SourceView: NSTextView
         self.sourceEditorDelegate?.sourceEditor(self,changedLine: line + 1,offset: location - offset)
         }
         
+    public override func mouseDown(with event: NSEvent)
+        {
+        super.mouseDown(with: event)
+        guard self.matchBrackets else
+            {
+            return
+            }
+        let location = self.convert(event.locationInWindow,from: nil)
+        var offset = self.characterIndexForInsertion(at: location)
+        var index:Int?
+        var character: Character?
+        if var first = self.string.character(at: offset),first.isBracket
+            {
+            index = offset
+            character = first
+            }
+        if index.isNil,offset - 1 >= 0,let next = self.string.character(at: offset - 1),next.isBracket
+            {
+            index = offset - 1
+            character = next
+            }
+        guard index.isNotNil else
+            {
+            return
+            }
+        guard let locations = self.bracketMatcher.locateMatch(for: character!.bracketKind,at: index!) else
+            {
+            return
+            }
+        self.highlightCharacters(atLocations: locations,forMilliseconds: 1000,inColor: NSColor.cyan)
+        }
+        
     private func highlightCharacters(atLocations locations: (Location,Location),forMilliseconds: Int,inColor: NSColor)
         {
         self.textStorage?.beginEditing()
         let styleTheme = StyleTheme.shared
         let font = styleTheme.font(for: .fontEditor)
         let boldFont = NSFontManager.shared.convert(font,toHaveTrait: .boldFontMask)
+        let oldAttributes = self.textStorage!.attributes(at: locations.0.start, effectiveRange: nil)
         var attributes = Dictionary<NSAttributedString.Key,Any>()
         attributes[.backgroundColor] = inColor
         attributes[.font] = boldFont
@@ -340,11 +381,12 @@ class SourceView: NSTextView
             {
             [weak self] in
             self?.textStorage?.beginEditing()
-            var attributes = Dictionary<NSAttributedString.Key,Any>()
-            attributes[.backgroundColor] = self?.backgroundColor
-            attributes[.font] = font
-            self?.textStorage?.setAttributes(attributes, range: locations.0.range)
-            self?.textStorage?.setAttributes(attributes, range: locations.1.range)
+//            var attributes = Dictionary<NSAttributedString.Key,Any>()
+//            attributes[.foregroundColor] =
+//            attributes[.backgroundColor] = self?.backgroundColor
+//            attributes[.font] = font
+            self?.textStorage?.setAttributes(oldAttributes, range: locations.0.range)
+            self?.textStorage?.setAttributes(oldAttributes, range: locations.1.range)
             self?.textStorage?.endEditing()
             }
         }

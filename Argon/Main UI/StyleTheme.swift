@@ -58,7 +58,8 @@ public enum StyleElement
     case colorNumber
     
     case colorOperator
-    case colorOutlineBackground
+    case colorOutlinerBackground
+    case colorOutlinerText
     
     case colorPath
     case colorProjectControls
@@ -84,12 +85,13 @@ public enum StyleElement
     case fontLineNumber
     case fontEditor
     case fontToolbarText
-    case fontProjectCell
+    case fontOutliner
     
     case metric
     case metricLineNumberRulerWidth
     case metricLineNumberIndent
     case metricControlCornerRadius
+    case metricOutlinerImageHeight
     }
     
 public class StyleTheme
@@ -101,10 +103,10 @@ public class StyleTheme
     public init()
         {
         self.styles = [:]
-        self.styles[.fontDefault] = NSFont(name: "SunSans-Demi",size: 11)!
-        self.styles[.fontProjectCell] = self.styles[.fontDefault]
+        self.styles[.fontDefault] = NSFont(name: "SunSans-Demi",size: 12)!
+        self.styles[.fontOutliner] = self.styles[.fontDefault]
         self.styles[.fontToolbarText] = NSFont(name: "SunSans-Regular",size: 10)!
-        self.styles[.fontText] = NSFont(name: "SunSans-Regular",size: 10)!
+        self.styles[.fontText] = NSFont(name: "SunSans-Regular",size: 11)!
         self.styles[.fontEditor] = NSFont(name: "Menlo-Regular",size: 11)
         self.styles[.fontLineNumber] = self.styles[.fontEditor]
         
@@ -157,7 +159,8 @@ public class StyleTheme
         self.styles[.colorName] = NSColor.argonXIvory
         
         self.styles[.colorOperator] = NSColor.argonFulvous
-        self.styles[.colorOutlineBackground] = NSColor.windowBackgroundColor
+        self.styles[.colorOutlinerBackground] = NSColor.windowBackgroundColor
+        self.styles[.colorOutlinerText] = NSColor.argonWhite50
         
         self.styles[.colorProjectControls] = NSColor.argonWhite40
         
@@ -184,6 +187,7 @@ public class StyleTheme
         self.styles[.metricLineNumberRulerWidth] = CGFloat(30 + 10)
         self.styles[.metricLineNumberIndent] = CGFloat(10)
         self.styles[.metricControlCornerRadius] = CGFloat(4)
+        self.styles[.metricOutlinerImageHeight] = CGFloat(16)
         }
         
     public func set(font: NSFont,for: StyleElement)

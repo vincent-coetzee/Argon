@@ -7,9 +7,9 @@
 
 import AppKit
 
-public class ProjectViewCell: NSTableCellView
+public class ProjectViewCell: NSTableCellView,NSTextFieldDelegate
     {
-    private static let fontStyleElement: StyleElement = .fontProjectCell
+    private static let fontStyleElement: StyleElement = .fontOutliner
     
     public var cellWidth: CGFloat
         {
@@ -26,32 +26,49 @@ public class ProjectViewCell: NSTableCellView
         {
         didSet
             {
-            if self.node.isNotNil
+            if let newNode = self.node
                 {
-                self.textField?.stringValue = self.node?.name ?? ""
-                let image = self.node!.projectViewImage
-                self.imageView?.image = image
-                self.imageView?.image?.isTemplate = true
-                self.imageView?.contentTintColor = StyleTheme.shared.color(for: .colorTint)
+                self.textPane.stringValue = newNode.name
+                let image = newNode.projectViewImage
+                self.imagePane.image = image
+                self.imagePane.image?.isTemplate = true
+                self.imagePane.contentTintColor = StyleTheme.shared.color(for: .colorTint)
                 }
             }
         }
         
-    @objc public func textFieldChanged(_ sender: Any?)
+    private let imagePane = NSImageView(frame: .zero)
+    public let textPane = NSTextField(labelWithString: "")
+    
+    public override init(frame: NSRect)
         {
-        
+        super.init(frame: frame)
+        self.initPanes()
         }
         
-    public override func layout()
+    public required init?(coder: NSCoder)
         {
-        super.layout()
-        let theFrame = self.bounds
-        let cellFont = StyleTheme.shared.font(for: Self.fontStyleElement)
-        let rowHeight = cellFont.lineHeight + 4 + 4
-        let imageWidth = rowHeight - 4
-        self.imageView!.frame = NSRect(x: 0,y: 2,width: imageWidth,height: imageWidth)
-        let inset = (theFrame.size.height - cellFont.lineHeight) / 2
-        self.textField!.frame = NSRect(x: imageWidth + 4,y: inset,width: theFrame.size.width - imageWidth - 4,height: cellFont.lineHeight)
-        self.textField?.font = cellFont
+        super.init(coder: coder)
+        self.initPanes()
+        }
+        
+    private func initPanes()
+        {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.textField = nil
+        self.imageView = nil
+        self.imagePane.translatesAutoresizingMaskIntoConstraints = false
+        self.textPane.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(self.imagePane)
+        self.addSubview(self.textPane)
+        self.imagePane.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 4).isActive = true
+        self.imagePane.heightAnchor.constraint(equalToConstant: StyleTheme.shared.metric(for: .metricOutlinerImageHeight)).isActive = true
+        self.imagePane.widthAnchor.constraint(equalTo: self.imagePane.heightAnchor).isActive = true
+        self.imagePane.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        self.textPane.leadingAnchor.constraint(equalTo: self.imagePane.trailingAnchor, constant: 4).isActive = true
+        self.textPane.trailingAnchor.constraint(equalTo: self.trailingAnchor,constant: -4).isActive = true
+        self.textPane.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        self.textPane.font = StyleTheme.shared.font(for: .fontOutliner)
+        self.textPane.textColor = StyleTheme.shared.color(for: .colorOutlinerText)
         }
     }

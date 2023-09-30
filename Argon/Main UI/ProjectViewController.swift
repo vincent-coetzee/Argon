@@ -211,7 +211,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         let cellFont = StyleTheme.shared.font(for: .fontDefault)
         let rowHeight = cellFont.lineHeight + 4 + 4
         self.outliner.rowHeight = rowHeight
-        self.outliner.backgroundColor = StyleTheme.shared.color(for: .colorOutlineBackground)
+        self.outliner.backgroundColor = StyleTheme.shared.color(for: .colorOutlinerBackground)
         self.outliner.rowSizeStyle = .custom
         self.outliner.intercellSpacing = NSSize(width: 0, height: 4)
         self.outliner.doubleAction = #selector(self.onOutlinerDoubleClicked)
@@ -331,7 +331,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
             let row = self.outliner.row(forItem: file)
             let indexSet = IndexSet(integer: row)
             self.outliner.selectRowIndexes(indexSet, byExtendingSelection: false)
-            self.sourceView.tokens = file.tokens
+//            self.sourceView.tokens = file.tokens
             }
         else
             {
@@ -378,7 +378,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
             {
             let sourceFileNode = sourceNode as! SourceFileNode
             self.sourceView.string = sourceFileNode.expandedSource
-            self.sourceView.tokens = ArgonScanner(source: sourceFileNode.expandedSource).allTokens()
+//            self.sourceView.tokens = ArgonScanner(source: sourceFileNode.expandedSource).allTokens()
             }
         }
     }
