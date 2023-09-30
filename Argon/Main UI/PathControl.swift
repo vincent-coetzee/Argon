@@ -5,7 +5,7 @@
 //  Created by Vincent Coetzee on 17/09/2023.
 //
 
-import Cocoa
+import AppKit
 
 public class PathControl: NSPathControl,Dependent
     {
@@ -20,6 +20,7 @@ public class PathControl: NSPathControl,Dependent
         didSet
             {
             self.valueModel?.addDependent(self)
+            self.valueModel?.shake(aspect: "value")
             }
         }
         
@@ -35,7 +36,7 @@ public class PathControl: NSPathControl,Dependent
             {
             return
             }
-        guard let newValue = self.valueModel?.value as? SourceNode else
+        guard let newValue = (model as! ValueModel).value as? SourceNode else
             {
             return
             }

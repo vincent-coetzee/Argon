@@ -45,6 +45,11 @@ class ProjectHierarchyViewController: NSViewController,Dependent
         self.initOutlineView()
         }
         
+    public func saveContents()
+        {
+        (self.projectModel.value as? SourceProjectNode)?.saveContents()
+        }
+
     private func initOutlineView()
         {
         let cellFont = StyleTheme.shared.font(for: .fontDefault)
@@ -52,8 +57,7 @@ class ProjectHierarchyViewController: NSViewController,Dependent
         self.outlineView.rowHeight = rowHeight
         self.outlineView.backgroundColor = StyleTheme.shared.color(for: .colorOutlineBackground)
         self.outlineView.rowSizeStyle = .custom
-        self.outlineView.intercellSpacing = NSSize(width: 0, height: 4)
-//        self.outlineView.doubleAction = #selector(self.onOutlineViewDoubleClicked)
+        self.outlineView.intercellSpacing = NSSize(width: 5, height: 2)
         self.outlineView.target = self
         self.outlineView.style = .plain
         self.outlineView.columnAutoresizingStyle = .lastColumnOnlyAutoresizingStyle
@@ -62,9 +66,8 @@ class ProjectHierarchyViewController: NSViewController,Dependent
         self.outlineView.dataSource = self
         self.outlineView.reloadData()
         self.outlineView.font = StyleTheme.shared.font(for: .fontDefault)
-        self.outlineView.indentationPerLevel = 15
+        self.outlineView.indentationPerLevel = 20
         self.outlineView.indentationMarkerFollowsCell = true
-        self.outlineView.intercellSpacing = NSSize(width: 5,height: 0)
         }
         
     public func update(aspect: String,with: Any?,from: Model)

@@ -12,7 +12,7 @@ public class BinaryExpression: Expression
     public let left: Expression
     private let `operator`: TokenType
     public let right: Expression
-    private var methods: Methods?
+    private var method: MultimethodType?
     
     public init(left: Expression,right: Expression)
         {
@@ -54,8 +54,8 @@ public class BinaryExpression: Expression
         visitor.exit(binaryExpression: self)
         }
         
-    public func setMethods(_ methods: Methods)
+    public func setMethod(_ method: MultimethodType?)
         {
-        self.methods = methods
+        self.method = method
         }
     }

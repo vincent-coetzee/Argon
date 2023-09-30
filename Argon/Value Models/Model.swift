@@ -18,6 +18,11 @@ public protocol Model: AnyObject
 
 extension Model
     {
+    public func shake(aspect: String)
+        {
+        self.changed(aspect: aspect)
+        }
+        
     public func addDependent(_ dependent: Dependent)
         {
         self.dependents.addDependent(dependent)

@@ -150,6 +150,7 @@
 		BFBDC53E2A211C510093C554 /* libLLVM.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF97988B2A19188D00C9852C /* libLLVM.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		BFC4B6CA2A934A1C0098FBB1 /* TypeSubstitutionSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC4B6C92A934A1C0098FBB1 /* TypeSubstitutionSet.swift */; };
 		BFC6C0722A69990600BC424D /* ModuleBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC6C0712A69990600BC424D /* ModuleBundle.swift */; };
+		BFC779F82AC771EB00756140 /* TitlebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC779F72AC771EB00756140 /* TitlebarView.swift */; };
 		BFCA9342296F43340049B39A /* Scope.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCA9341296F43340049B39A /* Scope.swift */; };
 		BFCB438429845D07001D1CFD /* Slot.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCB438329845D07001D1CFD /* Slot.swift */; };
 		BFCB438629845D33001D1CFD /* EnumerationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCB438529845D33001D1CFD /* EnumerationType.swift */; };
@@ -163,6 +164,8 @@
 		BFCDC3EE2A8559E000C20746 /* AccessoryViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCDC3ED2A8559E000C20746 /* AccessoryViewControllers.swift */; };
 		BFCDC3F22A8579FE00C20746 /* NSImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCDC3F12A8579FE00C20746 /* NSImage+Extensions.swift */; };
 		BFD0B50D2968758B00E9ABBD /* SourceProjectNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD0B50C2968758B00E9ABBD /* SourceProjectNode.swift */; };
+		BFD223242AC7C2CF00F0C614 /* SourceNodeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD223232AC7C2CF00F0C614 /* SourceNodeState.swift */; };
+		BFD223262AC7F73300F0C614 /* NSView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD223252AC7F73300F0C614 /* NSView+Extensions.swift */; };
 		BFD87E982954A3D200298094 /* CompilerIssue.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD87E972954A3D200298094 /* CompilerIssue.swift */; };
 		BFDC80152A7D42D7008118FF /* CalendricalToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFDC80142A7D42D7008118FF /* CalendricalToken.swift */; };
 		BFDC80172A7D5CFF008118FF /* NodeChangeSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFDC80162A7D5CFF008118FF /* NodeChangeSet.swift */; };
@@ -366,6 +369,7 @@
 		BFBDC5382A21151D0093C554 /* libLLVM-C.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libLLVM-C.dylib"; path = "../../../../../opt/homebrew/Cellar/llvm/16.0.1/lib/libLLVM-C.dylib"; sourceTree = "<group>"; };
 		BFC4B6C92A934A1C0098FBB1 /* TypeSubstitutionSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeSubstitutionSet.swift; sourceTree = "<group>"; };
 		BFC6C0712A69990600BC424D /* ModuleBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleBundle.swift; sourceTree = "<group>"; };
+		BFC779F72AC771EB00756140 /* TitlebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitlebarView.swift; sourceTree = "<group>"; };
 		BFCA9341296F43340049B39A /* Scope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scope.swift; sourceTree = "<group>"; };
 		BFCB438329845D07001D1CFD /* Slot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slot.swift; sourceTree = "<group>"; };
 		BFCB438529845D33001D1CFD /* EnumerationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumerationType.swift; sourceTree = "<group>"; };
@@ -379,6 +383,8 @@
 		BFCDC3ED2A8559E000C20746 /* AccessoryViewControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessoryViewControllers.swift; sourceTree = "<group>"; };
 		BFCDC3F12A8579FE00C20746 /* NSImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage+Extensions.swift"; sourceTree = "<group>"; };
 		BFD0B50C2968758B00E9ABBD /* SourceProjectNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceProjectNode.swift; sourceTree = "<group>"; };
+		BFD223232AC7C2CF00F0C614 /* SourceNodeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceNodeState.swift; sourceTree = "<group>"; };
+		BFD223252AC7F73300F0C614 /* NSView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSView+Extensions.swift"; sourceTree = "<group>"; };
 		BFD87E972954A3D200298094 /* CompilerIssue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompilerIssue.swift; sourceTree = "<group>"; };
 		BFDC80142A7D42D7008118FF /* CalendricalToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendricalToken.swift; sourceTree = "<group>"; };
 		BFDC80162A7D5CFF008118FF /* NodeChangeSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeChangeSet.swift; sourceTree = "<group>"; };
@@ -511,7 +517,6 @@
 			children = (
 				BFBD79762A576CFB0038EEEA /* AliasedType.swift */,
 				BF31131C298D6FD600BF5D11 /* ArgonType.swift */,
-				BF2D01E52A7C0E2A00887DD7 /* InvokableType.swift */,
 				BFCB438929845D5D001D1CFD /* ClassType.swift */,
 				BFCB438729845D40001D1CFD /* EnumerationCase.swift */,
 				BFCB438529845D33001D1CFD /* EnumerationType.swift */,
@@ -519,9 +524,11 @@
 				BFEF43632ABC5F6B0016BD51 /* FunctionType.swift */,
 				BF077A092AB4CEA8007F88D3 /* IntrinsicMethodType.swift */,
 				BF0D320C2A6406EF002A2D8D /* InvocationType.swift */,
+				BF2D01E52A7C0E2A00887DD7 /* InvokableType.swift */,
 				BF4DB6D92A8167D200A509A4 /* MetaclassType.swift */,
 				BFAD0C152A8001AD00FB45B9 /* MethodSignature.swift */,
 				BFEF43612ABC5E940016BD51 /* MethodType.swift */,
+				BF5EB1462AC5D2E1002A4E4B /* MultimethodType.swift */,
 				BF92E2CA2AC0CC3A00D1FDE2 /* PrimitiveType.swift */,
 				BFCB438329845D07001D1CFD /* Slot.swift */,
 				BF1F4B022A5616B000C1F977 /* StructuredType.swift */,
@@ -532,7 +539,6 @@
 				BFAC05982AB31759004C3823 /* TypeRegistry.swift */,
 				BFC4B6C92A934A1C0098FBB1 /* TypeSubstitutionSet.swift */,
 				BFEE2AE7298EF7960060EE74 /* TypeVariable.swift */,
-				BF5EB1462AC5D2E1002A4E4B /* MultimethodType.swift */,
 			);
 			path = "Types and Type Inference";
 			sourceTree = "<group>";
@@ -594,8 +600,10 @@
 				BFC6C0712A69990600BC424D /* ModuleBundle.swift */,
 				BF47CD612A68729B00C63D1E /* ModuleBundleDocument.swift */,
 				BF47CD632A68749700C63D1E /* ModuleBundleViewController.swift */,
+				BF95CD4D2AB784B500792BD6 /* PathControl.swift */,
 				BFA93E42291678AF0001F05D /* ProjectDocument.swift */,
 				BF789A7B2AB634160022ED48 /* ProjectHierarchyViewController.swift */,
+				BF95CD4F2AB7880500792BD6 /* ProjectInspectorView.swift */,
 				BF789A812AB6364E0022ED48 /* ProjectInspectorViewController.swift */,
 				BF789A7F2AB6362C0022ED48 /* ProjectSourceViewController.swift */,
 				BF8CB1852A8FE8380056F145 /* ProjectState.swift */,
@@ -604,11 +612,11 @@
 				BFA93E40291678AF0001F05D /* ProjectViewController.swift */,
 				BF789A7D2AB635660022ED48 /* ProjectWindowController.swift */,
 				BF96903D29F57FA200A7ED65 /* SourceCodeEditingView.swift */,
-				BF3B430829A15319009C269F /* StyleTheme.swift */,
+				BFD223232AC7C2CF00F0C614 /* SourceNodeState.swift */,
 				BF3B430629A1515F009C269F /* SourceView.swift */,
+				BF3B430829A15319009C269F /* StyleTheme.swift */,
+				BFC779F72AC771EB00756140 /* TitlebarView.swift */,
 				BFAB87712A8671B30048B20E /* ToggleState.swift */,
-				BF95CD4D2AB784B500792BD6 /* PathControl.swift */,
-				BF95CD4F2AB7880500792BD6 /* ProjectInspectorView.swift */,
 			);
 			path = "Main UI";
 			sourceTree = "<group>";
@@ -660,6 +668,7 @@
 				BF789A732AB5C6FF0022ED48 /* NSOutlineView+Extensions.swift */,
 				BF3DBC692AB845A9009612B8 /* NSRulerMarker+Extensions.swift */,
 				BF60F4AE2ABB9DC00085700C /* NSToolbar+Extensions.swift */,
+				BFD223252AC7F73300F0C614 /* NSView+Extensions.swift */,
 				BF6B052D296209F20097C9A9 /* Optional+Extensions.swift */,
 				BF0E84E32A5D612E003BCC49 /* Path+Extensions.swift */,
 				BFB5E60D2A2664DA0018824E /* String+Extensions.swift */,
@@ -940,6 +949,7 @@
 				BF4177372AC38FDA00DBAA01 /* TypeConstructor.swift in Sources */,
 				BFCB438629845D33001D1CFD /* EnumerationType.swift in Sources */,
 				BF0238122AB0DF56001DE9F9 /* NameMangler.swift in Sources */,
+				BFD223262AC7F73300F0C614 /* NSView+Extensions.swift in Sources */,
 				BF2D01E62A7C0E2A00887DD7 /* InvokableType.swift in Sources */,
 				BFB5E60E2A2664DA0018824E /* String+Extensions.swift in Sources */,
 				BF1F4AFE2A554A2700C1F977 /* Block.swift in Sources */,
@@ -1032,6 +1042,7 @@
 				BFE6BDA72AA670BA00614F71 /* ProcessingFlags.swift in Sources */,
 				BF1918A52A59AAB00093A765 /* Collection+Exensions.swift in Sources */,
 				BF7749FC29899259003250CB /* Array+Extensions.swift in Sources */,
+				BFD223242AC7C2CF00F0C614 /* SourceNodeState.swift in Sources */,
 				BFABDBD22A8BD3EA00806F7D /* PseudoVariable.swift in Sources */,
 				BF53D1372A72DDA700C2777D /* TernaryExpression.swift in Sources */,
 				BFCB438829845D40001D1CFD /* EnumerationCase.swift in Sources */,
@@ -1104,6 +1115,7 @@
 				BF1F4AF62A5549C500C1F977 /* IfStatement.swift in Sources */,
 				BF1F4B002A557CBB00C1F977 /* Constant.swift in Sources */,
 				BF174B63294CC8960094A6D4 /* AtomToken.swift in Sources */,
+				BFC779F82AC771EB00756140 /* TitlebarView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

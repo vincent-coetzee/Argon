@@ -13,8 +13,8 @@ public protocol Scope: AnyObject
     func addSymbol(_ symbol: Symbol)
     func lookupSymbol(atName: String) -> Symbol?
     func lookupSymbol(atIdentifier: Identifier) -> Symbol?
-    func lookupMethods(atName: String) -> Methods
-    func lookupMethods(atIdentifier: Identifier) -> Methods
+    func lookupMethod(atName: String) -> MultimethodType?
+    func lookupMethod(atIdentifier: Identifier) -> MultimethodType?
     func lookupType(atName: String) -> ArgonType?
     func lookupType(atIdentifier: Identifier) -> ArgonType?
     }

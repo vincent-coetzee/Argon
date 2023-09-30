@@ -9,6 +9,21 @@ import Foundation
 
 public class MultimethodType: StructuredType
     {
+    public var signatures: MethodSignatures
+        {
+        self.methods.map{$0.signature}
+        }
+        
+    public override var styleElement: StyleElement
+        {
+        .colorMultimethod
+        }
+        
+    public override var isMultimethod: Bool
+        {
+        true
+        }
+        
     public private(set) var methods = Methods()
     
     public init(name: String)
@@ -59,6 +74,15 @@ public class MultimethodType: StructuredType
             }
         newMethod.methods = self.methods.appending(contentsOf: method.methods)
         return(newMethod as! Self)
+        }
+        
+    public func append(contentsOf method: MultimethodType?)
+        {
+        guard let method = method else
+            {
+            return
+            }
+        self.methods.append(contentsOf: method.methods)
         }
     }
 

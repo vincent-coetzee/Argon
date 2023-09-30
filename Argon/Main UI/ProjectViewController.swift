@@ -25,7 +25,6 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
     private var rightSidebarState = ToggleState.expanded
     private var pathControl: NSPathControl!
     private var leftSidebarController: LeftSidebarButtonController!
-    private var rightSidebarController: RightSidebarButtonController!
     private var pathControlWidthConstraint: NSLayoutConstraint!
     private var selectedSourceNode: SourceNode!
     private var issueCountIconLabelView: IconLabelView!
@@ -89,9 +88,6 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         self.leftSidebarController = LeftSidebarButtonController()
         self.leftSidebarController.target = self
         window.addTitlebarAccessoryViewController(self.leftSidebarController)
-        self.rightSidebarController = RightSidebarButtonController()
-        self.rightSidebarController.target = self
-        window.addTitlebarAccessoryViewController(self.rightSidebarController)
         NotificationCenter.default.addObserver(self, selector: #selector(self.windowFrameDidChange), name: NSWindow.didResizeNotification, object: window)
         window.titleVisibility = .hidden
         if !self.stateWasRestored

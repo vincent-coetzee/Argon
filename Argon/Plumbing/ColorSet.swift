@@ -5,7 +5,7 @@
 //  Created by Vincent Coetzee on 15/08/2023.
 //
 
-import Cocoa
+import AppKit
 
 public enum ColorName: String
     {

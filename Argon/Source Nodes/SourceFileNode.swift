@@ -5,7 +5,7 @@
 //  Created by Vincent Coetzee on 18/02/2023.
 //
 
-import Cocoa
+import AppKit
 import Path
 
 public class SourceFileNode: SourceNode
@@ -25,6 +25,11 @@ public class SourceFileNode: SourceNode
         true
         }
         
+    public override var actionSet: BrowserActionSet
+        {
+        super.actionSet.enabling(.loadAction,.saveAction,.hideIssuesAction,.showIssuesAction,.cleanAction,.runAction,.buildAction,.debugAction)
+        }
+        
     public override var title: String
         {
         self.name + ".argon"
@@ -39,6 +44,7 @@ public class SourceFileNode: SourceNode
         set
             {
             self._compilerIssues = newValue
+            self._hasUnsavedChanges = true
             }
         }
         
@@ -47,6 +53,7 @@ public class SourceFileNode: SourceNode
     private var _compilerIssues = CompilerIssues()
     public var tokens = Tokens()
     public var module: Module!
+    private var _hasUnsavedChanges = false
     
     public init(name: String,path: Path,source: String = "")
         {
@@ -81,19 +88,35 @@ public class SourceFileNode: SourceNode
         NSImage(named: "IconSourceFile")!
         }
         
+    public override func saveContents()
+        {
+        do
+            {
+            try self.source.write(to: self.path,atomically: true)
+            }
+        catch let error
+            {
+            print("Failed to save SourceNode(\(self.name)) to \(self.path).")
+            print(error)
+            }
+        }
+        
     public override func setSource(_ string: String)
         {
         self.source = string
+        self._hasUnsavedChanges = true
         }
         
     public override func setTokens(_ tokens: Tokens)
         {
         self.tokens = tokens
+        self._hasUnsavedChanges = true
         }
         
     public func append(compilerIssues issues: CompilerIssues)
         {
         self.compilerIssues.append(contentsOf: issues)
+        self._hasUnsavedChanges = true
         }
     }
     

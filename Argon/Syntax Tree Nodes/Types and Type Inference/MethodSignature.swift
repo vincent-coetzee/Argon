@@ -9,6 +9,15 @@ import Foundation
 
 public class MethodSignature: NSObject,NSCoding
     {
+    public override var hash: Int
+        {
+        var hasher = Hasher()
+        hasher.combine(self.name)
+        hasher.combine(self.parameterTypes)
+        hasher.combine(self.returnType)
+        return(hasher.finalize())
+        }
+        
     private(set) var name: String
     private(set) var parameterTypes: ArgonTypes
     private(set) var returnType: ArgonType?
@@ -33,19 +42,6 @@ public class MethodSignature: NSObject,NSCoding
         coder.encode(self.name,forKey: "name")
         coder.encode(self.parameterTypes,forKey: "parameterTypes")
         coder.encode(self.returnType,forKey: "returnType")
-        }
-        
-    public override var hash: Int
-        {
-        var hasher = Hasher()
-        hasher.combine(super.hash)
-        hasher.combine(self.name)
-        for type in self.parameterTypes
-            {
-            hasher.combine(type)
-            }
-        hasher.combine(returnType)
-        return(hasher.finalize())
         }
         
     public override func isEqual(_ other: Any?) -> Bool

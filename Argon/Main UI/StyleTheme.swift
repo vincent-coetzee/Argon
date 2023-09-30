@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Cocoa
+import AppKit
 
 public enum StyleElement
     {
@@ -52,6 +52,7 @@ public enum StyleElement
     case colorList
     case colorLowlight
     case colorMethod
+    case colorMultimethod
     
     case colorName
     case colorNumber
@@ -118,7 +119,7 @@ public class StyleTheme
         self.styles[.colorByte] = NSColor.argonXSmoke
         self.styles[.colorBracketHighlight] = NSColor.argonIvory
         
-        self.styles[.colorComment] = NSColor.argonSolidPlum
+        self.styles[.colorComment] = NSColor.argonCommentPurple
         self.styles[.colorClass] = NSColor.argonLime
         self.styles[.colorCharacter] = NSColor.argonXSmoke
         self.styles[.colorConstant] = NSColor.argonCheese
@@ -150,7 +151,8 @@ public class StyleTheme
         self.styles[.colorLineNumber] = NSColor(hex: 0xA0A0A0)
         self.styles[.colorList] = NSColor.argonBluestone
         
-        self.styles[.colorMethod] = NSColor.argonNeonOrange
+        self.styles[.colorMethod] = NSColor.white
+        self.styles[.colorMultimethod] = NSColor.white
         
         self.styles[.colorName] = NSColor.argonXIvory
         
@@ -202,6 +204,11 @@ public class StyleTheme
     public func font(`for` element: StyleElement) -> NSFont
         {
         self.styles[element] as! NSFont
+        }
+        
+    public func font(`for` element: StyleElement,size: CGFloat) -> NSFont
+        {
+        (self.styles[element] as! NSFont).withSize(size)
         }
         
     public func color(`for` element: StyleElement) -> NSColor

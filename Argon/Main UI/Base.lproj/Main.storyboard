@@ -3,7 +3,6 @@
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22154"/>
-        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -344,6 +343,20 @@
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="Editor" id="9P5-Yr-vgH" userLabel="Editor">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Editor" id="Xz3-Xu-Qkb">
+                                    <items>
+                                        <menuItem title="Show Issues" id="oE6-Cl-xbh">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
+                                        <menuItem title="Show Inferred Types" id="JbX-OT-xO0">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="zmM-Y5-VbQ"/>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Project" id="lME-3G-idW">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Project" id="Ulm-a1-mbF">
@@ -353,12 +366,7 @@
                                                 <action selector="onBuildClicked:" target="Ady-hI-5gd" id="Yj2-a1-TAx"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Parse File" keyEquivalent="e" id="MzC-Us-xzh">
-                                            <connections>
-                                                <action selector="onParseClicked:" target="Ady-hI-5gd" id="9Ys-iN-F8M"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="jzi-A4-ikW"/>
+                                        <menuItem isSeparatorItem="YES" id="bzZ-M4-Aet"/>
                                         <menuItem title="Run Project" keyEquivalent="r" id="dXN-oi-Tw7">
                                             <connections>
                                                 <action selector="onRunClicked:" target="Ady-hI-5gd" id="Qan-WE-6wB"/>
@@ -718,8 +726,21 @@
                 <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="Argon" customModuleProvider="target"/>
                 <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <menu id="PgL-Aw-w9F">
+                    <items>
+                        <menuItem title="Item 1" id="oNX-Km-jun">
+                            <modifierMask key="keyEquivalentModifierMask"/>
+                        </menuItem>
+                        <menuItem title="Item 2" id="GFh-P8-9ph">
+                            <modifierMask key="keyEquivalentModifierMask"/>
+                        </menuItem>
+                        <menuItem title="Item 3" id="smx-38-KfU">
+                            <modifierMask key="keyEquivalentModifierMask"/>
+                        </menuItem>
+                    </items>
+                </menu>
             </objects>
-            <point key="canvasLocation" x="-280" y="-37"/>
+            <point key="canvasLocation" x="-331" y="-937"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -730,97 +751,6 @@
                         <rect key="contentRect" x="-62" y="240" width="1110" height="500"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
                         <value key="minSize" type="size" width="1000" height="500"/>
-                        <toolbar key="toolbar" implicitIdentifier="4B4C3880-E050-4C01-BEAE-5FAA44193770" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="5V9-16-3q1">
-                            <allowedToolbarItems>
-                                <toolbarItem implicitItemIdentifier="NSToolbarShowColorsItem" id="K1U-xd-f4F"/>
-                                <toolbarItem implicitItemIdentifier="NSToolbarShowFontsItem" id="utb-K8-p3g"/>
-                                <toolbarItem implicitItemIdentifier="NSToolbarPrintItem" id="0Pz-rP-lCt"/>
-                                <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="MeC-M0-CzF"/>
-                                <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="SaC-TI-ewb"/>
-                                <toolbarItem implicitItemIdentifier="ED19AF81-0292-4596-A42C-3B379458DF77" explicitItemIdentifier="build" label="Build" paletteLabel="Build" toolTip="Build this project" tag="1" bordered="YES" sizingBehavior="auto" id="hcm-BS-cn1">
-                                    <imageReference key="image" image="hammer.fill" catalog="system" symbolScale="default"/>
-                                    <connections>
-                                        <action selector="onBuildClicked:" target="6f7-a7-6o1" id="w6K-g1-Jco"/>
-                                    </connections>
-                                </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="F5639CAB-FC95-4E84-9BDE-4CD9270740B7" explicitItemIdentifier="parse" label="Parse" paletteLabel="Parse" toolTip="Parse all source files" tag="2" bordered="YES" sizingBehavior="auto" id="2xL-mB-pcx">
-                                    <imageReference key="image" image="screwdriver.fill" catalog="system" symbolScale="default"/>
-                                    <connections>
-                                        <action selector="onParseClicked:" target="6f7-a7-6o1" id="yNu-E6-I89"/>
-                                    </connections>
-                                </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="7FBE07B2-D151-4A40-AA67-FD6A561D0283" explicitItemIdentifier="clean" label="Clean" paletteLabel="Clean" toolTip="Clean this project" tag="-1" bordered="YES" sizingBehavior="auto" id="Lrd-q3-y5k">
-                                    <imageReference key="image" image="paintbrush.fill" catalog="system" symbolScale="default"/>
-                                    <connections>
-                                        <action selector="onCleanClicked:" target="6f7-a7-6o1" id="XzY-5O-vWw"/>
-                                    </connections>
-                                </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="29BBAC62-081E-40D7-945A-684956232C46" explicitItemIdentifier="run" label="Run" paletteLabel="Run" toolTip="Run this project" tag="-1" bordered="YES" sizingBehavior="auto" id="ddT-8V-mUh">
-                                    <imageReference key="image" image="bolt.fill" catalog="system" symbolScale="default"/>
-                                    <connections>
-                                        <action selector="onRunClicked:" target="6f7-a7-6o1" id="0py-M5-Bt2"/>
-                                    </connections>
-                                </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="B29D00D5-1878-48CF-8C7B-667B851504C0" explicitItemIdentifier="debug" label="Debug" paletteLabel="Debug" toolTip="Debug this project" tag="-1" bordered="YES" sizingBehavior="auto" id="163-Ag-rli">
-                                    <imageReference key="image" image="ladybug.fill" catalog="system" symbolScale="default"/>
-                                    <connections>
-                                        <action selector="onDebugClicked:" target="6f7-a7-6o1" id="JR1-lT-sPF"/>
-                                    </connections>
-                                </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="19AE564D-CFCA-42C4-9580-E37DCB1749C2" explicitItemIdentifier="load" label="Load" paletteLabel="Load" toolTip="Load a project" tag="-1" bordered="YES" id="nHW-jx-wnX">
-                                    <imageReference key="image" image="square.and.arrow.up" catalog="system" symbolScale="default"/>
-                                    <size key="minSize" width="27" height="25"/>
-                                    <size key="maxSize" width="27" height="25"/>
-                                    <connections>
-                                        <action selector="onLoadClicked:" target="6f7-a7-6o1" id="YfH-p9-4Lb"/>
-                                    </connections>
-                                </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="741EEB11-2C0B-4D65-94EB-47D7B04E80CC" explicitItemIdentifier="save" label="Save" paletteLabel="Save" toolTip="Save this project" tag="-1" bordered="YES" id="S8k-dN-PQs">
-                                    <imageReference key="image" image="square.and.arrow.down" catalog="system" symbolScale="default"/>
-                                    <size key="minSize" width="27" height="25"/>
-                                    <size key="maxSize" width="27" height="25"/>
-                                    <connections>
-                                        <action selector="onSaveClicked:" target="6f7-a7-6o1" id="YwL-Ep-St6"/>
-                                    </connections>
-                                </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="B7C08D13-B4DC-4BD7-AAF4-6394781BEC69" explicitItemIdentifier="show" label="Show" paletteLabel="Show" toolTip="Show all compiler issues" tag="-1" bordered="YES" id="vzQ-JE-dYj">
-                                    <imageReference key="image" image="eye" catalog="system" symbolScale="default"/>
-                                    <size key="minSize" width="33" height="25"/>
-                                    <size key="maxSize" width="33" height="25"/>
-                                    <connections>
-                                        <action selector="onShowIssuesClicked:" target="6f7-a7-6o1" id="uH9-r8-r7T"/>
-                                    </connections>
-                                </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="20960F55-D386-4EBF-A172-61D31820C742" explicitItemIdentifier="import" label="Import" paletteLabel="Import" tag="-1" bordered="YES" id="jog-VP-KpF">
-                                    <imageReference key="image" image="rectangle.portrait.and.arrow.right" catalog="system" symbolScale="default"/>
-                                    <size key="minSize" width="30" height="25"/>
-                                    <size key="maxSize" width="30" height="25"/>
-                                    <connections>
-                                        <action selector="onImportFileClicked:" target="6f7-a7-6o1" id="K3F-p4-RxS"/>
-                                    </connections>
-                                </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="F5386E5B-EC17-4A9A-809C-0E32D5F04050" label="Delete" paletteLabel="Delete" tag="-1" image="delete.left" catalog="system" bordered="YES" id="uDx-1U-VAT">
-                                    <size key="minSize" width="29" height="25"/>
-                                    <size key="maxSize" width="29" height="25"/>
-                                </toolbarItem>
-                            </allowedToolbarItems>
-                            <defaultToolbarItems>
-                                <toolbarItem reference="vzQ-JE-dYj"/>
-                                <toolbarItem reference="MeC-M0-CzF"/>
-                                <toolbarItem reference="hcm-BS-cn1"/>
-                                <toolbarItem reference="2xL-mB-pcx"/>
-                                <toolbarItem reference="Lrd-q3-y5k"/>
-                                <toolbarItem reference="MeC-M0-CzF"/>
-                                <toolbarItem reference="ddT-8V-mUh"/>
-                                <toolbarItem reference="163-Ag-rli"/>
-                                <toolbarItem reference="MeC-M0-CzF"/>
-                                <toolbarItem reference="jog-VP-KpF"/>
-                                <toolbarItem reference="nHW-jx-wnX"/>
-                                <toolbarItem reference="S8k-dN-PQs"/>
-                                <toolbarItem reference="MeC-M0-CzF"/>
-                                <toolbarItem reference="uDx-1U-VAT"/>
-                            </defaultToolbarItems>
-                        </toolbar>
                         <connections>
                             <outlet property="delegate" destination="jGA-0Y-lOj" id="98r-iN-zZc"/>
                         </connections>
@@ -831,7 +761,7 @@
                 </windowController>
                 <customObject id="6f7-a7-6o1" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="557" y="-659"/>
+            <point key="canvasLocation" x="718" y="-676"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="oFp-7j-QSB">
@@ -864,11 +794,11 @@
         <scene sceneID="ghu-py-RFz">
             <objects>
                 <viewController id="Go3-Hd-dc0" customClass="ProjectHierarchyViewController" customModule="Argon" customModuleProvider="target" sceneMemberID="viewController">
-                    <scrollView key="view" autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="Pia-cb-0ud">
-                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                    <scrollView key="view" misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="Pia-cb-0ud">
+                        <rect key="frame" x="0.0" y="0.0" width="430" height="300"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <clipView key="contentView" id="C0s-jM-lDn">
-                            <rect key="frame" x="1" y="1" width="448" height="298"/>
+                            <rect key="frame" x="1" y="1" width="428" height="298"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="24" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="25" outlineTableColumn="sCm-wh-MDR" id="mqv-Ge-Meh">
@@ -918,7 +848,7 @@
                                 </outlineView>
                             </subviews>
                         </clipView>
-                        <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="Bg0-5J-VyH">
+                        <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="Bg0-5J-VyH">
                             <rect key="frame" x="1" y="283" width="428" height="16"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
@@ -926,28 +856,12 @@
                             <rect key="frame" x="224" y="17" width="15" height="102"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
-                        <connections>
-                            <outlet property="menu" destination="YgI-gG-ZyJ" id="JF6-uh-FT7"/>
-                        </connections>
                     </scrollView>
                     <connections>
                         <outlet property="outlineView" destination="mqv-Ge-Meh" id="FaU-lJ-su2"/>
                     </connections>
                 </viewController>
                 <customObject id="djx-FJ-gbl" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-                <menu id="YgI-gG-ZyJ">
-                    <items>
-                        <menuItem title="Item 1" id="FHZ-4U-Bz7">
-                            <modifierMask key="keyEquivalentModifierMask"/>
-                        </menuItem>
-                        <menuItem title="Item 2" id="e1N-dR-50h">
-                            <modifierMask key="keyEquivalentModifierMask"/>
-                        </menuItem>
-                        <menuItem title="Item 3" id="gkF-UO-maa">
-                            <modifierMask key="keyEquivalentModifierMask"/>
-                        </menuItem>
-                    </items>
-                </menu>
             </objects>
             <point key="canvasLocation" x="155.5" y="974"/>
         </scene>
@@ -1044,16 +958,4 @@
             <point key="canvasLocation" x="-1141" y="624"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="bolt.fill" catalog="system" width="13" height="17"/>
-        <image name="delete.left" catalog="system" width="17" height="14"/>
-        <image name="eye" catalog="system" width="21" height="13"/>
-        <image name="hammer.fill" catalog="system" width="19" height="18"/>
-        <image name="ladybug.fill" catalog="system" width="18" height="18"/>
-        <image name="paintbrush.fill" catalog="system" width="17" height="18"/>
-        <image name="rectangle.portrait.and.arrow.right" catalog="system" width="18" height="16"/>
-        <image name="screwdriver.fill" catalog="system" width="19" height="18"/>
-        <image name="square.and.arrow.down" catalog="system" width="15" height="16"/>
-        <image name="square.and.arrow.up" catalog="system" width="15" height="17"/>
-    </resources>
 </document>

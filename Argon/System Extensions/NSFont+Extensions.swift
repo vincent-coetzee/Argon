@@ -5,7 +5,7 @@
 //  Created by Vincent Coetzee on 23/08/2023.
 //
 
-import Cocoa
+import AppKit
 
 extension NSFont
     {

@@ -25,6 +25,11 @@ public struct ClassFlags: OptionSet
     
 public class ClassType: StructuredType
     {
+    public override var styleElement: StyleElement
+        {
+        .colorClass
+        }
+        
     public var isAbstract: Bool
         {
         self.classFlags.contains(.abstract)
@@ -513,9 +518,9 @@ public class ClassType: StructuredType
         return(self.container?.lookupSymbol(atName: atName))
         }
         
-    public override func lookupMethods(atName name: String) -> Methods
+    public override func lookupMethod(atName name: String) -> MultimethodType?
         {
-        self.container?.lookupMethods(atName: name) ?? Methods()
+        self.container?.lookupMethod(atName: name)
         }
         
     public func addPoolVariable(_ variable: Variable)

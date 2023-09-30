@@ -312,25 +312,26 @@ public class ArgonParser
         {
         let location = self.token.location
         self.token.setStyleElement(.colorType)
+        let identifierToken = self.token
         let identifier = self.parseIdentifier(errorCode: .identifierExpected)
         let typeName = identifier.lastPart
         var type: ArgonType = ArgonType(name: typeName)
         var typeValues = ArgonTypes()
         if self.token.isLeftBrocket
             {
-            repeat
+            self.parseBrockets
                 {
-                self.parseComma()
-                typeValues.append(self.parseType())
-                }
-            while self.token.isComma && !self.token.isEnd
-            if self.token.isRightBrocket
-                {
-                self.nextToken()
+                repeat
+                    {
+                    self.parseComma()
+                    typeValues.append(self.parseType())
+                    }
+                while self.token.isComma && !self.token.isEnd
                 }
             }
         if let node = self.currentScope.lookupType(atIdentifier: identifier)
             {
+            identifierToken.setStyleElement(node.styleElement)
             do
                 {
                 type = try node.constructType(from: typeValues)

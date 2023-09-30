@@ -53,6 +53,9 @@ public enum IssueCode: String
     case integerUpperBoundExpectedAfterIntegerLowerBound            = "integer upper bound expected after integer lower bound."
     case identifierUpperBoundExpectedAfterIdentifierLowerBound      = "identifier upper bound expected after identifier lower bound."
     case integerOrIdentifierExpected                                = "integer or identifier expected."
+    case invalidBinaryNumber                                        = "The binary number is invalid."
+    case invalidOctalNumber                                         = "The octal number is invalid."
+    case invalidHexadecimalNumber                                   = "The hexadecimal number is invalid."
     
     case lValueExpectedOnLeft                                       = "lvalue expected on left."
     case leftParenthesisExpected                                    = "'(' expected."
@@ -66,6 +69,7 @@ public enum IssueCode: String
     case mustInheritFromDiscreteType                                = "must inherit from DiscreteType."
     case multipleMainMethodsFound                                   = "multiple 'main' methods found."
     case methodWithDuplicateSignature                               = "Duplicate methods with same signature"
+    case multimethodNotFound                                        = "A multimethod with the specified name is not in scope."
     
     case none                                                       = "none"
     case nodeAlreadyDefined                                         = "node already defined."

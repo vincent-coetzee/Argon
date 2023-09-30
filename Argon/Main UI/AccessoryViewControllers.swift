@@ -9,24 +9,23 @@ import Cocoa
 
 class LeftSidebarButtonController: NSTitlebarAccessoryViewController
     {
-    public var isEnabled: Bool = true
+    public var selectedNodeModel: ValueModel?
         {
-        didSet
+        get
             {
-            (self.view as! TitlebarButton).isEnabled = self.isEnabled
+            (self.view as! TitlebarView).selectedNodeModel
+            }
+        set
+            {
+            (self.view as! TitlebarView).selectedNodeModel = newValue
             }
         }
         
-    public var rightOffset: CGFloat = 0
+    public func setViewWidth(_ width: CGFloat)
         {
-        didSet
-            {
-            var frame = self.view.frame
-//            let width = max(45,self.rightOffset - (15 * 6))
-//            frame.size.width = width
-            frame.size.width = 120
-            self.view.frame = frame
-            }
+        var frame = self.view.frame
+        frame.size.width = width
+        self.view.frame = frame
         }
         
     public var target: Any!
@@ -39,40 +38,54 @@ class LeftSidebarButtonController: NSTitlebarAccessoryViewController
     public override func loadView()
         {
         self.layoutAttribute = .left
-        self.automaticallyAdjustsSize = false
-        let button = TitlebarButton(imageName: "sidebar.left",target: self.target!, action: #selector(ProjectViewController.onToggleLeftSidebar),layoutAttribute: .left)
-        button.frame = NSRect(x: 0,y: 0,width: 40,height: 20)
-        self.view = button
+        self.view = TitlebarView()
+        self.view.translatesAutoresizingMaskIntoConstraints = false
+        var button = NSButton(image: NSImage(systemSymbolName: "sidebar.left", accessibilityDescription: nil)!, target: self.target, action: #selector(ProjectViewController.onToggleLeftSidebar))
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.isBordered = false
+        self.view.addSubview(button)
+        button.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        button.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        button.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        button = NSButton(image: NSImage(systemSymbolName: "sidebar.right", accessibilityDescription: nil)!, target: self.target, action: #selector(ProjectViewController.onToggleRightSidebar))
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.isBordered = false
+        self.view.addSubview(button)
+        button.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        button.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        button.widthAnchor.constraint(equalToConstant: 20).isActive = true
         self.view.needsLayout = true
         }
     }
-
-//class SpaceController: NSTitlebarAccessoryViewController
-//    {
-//    public override func viewDidLoad()
-//        {
-//        super.viewDidLoad()
-//        }
-//        
-//    public override func loadView()
-//        {
-//        self.automaticallyAdjustsSize = false
-//        self.view = NSView(frame: .zero)
-//        self.view.frame = NSRect(x: 0,y: 0,width: 40,height: 20)
-//        }
-//    }
-
-class RightSidebarButtonController: NSTitlebarAccessoryViewController
+    
+class LowerTitleController: NSTitlebarAccessoryViewController,Dependent
     {
-    public var isEnabled: Bool = true
+    public let dependentKey = DependentSet.nextDependentKey
+    
+    public func setViewHeight(_ height: CGFloat)
         {
+        var frame = self.view.frame
+        frame.size.height = height
+        self.view.frame = frame
+        }
+        
+    public var selectedNodeModel: ValueModel?
+        {
+        willSet
+            {
+            self.selectedNodeModel?.removeDependent(self)
+            }
         didSet
             {
-            (self.view as! TitlebarButton).isEnabled = self.isEnabled
+            self.selectedNodeModel?.addDependent(self)
+            self.selectedNodeModel?.shake(aspect: "value")
             }
         }
         
     public var target: Any!
+    private let titleField = NSTextField(labelWithString: "")
     
     public override func viewDidLoad()
         {
@@ -81,57 +94,31 @@ class RightSidebarButtonController: NSTitlebarAccessoryViewController
         
     public override func loadView()
         {
-        self.layoutAttribute = .right
-        self.automaticallyAdjustsSize = false
-        let button = TitlebarButton(imageName: "sidebar.right",target: self.target!, action: #selector(ProjectViewController.onToggleRightSidebar),layoutAttribute: .right)
-        button.frame = NSRect(x: 0,y: 0,width: 60,height: 30)
-        self.view = button
+        self.layoutAttribute = .bottom
+        self.view = NSView()
+        self.view.translatesAutoresizingMaskIntoConstraints = false
+        self.titleField.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(self.titleField)
+        self.titleField.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        self.titleField.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        self.titleField.widthAnchor.constraint(equalToConstant: 400).isActive = true
         self.view.needsLayout = true
-        }
-    }
-
-fileprivate class TitlebarButton: NSView
-    {
-    var isEnabled: Bool
-        {
-        get
-            {
-            self.button.isEnabled
-            }
-        set
-            {
-            self.button.isEnabled = newValue
-            }
+        self.titleField.textColor = StyleTheme.shared.color(for: .colorToolbarText)
+        self.titleField.font = StyleTheme.shared.font(for: .fontDefault,size: 12)
+        self.titleField.alignment = .center
         }
         
-    private let button: NSButton
-    private let attribute: NSLayoutConstraint.Attribute
-    
-    public init(imageName: String,target: Any,action: Selector,layoutAttribute: NSLayoutConstraint.Attribute)
+    public func update(aspect: String,with: Any?,from model: Model)
         {
-        self.attribute = layoutAttribute
-        self.button = NSButton(image: NSImage(systemSymbolName: imageName, accessibilityDescription: "")!, target: target, action: action)
-        super.init(frame: .zero)
-        self.addSubview(button)
-        self.button.isBordered = false
-        }
-        
-    required init?(coder: NSCoder)
-        {
-        fatalError("init(coder:) has not been implemented")
-        }
-        
-    public override func layout()
-        {
-        super.layout()
-        let delta = (self.bounds.size.height - 20) / 2
-        if self.attribute == .right
+        guard aspect == "value" && model.dependentKey == self.selectedNodeModel?.dependentKey else
             {
-            self.button.frame = NSRect(x: self.bounds.size.width - 15 - 20,y: delta,width: 20,height: 20)
+            return
             }
-        else if self.attribute == .left
+        guard let node = self.selectedNodeModel?.value as? SourceFileNode else
             {
-            self.button.frame = NSRect(x: 15,y: delta,width: 20,height: 20)
+            return
             }
+        self.titleField.stringValue = node.title
+        self.view.needsLayout = true
         }
     }

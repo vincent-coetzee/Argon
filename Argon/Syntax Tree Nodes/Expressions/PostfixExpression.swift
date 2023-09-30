@@ -11,7 +11,7 @@ public class PostfixExpression: Expression
     {
     public let `operator`: TokenType
     public let left: Expression
-    public var methods: Methods?
+    public var method: MultimethodType?
     
     public init(left: Expression,operator: TokenType)
         {
@@ -42,9 +42,9 @@ public class PostfixExpression: Expression
         visitor.exit(postfixExpression: self)
         }
         
-    public func setMethods(_ methods: Methods)
+    public func setMethod(_ method: MultimethodType?)
         {
-        self.methods = methods
+        self.method = method
         }
     }
     

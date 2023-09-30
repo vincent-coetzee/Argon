@@ -30,7 +30,7 @@ class ProjectDocument: NSDocument
         self.addWindowController(windowController)
         windowController.initWindowController(projectModel: self.projectModel, selectedNodeModel: self.selectedNodeModel)
         }
-
+        
     override func write(to url: URL,ofType: String) throws
         {
         var path = url.path
@@ -44,6 +44,10 @@ class ProjectDocument: NSDocument
                 {
                 throw(CompilerIssue(code: .couldNotWriteFile, message: "Unable to write to the file \(url.path)."))
                 }
+            }
+        for controller in self.windowControllers
+            {
+            (controller as? ProjectWindowController)?.saveContents()
             }
         }
         

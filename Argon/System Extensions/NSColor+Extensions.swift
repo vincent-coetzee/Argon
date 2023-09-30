@@ -5,7 +5,7 @@
 //  Created by Vincent Coetzee on 21/04/2023.
 //
 
-import Cocoa
+import AppKit
 
 extension NSColor
     {
@@ -36,6 +36,7 @@ extension NSColor
     public static let argonMangoGreen:NSColor = NSColor(hex: 0x96ff00)
     public static let argonSeaGreen:NSColor = NSColor(hex: 0x007563)
     public static let argonStandardPink:NSColor = NSColor(hex: 0xF51475)
+    public static let argonCommentPurple = NSColor(hex: 0xC95EEE)
     
     public static let argonNeonYellow:NSColor = NSColor(hex: 0xF3F315)
     public static let argonNeonOrange = NSColor(red: 237.0/255.0,green: 111.0/255.0,blue:45.0/255.0,alpha:1)

@@ -5,7 +5,7 @@
 //  Created by Vincent Coetzee on 02/09/2023.
 //
 
-import Cocoa
+import AppKit
 
 public class MessageLayer: CAShapeLayer
     {

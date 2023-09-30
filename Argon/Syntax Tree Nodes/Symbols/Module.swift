@@ -33,14 +33,11 @@ public class Module: CompositeSyntaxTreeNode
         self.mainMethod.isNotNil
         }
         
-    public var mainMethod: MethodType?
+    public var mainMethod: MultimethodType?
         {
-        for symbol in self.lookupMethods(atName: "main")
+        if let method = self.lookupMethod(atName: "main")
             {
-            if symbol.isMethod
-                {
-                return(symbol)
-                }
+            return(method)
             }
         return(nil)
         }

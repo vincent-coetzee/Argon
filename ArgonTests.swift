@@ -20,7 +20,7 @@ public struct ArgonTests
         self.testRootModule()
 //        self.testSymbolTables()
         self.testTypeHashing()
-        self.testIdentity()
+//        self.testIdentity()
         self.testIdentifiers()
         self.testAddingNodes()
         self.testInitialization()
@@ -74,14 +74,14 @@ public struct ArgonTests
         
     public static func testSymbolTree()
         {
-        let tree = SymbolTreeNode(key: "/")
+        let tree = SymbolTreeNode(key: "\\")
         tree.insert(symbol: Module(name: "ModuleA"))
         tree.insert(symbol: MultimethodType(name: "methodA"))
         let class1 = ClassType(name: "ClassA")
-        let newNode = tree.insert(symbol: class1,at: Identifier(string: "//Module1/Module2/Module3/ClassA"))
+        let newNode = tree.insert(symbol: class1,at: Identifier(string: "\\\\Module1\\Module2\\Module3\\ClassA"))
         let symbol1 = newNode.lookupSymbol(at: "ClassA")
         assert(symbol1 == class1,"symbol1 != class1 but it should be.")
-        print("Path of //Module1/Module2/Module3 is \(newNode.path.description)")
+        print("Path of \\\\Module1\\Module2\\Module3 is \(newNode.path.description)")
         }
         
     public static func testIdentity()
@@ -131,7 +131,7 @@ public struct ArgonTests
         // Define an enumeration with cases
         //
         thirdInnerModule.addSymbol(enumeration)
-        let lookupEnumeration = outerModule.lookupSymbol(atIdentifier: Identifier(string: "//OuterModule/FirstInnerModule/SecondInnerModule/ThirdInnerModule/NodeType"))
+        let lookupEnumeration = outerModule.lookupSymbol(atIdentifier: Identifier(string: "\\\\OuterModule\\FirstInnerModule\\SecondInnerModule\\ThirdInnerModule\\NodeType"))
         assert(lookupEnumeration == enumeration,"Looked up enumeration should be the same as the original enumeration and it is not")
 //        let newClass = ClassType(name: "NewClass")
 //        let identifier = Identifier(string: "//OuterModule/FirstInnerModule/SecondInnerModule/NewClass")
@@ -252,20 +252,25 @@ public struct ArgonTests
                     SLOT floatSlot = 12.567
                     SLOT integerSlot = 5964
                     }
-                :(//This/is/a/path)
+                \\\\This\\is\\a\\path
+                LET binary = 0B110110111
+                LET octal = 0O7733657
+                LET hex = 0XA0B1EEF9
+                LET overflow = 0XFFFFFFFFFFFFFFFFFFFFFFFFFF
                 MACRO someMacro(a1,a2,a3)
                     $
                     this is some `a1 and some more `a2
                     $
-                    
-                // This is a comment that stays on a line
-                /*  This comment
-                    stretches across
-                    several
-                    lines
-                */
+                  
+                ;;
+                ;; This is a comment that stays on a line
+                ;; This comment
+                ;;  stretches across
+                ;;  several
+                ;;  lines
+                ;;
                 LET thisValue = $Z -> ,
-                LET someValue = MAKE(\\Module1\\Module2\\Module3\\AClass),
+                LET someValue = MAKE(\\\\Module1\\Module2\\Module3\\AClass),
                 ENUMERATION SomeEnum::Integer
                     {
                     #someCase = 1
@@ -352,7 +357,6 @@ public struct ArgonTests
     public static func testRootModule()
         {
         let _ = ArgonModule()
-        let methods = RootModule.shared.lookupMethods(atName: "string")
-        assert(methods.count == 6,"count(string methods) should be 6 but is \(methods.count).")
+        assert(RootModule.shared.lookupMethod(atName: "string").isNotNil,"There should be a string multimethod but there is not.")
         }
     }

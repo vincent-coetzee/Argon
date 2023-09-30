@@ -5,7 +5,7 @@
 //  Created by Vincent Coetzee on 18/02/2023.
 //
 
-import Cocoa
+import AppKit
 import Path
 
 public class SourceNode: NSObject,NSCoding,Comparable,Dependent
@@ -13,6 +13,11 @@ public class SourceNode: NSObject,NSCoding,Comparable,Dependent
     public static func < (lhs: SourceNode, rhs: SourceNode) -> Bool
         {
         lhs.name < rhs.name
+        }
+        
+    public var hasUnsavedChanges: Bool
+        {
+        false
         }
     
     public var actionSet: BrowserActionSet
@@ -118,6 +123,10 @@ public class SourceNode: NSObject,NSCoding,Comparable,Dependent
         coder.encode(self.nodeKey,forKey: "nodeKey")
         }
     
+    public func clearUnsavedChanges()
+        {
+        }
+        
     public func setIsNewFile(_ boolean: Bool)
         {
         self.isNewFile = boolean
@@ -139,6 +148,10 @@ public class SourceNode: NSObject,NSCoding,Comparable,Dependent
             {
             self.setSource(with as! String)
             }
+        }
+        
+    public func saveContents()
+        {
         }
         
     public func setSource(_ string: String)

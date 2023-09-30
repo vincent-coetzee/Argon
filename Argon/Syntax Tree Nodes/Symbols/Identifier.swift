@@ -72,7 +72,7 @@ public class Identifier: NSObject,NSCoding
             switch(part)
                 {
                 case .root:
-                    hasher.combine("ROOT")
+                    hasher.combine("\\")
                 case .part(let string):
                     hasher.combine(string)
                 }
@@ -105,7 +105,7 @@ public class Identifier: NSObject,NSCoding
             switch(self)
                 {
                 case(.root):
-                    return("/")
+                    return("\\")
                 case(.part(let piece)):
                     return(piece)
                 }
@@ -141,7 +141,7 @@ public class Identifier: NSObject,NSCoding
         
     public override var description: String
         {
-        self.parts.map{$0.stringPart}.joined(separator: "/")
+        self.parts.map{$0.stringPart}.joined(separator: "\\")
         }
      
     public var firstPart: String
@@ -226,7 +226,7 @@ public class Identifier: NSObject,NSCoding
             }
         else
             {
-            var pieces = string.components(separatedBy: "/")
+            var pieces = string.components(separatedBy: "\\")
             if pieces.count > 0
                 {
                 if pieces[0] == ""

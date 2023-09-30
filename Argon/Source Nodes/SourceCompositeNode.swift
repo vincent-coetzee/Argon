@@ -71,6 +71,14 @@ public class SourceCompositeNode: SourceNode
         return(nodes[atIndex])
         }
         
+    public override func saveContents()
+        {
+        for node in self.nodes
+            {
+            node.saveContents()
+            }
+        }
+        
     public override func addNode( _ element: SourceNode)
         {
         self.nodes.append(element)

@@ -9,7 +9,8 @@ import Foundation
 
 public class IdentifierToken: Token
     {
-    public static let systemTypeNames = ["Integer","UInteger","Integer64","UInteger64","Integer32","UInteger32","Integer16","UInteger16","Integer8","'UInteger8","Byte","Character","Boolean","Array","Set","List","BitVector","Dictionary","String","Symbol"]
+    public static let systemTypeNames = ["Integer","UInteger","Integer64","UInteger64","Integer32","UInteger32","Integer16","UInteger16","Integer8","'UInteger8","Byte","Character","Boolean","Array","Set","List","BitVector","Dictionary","String","Atom"]
+    
     public override var isExpressionRelatedToken: Bool
         {
         true

@@ -252,6 +252,16 @@ public class ArgonModule: Module
         {
         return(self.lookupType(atName: "Number")!)
         }
+        
+    public var slotType: ArgonType
+        {
+        return(self.lookupType(atName: "Slot")!)
+        }
+        
+    public var constantType: ArgonType
+        {
+        return(self.lookupType(atName: "Constant")!)
+        }
     
     private func initializeSystemClasses()
         {
@@ -263,6 +273,7 @@ public class ArgonModule: Module
         self.addSystemClass(named: "InvokableType",superclassesNamed: ["Type"])
         self.addSystemClass(named: "Function",superclassesNamed: ["InvokableType"])
         self.addSystemClass(named: "Method",superclassesNamed: ["InvokableType"])
+        self.addSystemClass(named: "Multimethod",superclassesNamed: ["InvokableType"])
         self.addSystemClass(named: "DiscreteType",superclassesNamed: ["Object"])
         self.addSystemClass(named: "String",superclassesNamed: ["Object","DiscreteType"])
         self.addSystemClass(named: "Atom",superclassesNamed: ["Object"])
@@ -294,6 +305,7 @@ public class ArgonModule: Module
         self.addSystemClass(named: "Time",superclassesNamed:["Magnitude"])
         self.addSystemClass(named: "DateTime",superclassesNamed:["Date","Time"])
         self.addSystemClass(named: "Slot",superclassesNamed: ["Object"]).slot("name",self.stringType)
+        self.addSystemClass(named: "Constant",superclassesNamed: ["Slot"])
         self.addSystemClass(named: "EnumerationCase",superclassesNamed: ["Object"],genericTypes: [.newTypeVariable(named: "Base")]).slot("name",self.stringType)
         self.addSystemClass(named: "Enumeration",superclassesNamed: ["Type"],genericTypes: [.newTypeVariable(named: "Base")])
         self.addSystemClass(named: "Collection",superclassesNamed: ["Object"],genericTypes: [.newTypeVariable(named: "Element")]).slot("count",self.integer64Type).slot("size",self.integer64Type)
@@ -545,7 +557,6 @@ public class ArgonModule: Module
         let aType = PrimitiveType(name: name,superclasses: classes)
         self.addSymbol(aType)
         aType.isSystemNode = true
-        aType.symbolType = self.primitiveType
         return(aType)
         }
         
@@ -617,6 +628,7 @@ public class ArgonModule: Module
         let baseType = self.lookupType(atName: typeName)!
         let constant = Constant(name: name,type: baseType,expression: nil)
         constant.isSystemNode = true
+        constant.symbolType = self.constantType
         self.addSymbol(constant)
         }
         

@@ -15,6 +15,10 @@ class ProjectInspectorViewController: NSViewController
     public var projectModel: ValueHolder!
     public var selectedNodeModel: ValueHolder!
     
+    public func saveContents()
+        {
+        }
+        
     override func viewDidLoad()
         {
         super.viewDidLoad()

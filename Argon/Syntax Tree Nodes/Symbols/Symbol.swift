@@ -42,6 +42,11 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
             }
         return(lhs.name < rhs.name)
         }
+        
+    public var styleElement: StyleElement
+        {
+        .colorSymbol
+        }
     //
     //
     // This instance variable should always be used to access the generics
@@ -106,7 +111,11 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
         
     public var identifier: Identifier
         {
-        return(self.container?.identifier ?? Identifier(string: self.name))
+        guard let someIdentifier = self.container?.identifier else
+            {
+            return(Identifier(string: self.name))
+            }
+        return(someIdentifier + self.name)
         }
     //
     //
@@ -267,6 +276,11 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
         false
         }
         
+    public var isMultimethod: Bool
+        {
+        false
+        }
+        
     public var isGenericType: Bool
         {
         false
@@ -320,9 +334,9 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
         self.container?.lookupSymbol(atName: atName)
         }
         
-    public func lookupMethods(atName: String) -> Methods
+    public func lookupMethod(atName: String) -> MultimethodType?
         {
-        self.container?.lookupMethods(atName: atName) ?? Methods()
+        self.container?.lookupMethod(atName: atName)
         }
         
     public func lookupSymbol(atIdentifier identifier: Identifier) -> Symbol?
@@ -349,28 +363,28 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
         return(nil)
         }
         
-    public func lookupMethods(atIdentifier identifier: Identifier) -> Methods
+    public func lookupMethod(atIdentifier identifier: Identifier) -> MultimethodType?
         {
         if identifier.isEmpty
             {
-            return(Methods())
+            return(nil)
             }
         if identifier.isRooted
             {
-            return(self.rootModule.lookupMethods(atIdentifier: identifier.cdr))
+            return(self.rootModule.lookupMethod(atIdentifier: identifier.cdr))
             }
         if let node = self.lookupSymbol(atName: identifier.car!)
             {
             if identifier.cdr.count == 1
                 {
-                return(node.lookupMethods(atName: identifier.lastPart))
+                return(node.lookupMethod(atName: identifier.lastPart))
                 }
             else
                 {
-                return(node.lookupMethods(atIdentifier: identifier.cdr))
+                return(node.lookupMethod(atIdentifier: identifier.cdr))
                 }
             }
-        return(Methods())
+        return(nil)
         }
         
     public func lookupType(atName: String) -> ArgonType?

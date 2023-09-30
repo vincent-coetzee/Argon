@@ -49,6 +49,10 @@ class ProjectSourceViewController: NSViewController,Dependent
             }
         }
         
+    public func saveContents()
+        {
+        }
+        
     public func showAllCompilerIssues()
         {
         self.sourceView.showAllCompilerIssues()

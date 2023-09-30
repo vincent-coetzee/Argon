@@ -5,7 +5,7 @@
 //  Created by Vincent Coetzee on 19/04/2023.
 //
 
-import Cocoa
+import AppKit
 
 public class ProjectViewCell: NSTableCellView
     {

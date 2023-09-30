@@ -5,7 +5,7 @@
 //  Created by Vincent Coetzee on 18/02/2023.
 //
 
-import Cocoa
+import AppKit
 
 public protocol TextFocusDelegate
     {

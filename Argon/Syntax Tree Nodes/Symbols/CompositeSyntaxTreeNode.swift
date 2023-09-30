@@ -28,6 +28,19 @@ public class CompositeSyntaxTreeNode: Symbol
         
     public override func addSymbol(_ symbol: Symbol)
         {
+        if symbol.isMethod
+            {
+            if let multimethod = self.lookupSymbol(atName: symbol.name) as? MultimethodType
+                {
+                multimethod.addMethod(symbol as! MethodType)
+                return
+                }
+            let multimethod = MultimethodType(name: symbol.name)
+            multimethod.addMethod(symbol as! MethodType)
+            multimethod.setContainer(self)
+            self.symbols.append(multimethod)
+            return
+            }
         self.symbols.append(symbol)
         symbol.setContainer(self)
         }
@@ -36,7 +49,7 @@ public class CompositeSyntaxTreeNode: Symbol
         {
         for node in self.symbols
             {
-            if node.name == atName && !(node.isMethod || node.isFunction)
+            if node.name == atName
                 {
                 return(node)
                 }
@@ -44,11 +57,28 @@ public class CompositeSyntaxTreeNode: Symbol
         return(self.container?.lookupSymbol(atName: atName))
         }
         
-    public override func lookupMethods(atName someName: String) -> Methods
+    public override func lookupMethod(atName someName: String) -> MultimethodType?
         {
-        var methods = self.container?.lookupMethods(atName: someName) ?? Methods()
-        methods.append(contentsOf: self.symbols.filter{$0.name == someName && ($0.isMethod || $0.isFunction)}.map{$0 as! MethodType})
-        return(methods)
+        let method = MultimethodType(name: someName)
+        for symbol in self.symbols
+            {
+            if symbol.name == someName && symbol.isMultimethod
+                {
+                method.append(contentsOf: symbol as? MultimethodType)
+                }
+            }
+        if let parentMethod = self.container?.lookupMethod(atName: someName) as? MultimethodType
+            {
+            let signatures = Set(method.signatures)
+            for aMethod in parentMethod.methods
+                {
+                if !signatures.contains(aMethod.signature)
+                    {
+                    method.addMethod(aMethod)
+                    }
+                }
+            }
+        return(method)
         }
         
     public override func accept(visitor: Visitor)

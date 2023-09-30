@@ -57,7 +57,12 @@ public class PrefixOperatorParser: PrefixParser
         parser.nextToken()
         let expression = PrefixExpression(operator: token.tokenType,right: parser.parseExpression(precedence: self.precedence)).addDeclaration(location)
         expression.location = location
-        expression.setMethods(parser.currentScope.lookupMethods(atName: token.matchString))
+        let method = parser.currentScope.lookupMethod(atName: token.matchString)
+        if method.isNil
+            {
+            parser.lodgeError(code: .multimethodNotFound,location: location)
+            }
+        expression.setMethod(method)
         return(expression)
         }
     }
@@ -119,7 +124,7 @@ public class PostfixOperatorParser: InfixParser
         let location = parser.token.location
         parser.nextToken()
         let expression = PostfixExpression(left: left,operator: token.tokenType).addDeclaration(location)
-        expression.setMethods(parser.currentScope.lookupMethods(atName: token.matchString))
+        expression.setMethod(parser.currentScope.lookupMethod(atName: token.matchString))
         expression.location = location
         return(expression)
         }
@@ -154,9 +159,13 @@ public class BinaryOperatorParser: InfixParser
         {
         let location = parser.token.location
         let right = parser.parseExpression(precedence: Precedence.assignment - (self.isRightAssociative ? 1 : 0))
-        let methods = parser.currentScope.lookupMethods(atName: token.matchString)
         let expression = BinaryExpression(left: left, operator: token.tokenType, right: right).addDeclaration(location)
-        expression.setMethods(methods)
+        let method = parser.currentScope.lookupMethod(atName: token.matchString)
+        if method.isNil
+            {
+            parser.lodgeError(code: .multimethodNotFound,location: location)
+            }
+        expression.setMethod(method)
         expression.location = location
         return(expression)
         }
@@ -286,9 +295,16 @@ public class MethodInvocationParser: InfixParser
             parser.lodgeError(code: .rightParenthesisExpected,location: location)
             }
         arguments.location = location
-        let methods = parser.currentScope.lookupMethods(atIdentifier: methodName)
         let expression = MethodInvocationExpression(methodName: methodName,arguments: arguments).addDeclaration(location)
-        expression.setMethods(methods)
+        if let method = parser.currentScope.lookupMethod(atIdentifier: methodName)
+            {
+            expression.setMethod(method)
+            }
+        else
+            {
+            parser.lodgeError(code: .multimethodNotFound,location: location)
+            expression.setMethod(MultimethodType(name: methodName.lastPart))
+            }
         expression.location = location
         return(expression)
         }

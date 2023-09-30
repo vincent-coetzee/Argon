@@ -30,6 +30,11 @@ public class EnumerationType: StructuredType
             }
         }
         
+    public override var styleElement: StyleElement
+        {
+        .colorEnumeration
+        }
+        
     public override var typeHash: Int
         {
         self.hash
@@ -121,7 +126,6 @@ public class EnumerationType: StructuredType
                     }
                 }
             }
-        parser.currentScope.addSymbol(enumeration)
         }
         
     public private(set) var defaultCase: EnumerationCase?
@@ -214,9 +218,9 @@ public class EnumerationType: StructuredType
         return(self.container?.lookupSymbol(atName: atName))
         }
         
-    public override func lookupMethods(atName name: String) -> Methods
+    public override func lookupMethod(atName name: String) -> MultimethodType?
         {
-        self.container?.lookupMethods(atName: name) ?? Methods()
+        self.container?.lookupMethod(atName: name)
         }
         
     public override func accept(visitor: Visitor)

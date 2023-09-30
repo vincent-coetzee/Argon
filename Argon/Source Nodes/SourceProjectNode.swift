@@ -5,7 +5,7 @@
 //  Created by Vincent Coetzee on 06/01/2023.
 //
 
-import Cocoa
+import AppKit
 import Path
 
 public class SourceProjectNode: SourceCompositeNode

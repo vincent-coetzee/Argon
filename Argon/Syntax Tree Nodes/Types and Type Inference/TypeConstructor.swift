@@ -60,8 +60,13 @@ public class TypeConstructor: ArgonType
             }
         }
         
+    public override var styleElement: StyleElement
+        {
+        self.constructedType.typeValue.styleElement
+        }
+        
     private let constructedType: ConstructedType
-    private var typeParameters: TypeParameters!
+    private var typeParameters = TypeParameters()
     
     public init(name: String,constructedType: ConstructedType)
         {
@@ -72,7 +77,7 @@ public class TypeConstructor: ArgonType
     public required init(coder: NSCoder)
         {
         self.constructedType = coder.decodeConstructedType(forKey: "constructedType")
-        self.typeParameters = coder.decodeObject(forKey: "typeParameters") as? TypeParameters
+        self.typeParameters = coder.decodeObject(forKey: "typeParameters") as! TypeParameters
         super.init(coder: coder)
         }
         

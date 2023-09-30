@@ -5,7 +5,7 @@
 //  Created by Vincent Coetzee on 23/04/2023.
 //
 
-import Cocoa
+import AppKit
 
 public class SourceCodeEditingView: NSView,NSTextViewDelegate,Model
     {

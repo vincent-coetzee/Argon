@@ -22,11 +22,18 @@ public class ArgonScanner
     private var sourceLine: Int = 1
     private let operatorCharacters = CharacterSet(charactersIn: "!$%^&*-+=:;|<>?/.,~@")
     private let brackets = CharacterSet(charactersIn: "()[]{}")
-    private let identifierStartCharacters = CharacterSet.letters.union(CharacterSet(charactersIn: "/"))
-    private let identifierCharacters = CharacterSet.letters.union(CharacterSet.decimalDigits).union(CharacterSet(charactersIn: "_!?/"))
+    private let decimalCharacters = CharacterSet(charactersIn: "0123456789_")
+    private let binaryCharacters = CharacterSet(charactersIn: "01_")
+    private let octalCharacters = CharacterSet(charactersIn: "01234567_")
+    private let hexadecimalCharacters = CharacterSet(charactersIn: "0123456789ABCDEFabcdef_")
+    private let identifierStartCharacters = CharacterSet.letters.union(CharacterSet(charactersIn: "\\"))
+    private let identifierCharacters = CharacterSet.letters.union(CharacterSet.decimalDigits).union(CharacterSet(charactersIn: "\\_"))
+    private let identifierEndCharacters = CharacterSet(charactersIn: "!?")
     private let symbolCharacters = CharacterSet.letters.union(.decimalDigits).union(CharacterSet(charactersIn: "-_"))
     private let pathCharacters = CharacterSet.letters.union(.decimalDigits).union(CharacterSet(charactersIn: "-_/~"))
-    private let identifierPattern = try! NSRegularExpression(pattern: "(//)? ( [A-Za-z]{1}[A-Za-z0-9_]* )? (/[A-Za-z0-9_]*)* (!?)?",options: .anchorsMatchLines)
+    private let identifier1Pattern = try! NSRegularExpression(pattern: "[a-zA-Z]{1}[a-zA-Z0-9_]*[\\?!]?")
+    private let identifier2Pattern = try! NSRegularExpression(pattern: "(/[a-zA-Z]{1}[a-zA-Z0-9_]*)+[\\?!]?")
+    private let identifier3Pattern = try! NSRegularExpression(pattern: "//[a-zA-Z]{1}[a-zA-Z0-9_]*(/[a-zA-Z]{1}[a-zA-Z0-9_]*)*[\\?!]?")
     public var currentCharacter = Unicode.Scalar(0)!
     public let bracketMatcher = BracketMatcher()
     
@@ -82,6 +89,7 @@ public class ArgonScanner
 
     public func scanUntilEndOfLine() -> String
         {
+        self.nextDirtyCharacter()
         self.nextDirtyCharacter()
         var string = ";;"
         while self.currentCharacter.isNotNewLine && !self.atEnd
@@ -150,24 +158,14 @@ public class ArgonScanner
             {
             return([EndToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: "")])
             }
-        self.startOffset = offset - 1
+        self.startOffset = self.offset - 1
         if CharacterSet.whitespacesAndNewlines.contains(self.currentCharacter)
             {
             self.scanWhitespace()
             return(self.scanTokens())
             }
-        if let match = self.identifierPattern.firstMatch(in: self.source, options: .anchored, range: NSRange(location: self.offset, length: self.source.count - self.offset))
-            {
-            let string = self.source.suffix(self.offset).prefix(match.range.length)
-            let location = Location(nodeKey: 0, line: self.sourceLine, start: match.range.location, stop: match.range.location + match.range.length)
-            return([IdentifierToken(location: location, string: String(string))])
-            }
         let prefix = self.sourcePrefix(length: 2)
-        if prefix == ":("
-            {
-            return(self.scanPath())
-            }
-        else if prefix == "@("
+        if prefix == "@("
             {
             return(self.scanDateOrTime())
             }
@@ -175,10 +173,6 @@ public class ArgonScanner
             {
             return(self.scanComment())
             }
-//        else if prefix == "//"
-//            {
-//            return(self.scanIdentifier())
-//            }
         else if self.brackets.contains(self.currentCharacter)
             {
             return(self.scanBracket())
@@ -199,10 +193,10 @@ public class ArgonScanner
             {
             return(self.scanOperator())
             }
-//        else if self.identifierStartCharacters.contains(self.currentCharacter)
-//            {
-//            return(self.scanIdentifier())
-//            }
+        else if self.identifierStartCharacters.contains(self.currentCharacter)
+            {
+            return(self.scanIdentifier())
+            }
         let character = self.currentCharacter
         self.nextCharacter()
         return([ErrorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: "Unknown character '\(character)'")])
@@ -232,52 +226,27 @@ public class ArgonScanner
         return([OperatorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset), string: String(character))])
         }
         
-    private func scanPath() -> Tokens
+    private func scanIdentifier() -> Tokens
         {
-        var string = String()
+        var string = String(self.currentCharacter)
         self.nextCharacter()
-        self.nextCharacter()
-        while self.pathCharacters.contains(self.currentCharacter) && !self.atEnd
+        while self.identifierCharacters.contains(self.currentCharacter) && !self.atEnd
             {
             string.append(self.currentCharacter)
             self.nextCharacter()
             }
-        if self.currentCharacter == ")"
+        if self.identifierEndCharacters.contains(self.currentCharacter)
             {
+            string.append(self.currentCharacter)
             self.nextCharacter()
             }
-        return([PathToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string)])
+        let location = Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset)
+        if KeywordToken.isKeyword(string)
+            {
+            return([KeywordToken(location: location,string: string)])
+            }
+        return([IdentifierToken(location: location, string: string)])
         }
-        
-//    private func scanIdentifier() -> Tokens
-//        {
-//        var identifier = String()
-//        while self.identifierCharacters.contains(self.currentCharacter) && !self.atEnd
-//            {
-//            identifier.append(self.currentCharacter)
-//            self.nextDirtyCharacter()
-//            }
-//        let location = Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset)
-//        if KeywordToken.isKeyword(identifier)
-//            {
-//            if KeywordToken.isSectionKeyword(identifier)
-//                {
-//                // should look like: SECTION(This is some sexy section)
-//                var tokens = Tokens()
-//                tokens.append(KeywordToken(location: location,string: identifier))
-//                // should be a '('
-//                tokens.append(contentsOf: self.scanTokens())
-//                // should be unquoted string
-//                let string = self.scanUntilRightParenthesis()
-//                tokens.append(TextToken(location: location,string: string))
-//                // should be ')'
-//                tokens.append(contentsOf: self.scanTokens())
-//                return(tokens)
-//                }
-//            return([KeywordToken(location: location,string: identifier)])
-//            }
-//        return([IdentifierToken(location: location, string: identifier)])
-//        }
         
     private func scanOperator() -> Tokens
         {
@@ -328,11 +297,6 @@ public class ArgonScanner
                 self.nextCharacter()
                 return(self.scanBinaryNumber())
                 }
-            else if self.currentCharacter == Unicode.Scalar("T")
-                {
-                self.nextCharacter()
-                return(self.scanTernaryNumber())
-                }
             else if self.currentCharacter == Unicode.Scalar("O")
                 {
                 self.nextCharacter()
@@ -349,30 +313,70 @@ public class ArgonScanner
 
     private func scanBinaryNumber() -> Tokens
         {
-        fatalError()
-        }
-        
-    private func scanTernaryNumber() -> Tokens
-        {
-        fatalError()
+        var string = String()
+        while self.binaryCharacters.contains(self.currentCharacter) && !self.atEnd
+            {
+            if self.currentCharacter != Unicode.Scalar("_")
+                {
+                string.append(String(self.currentCharacter))
+                }
+            self.nextCharacter()
+            }
+        if let integer = Int(string,radix: 2)
+            {
+            let number = "\(integer)"
+            return([IntegerToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: number)])
+            }
+        return([ErrorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset), code: .invalidBinaryNumber, message: "The binary number can not be represented by an Argon Integer.")])
         }
         
     private func scanOctalNumber() -> Tokens
         {
-        fatalError()
+        var string = String()
+        while self.octalCharacters.contains(self.currentCharacter) && !self.atEnd
+            {
+            if self.currentCharacter != Unicode.Scalar("_")
+                {
+                string.append(String(self.currentCharacter))
+                }
+            self.nextCharacter()
+            }
+        if let integer = Int(string,radix: 8)
+            {
+            let number = "\(integer)"
+            return([IntegerToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: number)])
+            }
+        return([ErrorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset), code: .invalidOctalNumber, message: "The octal number can not be represented by an Argon Integer.")])
         }
         
     private func scanHexadecimalNumber() -> Tokens
         {
-        fatalError()
+        var string = String()
+        while self.hexadecimalCharacters.contains(self.currentCharacter) && !self.atEnd
+            {
+            if self.currentCharacter != Unicode.Scalar("_")
+                {
+                string.append(String(self.currentCharacter))
+                }
+            self.nextCharacter()
+            }
+        if let integer = Int(string,radix: 16)
+            {
+            let number = "\(integer)"
+            return([IntegerToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: number)])
+            }
+        return([ErrorToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset), code: .invalidHexadecimalNumber, message: "The hexadecimal number can not be represented by an Argon Integer.")])
         }
         
     private func scanDecimalNumber() -> Tokens
         {
         var string = String()
-        while CharacterSet.decimalDigits.contains(self.currentCharacter) && !self.atEnd
+        while self.decimalCharacters.contains(self.currentCharacter) && !self.atEnd
             {
-            string.append(String(self.currentCharacter))
+            if self.currentCharacter != Unicode.Scalar("_")
+                {
+                string.append(String(self.currentCharacter))
+                }
             self.nextCharacter()
             }
         if self.sourcePrefix(length: 2) == ".."
@@ -383,9 +387,12 @@ public class ArgonScanner
             {
             string.append(".")
             self.nextCharacter()
-            while CharacterSet.decimalDigits.contains(self.currentCharacter) && !self.atEnd
+            while self.decimalCharacters.contains(self.currentCharacter) && !self.atEnd
                 {
-                string.append(String(self.currentCharacter))
+                if self.currentCharacter != Unicode.Scalar("_")
+                    {
+                    string.append(String(self.currentCharacter))
+                    }
                 self.nextCharacter()
                 }
             return([FloatToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.offset),string: string)])

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Cocoa
+import AppKit
 
 public enum InterfaceAction: Int
     {
@@ -62,6 +62,7 @@ public struct BrowserActionSet: OptionSet
         {
         let menu = NSMenu()
         var wasFileAction = false
+        var wasImportAction = false
         if self.contains(.newFolderAction)
             {
             menu.addItem(withTitle: "New Folder", action: #selector(ProjectHierarchyViewController.onNewFolder), keyEquivalent: "").isEnabled = true
@@ -79,10 +80,10 @@ public struct BrowserActionSet: OptionSet
         if self.contains(.importAction)
             {
             menu.addItem(withTitle: "Import File...", action: #selector(ProjectHierarchyViewController.onImportFile), keyEquivalent: "").isEnabled = true
-            menu.addItem(NSMenuItem.separator())
             }
         if self.contains(.deleteAction)
             {
+            menu.addItem(NSMenuItem.separator())
             menu.addItem(withTitle: "Delete", action: #selector(ProjectHierarchyViewController.onDeleteNode), keyEquivalent: "").isEnabled = true
             }
         return(menu)

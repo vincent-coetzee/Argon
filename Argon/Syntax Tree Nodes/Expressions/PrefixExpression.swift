@@ -11,7 +11,7 @@ public class PrefixExpression: Expression
     {
     public let `operator`: TokenType
     public let right: Expression
-    public var methods: Methods?
+    public var method: MultimethodType?
     
     public init(operator: TokenType,right: Expression)
         {
@@ -42,9 +42,9 @@ public class PrefixExpression: Expression
         visitor.exit(prefixExpression: self)
         }
         
-    public func setMethods(_ methods: Methods)
+    public func setMethod(_ method: MultimethodType?)
         {
-        self.methods = methods
+        self.method = method
         }
     }
     

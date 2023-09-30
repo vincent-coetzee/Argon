@@ -5,7 +5,7 @@
 //  Created by Vincent Coetzee on 10/4/22.
 //
 
-import Cocoa
+import AppKit
 
 /// Adds line numbers to a NSTextField.
 public class LineNumberRulerView: NSRulerView
