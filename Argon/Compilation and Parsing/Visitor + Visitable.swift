@@ -13,8 +13,8 @@ public protocol Visitor
     
     func enter(rootModule: RootModule)
     func exit(rootModule: RootModule)
-    func enter(module: Module)
-    func exit(module: Module)
+    func enter(module: ModuleType)
+    func exit(module: ModuleType)
     func enter(class: ClassType)
     func exit(class: ClassType)
     func enter(enumeration: EnumerationType)

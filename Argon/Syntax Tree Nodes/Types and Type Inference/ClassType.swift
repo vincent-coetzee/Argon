@@ -30,6 +30,11 @@ public class ClassType: StructuredType
         .colorClass
         }
         
+    public override var isMakeable: Bool
+        {
+        true
+        }
+        
     public var isAbstract: Bool
         {
         self.classFlags.contains(.abstract)

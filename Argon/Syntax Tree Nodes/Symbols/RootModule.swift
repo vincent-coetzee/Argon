@@ -19,7 +19,7 @@ import Foundation
 // return "nil" to indicate the symbol is not defined in the Module mesh.
 //
 //
-public class RootModule: Module
+public class RootModule: ModuleType
     {
     public static func reset()
         {
@@ -63,7 +63,7 @@ public class RootModule: Module
         Identifier.rootIdentifier
         }
         
-    public override var module: Module
+    public override var module: ModuleType
         {
         self
         }

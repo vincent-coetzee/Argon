@@ -7,7 +7,7 @@
 
 import Foundation
         
-public class ArgonModule: Module
+public class ArgonModule: ModuleType
     {
     public private(set) static var shared: ArgonModule!
     
@@ -262,12 +262,18 @@ public class ArgonModule: Module
         {
         return(self.lookupType(atName: "Constant")!)
         }
+        
+    public var moduleType: ArgonType
+        {
+        return(self.lookupType(atName: "Module")!)
+        }
     
     private func initializeSystemClasses()
         {
         let theObjectType = self.addSystemClass(named: "Object",superclassesNamed: [])
         self.addSystemClass(named: "Type",superclassesNamed: ["Object"])
         self.addSystemClass(named: "Class",superclassesNamed: ["Type"])
+        self.addSystemClass(named: "Module",superclassesNamed: ["Type"])
         self.addSystemClass(named: "Metaclass",superclassesNamed: ["Class"])
         self.addSystemClass(named: "PrimitiveType",superclassesNamed: ["Type"])
         self.addSystemClass(named: "InvokableType",superclassesNamed: ["Type"])

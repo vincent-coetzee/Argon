@@ -12,7 +12,7 @@ extension NSView
     public func showBorder(color: NSColor)
         {
         self.wantsLayer = true
-        self.layer?.borderWidth = 1
+        self.layer?.borderWidth = 2
         self.layer?.borderColor = color.cgColor
         }
         

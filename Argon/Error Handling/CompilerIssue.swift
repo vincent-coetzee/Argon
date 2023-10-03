@@ -70,6 +70,8 @@ public enum IssueCode: String
     case multipleMainMethodsFound                                   = "multiple 'main' methods found."
     case methodWithDuplicateSignature                               = "Duplicate methods with same signature"
     case multimethodNotFound                                        = "A multimethod with the specified name is not in scope."
+    case makeExpectsTypeToMake                                      = "MAKE expects a type to make."
+    case makeableTypeExpected                                       = "A makeable type was expected."
     
     case none                                                       = "none"
     case nodeAlreadyDefined                                         = "node already defined."
@@ -98,6 +100,7 @@ public enum IssueCode: String
     case typeVariableGenericMismatch                                = "Type variable / generic mismatch."
     case typeParameterMismatch                                      = "Type parameter mismatch."
     case typeUndefined                                              = "Type is undefined."
+
     
     case undefinedSymbol                                            = "undefined symbol."
     case undefinedClass                                             = "undefined class."

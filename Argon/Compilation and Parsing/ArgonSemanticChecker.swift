@@ -11,10 +11,21 @@ public class ArgonSemanticChecker: Visitor
     {
     internal var compilerIssues = CompilerIssues()
     internal var hasMainMethod = false
+    internal var visitedSymbols = Set<Int>()
     
     public var processingFlag: ProcessingFlags
         {
         .semanticsChecked
+        }
+        
+    private func markAsVisited(_ symbol: Symbol)
+        {
+        self.visitedSymbols.insert(symbol.index)
+        }
+        
+    private func wasNotVisited(_ symbol: Symbol) -> Bool
+        {
+        self.visitedSymbols.contains(symbol.index)
         }
         
     public func lodgeError(code: IssueCode,location: Location,message: String? = nil)
@@ -39,12 +50,12 @@ public class ArgonSemanticChecker: Visitor
         print("Exiting rootModule \(rootModule.name)")
         }
         
-    public func enter(module: Module)
+    public func enter(module: ModuleType)
         {
         print("Entering module \(module.name)")
         }
     
-    public func exit(module: Module)
+    public func exit(module: ModuleType)
         {
         module.validateMethodUniqueness(semanticChecker: self)
         }
@@ -200,7 +211,21 @@ public class ArgonSemanticChecker: Visitor
     
     public func visit(makeExpression: MakeExpression)
         {
-        
+        guard self.wasNotVisited(makeExpression) else
+            {
+            return
+            }
+        self.markAsVisited(makeExpression)
+        if makeExpression.typeNode.isErrorType
+            {
+            self.lodgeError(code: .makeExpectsTypeToMake,location: makeExpression.location!,message: "MAKE expects a type to make but found '\(makeExpression.typeNode.name)'.")
+            return
+            }
+        guard makeExpression.typeNode.isMakeable else
+            {
+            self.lodgeError(code: .makeableTypeExpected,location: makeExpression.location!,message: "The type '\(makeExpression.typeNode.name)' is not makeable.")
+            return
+            }
         }
     
     public func enter(memberAccessExpression: MemberAccessExpression)
@@ -210,6 +235,11 @@ public class ArgonSemanticChecker: Visitor
     
     public func exit(memberAccessExpression: MemberAccessExpression)
         {
+        guard self.wasNotVisited(memberAccessExpression) else
+            {
+            return
+            }
+        self.markAsVisited(memberAccessExpression)
         
         }
     
@@ -420,7 +450,7 @@ public class ArgonSemanticChecker: Visitor
         
     public func checkPrimaryModules(_ modules: Modules)
         {
-        let uniqueModules = Array(Set<Module>(modules))
+        let uniqueModules = Array(Set<ModuleType>(modules))
         let mainMethodCount = uniqueModules.reduce(0) { $0 + ($1.hasMainMethod ? 1 : 0) }
         if mainMethodCount > 1
             {

@@ -41,7 +41,8 @@ public class TitlebarView: NSView
         self.pathControl = control
         self.addSubview(control)
         control.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 200).isActive = true
-        control.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -200).isActive = true
+//        control.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -200).isActive = true
+        control.widthAnchor.constraint(equalToConstant: 400).isActive = true
         control.heightAnchor.constraint( equalToConstant: 20).isActive = true
         control.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         self.needsLayout = true

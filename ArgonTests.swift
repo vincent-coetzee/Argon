@@ -75,7 +75,7 @@ public struct ArgonTests
     public static func testSymbolTree()
         {
         let tree = SymbolTreeNode(key: "\\")
-        tree.insert(symbol: Module(name: "ModuleA"))
+        tree.insert(symbol: ModuleType(name: "ModuleA"))
         tree.insert(symbol: MultimethodType(name: "methodA"))
         let class1 = ClassType(name: "ClassA")
         let newNode = tree.insert(symbol: class1,at: Identifier(string: "\\\\Module1\\Module2\\Module3\\ClassA"))
@@ -109,13 +109,13 @@ public struct ArgonTests
         
     public static func testAddingNodes()
         {
-        let outerModule = Module(name: "OuterModule")
+        let outerModule = ModuleType(name: "OuterModule")
         RootModule.shared.addSymbol(outerModule)
-        let firstInnerModule = Module(name: "FirstInnerModule")
+        let firstInnerModule = ModuleType(name: "FirstInnerModule")
         outerModule.addSymbol(firstInnerModule)
-        let secondInnerModule = Module(name: "SecondInnerModule")
+        let secondInnerModule = ModuleType(name: "SecondInnerModule")
         firstInnerModule.addSymbol(secondInnerModule)
-        let thirdInnerModule = Module(name: "ThirdInnerModule")
+        let thirdInnerModule = ModuleType(name: "ThirdInnerModule")
         secondInnerModule.addSymbol(thirdInnerModule)
         //
         // Define cases for an enumeration
@@ -141,11 +141,11 @@ public struct ArgonTests
         }
         
     @discardableResult
-    private static func makeTestParseTree() -> Module
+    private static func makeTestParseTree() -> ModuleType
         {
-        let module = Module(name: "SomeModule")
+        let module = ModuleType(name: "SomeModule")
         RootModule.shared.addSymbol(module)
-        let innerModule = Module(name: "WeatherType")
+        let innerModule = ModuleType(name: "WeatherType")
         //
         // Define an enumeration with cases
         //

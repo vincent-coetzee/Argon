@@ -9,4 +9,8 @@ import Foundation
 
 public class ErrorType: ArgonType
     {
+    public override var isErrorType: Bool
+        {
+        true
+        }
     }

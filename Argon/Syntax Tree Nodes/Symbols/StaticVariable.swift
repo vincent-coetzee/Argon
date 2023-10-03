@@ -11,8 +11,8 @@ import Foundation
 //
 // Static Variable store the details of static variables that
 // get declared in either Modules or Methods. Static Variables have
-// mangled names that relates to their Identifier so they remain
-// globally defined but are only visible in the declaring scopes where i.e. a Method or a Module.
+// mangled names that relate to their Identifier so they remain
+// globally defined but are only visible in the declaring scopes i.e. a Method or a Module.
 //
 //
 // TODO: Fix the name mangling of Variables, StaticVariables and Constants.

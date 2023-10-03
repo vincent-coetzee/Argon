@@ -9,10 +9,21 @@ import Foundation
 
 public class MakeExpression: Expression
     {
-    private let typeNode: ArgonType?
-    private let arguments: Expressions
+    public override var symbolType: ArgonType
+        {
+        get
+            {
+            self.typeNode.baseType
+            }
+        set
+            {
+            }
+        }
+        
+    public let typeNode: ArgonType
+    public let arguments: Expressions
     
-    init(type: ArgonType?,arguments: Expressions)
+    init(type: ArgonType,arguments: Expressions)
         {
         self.typeNode = type
         self.arguments = arguments
@@ -21,7 +32,7 @@ public class MakeExpression: Expression
         
     public required init(coder: NSCoder)
         {
-        self.typeNode = coder.decodeObject(forKey: "type") as? ArgonType
+        self.typeNode = coder.decodeObject(forKey: "type") as! ArgonType
         self.arguments = coder.decodeObject(forKey: "arguments") as! Expressions
         super.init(coder: coder)
         }

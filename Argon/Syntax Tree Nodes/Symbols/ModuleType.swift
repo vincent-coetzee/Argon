@@ -26,7 +26,7 @@ import Foundation
 //
 //
 
-public class Module: CompositeSyntaxTreeNode
+public class ModuleType: CompositeSyntaxTreeNode
     {
     public var hasMainMethod: Bool
         {
@@ -42,7 +42,7 @@ public class Module: CompositeSyntaxTreeNode
         return(nil)
         }
         
-    public override var module: Module
+    public override var module: ModuleType
         {
         self
         }
@@ -52,10 +52,16 @@ public class Module: CompositeSyntaxTreeNode
         true
         }
         
-//    public override var nodeType: NodeType
-//        {
-//        return(.module)
-//        }
+    public override var symbolType: ArgonType
+        {
+        get
+            {
+            ArgonModule.shared.moduleType
+            }
+        set
+            {
+            }
+        }
         
     public override var parentModules: Modules
         {
@@ -69,9 +75,7 @@ public class Module: CompositeSyntaxTreeNode
             {
             return(nil)
             }
-//        let name = parser.token.identifier.description
         parser.nextToken()
-//        while !parser.token.isImport && !parser.token.isEnd
         fatalError()
         }
         
@@ -88,7 +92,7 @@ public class Module: CompositeSyntaxTreeNode
         self.parseModuleContents(using: parser,into: module)
         }
         
-    private class func parseForModule(using parser: ArgonParser,location: Location) -> Module
+    private class func parseForModule(using parser: ArgonParser,location: Location) -> ModuleType
         {
         if let lastToken = parser.expect(tokenType: .identifier,error: .moduleNameExpected)
             {
@@ -97,17 +101,17 @@ public class Module: CompositeSyntaxTreeNode
                 {
                 if node.isModuleType
                     {
-                    return(node as! Module)
+                    return(node as! ModuleType)
                     }
                 else
                     {
                     parser.lodgeError(code: .identifierAlreadyDefined,location: location)
-                    return(Module(name: Argon.nextIndex(named: "MODULE_")))
+                    return(ModuleType(name: Argon.nextIndex(named: "MODULE_")))
                     }
                 }
             else
                 {
-                let module = Module(name: moduleName)
+                let module = ModuleType(name: moduleName)
                 parser.addSymbol(module)
                 if lastToken.identifier.isCompoundIdentifier
                     {
@@ -118,11 +122,11 @@ public class Module: CompositeSyntaxTreeNode
             }
         else
             {
-            return(Module(name: Argon.nextIndex(named: "MODULE_")))
+            return(ModuleType(name: Argon.nextIndex(named: "MODULE_")))
             }
         }
         
-    private class func parseModuleContents(using parser: ArgonParser,into module: Module)
+    private class func parseModuleContents(using parser: ArgonParser,into module: ModuleType)
         {
         let location = parser.token.location
         module.location = location
@@ -143,7 +147,7 @@ public class Module: CompositeSyntaxTreeNode
                     case(.TYPE):
                         AliasedType.parse(using: parser)
                     case(.MODULE):
-                        Module.parse(using: parser)
+                        ModuleType.parse(using: parser)
                     case(.FUNCTION):
                         FunctionType.parse(using: parser)
                     case(.ENUMERATION):
@@ -188,11 +192,11 @@ public class Module: CompositeSyntaxTreeNode
                     }
                 }
             }
-        for module in self.symbols.compactMap{$0 as? Module}
+        for module in self.symbols.compactMap({$0 as? ModuleType})
             {
             module.validateMethodUniqueness(semanticChecker: semanticChecker)
             }
         }
     }
 
-public typealias Modules = Array<Module>
+public typealias Modules = Array<ModuleType>

@@ -41,6 +41,11 @@ public class ArgonType: Symbol
         TypeSubstitutionSet.initialSet.newTypeVariable(named: named)
         }
         
+    public var isMakeable: Bool
+        {
+        false
+        }
+        
     public var isClassType: Bool
         {
         false
@@ -164,6 +169,11 @@ public class ArgonType: Symbol
     public var instanceSizeInBytes: Int
         {
         MemoryLayout<UInt64>.size
+        }
+        
+    public var isErrorType: Bool
+        {
+        false
         }
         
     public override var symbolType: ArgonType

@@ -70,5 +70,6 @@ public class ProjectViewCell: NSTableCellView,NSTextFieldDelegate
         self.textPane.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         self.textPane.font = StyleTheme.shared.font(for: .fontOutliner)
         self.textPane.textColor = StyleTheme.shared.color(for: .colorOutlinerText)
+        self.textPane.isEditable = true
         }
     }

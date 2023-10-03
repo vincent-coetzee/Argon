@@ -108,6 +108,7 @@ public class StyleTheme
         self.styles[.fontToolbarText] = NSFont(name: "SunSans-Regular",size: 10)!
         self.styles[.fontText] = NSFont(name: "SunSans-Regular",size: 11)!
         self.styles[.fontEditor] = NSFont(name: "Menlo-Regular",size: 11)
+//        self.styles[.fontEditor] = self.styles[.fontDefault]
         self.styles[.fontLineNumber] = self.styles[.fontEditor]
         
         self.styles[.colorArray] = NSColor.argonYellowSpaghettiSquash
@@ -150,7 +151,8 @@ public class StyleTheme
         
         self.styles[.colorLowlight] = NSColor.argonWhite50
         self.styles[.colorLine] = NSColor.argonWhite50
-        self.styles[.colorLineNumber] = NSColor(hex: 0xA0A0A0)
+//        self.styles[.colorLineNumber] = NSColor(hex: 0xA0A0A0)
+        self.styles[.colorLineNumber] = NSColor(hex: 0x606060)
         self.styles[.colorList] = NSColor.argonBluestone
         
         self.styles[.colorMethod] = NSColor.white
@@ -185,7 +187,7 @@ public class StyleTheme
 //        self.styles[.colorWarning] = NSColor.argonDeepOrange
         
         self.styles[.metricLineNumberRulerWidth] = CGFloat(30 + 10)
-        self.styles[.metricLineNumberIndent] = CGFloat(10)
+        self.styles[.metricLineNumberIndent] = CGFloat(6)
         self.styles[.metricControlCornerRadius] = CGFloat(4)
         self.styles[.metricOutlinerImageHeight] = CGFloat(16)
         }

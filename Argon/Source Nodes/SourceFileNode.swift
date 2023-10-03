@@ -52,7 +52,7 @@ public class SourceFileNode: SourceNode
     public var expandedSource: String
     private var _compilerIssues = CompilerIssues()
     public var tokens = Tokens()
-    public var module: Module!
+    public var module: ModuleType!
     private var _hasUnsavedChanges = false
     
     public init(name: String,path: Path,source: String = "")
@@ -68,7 +68,7 @@ public class SourceFileNode: SourceNode
         self.expandedSource = coder.decodeObject(forKey: "expandedSource") as! String
         self.tokens = coder.decodeObject(forKey: "tokens") as! Tokens
         self._compilerIssues = coder.decodeObject(forKey: "compilerIssues") as! CompilerIssues
-        self.module = coder.decodeObject(forKey: "module") as? Module
+        self.module = coder.decodeObject(forKey: "module") as? ModuleType
         super.init(coder: coder)
         self.expandedSource = self.source
         }

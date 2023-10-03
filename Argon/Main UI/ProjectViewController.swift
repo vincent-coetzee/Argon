@@ -200,10 +200,10 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         
     private func initSourceView()
         {
-        self.sourceView.textViewDelegate = self
-        self.sourceView.textFocusDelegate = self
+//        self.sourceView.textViewDelegate = self
+//        self.sourceView.textFocusDelegate = self
         self.sourceView.autoresizingMask = [.width]
-        self.sourceView.sourceEditorDelegate = self
+//        self.sourceView.sourceEditorDelegate = self
         }
         
     private func initOutliner()
@@ -323,7 +323,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
             let file = SourceFileNode(name: name,path: path)
             file.setIsNewFile(true)
             file.setSource(Repository.initialSourceForNewSourceFile)
-            self.sourceView.string = file.source
+//            self.sourceView.string = file.source
             node.addNode(file)
             self.outliner.reloadItem(node,reloadChildren: true)
             self.outliner.expandItem(node,expandChildren: true)
@@ -370,14 +370,14 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         {
         if self.selectedSourceNode.isNotNil
             {
-            self.sourceView.removeDependent(self.selectedSourceNode)
+//            self.sourceView.removeDependent(self.selectedSourceNode)
             }
         self.selectedSourceNode = sourceNode
-        self.sourceView.addDependent(sourceNode)
+//        self.sourceView.addDependent(sourceNode)
         if sourceNode.isSourceFileNode
             {
             let sourceFileNode = sourceNode as! SourceFileNode
-            self.sourceView.string = sourceFileNode.expandedSource
+//            self.sourceView.string = sourceFileNode.expandedSource
 //            self.sourceView.tokens = ArgonScanner(source: sourceFileNode.expandedSource).allTokens()
             }
         }
@@ -598,7 +598,7 @@ extension ProjectViewController
             {
             return
             }
-        self.sourceView.resetCompilerIssues(newIssues: node.compilerIssues)
+//        self.sourceView.resetCompilerIssues(newIssues: node.compilerIssues)
         let count = compiler.compilerIssueCount
         self.issueCountIconLabelView.iconTintColorElement = count > 0 ? .colorIssue : .colorToolbarText
         self.issueCountIconLabelView.text = count > 0 ? "\(count) issues" : ""
@@ -612,7 +612,7 @@ extension ProjectViewController
         item.toolTip = "Hide all compiler issues"
         item.label = "Hide"
         item.action = #selector(self.onHideIssuesClicked)
-        self.sourceView.showAllCompilerIssues()
+//        self.sourceView.showAllCompilerIssues()
         }
         
     @IBAction public func onHideIssuesClicked(_ sender: Any?)
@@ -622,7 +622,7 @@ extension ProjectViewController
         item.toolTip = "Show all compiler issues"
         item.label = "Show"
         item.action = #selector(self.onShowIssuesClicked)
-        self.sourceView.hideAllCompilerIssues()
+//        self.sourceView.hideAllCompilerIssues()
         }
         
     @IBAction public func onLoadClicked(_ sender: Any?)

@@ -27,12 +27,13 @@ class ProjectSourceViewController: NSViewController,Dependent
             }
         }
     
-    @IBOutlet weak var sourceView: SourceCodeEditingView!
+    @IBOutlet var sourceView: SourceView!
     
     override func viewDidLoad()
         {
         super.viewDidLoad()
         self.sourceView.sourceEditorDelegate = self
+        self.sourceView.configureScrollView()
         }
         
     public func update(aspect: String,with: Any?,from: Model)
@@ -41,9 +42,7 @@ class ProjectSourceViewController: NSViewController,Dependent
             {
             if let node = self.selectedNodeModel.value as? SourceFileNode
                 {
-                self.sourceView.string = node.expandedSource
-                node.tokens = ArgonScanner(source: node.expandedSource).allTokens()
-//                self.sourceView.tokens = node.tokens
+                self.sourceView.sourceString = node.expandedSource
                 return
                 }
             }
@@ -55,17 +54,17 @@ class ProjectSourceViewController: NSViewController,Dependent
         
     public func showAllCompilerIssues()
         {
-        self.sourceView.showAllCompilerIssues()
+//        self.sourceView.showAllCompilerIssues()
         }
         
     public func hideAllCompilerIssues()
         {
-        self.sourceView.hideAllCompilerIssues()
+//        self.sourceView.hideAllCompilerIssues()
         }
         
     public func resetCompilerIssues(newIssues: CompilerIssues)
         {
-        self.sourceView.resetCompilerIssues(newIssues: newIssues)
+//        self.sourceView.resetCompilerIssues(newIssues: newIssues)
         }
     }
 

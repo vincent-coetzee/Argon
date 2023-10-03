@@ -794,21 +794,21 @@
         <scene sceneID="ghu-py-RFz">
             <objects>
                 <viewController id="Go3-Hd-dc0" customClass="ProjectHierarchyViewController" customModule="Argon" customModuleProvider="target" sceneMemberID="viewController">
-                    <scrollView key="view" autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="nre-Z1-hhE">
-                        <rect key="frame" x="0.0" y="0.0" width="130" height="144"/>
+                    <scrollView key="view" misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="nre-Z1-hhE">
+                        <rect key="frame" x="0.0" y="0.0" width="348" height="159"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <clipView key="contentView" id="GDB-IQ-0aO">
-                            <rect key="frame" x="1" y="1" width="128" height="142"/>
+                            <rect key="frame" x="1" y="1" width="346" height="157"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="24" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="20" autoresizesOutlineColumn="YES" outlineTableColumn="nQf-zc-ED2" translatesAutoresizingMaskIntoConstraints="NO" id="roe-1w-3Eg">
-                                    <rect key="frame" x="0.0" y="0.0" width="128" height="142"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="386" height="157"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <size key="intercellSpacing" width="17" height="0.0"/>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                     <tableColumns>
-                                        <tableColumn identifier="AutomaticTableColumnIdentifier.0" width="116" minWidth="40" maxWidth="1000" id="nQf-zc-ED2">
+                                        <tableColumn identifier="AutomaticTableColumnIdentifier.0" width="374" minWidth="40" maxWidth="1000" id="nQf-zc-ED2">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -821,11 +821,11 @@
                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                             <prototypeCellViews>
                                                 <tableCellView id="s4n-up-7v9">
-                                                    <rect key="frame" x="8" y="0.0" width="111" height="24"/>
+                                                    <rect key="frame" x="8" y="0.0" width="369" height="24"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="me5-Cc-zMj">
-                                                            <rect key="frame" x="0.0" y="4" width="111" height="16"/>
+                                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="me5-Cc-zMj">
+                                                            <rect key="frame" x="0.0" y="4" width="369" height="16"/>
                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="2Gy-li-ts5">
                                                                 <font key="font" usesAppearanceFont="YES"/>
                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -848,8 +848,8 @@
                                 </outlineView>
                             </subviews>
                         </clipView>
-                        <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="4Im-Vb-vJz">
-                            <rect key="frame" x="1" y="118" width="238" height="16"/>
+                        <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="4Im-Vb-vJz">
+                            <rect key="frame" x="1" y="142" width="346" height="16"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="grN-kc-GNI">
@@ -863,7 +863,7 @@
                 </viewController>
                 <customObject id="djx-FJ-gbl" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="14" y="1037"/>
+            <point key="canvasLocation" x="153" y="1044.5"/>
         </scene>
         <!--Project Inspector View Controller-->
         <scene sceneID="9C0-Ae-TSP">
@@ -900,19 +900,52 @@
                         <rect key="frame" x="0.0" y="0.0" width="424" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="SO7-n8-2i0" customClass="SourceCodeEditingView" customModule="Argon" customModuleProvider="target">
+                            <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LLy-Cu-z9Q">
                                 <rect key="frame" x="0.0" y="0.0" width="424" height="300"/>
-                            </customView>
+                                <clipView key="contentView" drawsBackground="NO" id="ghs-9J-uGO">
+                                    <rect key="frame" x="0.0" y="0.0" width="424" height="300"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <textView wantsLayer="YES" drawsBackground="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" allowsUndo="YES" usesRuler="YES" textCompletion="NO" smartInsertDelete="YES" layoutManager="textKit1" id="vhM-d5-ym7" customClass="SourceView" customModule="Argon" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="0.0" width="424" height="300"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <size key="minSize" width="424" height="300"/>
+                                            <size key="maxSize" width="10000000" height="10000000"/>
+                                            <attributedString key="textStorage">
+                                                <fragment content="Hello">
+                                                    <attributes>
+                                                        <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                        <font key="NSFont" size="12" name="Helvetica"/>
+                                                        <font key="NSOriginalFont" size="12" name="Helvetica"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                    </attributes>
+                                                </fragment>
+                                            </attributedString>
+                                            <color key="insertionPointColor" name="textInsertionPointColor" catalog="System" colorSpace="catalog"/>
+                                        </textView>
+                                    </subviews>
+                                </clipView>
+                                <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="6x3-pQ-pMM">
+                                    <rect key="frame" x="-100" y="-100" width="240" height="16"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                                <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="bpE-N7-q6d">
+                                    <rect key="frame" x="408" y="0.0" width="16" height="300"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                            </scrollView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="SO7-n8-2i0" firstAttribute="top" secondItem="lKj-Jf-L2h" secondAttribute="top" id="EiE-T0-bzk"/>
-                            <constraint firstAttribute="bottom" secondItem="SO7-n8-2i0" secondAttribute="bottom" id="HBE-jy-Ey8"/>
-                            <constraint firstAttribute="trailing" secondItem="SO7-n8-2i0" secondAttribute="trailing" id="oob-Rs-uoE"/>
-                            <constraint firstItem="SO7-n8-2i0" firstAttribute="leading" secondItem="lKj-Jf-L2h" secondAttribute="leading" id="xmo-8q-WaL"/>
+                            <constraint firstAttribute="trailing" secondItem="LLy-Cu-z9Q" secondAttribute="trailing" id="V3L-IX-Vwe"/>
+                            <constraint firstItem="LLy-Cu-z9Q" firstAttribute="leading" secondItem="lKj-Jf-L2h" secondAttribute="leading" id="acv-ka-eHZ"/>
+                            <constraint firstItem="LLy-Cu-z9Q" firstAttribute="top" secondItem="lKj-Jf-L2h" secondAttribute="top" id="bgE-6r-8Al"/>
+                            <constraint firstAttribute="bottom" secondItem="LLy-Cu-z9Q" secondAttribute="bottom" id="q6p-W9-KG9"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="sourceView" destination="SO7-n8-2i0" id="YkA-92-DIO"/>
+                        <outlet property="sourceView" destination="vhM-d5-ym7" id="3cO-A3-dLL"/>
                     </connections>
                 </viewController>
                 <customObject id="b7b-GR-1Fz" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

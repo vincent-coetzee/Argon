@@ -32,12 +32,12 @@ public class ArgonTypeChecker: Visitor
         {
         }
     
-    public func enter(module: Module)
+    public func enter(module: ModuleType)
         {
         print("Entering module \(module.name)")
         }
     
-    public func exit(module: Module)
+    public func exit(module: ModuleType)
         {
         
         }

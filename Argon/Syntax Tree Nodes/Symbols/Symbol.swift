@@ -291,7 +291,7 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
         false
         }
         
-    public var module: Module
+    public var module: ModuleType
         {
         self.container!.module
         }
@@ -306,7 +306,7 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
         fatalError("This should not be called on Symbol")
         }
         
-    public func makeMetaclass(named: String,inModule: Module)
+    public func makeMetaclass(named: String,inModule: ModuleType)
         {
 //        let objectClass = inModule.argonModule.lookupSymbol(atName: "Object") as! ClassType
 //        let metaclass = MetaclassType(name: named,superclasses: [objectClass],genericTypes: [])
@@ -317,7 +317,7 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
         }
         
     @discardableResult
-    public func setMetaclass(named: String,fromModule: Module) -> ArgonType
+    public func setMetaclass(named: String,fromModule: ModuleType) -> ArgonType
         {
         let metaclass = fromModule.lookupSymbol(atName: "Object") as! ClassType
         self._symbolType = metaclass

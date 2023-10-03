@@ -9,6 +9,11 @@ import Foundation
 
 public class TupleType: StructuredType
     {
+    public override var isMakeable: Bool
+        {
+        true
+        }
+        
     public override var symbolType: ArgonType
         {
         get

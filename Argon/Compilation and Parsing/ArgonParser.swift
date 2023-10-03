@@ -19,7 +19,7 @@ public class ArgonParser
     private var scopeStack = Stack<Scope>()
     public private(set) var currentScope: Scope
     public private(set) var rootModule: RootModule
-    private var initialModule: Module!
+    private var initialModule: ModuleType!
     public var nodeKey = 0
     private var prefixParsers = Dictionary<TokenType,PrefixParser>()
     private var infixParsers = Dictionary<TokenType,InfixParser>()
@@ -266,13 +266,13 @@ public class ArgonParser
             return
             }
         let name = self.token.identifier.lastPart
-        if let someModule = RootModule.shared.lookupSymbol(atName: name) as? Module
+        if let someModule = RootModule.shared.lookupSymbol(atName: name) as? ModuleType
             {
             initialModule = someModule
             }
         else
             {
-            initialModule = Module(name: name)
+            initialModule = ModuleType(name: name)
             self.currentScope.addSymbol(initialModule)
             }
         self.nextToken()
@@ -315,7 +315,7 @@ public class ArgonParser
         let identifierToken = self.token
         let identifier = self.parseIdentifier(errorCode: .identifierExpected)
         let typeName = identifier.lastPart
-        var type: ArgonType = ArgonType(name: typeName)
+        var type: ArgonType = ErrorType(name: typeName)
         var typeValues = ArgonTypes()
         if self.token.isLeftBrocket
             {

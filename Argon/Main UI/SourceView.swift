@@ -24,10 +24,15 @@ class SourceView: NSTextView
     {
     public var matchBrackets: Bool = true
         
-    public override var string: String
+    public var sourceString: String
         {
-        didSet
+        get
             {
+            self.textStorage?.string ?? ""
+            }
+        set
+            {
+            self.string = newValue
             self.textDidChange(self)
             }
         }
@@ -45,19 +50,6 @@ class SourceView: NSTextView
             }
         }
         
-    public var tokens: Tokens
-        {
-        get
-            {
-            self._tokens
-            }
-        set
-            {
-            self._tokens = newValue
-            self.refresh()
-            }
-        }
-        
     public let theme = StyleTheme.shared
     
     private var _tokens = Tokens()
@@ -72,23 +64,26 @@ class SourceView: NSTextView
         {
         super.init(frame: frame)
         self.initSourceView()
+        self.configureScrollView()
         }
         
     public required init?(coder: NSCoder)
         {
         super.init(coder: coder)
         self.initSourceView()
+        self.configureScrollView()
         }
         
     public override init(frame: NSRect,textContainer: NSTextContainer?)
         {
-        super.init(frame: frame,textContainer: textContainer)
-        self.initSourceView()
+//        super.init(frame: frame,textContainer: textContainer)
+//        self.initSourceView()
+//        self.configureScrollView()
+        fatalError("Unimplemented")
         }
         
     private func initSourceView()
         {
-        self.backgroundColor = StyleTheme.shared.color(for: .colorEditorBackground)
         self.font = StyleTheme.shared.font(for: .fontEditor)
         self.textColor = StyleTheme.shared.color(for: .colorEditorText)
         self.isAutomaticTextCompletionEnabled = false
@@ -100,14 +95,12 @@ class SourceView: NSTextView
         self.isAutomaticDashSubstitutionEnabled = false
         self.isAutomaticDataDetectionEnabled = false
         self.isAutomaticTextReplacementEnabled = false
-        self.font = StyleTheme.shared.font(for: .fontEditor)
-        self.backgroundColor = StyleTheme.shared.color(for: .colorEditorBackground)
         self.isEditable = true
         self.wantsLayer = true
         self.isVerticallyResizable = true
         self.isHorizontallyResizable = false
         self.maxSize = NSSize(width: CGFloat.infinity,height: CGFloat.infinity)
-        self.textContainerInset = NSSize(width: 0,height: 10)
+        self.textContainerInset = NSSize(width: 2,height: 0)
         self.textContainer?.lineFragmentPadding = 0
         self.textContainer?.containerSize = NSSize(width: 1000,height: CGFloat.infinity)
         self.textContainer?.widthTracksTextView = true
@@ -117,6 +110,19 @@ class SourceView: NSTextView
         NotificationCenter.default.addObserver(self, selector: #selector(self.textDidEndEditing), name: NSText.didEndEditingNotification, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(self.textDidBeginEditing), name: NSText.didBeginEditingNotification, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(self.textDidChange), name: NSText.didChangeNotification, object: self)
+        }
+        
+    public func configureScrollView()
+        {
+        self.enclosingScrollView?.backgroundColor = StyleTheme.shared.color(for: .colorEditorBackground)
+        self.enclosingScrollView?.drawsBackground = true
+        self.enclosingScrollView?.borderType = .noBorder
+        self.enclosingScrollView?.hasVerticalRuler = true
+        self.enclosingScrollView?.hasVerticalScroller = true
+        self.enclosingScrollView?.hasHorizontalScroller = false
+        self.enclosingScrollView?.autohidesScrollers = true
+        self.enclosingScrollView?.verticalRulerView = self.rulerView
+        self.enclosingScrollView?.rulersVisible = true
         }
         
     public func resetCompilerIssues(newIssues: CompilerIssues)
@@ -206,6 +212,16 @@ class SourceView: NSTextView
         self.rulerView.addIssues(self._compilerIssues)
         }
         
+    //
+    //
+    // The source this view edits has changed so rescan it to
+    // find all the tokens in the source as well as the bracket
+    // information. Save the tokens locally as well as the
+    // bracket matcher that the ArgonScanner generated. The bracket
+    // matcher will be used by this view to display matching
+    // brackets.
+    //
+    //
     @objc func textDidChange(_ sender: Any?)
         {
         let theString = self.string
@@ -340,10 +356,10 @@ class SourceView: NSTextView
             return
             }
         let location = self.convert(event.locationInWindow,from: nil)
-        var offset = self.characterIndexForInsertion(at: location)
+        let offset = self.characterIndexForInsertion(at: location)
         var index:Int?
         var character: Character?
-        if var first = self.string.character(at: offset),first.isBracket
+        if let first = self.string.character(at: offset),first.isBracket
             {
             index = offset
             character = first

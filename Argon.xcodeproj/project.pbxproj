@@ -156,8 +156,7 @@
 		BFCB438829845D40001D1CFD /* EnumerationCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCB438729845D40001D1CFD /* EnumerationCase.swift */; };
 		BFCB438A29845D5D001D1CFD /* ClassType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCB438929845D5D001D1CFD /* ClassType.swift */; };
 		BFCB438C29845DDA001D1CFD /* CompositeSyntaxTreeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCB438B29845DDA001D1CFD /* CompositeSyntaxTreeNode.swift */; };
-		BFCB438E29845F79001D1CFD /* NodeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCB438D29845F79001D1CFD /* NodeType.swift */; };
-		BFCB43902984613A001D1CFD /* Module.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCB438F2984613A001D1CFD /* Module.swift */; };
+		BFCB43902984613A001D1CFD /* ModuleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCB438F2984613A001D1CFD /* ModuleType.swift */; };
 		BFCD396F2A3442FF00E84B5F /* AttributeScopes+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCD396E2A3442FF00E84B5F /* AttributeScopes+Extensions.swift */; };
 		BFCD39712A3444EB00E84B5F /* CustomTextStyleAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCD39702A3444EB00E84B5F /* CustomTextStyleAttributes.swift */; };
 		BFCDC3EE2A8559E000C20746 /* AccessoryViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCDC3ED2A8559E000C20746 /* AccessoryViewControllers.swift */; };
@@ -375,8 +374,7 @@
 		BFCB438729845D40001D1CFD /* EnumerationCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumerationCase.swift; sourceTree = "<group>"; };
 		BFCB438929845D5D001D1CFD /* ClassType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassType.swift; sourceTree = "<group>"; };
 		BFCB438B29845DDA001D1CFD /* CompositeSyntaxTreeNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositeSyntaxTreeNode.swift; sourceTree = "<group>"; };
-		BFCB438D29845F79001D1CFD /* NodeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeType.swift; sourceTree = "<group>"; };
-		BFCB438F2984613A001D1CFD /* Module.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Module.swift; sourceTree = "<group>"; };
+		BFCB438F2984613A001D1CFD /* ModuleType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleType.swift; sourceTree = "<group>"; };
 		BFCD396E2A3442FF00E84B5F /* AttributeScopes+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttributeScopes+Extensions.swift"; sourceTree = "<group>"; };
 		BFCD39702A3444EB00E84B5F /* CustomTextStyleAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextStyleAttributes.swift; sourceTree = "<group>"; };
 		BFCDC3ED2A8559E000C20746 /* AccessoryViewControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessoryViewControllers.swift; sourceTree = "<group>"; };
@@ -406,6 +404,7 @@
 		BFEF43612ABC5E940016BD51 /* MethodType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MethodType.swift; sourceTree = "<group>"; };
 		BFEF43632ABC5F6B0016BD51 /* FunctionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionType.swift; sourceTree = "<group>"; };
 		BFF0CD432A1E9EBD00F99EC3 /* ArgonTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgonTypes.swift; sourceTree = "<group>"; };
+		BFF6B38B2ACAE86B0099A852 /* Argon.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Argon.entitlements; sourceTree = "<group>"; };
 		BFF7B53229857CE80075F011 /* RootModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootModule.swift; sourceTree = "<group>"; };
 		BFF7B53429857CF60075F011 /* ArgonModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgonModule.swift; sourceTree = "<group>"; };
 		BFFB59212A95E77400E80995 /* NSFont+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSFont+Extensions.swift"; sourceTree = "<group>"; };
@@ -551,10 +550,9 @@
 				BF1F4AFF2A557CBB00C1F977 /* Constant.swift */,
 				BF3676C82972DBFC00E1A5B9 /* Identifier.swift */,
 				BF9FB7AF2A275D28008F8A75 /* Macro.swift */,
-				BFCB438F2984613A001D1CFD /* Module.swift */,
+				BFCB438F2984613A001D1CFD /* ModuleType.swift */,
 				BF0D320E2A642EC4002A2D8D /* ModuleNode.swift */,
 				BF27FCFB2A76821C000C78F1 /* NodeReference.swift */,
-				BFCB438D29845F79001D1CFD /* NodeType.swift */,
 				BFAD2C2A2A75509000565B6B /* Parameter.swift */,
 				BFABDBD12A8BD3EA00806F7D /* PseudoVariable.swift */,
 				BFF7B53229857CE80075F011 /* RootModule.swift */,
@@ -709,6 +707,7 @@
 				BF0E84DF2A5D4EA8003BCC49 /* Weather.argon */,
 				BFDC801C2A7D850E008118FF /* Notes.md */,
 				BFA93E49291678B00001F05D /* Info.plist */,
+				BFF6B38B2ACAE86B0099A852 /* Argon.entitlements */,
 				BFA93E3D291678AF0001F05D /* Argon */,
 				BF9BAD472965F33500608266 /* ArgonTests.swift */,
 				BFA93E52291678B00001F05D /* ArgonTests */,
@@ -1092,8 +1091,7 @@
 				BFE1AD102A8A7CD200402294 /* ArgonSemanticChecker.swift in Sources */,
 				BF1279A72A261BA300855760 /* MacroExpander.swift in Sources */,
 				BFAD2C2D2A75986A00565B6B /* ArrayAccessExpression.swift in Sources */,
-				BFCB43902984613A001D1CFD /* Module.swift in Sources */,
-				BFCB438E29845F79001D1CFD /* NodeType.swift in Sources */,
+				BFCB43902984613A001D1CFD /* ModuleType.swift in Sources */,
 				BF60F4AD2ABB9A3A0085700C /* UTType+Extensions.swift in Sources */,
 				BF1F4AF02A55499400C1F977 /* TimesStatement.swift in Sources */,
 				BF2423DC2A798AC000C5D4E4 /* ClosureExpression.swift in Sources */,
@@ -1294,9 +1292,12 @@
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = DLH9UBQV34;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = "/opt/homebrew/Cellar/llvm/16.0.1/include ";
 				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Argon;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -1308,6 +1309,7 @@
 					/opt/homebrew/Cellar/llvm/16.0.1/lib,
 					"$(inherited)",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"-lz",
@@ -1345,9 +1347,12 @@
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = DLH9UBQV34;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = "/opt/homebrew/Cellar/llvm/16.0.1/include ";
 				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Argon;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -1359,6 +1364,7 @@
 					/opt/homebrew/Cellar/llvm/16.0.1/lib,
 					"$(inherited)",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"-lz",

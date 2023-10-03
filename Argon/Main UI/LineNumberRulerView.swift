@@ -67,7 +67,7 @@ public class LineNumberRulerView: NSRulerView
     ///  - parameter backgroundColor: Defines the background color.
     ///
     ///  - returns: An initialized LineNumberGutter object.
-    init(withTextView textView: NSTextView, foregroundColorStyleElement: StyleElement, backgroundColorStyleElement: StyleElement)
+    init(withTextView textView: NSTextView,foregroundColorStyleElement: StyleElement, backgroundColorStyleElement: StyleElement)
         {
         // Set the color preferences.
         self.backgroundColorStyleElement = backgroundColorStyleElement
@@ -90,13 +90,14 @@ public class LineNumberRulerView: NSRulerView
     ///  - parameter rect: NSRect to draw the gutter view in.
     public override func drawHashMarksAndLabels(in rect: NSRect)
         {
-
         self.lineNumberOffsets = []
         // Set the current background color...
         StyleTheme.shared.color(for: self.backgroundColorStyleElement).set()
         // ...and fill the given rect.
-        rect.fill()
-        // Unwrap the clientView, the layoutManager and the textContainer, since we'll
+        var rulerRect = rect
+        rulerRect.size.width = StyleTheme.shared.metric(for: .metricLineNumberRulerWidth)
+        rulerRect.fill()
+        // Unwrap the clientView, the layoutManager and the textContainer, since we'll need
         // them sooner or later.
         guard let textView = self.clientView as? NSTextView,let layoutManager = textView.layoutManager,let textContainer = textView.textContainer else
             {
@@ -122,6 +123,7 @@ public class LineNumberRulerView: NSRulerView
         // Get the index of the first glyph in the visible rect, as starting point...
         var firstGlyphOfLineIndex = visibleGlyphsRange.location
         // ...then loop through all visible glyphs, line by line.
+
         while firstGlyphOfLineIndex < NSMaxRange(visibleGlyphsRange)
             {
             // Get the character range of the line we're currently in.
@@ -159,13 +161,24 @@ public class LineNumberRulerView: NSRulerView
             firstGlyphOfLineIndex = NSMaxRange(glyphRangeOfLine)
             lineNumber += 1
             }
-        // Draw another line number for the extra line fragment.
+          // Draw another line number for the extra line fragment.
         if let _ = layoutManager.extraLineFragmentTextContainer
             {
             self.drawLineNumber(number: lineNumber, atYPosition: layoutManager.extraLineFragmentRect.minY)
             self.lineNumberOffsets.append(layoutManager.extraLineFragmentRect.minY + layoutManager.extraLineFragmentRect.height / 2)
             self.totalLineCount = lineNumber
+            lineNumber += 1
             }
+        // Fill in the line numbers from the end of the lines to the end of the ruler
+        var lineOffset = layoutManager.extraLineFragmentRect.minY + self.lineHeight
+        while lineOffset < self.bounds.size.height
+            {
+            self.drawLineNumber(number: lineNumber, atYPosition: lineOffset)
+            self.lineNumberOffsets.append(lineOffset)
+            lineNumber += 1
+            lineOffset += self.lineHeight
+            }
+
         }
     ///
     ///  - parameter rect: NSRect to draw the gutter view in.
@@ -244,10 +257,11 @@ public class LineNumberRulerView: NSRulerView
     func drawLineNumber(number: Int, atYPosition yPos: CGFloat)
         {
         // Unwrap the text view.
-        guard let textView = self.clientView as? NSTextView,let font = textView.font else
+        guard let textView = self.clientView as? NSTextView else
             {
             return
             }
+        let font = StyleTheme.shared.font(for: .fontLineNumber)
         // Define attributes for the attributed string.
         let marker = self.annotatedLines[number]
         let color = marker.isNotNil ? marker!.color : StyleTheme.shared.color(for: self.foregroundColorStyleElement)
