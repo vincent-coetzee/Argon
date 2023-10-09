@@ -45,6 +45,8 @@
 		BF2423DC2A798AC000C5D4E4 /* ClosureExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2423DB2A798AC000C5D4E4 /* ClosureExpression.swift */; };
 		BF2643622AC16DE60061E49E /* TextToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2643612AC16DE60061E49E /* TextToken.swift */; };
 		BF27FCFC2A76821C000C78F1 /* NodeReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF27FCFB2A76821C000C78F1 /* NodeReference.swift */; };
+		BF28BB612AD341E700985F2E /* ArgonDocumentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF28BB602AD341E700985F2E /* ArgonDocumentController.swift */; };
+		BF28BB652AD39E5700985F2E /* ImportedModuleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF28BB642AD39E5700985F2E /* ImportedModuleType.swift */; };
 		BF2C0AEB29FB215500CCC384 /* LLVMModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2C0AEA29FB215500CCC384 /* LLVMModule.swift */; };
 		BF2C0AED29FB223200CCC384 /* LLVMContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2C0AEC29FB223200CCC384 /* LLVMContext.swift */; };
 		BF2D01E62A7C0E2A00887DD7 /* InvokableType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2D01E52A7C0E2A00887DD7 /* InvokableType.swift */; };
@@ -259,6 +261,8 @@
 		BF2423DB2A798AC000C5D4E4 /* ClosureExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosureExpression.swift; sourceTree = "<group>"; };
 		BF2643612AC16DE60061E49E /* TextToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextToken.swift; sourceTree = "<group>"; };
 		BF27FCFB2A76821C000C78F1 /* NodeReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeReference.swift; sourceTree = "<group>"; };
+		BF28BB602AD341E700985F2E /* ArgonDocumentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgonDocumentController.swift; sourceTree = "<group>"; };
+		BF28BB642AD39E5700985F2E /* ImportedModuleType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedModuleType.swift; sourceTree = "<group>"; };
 		BF2C0AEA29FB215500CCC384 /* LLVMModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLVMModule.swift; sourceTree = "<group>"; };
 		BF2C0AEC29FB223200CCC384 /* LLVMContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLVMContext.swift; sourceTree = "<group>"; };
 		BF2D01E52A7C0E2A00887DD7 /* InvokableType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvokableType.swift; sourceTree = "<group>"; };
@@ -527,6 +531,8 @@
 				BF4DB6D92A8167D200A509A4 /* MetaclassType.swift */,
 				BFAD0C152A8001AD00FB45B9 /* MethodSignature.swift */,
 				BFEF43612ABC5E940016BD51 /* MethodType.swift */,
+				BFCB438F2984613A001D1CFD /* ModuleType.swift */,
+				BF28BB642AD39E5700985F2E /* ImportedModuleType.swift */,
 				BF5EB1462AC5D2E1002A4E4B /* MultimethodType.swift */,
 				BF92E2CA2AC0CC3A00D1FDE2 /* PrimitiveType.swift */,
 				BFCB438329845D07001D1CFD /* Slot.swift */,
@@ -550,7 +556,6 @@
 				BF1F4AFF2A557CBB00C1F977 /* Constant.swift */,
 				BF3676C82972DBFC00E1A5B9 /* Identifier.swift */,
 				BF9FB7AF2A275D28008F8A75 /* Macro.swift */,
-				BFCB438F2984613A001D1CFD /* ModuleType.swift */,
 				BF0D320E2A642EC4002A2D8D /* ModuleNode.swift */,
 				BF27FCFB2A76821C000C78F1 /* NodeReference.swift */,
 				BFAD2C2A2A75509000565B6B /* Parameter.swift */,
@@ -614,6 +619,7 @@
 				BF3B430829A15319009C269F /* StyleTheme.swift */,
 				BFC779F72AC771EB00756140 /* TitlebarView.swift */,
 				BFAB87712A8671B30048B20E /* ToggleState.swift */,
+				BF28BB602AD341E700985F2E /* ArgonDocumentController.swift */,
 			);
 			path = "Main UI";
 			sourceTree = "<group>";
@@ -999,6 +1005,7 @@
 				BFEF43622ABC5E940016BD51 /* MethodType.swift in Sources */,
 				BF57672429EDC0FC007EECA5 /* Stack.swift in Sources */,
 				BF31131D298D6FD600BF5D11 /* ArgonType.swift in Sources */,
+				BF28BB652AD39E5700985F2E /* ImportedModuleType.swift in Sources */,
 				BF53D13D2A72FDBB00C2777D /* Precedence.swift in Sources */,
 				BF789A802AB6362C0022ED48 /* ProjectSourceViewController.swift in Sources */,
 				BF0E84E42A5D612E003BCC49 /* Path+Extensions.swift in Sources */,
@@ -1036,6 +1043,7 @@
 				BF1F4AF82A5549D400C1F977 /* SignalStatement.swift in Sources */,
 				BF53D1332A72D8D400C2777D /* PostfixExpression.swift in Sources */,
 				BF0238102AB0566A001DE9F9 /* TupleExpression.swift in Sources */,
+				BF28BB612AD341E700985F2E /* ArgonDocumentController.swift in Sources */,
 				BF95CD4E2AB784B500792BD6 /* PathControl.swift in Sources */,
 				BF2C0AED29FB223200CCC384 /* LLVMContext.swift in Sources */,
 				BFE6BDA72AA670BA00614F71 /* ProcessingFlags.swift in Sources */,

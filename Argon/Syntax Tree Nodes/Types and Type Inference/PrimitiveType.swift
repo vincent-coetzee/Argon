@@ -19,17 +19,6 @@ public class PrimitiveType: ArgonType
         true
         }
         
-    public override var symbolType: ArgonType
-        {
-        get
-            {
-            ArgonModule.shared.primitiveType
-            }
-        set
-            {
-            }
-        }
-        
     public required init(name: String,superclasses: ClassTypes)
         {
         super.init(name: name)

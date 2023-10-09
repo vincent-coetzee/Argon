@@ -60,6 +60,11 @@ public class TypeConstructor: ArgonType
             }
         }
         
+    public override var symbolType: ArgonType
+        {
+        self.constructedType.constructedTypeType
+        }
+        
     public override var styleElement: StyleElement
         {
         self.constructedType.typeValue.styleElement
@@ -103,7 +108,6 @@ public class TypeConstructor: ArgonType
             newType.setSymbol(typeValue,atName: parameter.name)
             newType.addGenericType(typeValue)
             }
-        newType.symbolType = self.constructedType.constructedTypeType
         return(newType)
         }
     }

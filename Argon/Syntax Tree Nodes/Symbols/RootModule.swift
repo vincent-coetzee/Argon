@@ -53,6 +53,12 @@ public class RootModule: ModuleType
         super.init(coder: coder)
         }
         
+    public required init(name: String,genericTypes: ArgonTypes)
+        {
+        super.init(name: name)
+        self.setGenericTypes(genericTypes)
+        }
+        
     public override var isRootModule: Bool
         {
         true

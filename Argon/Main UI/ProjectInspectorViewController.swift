@@ -12,16 +12,18 @@ class ProjectInspectorViewController: NSViewController
     private weak var issueView: NSTableView!
     private weak var classView: NSOutlineView!
     @IBOutlet weak var inspectorView: ProjectInspectorView!
+    @IBOutlet weak var outlineView: NSOutlineView!
     public var projectModel: ValueHolder!
     public var selectedNodeModel: ValueHolder!
     
-    public func saveContents()
-        {
-        }
+    
+//    public func saveContents()
+//        {
+//        }
         
     override func viewDidLoad()
         {
         super.viewDidLoad()
-        // Do view setup here.
+        self.outlineView.reloadData()
         }
     }

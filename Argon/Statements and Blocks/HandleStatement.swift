@@ -64,7 +64,7 @@ public class HandleStatement: Statement
         var variable: Variable!
         parser.parseBraces
             {
-            if parser.token.isInto
+            if parser.token.isWith
                 {
                 parser.nextToken()
                 parser.parseParentheses

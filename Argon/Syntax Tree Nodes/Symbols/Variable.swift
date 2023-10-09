@@ -9,6 +9,20 @@ import Foundation
 
 public class Variable: Symbol
     {
+    public override var symbolType: ArgonType
+        {
+        get
+            {
+            self._symbolType
+            }
+        set
+            {
+            self._symbolType = newValue
+            }
+        }
+        
+    private var _symbolType: ArgonType!
+    
     public let expression: Expression?
     
     public override init(name: String)
@@ -21,17 +35,19 @@ public class Variable: Symbol
         {
         self.expression = expression
         super.init(name: name)
-        self.symbolType = type ?? TypeSubstitutionSet.initialSet.newTypeVariable()
+        self._symbolType = type ?? TypeSubstitutionSet.initialSet.newTypeVariable()
         }
         
     public required init(coder: NSCoder)
         {
+        self._symbolType = coder.decodeObject(forKey: "_symbolType") as? ArgonType
         self.expression = coder.decodeObject(forKey: "expression") as? Expression
         super.init(coder: coder)
         }
     
     public override func encode(with coder: NSCoder)
         {
+        coder.encode(self._symbolType,forKey: "_symbolType")
         coder.encode(self.expression,forKey: "expression")
         super.encode(with: coder)
         }

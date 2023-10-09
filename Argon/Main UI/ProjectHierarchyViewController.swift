@@ -45,10 +45,10 @@ class ProjectHierarchyViewController: NSViewController,Dependent
         self.initOutlineView()
         }
         
-    public func saveContents()
-        {
-        (self.projectModel.value as? SourceProjectNode)?.saveContents()
-        }
+//    public func saveContents()
+//        {
+//        (self.projectModel.value as? SourceProjectNode)?.saveContents()
+//        }
 
     private func initOutlineView()
         {

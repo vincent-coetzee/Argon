@@ -297,3 +297,5 @@ extension String.StringInterpolation
         self.appendInterpolation("Parts(\(identifier.description))")
         }
     }
+
+public typealias Identifiers = Array<Identifier>

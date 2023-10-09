@@ -141,14 +141,7 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
     //
     public var symbolType: ArgonType
         {
-        get
-            {
-            self._symbolType
-            }
-        set
-            {
-            self._symbolType = newValue
-            }
+        fatalError("symbolType invoked on Symbol and it should have been overriden.")
         }
         
     public private(set) var references = NodeReferences()
@@ -156,7 +149,6 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
     public private(set) var index: Int
     public private(set) var container: Symbol?
     public var isSystemNode: Bool = false
-    public private(set) var _symbolType: ArgonType!
     public private(set) var processingFlags = ProcessingFlags()
     public var location: Location?
     
@@ -174,7 +166,6 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
         
     public required init(coder: NSCoder)
         {
-        self._symbolType = coder.decodeObject(forKey: "symbolType") as? ArgonType
         self.name = coder.decodeObject(forKey: "name") as! String
         self.index = coder.decodeInteger(forKey: "index")
         self.container = coder.decodeObject(forKey: "parent") as? Symbol
@@ -196,7 +187,6 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
         
     public func encode(with coder: NSCoder)
         {
-        coder.encode(self._symbolType,forKey: "symbolType")
         coder.encode(self.name,forKey: "name")
         coder.encode(self.index,forKey: "indeX")
         coder.encode(self.container,forKey: "parent")
@@ -306,24 +296,6 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
         fatalError("This should not be called on Symbol")
         }
         
-    public func makeMetaclass(named: String,inModule: ModuleType)
-        {
-//        let objectClass = inModule.argonModule.lookupSymbol(atName: "Object") as! ClassType
-//        let metaclass = MetaclassType(name: named,superclasses: [objectClass],genericTypes: [])
-//        self.symbolType = metaclass
-//        metaclass.setSymbolType(objectClass)
-//        inModule.addSymbol(metaclass)
-        fatalError()
-        }
-        
-    @discardableResult
-    public func setMetaclass(named: String,fromModule: ModuleType) -> ArgonType
-        {
-        let metaclass = fromModule.lookupSymbol(atName: "Object") as! ClassType
-        self._symbolType = metaclass
-        return(self as! ArgonType)
-        }
-        
     public func addSymbol(_ symbol: Symbol)
         {
         fatalError("addSymbol is not implemented on Symbol")
@@ -400,6 +372,16 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
     public func clone() -> Self
         {
         Symbol(name: self.name) as! Self
+        }
+        
+    public var astLabel: String
+        {
+        "\(Swift.type(of: self)): \(self.name)"
+        }
+        
+    public var astChildSymbols: Symbols
+        {
+        []
         }
     }
 

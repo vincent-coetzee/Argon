@@ -48,23 +48,23 @@ class ProjectSourceViewController: NSViewController,Dependent
             }
         }
         
-    public func saveContents()
-        {
-        }
+//    public func saveContents()
+////        {
+////        }
         
     public func showAllCompilerIssues()
         {
-//        self.sourceView.showAllCompilerIssues()
+        self.sourceView.showAllCompilerIssues()
         }
         
     public func hideAllCompilerIssues()
         {
-//        self.sourceView.hideAllCompilerIssues()
+        self.sourceView.hideAllCompilerIssues()
         }
         
     public func resetCompilerIssues(newIssues: CompilerIssues)
         {
-//        self.sourceView.resetCompilerIssues(newIssues: newIssues)
+        self.sourceView.resetCompilerIssues(newIssues: newIssues)
         }
     }
 

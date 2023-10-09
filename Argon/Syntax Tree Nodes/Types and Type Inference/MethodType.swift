@@ -110,6 +110,16 @@ public class MethodType: InvokableType
         visitor.exit(block: self.block)
         visitor.exit(method: self)
         }
+        
+    public override var astLabel: String
+        {
+        "MethodType \(self.name) \(self.signature.description)"
+        }
+        
+    public override var astChildSymbols: Symbols
+        {
+        []
+        }
     }
 
 public typealias Methods = Array<MethodType>

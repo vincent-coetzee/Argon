@@ -50,22 +50,6 @@ public class ClassType: StructuredType
         self.slots.map{ $0.symbolType }
         }
         
-//    public override var nodeType: NodeType
-//        {
-//        return(.class)
-//        }
-        
-    public override var symbolType: ArgonType
-        {
-        get
-            {
-            ArgonType.classType
-            }
-        set
-            {
-            }
-        }
-        
     public var classFlags = ClassFlags(rawValue: 0)
     private var poolVariables = Dictionary<String,Variable>()
     private var symbols = SymbolDictionary()
@@ -549,6 +533,11 @@ public class ClassType: StructuredType
     public override func typeConstructor() -> ArgonType
         {
         return(TypeConstructor(name: self.name,constructedType: .class(self)))
+        }
+        
+    public override var astChildSymbols: Symbols
+        {
+        self.slots
         }
     }
 

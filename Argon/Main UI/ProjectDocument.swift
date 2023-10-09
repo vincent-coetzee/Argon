@@ -31,54 +31,90 @@ class ProjectDocument: NSDocument
         windowController.initWindowController(projectModel: self.projectModel, selectedNodeModel: self.selectedNodeModel)
         }
         
-    override func write(to url: URL,ofType: String) throws
+    override func fileWrapper(ofType typeName: String) throws -> FileWrapper
         {
-        var path = url.path
-        if !path.hasSuffix(".argonp")
+        guard let project = self.projectModel.value as? SourceProjectNode else
             {
-            path += ".argonp"
+            fatalError()
             }
-        if let data = try? NSKeyedArchiver.archivedData(withRootObject: self.projectModel.value!, requiringSecureCoding: false)
-            {
-            if (try? data.write(to: url)).isNil
-                {
-                throw(CompilerIssue(code: .couldNotWriteFile, message: "Unable to write to the file \(url.path)."))
-                }
-            }
-        for controller in self.windowControllers
-            {
-            (controller as? ProjectWindowController)?.saveContents()
-            }
+        return(project.containerFileWrapper)
         }
         
-    override func read(from url: URL,ofType: String) throws
+//    public override func save(_ sender: Any?)
+//        {
+//        super.save(sender)
+//        }
+        
+    public override nonisolated func read(from fileWrapper: FileWrapper, ofType typeName: String) throws
         {
-        do
+        guard fileWrapper.isDirectory,let wrappers = fileWrapper.fileWrappers else
             {
-            guard url.path.hasSuffix(".argonp") else
-                {
-                throw(CompilerIssue(code: .invalidFileType, message: "Argon can only open projects with a .argonp file extension."))
-                }
-            guard let data = try? Data(contentsOf: url) else
-                {
-                throw(CompilerIssue(code: .couldNotReadFile, message: "Argon can not read the file \(url.path)."))
-                }
-            guard let unarchiver = try? NSKeyedUnarchiver(forReadingFrom: data) else
-                {
-                throw(CompilerIssue(code: .fileDataIsCorrupt, message: "The file at \(url.path) is corrupt."))
-                }
-            unarchiver.requiresSecureCoding = false
-            let aProject = unarchiver.decodeObject(of: SourceProjectNode.self, forKey: NSKeyedArchiveRootObjectKey)
-            guard let aProject = aProject else
-                {
-                throw(CompilerIssue(code: .fileDataIsCorrupt, message: "The file at \(url.path) is corrupt."))
-                }
-            self.projectModel.value = aProject
+            throw(CompilerError(code: .couldNotReadFile, message: "The project \(fileWrapper.filename!) could not be read."))
             }
-        catch let error
+        guard let dataWrapper = wrappers[Argon.projectStateFilename] else
             {
-            Swift.print(error)
+            throw(CompilerError(code: .fileDataIsCorrupt, message: "The project \(fileWrapper.filename!) is corrupt and can not be read."))
             }
+        guard let data = dataWrapper.regularFileContents,let unarchiver = try? NSKeyedUnarchiver(forReadingFrom: data) else
+            {
+            throw(CompilerError(code: .fileDataIsCorrupt, message: "The file at \(dataWrapper.filename!) is corrupt amd can not be read."))
+            }
+        unarchiver.requiresSecureCoding = false
+        guard let project = unarchiver.decodeObject(of: SourceProjectNode.self, forKey: NSKeyedArchiveRootObjectKey) else
+            {
+            throw(CompilerError(code: .fileDataIsCorrupt, message: "The project \(dataWrapper.filename!) is corrupt amd can not be read."))
+            }
+        self.projectModel.value = project
         }
+    
+//    override func write(to url: URL,ofType: String) throws
+//        {
+//        var path = url.path
+//        if !path.hasSuffix(".argonp")
+//            {
+//            path += ".argonp"
+//            }
+//        if let data = try? NSKeyedArchiver.archivedData(withRootObject: self.projectModel.value!, requiringSecureCoding: false)
+//            {
+//            if (try? data.write(to: url)).isNil
+//                {
+//                throw(CompilerIssue(code: .couldNotWriteFile, message: "Unable to write to the file \(url.path)."))
+//                }
+//            }
+//        for controller in self.windowControllers
+//            {
+//            (controller as? ProjectWindowController)?.saveContents()
+//            }
+//        }
+        
+//    override func read(from url: URL,ofType: String) throws
+//        {
+//        do
+//            {
+//            guard url.path.hasSuffix(".argonp") else
+//                {
+//                throw(CompilerIssue(code: .invalidFileType, message: "Argon can only open projects with a .argonp file extension."))
+//                }
+//            guard let data = try? Data(contentsOf: url) else
+//                {
+//                throw(CompilerIssue(code: .couldNotReadFile, message: "Argon can not read the file \(url.path)."))
+//                }
+//            guard let unarchiver = try? NSKeyedUnarchiver(forReadingFrom: data) else
+//                {
+//                throw(CompilerIssue(code: .fileDataIsCorrupt, message: "The file at \(url.path) is corrupt."))
+//                }
+//            unarchiver.requiresSecureCoding = false
+//            let aProject = unarchiver.decodeObject(of: SourceProjectNode.self, forKey: NSKeyedArchiveRootObjectKey)
+//            guard let aProject = aProject else
+//                {
+//                throw(CompilerIssue(code: .fileDataIsCorrupt, message: "The file at \(url.path) is corrupt."))
+//                }
+//            self.projectModel.value = aProject
+//            }
+//        catch let error
+//            {
+//            Swift.print(error)
+//            }
+//        }
     }
 

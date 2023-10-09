@@ -92,6 +92,11 @@ public class SourceNode: NSObject,NSCoding,Comparable,Dependent
         self.name
         }
         
+    public var fileWrapper: (String,FileWrapper)
+        {
+        fatalError()
+        }
+        
     public var dependentKey = DependentSet.nextDependentKey
     
     public private(set) var name: String
@@ -150,9 +155,9 @@ public class SourceNode: NSObject,NSCoding,Comparable,Dependent
             }
         }
         
-    public func saveContents()
-        {
-        }
+//    public func saveContents()
+//        {
+//        }
         
     public func setSource(_ string: String)
         {

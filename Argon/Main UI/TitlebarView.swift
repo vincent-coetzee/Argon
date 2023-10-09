@@ -22,7 +22,7 @@ public class TitlebarView: NSView
         }
         
     private var pathControl: PathControl!
-    private var issueCountIconLabelView: IconLabelView!
+    public var issueCountIconLabelView: IconLabelView!
     
     public init()
         {

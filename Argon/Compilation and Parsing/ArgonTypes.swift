@@ -9,9 +9,12 @@ import Foundation
 
 public struct Argon
     {
-    private static let moduleExtension = "argonm"
-    private static let sourceExtension = "argon"
-    private static let projectExtension = "argonp"
+    public static let projectStateFilename = "ProjectState.argons"
+    
+    public static let moduleExtension = "argonm"
+    public static let sourceExtension = "argon"
+    public static let projectExtension = "argonp"
+    public static let stateExtension = "argons"
     
     private static var _nextIndex = 1
     
@@ -137,6 +140,22 @@ public struct Argon
             }
         }
         
+    public struct Tuple: Hashable
+        {
+        public func hash(into hasher:inout Hasher)
+            {
+            fatalError()
+            }
+            
+        public static func ==(lhs: Tuple,rhs:Tuple) -> Bool
+            {
+            fatalError()
+            }
+            
+        public var symbolType: ArgonType!
+        
+        }
+        
     public struct Range
         {
         public var lowerBound: Integer
@@ -185,6 +204,33 @@ public struct Argon
 //                }
 //            }
         }
+        
+    public static func possiblePathsForImportedModule(named: String) -> Identifiers
+        {
+        var identifiers = Identifiers()
+        identifiers.append(Identifier(string: NSHomeDirectory().replacingOccurrences(of: "/", with: "\\")))
+        if let value = try? FileManager.default.url(for: .libraryDirectory, in: FileManager.SearchPathDomainMask(arrayLiteral: .localDomainMask,.userDomainMask), appropriateFor: nil, create: false)
+            {
+            identifiers.append(Identifier(string: value.absoluteString.replacingOccurrences(of: "/", with: "\\")))
+            }
+        if let value = try? FileManager.default.url(for: .desktopDirectory, in: FileManager.SearchPathDomainMask(arrayLiteral: .localDomainMask,.userDomainMask), appropriateFor: nil, create: false)
+            {
+            identifiers.append(Identifier(string: value.absoluteString.replacingOccurrences(of: "/", with: "\\")))
+            }
+        if let url = try? FileManager.default.url(for: .applicationSupportDirectory, in: FileManager.SearchPathDomainMask(arrayLiteral: .localDomainMask,.userDomainMask), appropriateFor: nil, create: false)
+            {
+            var value = url.absoluteString
+            value.append("/Argon/")
+            identifiers.append(Identifier(string: value.replacingOccurrences(of: "/", with: "\\")))
+            }
+        if let url = try? FileManager.default.url(for: .documentDirectory, in: FileManager.SearchPathDomainMask(arrayLiteral: .localDomainMask,.userDomainMask), appropriateFor: nil, create: false)
+            {
+            var value = url.absoluteString
+            value.append("/Argon/")
+            identifiers.append(Identifier(string: value.replacingOccurrences(of: "/", with: "\\")))
+            }
+        return(identifiers)
+        }
     }
 
 public typealias Atoms = Array<Argon.Atom>
@@ -230,5 +276,18 @@ extension NSCoder
             case(.integer):
                 self.encode(4,forKey: key + "_index")
             }
+        }
+    }
+
+extension NSCoder
+    {
+    public func encode(_ tuple: Argon.Tuple,forKey key: String)
+        {
+        fatalError()
+        }
+        
+    public func decodeTuple(forKey key: String) -> Argon.Tuple
+        {
+        fatalError()
         }
     }

@@ -11,13 +11,7 @@ public class MakeExpression: Expression
     {
     public override var symbolType: ArgonType
         {
-        get
-            {
-            self.typeNode.baseType
-            }
-        set
-            {
-            }
+        self.typeNode.baseType
         }
         
     public let typeNode: ArgonType

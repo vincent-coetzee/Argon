@@ -21,6 +21,11 @@ class LeftSidebarButtonController: NSTitlebarAccessoryViewController
             }
         }
         
+    public var issueCountIconLabelView: IconLabelView
+        {
+        (self.view as! TitlebarView).issueCountIconLabelView
+        }
+        
     public func setViewWidth(_ width: CGFloat)
         {
         var frame = self.view.frame

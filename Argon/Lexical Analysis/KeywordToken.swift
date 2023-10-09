@@ -8,10 +8,10 @@
 import Foundation
 
 fileprivate let _Keywords = ["CLASS","CONSTANT","DEFORM","DYNAMIC","ELSE","ENTRY","ENUMERATION","EXIT",
-                            "FALSE","FOR","FROM","FREE","FORM","FUNCTION","IF","IN","HANDLE","IMPORT","INTO",
+                            "FALSE","FOR","FROM","FREE","FORM","FUNCTION","IF","IN","HANDLE","IMPORT",
                             "IS","KEY","LET","LOOP","MAKE","METHOD","MODULE","OTHERWISE","POOL","READ","REPEAT",
                             "RETURN","SECTION","SELECT","SLOT","SIGNAL","THEN","TIMES","TRUE","TYPE","USES",
-                            "VIRTUAL","WHEN","WHILE","WRAPPER","WRITE"]
+                            "VIRTUAL","WHEN","WHILE","WITH","WRAPPER","WRITE"]
                             
 public class KeywordToken: Token
     {
@@ -60,9 +60,9 @@ public class KeywordToken: Token
         self.matchString == "SLOT"
         }
         
-    public override var isInto: Bool
+    public override var isWith: Bool
         {
-        self.matchString == "INTO"
+        self.matchString == "WITH"
         }
         
     public override var isFork: Bool

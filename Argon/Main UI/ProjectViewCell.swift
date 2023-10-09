@@ -71,5 +71,11 @@ public class ProjectViewCell: NSTableCellView,NSTextFieldDelegate
         self.textPane.font = StyleTheme.shared.font(for: .fontOutliner)
         self.textPane.textColor = StyleTheme.shared.color(for: .colorOutlinerText)
         self.textPane.isEditable = true
+        NotificationCenter.default.addObserver(self, selector: #selector(self.textFieldContentsChanged), name: NSTextField.textDidChangeNotification, object: window)
+        }
+        
+    @objc public func textFieldContentsChanged(_ notification: Notification)
+        {
+        self.node?.setName(self.textPane.stringValue)
         }
     }

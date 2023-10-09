@@ -48,6 +48,11 @@ public class SourceFileNode: SourceNode
             }
         }
         
+    public override var fileWrapper: (String,FileWrapper)
+        {
+        (self.name,FileWrapper(regularFileWithContents: self.source.data(using: .utf8)!))
+        }
+        
     public private(set) var source: String
     public var expandedSource: String
     private var _compilerIssues = CompilerIssues()
@@ -88,18 +93,18 @@ public class SourceFileNode: SourceNode
         NSImage(named: "IconSourceFile")!
         }
         
-    public override func saveContents()
-        {
-        do
-            {
-            try self.source.write(to: self.path,atomically: true)
-            }
-        catch let error
-            {
-            print("Failed to save SourceNode(\(self.name)) to \(self.path).")
-            print(error)
-            }
-        }
+//    public override func saveContents()
+//        {
+//        do
+//            {
+//            try self.source.write(to: self.path,atomically: true)
+//            }
+//        catch let error
+//            {
+//            print("Failed to save SourceNode(\(self.name)) to \(self.path).")
+//            print(error)
+//            }
+//        }
         
     public override func setSource(_ string: String)
         {

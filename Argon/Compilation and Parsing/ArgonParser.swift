@@ -212,9 +212,9 @@ public class ArgonParser
         }
         
     @discardableResult
-    public func expect(tokenType: TokenType,error: IssueCode) -> Token?
+    public func expect(tokenType: TokenType,error: IssueCode,location theLocation: Location? = nil) -> Token?
         {
-        let location = self.token.location
+        let location = theLocation.isNil ? self.token.location : theLocation!
         if self.token.tokenType == tokenType
             {
             let temp = self.token
@@ -276,12 +276,13 @@ public class ArgonParser
             self.currentScope.addSymbol(initialModule)
             }
         self.nextToken()
+        let nextLocation = self.token.location
         self.pushCurrentScope(initialModule)
         self.parseBraces
             {
             while !self.token.isRightBrace && !self.token.isEnd
                 {
-                self.parseModuleEntries()
+                self.parseModuleEntries(location: nextLocation)
                 }
             }
         self.popCurrentScope()
@@ -587,10 +588,12 @@ public class ArgonParser
         self.currentScope.addSymbol(node)
         }
         
-    private func parseModuleEntries()
+    private func parseModuleEntries(location: Location)
         {
         switch(self.token.tokenType)
             {
+            case(.IMPORT):
+                ImportedModuleType.parse(using: self)
             case(.STATIC):
                 StaticStatement.parse(using: self)
             case(.METHOD):
@@ -610,7 +613,7 @@ public class ArgonParser
             case(.identifier):
                 AssignmentExpression.parse(using: self)
             default:
-                self.lodgeError(code: .statementExpected,message: "A statement was expected but '\(self.token.matchString)' was found.",location: self.token.location)
+                self.lodgeError(code: .statementExpected,message: "A statement was expected but '\(self.token.matchString)' was found.",location: location)
                 self.nextToken()
             }
         }
@@ -659,29 +662,6 @@ public class ArgonParser
                 self.lodgeError(code: .statementExpected,location: self.token.location)
                 self.nextToken()
             }
-        }
-        
-    private func parseImportDeclaration()
-        {
-//        self.nextToken()
-//        guard let lastToken = self.expect(tokenType: .identifier, error: .identifierExpected) else
-//            {
-//            return
-//            }
-////        let importedModuleName = lastToken.identifier.lastPart
-//        guard self.expect(tokenType: .leftParenthesis,error: .leftParenthesisExpected).isNotNil else
-//            {
-//            return
-//            }
-//        guard let middleToken = self.expect(tokenType: .path,error: .pathExpected) else
-//            {
-//            return
-//            }
-////        let importPath = middleToken.pathValue
-//        guard self.expect(tokenType: .rightParenthesis,error: .rightParenthesisExpected).isNil else
-//            {
-//            return
-//            }
         }
         
     public func lodgeError(code: IssueCode,message: String? = nil,location: Location)

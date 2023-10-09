@@ -12,6 +12,17 @@ public class SourceCompositeNode: SourceNode
     {
     public var nodes: Array<SourceNode>
     
+    public override var fileWrapper: (String,FileWrapper)
+        {
+        let allWrappers = self.nodes.map{$0.fileWrapper}
+        var wrappers = Dictionary<String,FileWrapper>()
+        for (name,wrapper) in allWrappers
+            {
+            wrappers[name] = wrapper
+            }
+        return((self.name,FileWrapper(directoryWithFileWrappers: wrappers)))
+        }
+        
     public override var allNodes: Array<SourceNode>
         {
         var someElements = Array<SourceNode>()
@@ -71,13 +82,13 @@ public class SourceCompositeNode: SourceNode
         return(nodes[atIndex])
         }
         
-    public override func saveContents()
-        {
-        for node in self.nodes
-            {
-            node.saveContents()
-            }
-        }
+//    public override func saveContents()
+//        {
+//        for node in self.nodes
+//            {
+//            node.saveContents()
+//            }
+//        }
         
     public override func addNode( _ element: SourceNode)
         {

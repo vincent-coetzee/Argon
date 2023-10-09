@@ -84,6 +84,16 @@ public class MultimethodType: StructuredType
             }
         self.methods.append(contentsOf: method.methods)
         }
+        
+    public override var astLabel: String
+        {
+        "MultimethodType \(self.name)"
+        }
+        
+    public override var astChildSymbols: Symbols
+        {
+        self.methods
+        }
     }
 
 public typealias Multimethods = Array<MultimethodType>

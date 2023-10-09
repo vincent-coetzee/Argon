@@ -34,7 +34,6 @@ public enum IssueCode: String
     case fileDataIsCorrupt                                          = "file data is corrupt."
     
     case invalidCharacterSequence                                   = "invalid character sequence."
-    case intoExpected                                               = "'INTO' expected."
     case identifierExpected                                         = "identifier expected."
     case identifierAlreadyDefined                                   = "identifier already defined."
     case invalidExpression                                          = "invalid expression."
@@ -72,12 +71,14 @@ public enum IssueCode: String
     case multimethodNotFound                                        = "A multimethod with the specified name is not in scope."
     case makeExpectsTypeToMake                                      = "MAKE expects a type to make."
     case makeableTypeExpected                                       = "A makeable type was expected."
+    case modulePathExpected                                         = "Module path expected."
     
     case none                                                       = "none"
     case nodeAlreadyDefined                                         = "node already defined."
                 
     case pathExpected                                               = "path expected."
     case primitiveTypeNotAGenericType                               = "A primitive type can not be used as a generic type."
+    case possiblePathForImportedModuleNotFound                      = "A possible path for the imported module can not be found."
     
     case rangeOperatorExpected                                      = "'..' expected."
     case returnExpectedInReadBlock                                  = "'RETURN' expected in READ block."
@@ -109,6 +110,7 @@ public enum IssueCode: String
     case vitualSlotMustSpecifyType                                  = "virtual slot must specify type."
     case virtualSlotNotAllowedInitialExpression                     = "virtual slot not allowed initial value."
     
+    case withExpected                                               = "'WITH' expected."
     case whenExpected                                               = "'WHEN' expected."
     case whileExpectedAfterRepeatBlock                              = "'WHILE' expected after 'REPEAT' block."
     case writeBlockExpectedForVirtualSlot                           = "'WRITE' block expected for virtual slot."

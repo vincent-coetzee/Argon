@@ -7,6 +7,38 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
+				<string>argon</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>ArgonProjectStateIcon</string>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<integer>0</integer>
+			<key>CFBundleTypeMIMETypes</key>
+			<array>
+				<string>com.macsemantics.argon.state</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>Argon Project State File</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>ARGT</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.macsemantics.argon.state</string>
+			</array>
+			<key>LSTypeIsPackage</key>
+			<false/>
+			<key>NSDocumentClass</key>
+			<string>NSDocument</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
 				<string>argonp</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
@@ -32,7 +64,7 @@
 				<string>com.macsemantics.argon.project</string>
 			</array>
 			<key>LSTypeIsPackage</key>
-			<false/>
+			<true/>
 			<key>NSDocumentClass</key>
 			<string>$(PRODUCT_MODULE_NAME).ProjectDocument</string>
 		</dict>
@@ -107,6 +139,34 @@
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Argon Project State</string>
+			<key>UTTypeIconFile</key>
+			<string>ArgonProjectStateIcon</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBadgeName</key>
+				<string></string>
+			</dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.macsemantics.argon.state</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>argons</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>com.macsemantics.argon.state</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>com.apple.package</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>Argon Project</string>

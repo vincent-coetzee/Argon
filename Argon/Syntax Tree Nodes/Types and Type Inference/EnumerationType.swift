@@ -19,17 +19,6 @@ public class EnumerationType: StructuredType
 //        return(.enumeration)
 //        }
         
-    public override var symbolType: ArgonType
-        {
-        get
-            {
-            ArgonType.enumerationType
-            }
-        set
-            {
-            }
-        }
-        
     public override var styleElement: StyleElement
         {
         .colorEnumeration
@@ -256,6 +245,11 @@ public class EnumerationType: StructuredType
             }
         someClass.symbols = newSymbols
         return(someClass as! Self)
+        }
+        
+    public override var astChildSymbols: Symbols
+        {
+        self.cases
         }
     }
 

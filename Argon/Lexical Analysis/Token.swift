@@ -330,7 +330,7 @@ public class Token: NSObject,NSCoding
         false
         }
         
-    public var isInto: Bool
+    public var isWith: Bool
         {
         false
         }

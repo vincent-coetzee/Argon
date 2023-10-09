@@ -11,19 +11,19 @@ public class ArgonModule: ModuleType
     {
     public private(set) static var shared: ArgonModule!
     
-    public static var classType: ArgonType { ArgonModule.shared.lookupType(atName: "Class")! }
-    public static var voidType: ArgonType { ArgonModule.shared.lookupType(atName: "Void")!}
-    public static var objectType: ArgonType { ArgonModule.shared.lookupType(atName: "Object")!}
-    public static var stringType: ArgonType { ArgonModule.shared.lookupType(atName: "String")!}
-    public static var floatType: ArgonType { ArgonModule.shared.lookupType(atName: "Float")!}
-    public static var integerType: ArgonType { ArgonModule.shared.lookupType(atName: "Integer")!}
-    public static var booleanType: ArgonType { ArgonModule.shared.lookupType(atName: "Boolean")!}
-    public static var arrayType: ArgonType { ArgonModule.shared.lookupType(atName: "Array")!}
-    public static var byteType: ArgonType { ArgonModule.shared.lookupType(atName: "Byte")!}
-    public static var characterType: ArgonType { ArgonModule.shared.lookupType(atName: "Character")!}
-    public static var atomType: ArgonType { ArgonModule.shared.lookupType(atName: "Atom")!}
-    public static var uIntegerType: ArgonType { ArgonModule.shared.lookupType(atName: "UInteger")!}
-    public static var tupleType: ArgonType { ArgonModule.shared.lookupType(atName: "TupleType")!}
+//    public static var classType: ArgonType { ArgonModule.shared.lookupType(atName: "Class")! }
+//    public static var voidType: ArgonType { ArgonModule.shared.lookupType(atName: "Void")!}
+//    public static var objectType: ArgonType { ArgonModule.shared.lookupType(atName: "Object")!}
+//    public static var stringType: ArgonType { ArgonModule.shared.lookupType(atName: "String")!}
+//    public static var floatType: ArgonType { ArgonModule.shared.lookupType(atName: "Float")!}
+//    public static var integerType: ArgonType { ArgonModule.shared.lookupType(atName: "Integer")!}
+//    public static var booleanType: ArgonType { ArgonModule.shared.lookupType(atName: "Boolean")!}
+//    public static var arrayType: ArgonType { ArgonModule.shared.lookupType(atName: "Array")!}
+//    public static var byteType: ArgonType { ArgonModule.shared.lookupType(atName: "Byte")!}
+//    public static var characterType: ArgonType { ArgonModule.shared.lookupType(atName: "Character")!}
+//    public static var atomType: ArgonType { ArgonModule.shared.lookupType(atName: "Atom")!}
+//    public static var uIntegerType: ArgonType { ArgonModule.shared.lookupType(atName: "UInteger")!}
+//    public static var tupleType: ArgonType { ArgonModule.shared.lookupType(atName: "TupleType")!}
     
 //    private static func systemClass(named name: String,superclassesNamed: Array<String> = [],slots: Slots = Slots(),generics: ArgonTypes = ArgonTypes()) -> ClassType
 //        {
@@ -78,6 +78,12 @@ public class ArgonModule: ModuleType
         super.init(coder: coder)
         }
     
+    public required init(name: String,genericTypes: ArgonTypes)
+        {
+        super.init(name: name)
+        self.setGenericTypes(genericTypes)
+        }
+        
     public var errorType: ArgonType
         {
         Self._errorType
@@ -208,9 +214,9 @@ public class ArgonModule: ModuleType
         return(self.lookupType(atName: "Month")!)
         }
         
-    public var voidType: ClassType
+    public var voidType: PrimitiveType
         {
-        return(self.lookupType(atName: "Void") as! ClassType)
+        return(self.lookupType(atName: "Void") as! PrimitiveType)
         }
         
     public var fileType: ClassType
@@ -284,7 +290,7 @@ public class ArgonModule: ModuleType
         self.addSystemClass(named: "String",superclassesNamed: ["Object","DiscreteType"])
         self.addSystemClass(named: "Atom",superclassesNamed: ["Object"])
         self.addSystemClass(named: "Boolean",superclassesNamed:["Object"])
-        self.addSystemClass(named: "Void",superclassesNamed:["Type"])
+        self.addPrimitiveType(named: "Void",superclassesNamed:["Type"])
         self.addSystemClass(named: "Stream",superclassesNamed: ["Object"])
         self.addSystemClass(named: "ReadStream",superclassesNamed: ["Stream"])
         self.addSystemClass(named: "WriteStream",superclassesNamed: ["Stream"])

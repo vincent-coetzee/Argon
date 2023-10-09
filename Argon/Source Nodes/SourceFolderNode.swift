@@ -8,7 +8,7 @@
 import AppKit
 
 public class SourceFolderNode: SourceCompositeNode
-    {
+    {        
     public override var projectViewImage: NSImage
         {
         NSImage(named: "IconGroup")!

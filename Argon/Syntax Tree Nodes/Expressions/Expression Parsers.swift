@@ -356,52 +356,66 @@ public struct ClosureParser: PrefixParser
         self.precedence = precedence
         }
         
+    //
+    // EBNF for clsoures
+    //
+    //
+    // INDUCTION_VARIABLE_DECLARATION := IDENTIFIER [ :: TYPE ]
+    // INDUCTION_VARIABLES_DECLARATION := INDUCTION_VARIABLE_DECLARATION | INDUCTION_VARIABLE_DECLARATION ',' INDUCTION_VARIABLE_DECLARATIONS
+    // WITH_CLAUSE := ε | 'WITH' '(' INDUCTION_VARIABLE_DECLARATIONS ')'
+    // CLOSURE_DECLARATION := '{' WITH_CLAUSE STATEMENTS '}'
+    //
+    //
     public func parse(parser: ArgonParser, token: Token) -> Expression
         {
         let location = parser.token.location
         parser.nextToken()
-        if !parser.token.isInto
-            {
-            parser.lodgeError( code: .intoExpected, location: location)
-            }
-        else
+        var parameters = Parameters()
+        if parser.token.isWith
             {
             parser.nextToken()
-            }
-        var name: String!
-        var parameters = Parameters()
-        parser.parseParentheses
-            {
-            repeat
+            var name: String!
+            parser.parseParentheses
                 {
-                parser.parseComma()
-                if !parser.token.isIdentifier
+                repeat
                     {
-                    parser.lodgeError( code: .identifierExpected, location: location)
-                    name = Argon.nextIndex(named: "ID")
+                    parser.parseComma()
+                    if !parser.token.isIdentifier
+                        {
+                        parser.lodgeError( code: .identifierExpected, location: location)
+                        name = Argon.nextIndex(named: "IDV")
+                        }
+                    else
+                        {
+                        name = parser.token.identifier.lastPart
+                        parser.nextToken()
+                        }
+                    if parser.token.isScope
+                        {
+                        parser.nextToken()
+                        }
+                    else
+                        {
+                        parser.lodgeError( code: .scopeOperatorExpected, location: location)
+                        }
+                    let type = parser.parseType()
+                    parameters.append(Parameter(definedByPosition: true,externalName: name, internalName: name, type: type))
                     }
-                else
-                    {
-                    name = parser.token.identifier.lastPart
-                    parser.nextToken()
-                    }
-                if parser.token.isScope
-                    {
-                    parser.nextToken()
-                    }
-                else
-                    {
-                    parser.lodgeError( code: .scopeOperatorExpected, location: location)
-                    }
-                let type = parser.parseType()
-                parameters.append(Parameter(definedByPosition: true,externalName: name, internalName: name, type: type))
+                while parser.token.isComma
                 }
-            while !parser.token.isEnd && !parser.token.isRightParenthesis
             }
         let block = Block()
         block.location = location
         parameters.location = location
         Block.parseBlockInner(block: block,using: parser)
+        if parser.token.isRightBrace
+            {
+            parser.nextToken()
+            }
+        else
+            {
+            parser.lodgeError(code: .rightBraceExpected,location: location)
+            }
         let expression = ClosureExpression(block: block,parameters: parameters).addDeclaration(location)
         expression.location = location
         return(expression)

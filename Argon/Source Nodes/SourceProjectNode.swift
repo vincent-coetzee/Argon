@@ -10,6 +10,22 @@ import Path
 
 public class SourceProjectNode: SourceCompositeNode
     {
+    public var containerFileWrapper: FileWrapper
+        {
+        let allWrappers = self.nodes.map{$0.fileWrapper}
+        var wrappers = Dictionary<String,FileWrapper>()
+        for (name,wrapper) in allWrappers
+            {
+            wrappers[name] = wrapper
+            }
+        if let data = try? NSKeyedArchiver.archivedData(withRootObject: self, requiringSecureCoding: false)
+            {
+            wrappers[Argon.projectStateFilename] = FileWrapper(regularFileWithContents: data)
+            return(FileWrapper(directoryWithFileWrappers: wrappers))
+            }
+        fatalError()
+        }
+        
     public override var pathToProject: Array<SourceNode>
         {
         [self]

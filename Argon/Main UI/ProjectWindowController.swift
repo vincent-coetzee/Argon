@@ -49,6 +49,7 @@ internal class ProjectWindowController: NSWindowController,Dependent
         self.inspectorViewController = self.splitViewController?.splitViewItems.last?.viewController as? ProjectInspectorViewController
         self.leftSidebarController.target = self
         self.window!.addTitlebarAccessoryViewController(self.leftSidebarController)
+        self.issueCountIconLabelView = self.leftSidebarController.issueCountIconLabelView
         self.leftSidebarController.selectedNodeModel = self.selectedNodeModel
         self.hierarchyViewController.selectedNodeModel = self.selectedNodeModel
         self.sourceViewController.selectedNodeModel = self.selectedNodeModel
@@ -75,12 +76,12 @@ internal class ProjectWindowController: NSWindowController,Dependent
         self.resizeLeftAccessoryView()
         }
         
-    public func saveContents()
-        {
-        self.hierarchyViewController.saveContents()
-        self.sourceViewController.saveContents()
-        self.inspectorViewController.saveContents()
-        }
+//    public func saveContents()
+//        {
+//        self.hierarchyViewController.saveContents()
+//        self.sourceViewController.saveContents()
+//        self.inspectorViewController.saveContents()
+//        }
         
     public func update(aspect: String,with: Any?,from: Model)
         {

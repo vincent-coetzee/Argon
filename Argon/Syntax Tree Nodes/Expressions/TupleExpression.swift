@@ -9,7 +9,20 @@ import Foundation
 
 public class TupleExpression: Expression
     {
+    public override var symbolType: ArgonType
+        {
+        guard let someType = self._symbolType else
+            {
+            let tupleType = TupleType()
+            tupleType.setGenericTypes(self.expressions.map{$0.symbolType})
+            self._symbolType = tupleType
+            return(tupleType)
+            }
+        return(someType)
+        }
+        
     private let expressions: Expressions
+    private var _symbolType: ArgonType?
     
     public init(expressions: Expressions)
         {

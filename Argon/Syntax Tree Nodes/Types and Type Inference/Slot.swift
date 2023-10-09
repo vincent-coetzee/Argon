@@ -33,11 +33,24 @@ public class Slot: Symbol
         return(hasher.finalize())
         }
         
+    public override var symbolType: ArgonType
+        {
+        get
+            {
+            self._symbolType
+            }
+        set
+            {
+            self._symbolType = newValue
+            }
+        }
+        
     public var slotFlags = SlotFlags(rawValue: 0)
     
     public private(set) var initialExpression: Expression?
     public private(set) var readBlock: Block?
     public private(set) var writeBlock: Block?
+    private var _symbolType: ArgonType = TypeSubstitutionSet.initialSet.newTypeVariable()
     
     public init(name: String,type: ArgonType? = nil)
         {
@@ -51,11 +64,13 @@ public class Slot: Symbol
         self.initialExpression = coder.decodeObject(forKey: "initialExpression") as? Expression
         self.readBlock = coder.decodeObject(forKey: "readBlock") as? Block
         self.writeBlock = coder.decodeObject(forKey: "writeBlock") as? Block
+        self._symbolType = coder.decodeObject(forKey: "_symbolType") as! ArgonType
         super.init(coder: coder)
         }
         
     public override func encode(with coder: NSCoder)
         {
+        coder.encode(self._symbolType,forKey: "_symbolType")
         coder.encode(self.slotFlags.rawValue,forKey: "slotFlags")
         coder.encode(self.initialExpression,forKey: "initialExpression")
         coder.encode(self.readBlock,forKey: "readBlock")
@@ -84,6 +99,11 @@ public class Slot: Symbol
         self.readBlock?.accept(visitor: visitor)
         self.writeBlock?.accept(visitor: visitor)
         visitor.visit(slot: self)
+        }
+        
+    public override var astLabel: String
+        {
+        "\(self.name) :: \(self.symbolType.name)"
         }
     }
 

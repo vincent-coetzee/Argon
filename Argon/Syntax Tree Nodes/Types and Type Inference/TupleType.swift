@@ -14,17 +14,6 @@ public class TupleType: StructuredType
         true
         }
         
-    public override var symbolType: ArgonType
-        {
-        get
-            {
-            ArgonType.tupleType
-            }
-        set
-            {
-            }
-        }
-        
     public override var hash: Int
         {
         var hasher = Hasher()
@@ -35,6 +24,11 @@ public class TupleType: StructuredType
             hasher.combine(aType)
             }
         return(hasher.finalize())
+        }
+        
+    public init()
+        {
+        super.init(name: Argon.nextIndex(named: "TUPLE"))
         }
         
     public required init(coder: NSCoder)
