@@ -15,6 +15,8 @@ class ProjectHierarchyViewController: NSViewController,Dependent
     
     @IBOutlet weak var outlineView: NSOutlineView!
     
+    public var sourceViewController: ProjectSourceViewController!
+    
     public var projectModel: ValueHolder = ValueHolder(value: nil)
         {
         willSet
@@ -67,6 +69,7 @@ class ProjectHierarchyViewController: NSViewController,Dependent
         self.outlineView.font = StyleTheme.shared.font(for: .fontDefault)
         self.outlineView.indentationPerLevel = 20
         self.outlineView.indentationMarkerFollowsCell = true
+        self.outlineView.menu?.delegate = self
         }
         
     public func update(aspect: String,with: Any?,from: Model)
@@ -80,9 +83,52 @@ class ProjectHierarchyViewController: NSViewController,Dependent
             {
             if self.selectedNodeModel.value.isNotNil
                 {
-                self.outlineView.menu = (self.selectedNodeModel.value! as! SourceNode).actionSet.hierarchyActionMenu
+                self.outlineView.menu = (self.selectedNodeModel.value! as! IDENode).actionSet.hierarchyActionMenu
                 }
             return
+            }
+        }
+        
+    @objc public func handleMenuItem(_ menuItem: NSMenuItem) -> Bool
+        {
+        switch(menuItem.identifier!.rawValue)
+            {
+            case("importFile"):
+                self.importFile()
+                return(true)
+            case("newFolder"):
+                self.onNewFolder(nil)
+                return(true)
+            case("newArgonFile"):
+                self.onNewArgonFile(nil)
+                return(true)
+            case("newVisualDesignFile"):
+                self.onNewVisualDesign(nil)
+                return(true)
+            case("delete"):
+                self.onDeleteNode(nil)
+                return(true)
+            default:
+                return(false)
+            }
+        }
+        
+    @objc public func validateMenuItem(_ menuItem: NSMenuItem) -> Bool
+        {
+        switch(menuItem.identifier!.rawValue)
+            {
+            case("importFile"):
+                return((self.selectedNodeModel.value as? IDECompositeNode).isNotNil)
+            case("newFolder"):
+                return((self.selectedNodeModel.value as? IDECompositeNode).isNotNil)
+            case("newArgonFile"):
+                return((self.selectedNodeModel.value as? IDECompositeNode).isNotNil)
+            case("newVisualDesignFile"):
+                return((self.selectedNodeModel.value as? IDECompositeNode).isNotNil)
+            case("delete"):
+                return(self.selectedNodeModel.value.isNotNil)
+            default:
+                return(false)
             }
         }
     }
@@ -93,9 +139,9 @@ extension ProjectHierarchyViewController: NSMenuDelegate
     public func menuNeedsUpdate(_ menu: NSMenu)
         {
         menu.autoenablesItems = true
-        menu.item(withTitle: "New Folder")?.action = #selector(self.onNewFolder)
-        menu.item(withTitle: "New Argon File")?.action = #selector(self.onNewArgonFile)
-        menu.item(withTitle: "Delete")?.action = #selector(self.onDeleteNode)
+        menu.item(withTitle: "New Folder")?.action = #selector(self.handleMenuItem)
+        menu.item(withTitle: "New Argon File")?.action = #selector(self.handleMenuItem)
+        menu.item(withTitle: "Delete")?.action = #selector(self.handleMenuItem)
         let row = self.outlineView.clickedRow
         guard row != -1 else
             {
@@ -105,8 +151,11 @@ extension ProjectHierarchyViewController: NSMenuDelegate
             {
             menuItem.target = self
             }
-        let item = self.outlineView.item(atRow: row) as! SourceNode
-        menu.item(withTitle: "Import...")?.isEnabled = item.isCompositeNode
+        let item = self.outlineView.item(atRow: row) as! IDENode
+        let menuItem = menu.item(withTitle: "Import...")!
+        menuItem.isEnabled = item.isCompositeNode
+        menuItem.target = self
+        menuItem.action = #selector(self.handleMenuItem)
         }
     }
         
@@ -115,8 +164,9 @@ extension ProjectHierarchyViewController: NSOutlineViewDelegate
     @MainActor public func outlineViewSelectionDidChange(_ notification: Notification)
         {
         let row = self.outlineView.selectedRow
-        let item:SourceNode? = row == -1 ? nil : self.outlineView.item(atRow: row) as? SourceNode
+        let item:IDENode? = row == -1 ? nil : self.outlineView.item(atRow: row) as? IDENode
         self.selectedNodeModel.value = item
+        self.sourceViewController.editedNode = item
         }
         
     public func outlineView(_ outlineView: NSOutlineView, shouldEdit tableColumn: NSTableColumn?, item: Any) -> Bool
@@ -130,14 +180,14 @@ extension ProjectHierarchyViewController: NSOutlineViewDelegate
             {
             return(1)
             }
-        let element = item as! SourceNode
+        let element = item as! IDENode
         return(element.childCount)
         }
         
     @objc func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView?
         {
         let view = ProjectViewCell(frame: .zero)
-        view.node = item as? SourceNode
+        view.node = item as? IDENode
         view.textPane.target = self
         view.textPane.action = #selector(self.projectElementTitleChanged)
         return(view)
@@ -150,7 +200,7 @@ extension ProjectHierarchyViewController: NSOutlineViewDelegate
             {
             return
             }
-        let element = self.outlineView.item(atRow: rowIndex) as! SourceNode
+        let element = self.outlineView.item(atRow: rowIndex) as! IDENode
         if let string = (sender as? NSTextField)?.stringValue
             {
             element.setName(string)
@@ -171,19 +221,23 @@ extension ProjectHierarchyViewController: NSOutlineViewDataSource
             {
             return(self.projectModel.value!)
             }
-        let element = (item as! SourceNode)
+        let element = (item as! IDENode)
         return(element.child(atIndex: index)!)
         }
 
     @objc func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool
         {
-        let element = (item as! SourceNode)
+        let element = (item as! IDENode)
         return(element.isExpandable)
         }
     }
 
 extension ProjectHierarchyViewController
     {
+    @IBAction public func onNewVisualDesign(_ sender: Any?)
+        {
+        }
+        
     @IBAction public func onNewArgonFile(_ sender: Any?)
         {
         let row = self.outlineView.clickedRow
@@ -191,12 +245,12 @@ extension ProjectHierarchyViewController
             {
             return
             }
-        let node = self.outlineView.item(atRow: row) as! SourceNode
+        let node = self.outlineView.item(atRow: row) as! IDENode
         if node.isCompositeNode
             {
             let name = Argon.nextIndex(named: "Untitled") + ".argon"
             let path = node.path.join(name)
-            let file = SourceFileNode(name: name,path: path)
+            let file = IDESourceFileNode(name: name,path: path)
             file.setIsNewFile(true)
             file.setSource(Repository.initialSourceForNewSourceFile)
             node.addNode(file)
@@ -220,11 +274,11 @@ extension ProjectHierarchyViewController
             {
             return
             }
-        let element = self.outlineView.item(atRow: row) as! SourceNode
+        let element = self.outlineView.item(atRow: row) as! IDENode
         if element.isCompositeNode
             {
             let path = element.path.join("Folder")
-            let folder = SourceFolderNode(name: "Folder",path: path)
+            let folder = IDEFolderNode(name: "Folder",path: path)
             element.addNode(folder)
             self.outlineView.reloadItem(element,reloadChildren: true)
             self.outlineView.expandItem(element,expandChildren: true)
@@ -244,7 +298,7 @@ extension ProjectHierarchyViewController
         // use an nsalert to warn user then delete element
         }
         
-    @IBAction public func onImportFile(_ sender: Any?)
+    @objc func importFile()
         {
         let selectedRow = self.outlineView.selectedRow
         guard selectedRow != -1 else
@@ -252,7 +306,7 @@ extension ProjectHierarchyViewController
             NSSound.beep()
             return
             }
-        let selectedNode = self.outlineView.item(atRow: selectedRow) as! SourceNode
+        let selectedNode = self.outlineView.item(atRow: selectedRow) as! IDENode
         guard selectedNode.isCompositeNode else
             {
             NSSound.beep()
@@ -272,7 +326,7 @@ extension ProjectHierarchyViewController
                 if let source = try? String(contentsOf: path)
                     {
                     let name = path.lastPathComponentSansExtension
-                    let newNode = SourceFileNode(name: name, path: path,source: source)
+                    let newNode = IDESourceFileNode(name: name, path: path,source: source)
                     newNode.setIsNewFile(false)
                     newNode.expandedSource = newNode.source
                     selectedNode.addNode(newNode)

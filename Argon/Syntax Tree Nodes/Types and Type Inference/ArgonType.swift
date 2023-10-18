@@ -124,7 +124,12 @@ public class ArgonType: Symbol
         {
         ArgonModule.shared.bufferType
         }
-//        
+        
+    public static var moduleType: ArgonType
+        {
+        ArgonModule.shared.moduleType
+        }
+//
 //    public static var integerType: ArgonType
 //        {
 //        ArgonModule.shared.integerType
@@ -180,6 +185,15 @@ public class ArgonType: Symbol
         false
         }
         
+    public override var diagnosticString: String
+        {
+        if self.baseType == self
+            {
+            return("\(Swift.type(of: self))(\(self.name))")
+            }
+        return(self.baseType.diagnosticString)
+        }
+        
     public var instanceSizeInBits: Int
         {
         self.instanceSizeInBytes * UInt8.bitWidth
@@ -206,10 +220,7 @@ public class ArgonType: Symbol
         hasher.combine(5381)
         hasher.combine("\(Swift.type(of: self))")
         hasher.combine(self.name)
-        for generic in self.genericTypes
-            {
-            hasher.combine(generic.typeHash)
-            }
+        hasher.combine(self.genericTypes)
         return(hasher.finalize())
         }
         
@@ -234,7 +245,7 @@ public class ArgonType: Symbol
         return(super.tag + inners)
         }
         
-    public var section: String?
+    public var sections = Identifiers()
     
 //    public private(set) var instanceType: GenericInstanceType.Type?
     
@@ -377,7 +388,7 @@ public class ArgonType: Symbol
         
     public func constructType(from: ArgonTypes) throws -> ArgonType
         {
-        fatalError("constructType(from:) should not be invoked on an ArgonType.")
+        self
         }
         
     public func constructType(map typeParameters: TypeParameters,to types: ArgonTypes) throws -> ArgonType

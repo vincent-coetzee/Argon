@@ -176,6 +176,7 @@ public class GroupParser: PrefixParser
     public func parse(parser: ArgonParser, token: Token) -> Expression
         {
         let location = parser.token.location
+        let firstIndex = parser.tokenIndex
         parser.nextToken()
         let expression = parser.parseExpression(precedence: 0)
         var wasTuple = false
@@ -204,6 +205,10 @@ public class GroupParser: PrefixParser
             expression.addDeclaration(location)
             expression.location = location
             return(expression)
+            }
+        for index in firstIndex...parser.tokenIndex
+            {
+            parser.token(atIndex: index)?.setStyleElement(.colorTuple)
             }
         let tuple = TupleExpression(expressions: expressions)
         tuple.addDeclaration(location)

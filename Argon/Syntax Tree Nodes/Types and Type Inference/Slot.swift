@@ -105,6 +105,11 @@ public class Slot: Symbol
         {
         "\(self.name) :: \(self.symbolType.name)"
         }
+        
+    public override var diagnosticString: String
+        {
+        "\(self.container?.diagnosticString ?? "")::Slot(\(self.name)) :: \(self.symbolType.diagnosticString)"
+        }
     }
 
 public typealias Slots = Array<Slot>

@@ -8,10 +8,15 @@
 import Foundation
 import Path
 
-public class SourceCompositeNode: SourceNode
+public class IDECompositeNode: IDENode
     {
-    public var nodes: Array<SourceNode>
+    public var nodes: Array<IDENode>
     
+    public override var nodeType: IDENodeType
+        {
+        .compositeNode
+        }
+        
     public override var fileWrapper: (String,FileWrapper)
         {
         let allWrappers = self.nodes.map{$0.fileWrapper}
@@ -23,9 +28,9 @@ public class SourceCompositeNode: SourceNode
         return((self.name,FileWrapper(directoryWithFileWrappers: wrappers)))
         }
         
-    public override var allNodes: Array<SourceNode>
+    public override var allNodes: Array<IDENode>
         {
-        var someElements = Array<SourceNode>()
+        var someElements = Array<IDENode>()
         for element in self.nodes
             {
             someElements.append(element)
@@ -63,7 +68,7 @@ public class SourceCompositeNode: SourceNode
         
     public required init?(coder: NSCoder)
         {
-        self.nodes = coder.decodeObject(forKey: "nodes") as! Array<SourceNode>
+        self.nodes = coder.decodeObject(forKey: "nodes") as! Array<IDENode>
         super.init(coder: coder)
         }
         
@@ -73,7 +78,7 @@ public class SourceCompositeNode: SourceNode
         super.encode(with: coder)
         }
         
-    public override func child(atIndex: Int) -> SourceNode?
+    public override func child(atIndex: Int) -> IDENode?
         {
         if atIndex < 0 || atIndex >= nodes.count
             {
@@ -90,7 +95,7 @@ public class SourceCompositeNode: SourceNode
 //            }
 //        }
         
-    public override func addNode( _ element: SourceNode)
+    public override func addNode( _ element: IDENode)
         {
         self.nodes.append(element)
         element.setParent(self)

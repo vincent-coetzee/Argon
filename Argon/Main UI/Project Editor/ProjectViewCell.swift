@@ -22,7 +22,7 @@ public class ProjectViewCell: NSTableCellView,NSTextFieldDelegate
         return(20 + 8 + textWidth)
         }
         
-    public var node: SourceNode?
+    public var node: IDENode?
         {
         didSet
             {

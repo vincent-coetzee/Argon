@@ -57,9 +57,8 @@ public class IfStatement: Block
         
     public override func accept(visitor: Visitor)
         {
-        visitor.enter(ifStatement: self)
+        visitor.visit(ifStatement: self)
         self.trueBlock.accept(visitor: visitor)
         self.elseBlock?.accept(visitor: visitor)
-        visitor.exit(ifStatement: self)
         }
     }

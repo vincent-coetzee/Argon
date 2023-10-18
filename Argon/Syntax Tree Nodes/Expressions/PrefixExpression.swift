@@ -37,9 +37,8 @@ public class PrefixExpression: Expression
         
     public override func accept(visitor: Visitor)
         {
-        visitor.enter(prefixExpression: self)
+        visitor.visit(prefixExpression: self)
         self.right.accept(visitor: visitor)
-        visitor.exit(prefixExpression: self)
         }
         
     public func setMethod(_ method: MultimethodType?)

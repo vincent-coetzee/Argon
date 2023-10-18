@@ -59,9 +59,8 @@ public class WhileStatement: Block
     
     public override func accept(visitor: Visitor)
         {
-        visitor.enter(whileStatement: self)
+        visitor.visit(whileStatement: self)
         self.expression.accept(visitor: visitor)
         self.block.accept(visitor: visitor)
-        visitor.exit(whileStatement: self)
         }
     }

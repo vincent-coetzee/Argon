@@ -36,7 +36,7 @@ public class PathControl: NSPathControl,Dependent
             {
             return
             }
-        guard let newValue = (model as! ValueModel).value as? SourceNode else
+        guard let newValue = (model as! ValueModel).value as? IDENode else
             {
             return
             }

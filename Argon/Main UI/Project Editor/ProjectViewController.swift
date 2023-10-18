@@ -10,7 +10,7 @@ import AppKit
 import Path
 import UniformTypeIdentifiers
 
-class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelegate
+class ProjectViewController: NSViewController,NSTextViewDelegate
     {
     @IBOutlet weak var outliner: NSOutlineView!
     @IBOutlet weak var sourceView:SourceCodeEditingView!
@@ -20,13 +20,13 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
 //    @IBOutlet weak var centerView: NSView!
 //    @IBOutlet weak var rightView: NSView!
     
-    private var _project = SourceProjectNode(name: "Project",path: Path(Path.root))
+    private var _project = IDEProjectNode(name: "Project",path: Path(Path.root))
     private var leftSidebarState = ToggleState.expanded
     private var rightSidebarState = ToggleState.expanded
     private var pathControl: NSPathControl!
     private var leftSidebarController: LeftSidebarButtonController!
     private var pathControlWidthConstraint: NSLayoutConstraint!
-    private var selectedSourceNode: SourceNode!
+    private var selectedSourceNode: IDENode!
     private var issueCountIconLabelView: IconLabelView!
     private var stateWasRestored = false
     private var isCollapsingLeftSidebar = false
@@ -51,7 +51,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
             }
         }
         
-    public var project: SourceProjectNode
+    public var project: IDEProjectNode
         {
         get
             {
@@ -228,7 +228,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         self.outliner.intercellSpacing = NSSize(width: 5,height: 0)
         }
         
-    private func updatePathControl(from node: SourceNode?)
+    private func updatePathControl(from node: IDENode?)
         {
         guard node.isNotNil else
             {
@@ -315,12 +315,12 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
             {
             return
             }
-        let node = self.outliner.item(atRow: row) as! SourceNode
+        let node = self.outliner.item(atRow: row) as! IDENode
         if node.isCompositeNode
             {
             let name = Argon.nextIndex(named: "Untitled") + ".argon"
             let path = node.path.join(name)
-            let file = SourceFileNode(name: name,path: path)
+            let file = IDESourceFileNode(name: name,path: path)
             file.setIsNewFile(true)
             file.setSource(Repository.initialSourceForNewSourceFile)
 //            self.sourceView.string = file.source
@@ -346,11 +346,11 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
             {
             return
             }
-        let element = self.outliner.item(atRow: row) as! SourceNode
+        let element = self.outliner.item(atRow: row) as! IDENode
         if element.isCompositeNode
             {
             let path = element.path.join("Folder")
-            let folder = SourceFolderNode(name: "Folder",path: path)
+            let folder = IDEFolderNode(name: "Folder",path: path)
             element.addNode(folder)
             self.outliner.reloadItem(element,reloadChildren: true)
             self.outliner.expandItem(element,expandChildren: true)
@@ -366,7 +366,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
         // use an nsalert to warn user then delete element
         }
         
-    private func setSelected(sourceNode: SourceNode)
+    private func setSelected(sourceNode: IDENode)
         {
         if self.selectedSourceNode.isNotNil
             {
@@ -376,7 +376,7 @@ class ProjectViewController: NSViewController,TextFocusDelegate,NSTextViewDelega
 //        self.sourceView.addDependent(sourceNode)
         if sourceNode.isSourceFileNode
             {
-            let sourceFileNode = sourceNode as! SourceFileNode
+            let sourceFileNode = sourceNode as! IDESourceFileNode
 //            self.sourceView.string = sourceFileNode.expandedSource
 //            self.sourceView.tokens = ArgonScanner(source: sourceFileNode.expandedSource).allTokens()
             }
@@ -425,7 +425,7 @@ extension ProjectViewController: NSMenuItemValidation
             {
             return(true)
             }
-        let selectedItem = self.outliner.item(atRow: selectedRow) as! SourceNode
+        let selectedItem = self.outliner.item(atRow: selectedRow) as! IDENode
         if selectedItem.isCompositeNode
             {
             return(true)
@@ -451,7 +451,7 @@ extension ProjectViewController: NSMenuDelegate
             {
             menuItem.target = self
             }
-        let item = self.outliner.item(atRow: row) as! SourceNode
+        let item = self.outliner.item(atRow: row) as! IDENode
         menu.item(withTitle: "Import...")?.isEnabled = item.isCompositeNode
         }
     }
@@ -464,13 +464,13 @@ extension ProjectViewController: NSOutlineViewDataSource
             {
             return(self._project)
             }
-        let element = (item as! SourceNode)
+        let element = (item as! IDENode)
         return(element.child(atIndex: index)!)
         }
 
     @objc func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool
         {
-        let element = (item as! SourceNode)
+        let element = (item as! IDENode)
         return(element.isExpandable)
         }
     }
@@ -500,7 +500,7 @@ extension ProjectViewController: NSOutlineViewDelegate
             {
             return(1)
             }
-        let element = item as! SourceNode
+        let element = item as! IDENode
         return(element.childCount)
         }
         
@@ -508,7 +508,7 @@ extension ProjectViewController: NSOutlineViewDelegate
         {
         if let view = self.outliner.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "ProjectViewCell"), owner: nil) as? ProjectViewCell
             {
-            view.node = item as? SourceNode
+            view.node = item as? IDENode
             view.textField?.target = self
             view.textField?.action = #selector(projectElementTitleChanged)
             return(view)
@@ -523,7 +523,7 @@ extension ProjectViewController: NSOutlineViewDelegate
             {
             return
             }
-        let element = self.outliner.item(atRow: rowIndex) as! SourceNode
+        let element = self.outliner.item(atRow: rowIndex) as! IDENode
         if let string = (sender as? NSTextField)?.stringValue
             {
             element.setName(string)
@@ -532,21 +532,12 @@ extension ProjectViewController: NSOutlineViewDelegate
         }
     }
 
-extension ProjectViewController: SourceEditorDelegate
+extension ProjectViewController: IDEEditorViewDelegate
     {
-    func sourceEditorKeyPressed(_ editor: NSTextView)
+    func editorView(_ editor: IDEEditorView,changed: IDEEditorChange)
         {
-        
-        }
-    
-    func sourceEditor(_ editor: NSTextView, changedLine: Int, offset: Int)
-        {
-        }
-    
-    func sourceEditor(_ editor: NSTextView,changedSource string: String,tokens: Tokens)
-        {
-        self.selectedSourceNode.setSource(string)
-        self.selectedSourceNode.setTokens(tokens)
+//        self.selectedSourceNode.setSource(string)
+//        self.selectedSourceNode.setTokens(tokens)
         }
     }
     
@@ -560,7 +551,7 @@ extension ProjectViewController
             NSSound.beep()
             return
             }
-        let selectedNode = self.outliner.item(atRow: selectedRow) as! SourceNode
+        let selectedNode = self.outliner.item(atRow: selectedRow) as! IDENode
         guard selectedNode.isCompositeNode else
             {
             NSSound.beep()
@@ -580,7 +571,7 @@ extension ProjectViewController
                 if let source = try? String(contentsOf: path)
                     {
                     let name = path.lastPathComponentSansExtension
-                    let newNode = SourceFileNode(name: name, path: path,source: source)
+                    let newNode = IDESourceFileNode(name: name, path: path,source: source)
                     newNode.setIsNewFile(false)
                     newNode.expandedSource = newNode.source
                     selectedNode.addNode(newNode)

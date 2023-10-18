@@ -111,7 +111,10 @@ public struct ArgonCompiler
     public mutating func checkTypes()
         {
         let checker = ArgonTypeChecker()
-        self.rootModule.accept(visitor: checker)
+        checker.assignTypes(to: self.rootModule)
+        checker.defineTypeConstraints(for: self.rootModule)
+        checker.unifyConstraints()
+        checker.assignInferredTypes(to: self.rootModule)
         self.compilerIssues.append(contentsOf: checker.compilerIssues)
         }
     }

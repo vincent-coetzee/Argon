@@ -93,14 +93,8 @@ public class ClassType: StructuredType
         {
         var hasher = Hasher()
         hasher.combine("CLASS")
-        hasher.combine(self.classFlags.rawValue)
         hasher.combine(self.identifier)
-        hasher.combine(self.superclasses)
-        hasher.combine(self.slots)
-        for aType in self.genericTypes
-            {
-            hasher.combine(aType)
-            }
+        hasher.combine(self.genericTypes)
         return(hasher.finalize())
         }
         
@@ -156,6 +150,7 @@ public class ClassType: StructuredType
                 parser.lodgeError(code: .singleIdentifierExpected,location: location)
                 }
             name = parser.token.identifier.description
+            parser.token.setStyleElement(.colorClass)
             parser.nextToken()
             }
         let scope = ClassType(name: name)
@@ -259,17 +254,21 @@ public class ClassType: StructuredType
         }
     //
     //
-    // A SECTION contains the name of a group that this Class belongs to. e.g. if you
-    // have several classes that form part of the list of all  Client classes in the module
-    // SECTION would be declared as
+    // Section defines all the identifiers of the groups that this class
+    // belongs to. Let's say this class belong to the Weather\Clients groups
+    // and to \\Some\Other\Group then the SECTION would be defined as follows
     //
-    // SECTION(Weather Clients)
+    // SECTION(Weather\Clients,\\Some\Other\Group)
     //
-    // SECTION contents i.e. "Weather Clients" in this case are scanned as a continuous string
-    // contained between parentheses. Any legitimate character - including whitespace - can be placed in the content field and
-    // will be scanned into the content portion of the section. SECTION contents are scanned like this so that
-    // there is no need to constantly quote the SECTION contents. Each Class can be a member of one and only
-    // one SECTION.
+    // In this case this creates a group called Weather and positions
+    // this class wihin the Clients group which is a subgroup of of
+    // Weather. Similarly \\Some\Other\Group creates a group called
+    // Some and places in that group another group called Other and
+    // within that group another group called Group and adss this class
+    // into the the lst group i.e. Group. Classes and enumerations can
+    // be members of multiple groups or none. The groups defined by the
+    // SECTION keyword are purely organisational in nature and semantically
+    // are not affected by the sections they are in.
     //
     //
     private static func parseSection(in scope: ClassType,using parser: ArgonParser)
@@ -280,15 +279,21 @@ public class ClassType: StructuredType
             }
         let location = parser.token.location
         parser.nextToken()
+        var names = Identifiers()
         parser.parseParentheses
             {
-            if !parser.token.isTextToken
+            repeat
                 {
-                parser.lodgeError(code: .textExpectedInSection,location: location)
+                parser.parseComma()
+                if parser.token.isIdentifier
+                    {
+                    names.append(parser.token.identifier)
+                    parser.nextToken()
+                    }
                 }
-            scope.section = parser.token.textValue
-            parser.nextToken()
+            while parser.token.isComma && !parser.token.isEnd
             }
+        scope.sections = names
         }
     //
     //
@@ -425,6 +430,10 @@ public class ClassType: StructuredType
                 {
                 parser.lodgeError(code: .classExpectedButOtherSymbolFound,location: location)
                 }
+            else
+                {
+                classTypes.append(classType)
+                }
             }
         while parser.token.isComma && !parser.token.isEnd
         return(classTypes.compactMap{$0 as? ClassType})
@@ -459,6 +468,16 @@ public class ClassType: StructuredType
         return(false)
         }
 
+    public func superclassSlots() -> Slots
+        {
+        var someSlots = Slots()
+        for parent in self.superclasses.compactMap({$0 as? ClassType})
+            {
+            someSlots.append(contentsOf: parent.superclassSlots())
+            }
+        return(someSlots)
+        }
+        
     init(name: String,parent: Symbol? = nil)
         {
         super.init(name: name)

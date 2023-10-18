@@ -134,6 +134,8 @@ public class OperatorToken: Token
                 return(.dateTimeMarker)
             case(";"):
                 return(.semicolon)
+            case("."):
+                return(.point)
             default:
                 fatalError("Operator for \(self.matchString) is not defined.")
             }

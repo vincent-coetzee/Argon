@@ -52,9 +52,8 @@ public class TimesStatement: Block
         
     public override func accept(visitor: Visitor)
         {
-        visitor.enter(timesStatement: self)
+        visitor.visit(timesStatement: self)
         self.expression.accept(visitor: visitor)
         self.block.accept(visitor: visitor)
-        visitor.exit(timesStatement: self)
         }
     }

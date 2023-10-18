@@ -9,14 +9,14 @@ import Foundation
 
 public class ProjectState: NSObject,NSCoding
     {
-    public let project: SourceProjectNode
+    public let project: IDEProjectNode
     public let leftViewFrame: NSRect
     public let centerViewFrame: NSRect
     public let rightViewFrame: NSRect
     public var windowFrame: NSRect = .zero
     public var stateWasRestored = false
     
-    public init(project: SourceProjectNode,leftViewFrame: NSRect,centerViewFrame: NSRect,rightViewFrame: NSRect)
+    public init(project: IDEProjectNode,leftViewFrame: NSRect,centerViewFrame: NSRect,rightViewFrame: NSRect)
         {
         self.project = project
         self.leftViewFrame = leftViewFrame
@@ -27,7 +27,7 @@ public class ProjectState: NSObject,NSCoding
     public required init(coder: NSCoder)
         {
         self.windowFrame = coder.decodeRect(forKey: "windowFrame")
-        self.project = coder.decodeObject(forKey: "project") as! SourceProjectNode
+        self.project = coder.decodeObject(forKey: "project") as! IDEProjectNode
         self.leftViewFrame = coder.decodeRect(forKey: "leftViewFrame")
         self.centerViewFrame = coder.decodeRect(forKey: "centerViewFrame")
         self.rightViewFrame = coder.decodeRect(forKey: "rightViewFrame")

@@ -62,15 +62,25 @@ public struct BrowserActionSet: OptionSet
         {
         let menu = NSMenu()
         var wasFileAction = false
-        var wasImportAction = false
         if self.contains(.newFolderAction)
             {
-            menu.addItem(withTitle: "New Folder", action: #selector(ProjectHierarchyViewController.onNewFolder), keyEquivalent: "").isEnabled = true
+            let item = menu.addItem(withTitle: "New Folder", action: #selector(ProjectHierarchyViewController.handleMenuItem), keyEquivalent: "")
+            item.isEnabled = true
+            item.identifier = NSUserInterfaceItemIdentifier(rawValue: "newFolder")
             wasFileAction = true
             }
         if self.contains(.newFileAction)
             {
-            menu.addItem(withTitle: "New Argon File", action: #selector(ProjectHierarchyViewController.onNewArgonFile), keyEquivalent: "").isEnabled = true
+            let item = menu.addItem(withTitle: "New Argon File", action: #selector(ProjectHierarchyViewController.handleMenuItem), keyEquivalent: "")
+            item.isEnabled = true
+            item.identifier = NSUserInterfaceItemIdentifier(rawValue: "newArgonFile")
+            wasFileAction = true
+            }
+        if self.contains(.newVisualDesignAction)
+            {
+            let item = menu.addItem(withTitle: "New Visual Design File", action: #selector(ProjectHierarchyViewController.handleMenuItem), keyEquivalent: "")
+            item.isEnabled = true
+            item.identifier = NSUserInterfaceItemIdentifier(rawValue: "newVisualDesignFile")
             wasFileAction = true
             }
         if wasFileAction
@@ -79,12 +89,16 @@ public struct BrowserActionSet: OptionSet
             }
         if self.contains(.importAction)
             {
-            menu.addItem(withTitle: "Import File...", action: #selector(ProjectHierarchyViewController.onImportFile), keyEquivalent: "").isEnabled = true
+            let item = menu.addItem(withTitle: "Import File...", action: #selector(ProjectHierarchyViewController.handleMenuItem), keyEquivalent: "")
+            item.isEnabled = true
+            item.identifier = NSUserInterfaceItemIdentifier(rawValue: "importFile")
             }
         if self.contains(.deleteAction)
             {
             menu.addItem(NSMenuItem.separator())
-            menu.addItem(withTitle: "Delete", action: #selector(ProjectHierarchyViewController.onDeleteNode), keyEquivalent: "").isEnabled = true
+            let item = menu.addItem(withTitle: "Delete", action: #selector(ProjectHierarchyViewController.handleMenuItem), keyEquivalent: "")
+            item.isEnabled = true
+            item.identifier = NSUserInterfaceItemIdentifier(rawValue: "delete")
             }
         return(menu)
         }
@@ -106,6 +120,7 @@ public struct BrowserActionSet: OptionSet
     public static let cleanAction = BrowserActionSet(rawValue: 1 << 14)
     public static let newFileAction = BrowserActionSet(rawValue: 1 << 15)
     public static let newFolderAction = BrowserActionSet(rawValue: 1 << 16)
+    public static let newVisualDesignAction = BrowserActionSet(rawValue: 1 << 32)
     
     public static let `default` = BrowserActionSet(withEnabled: .loadAction,.leftSidebarAction,.rightSidebarAction,.buildAction,.cleanAction,.runAction,.debugAction)
     

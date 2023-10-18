@@ -9,11 +9,53 @@ import Foundation
 
 public class ArgonTypeChecker: Visitor
     {
+    internal enum Step
+        {
+        case assignTypes
+        case defineTypeConstraints
+        case assignInferredTypes
+        }
+        
     internal var compilerIssues = CompilerIssues()
-    
+    internal var visitedSymbols = Set<Int>()
+    internal var currentStep: Step!
+
+        
+    public func wasNotVisited(_ symbol: Symbol) -> Bool
+        {
+        !self.visitedSymbols.contains(symbol.index)
+        }
+        
+    public func markAsVisited(_ symbol: Symbol)
+        {
+        self.visitedSymbols.insert(symbol.index)
+        }
+        
     public var processingFlag: ProcessingFlags
         {
         .typesChecked
+        }
+        
+    public func assignTypes(to rootModule: RootModule)
+        {
+        self.currentStep = .assignTypes
+        rootModule.accept(visitor: self)
+        }
+        
+    public func defineTypeConstraints(for rootModule: RootModule)
+        {
+        self.currentStep = .defineTypeConstraints
+        rootModule.accept(visitor: self)
+        }
+        
+    public func unifyConstraints()
+        {
+        }
+        
+    public func assignInferredTypes(to rootModule: RootModule)
+        {
+        self.currentStep = .assignInferredTypes
+        rootModule.accept(visitor: self)
         }
         
     public func enter(rootModule: RootModule)
@@ -34,7 +76,6 @@ public class ArgonTypeChecker: Visitor
     
     public func enter(module: ModuleType)
         {
-        print("Entering module \(module.name)")
         }
     
     public func exit(module: ModuleType)
@@ -101,68 +142,36 @@ public class ArgonTypeChecker: Visitor
         {
         
         }
+        
+    public func visit(block: Block)
+        {
+        }
+        
+    public func visit(selectBlock: SelectBlock)
+        {
+        }
     
-    public func enter(tupleExpression: TupleExpression)
+    public func visit(tupleExpression: TupleExpression)
         {
         
         }
-        
-    public func exit(tupleExpression: TupleExpression)
-        {
-        
-        }
-    
-    public func visit(argument: Argument)
-        {
-        
-        }
-    
-    public func visit(parameter: Parameter)
-        {
-        
-        }
-    
-    public func visit(expression: Expression)
+
+    public func visit(arrayAccessExpression: ArrayAccessExpression)
         {
         
         }
     
-    public func enter(arrayAccessExpression: ArrayAccessExpression)
+    public func visit(assignmentExpression: AssignmentExpression)
         {
         
         }
     
-    public func exit(arrayAccessExpression: ArrayAccessExpression)
+    public func visit(binaryExpression: BinaryExpression)
         {
         
         }
     
-    public func enter(assignmentExpression: AssignmentExpression)
-        {
-        
-        }
-    
-    public func exit(assignmentExpression: AssignmentExpression)
-        {
-        
-        }
-    
-    public func enter(binaryExpression: BinaryExpression)
-        {
-        
-        }
-    
-    public func exit(binaryExpression: BinaryExpression)
-        {
-        
-        }
-    
-    public func enter(closureExpression: ClosureExpression)
-        {
-        
-        }
-    
-    public func exit(closureExpression: ClosureExpression)
+    public func visit(closureExpression: ClosureExpression)
         {
         
         }
@@ -187,12 +196,7 @@ public class ArgonTypeChecker: Visitor
         
         }
     
-    public func enter(memberAccessExpression: MemberAccessExpression)
-        {
-        
-        }
-    
-    public func exit(memberAccessExpression: MemberAccessExpression)
+    public func visit(memberAccessExpression: MemberAccessExpression)
         {
         
         }
@@ -202,202 +206,87 @@ public class ArgonTypeChecker: Visitor
         
         }
     
-    public func enter(postfixExpression: PostfixExpression)
+    public func visit(postfixExpression: PostfixExpression)
         {
         
         }
     
-    public func exit(postfixExpression: PostfixExpression)
+    public func visit(prefixExpression: PrefixExpression)
         {
         
         }
     
-    public func enter(prefixExpression: PrefixExpression)
+    public func visit(ternaryExpression: TernaryExpression)
         {
         
         }
     
-    public func exit(prefixExpression: PrefixExpression)
+    public func visit(forStatement: ForStatement)
+        {
+        
+        }
+        
+    public func visit(loopStatement: LoopStatement)
+        {
+        
+        }
+        
+    public func visit(letStatement: LetStatement)
+        {
+        
+        }
+        
+    public func visit(assignmentStatement: AssignmentStatement)
         {
         
         }
     
-    public func enter(ternaryExpression: TernaryExpression)
+    public func visit(forkStatement: ForkStatement)
+        {
+        
+        }
+
+    public func visit(handleStatement: HandleStatement)
         {
         
         }
     
-    public func exit(ternaryExpression: TernaryExpression)
+    public func visit(ifStatement: IfStatement)
         {
         
         }
     
-    public func enter(block: Block)
+    public func visit(repeatStatement: RepeatStatement)
         {
         
         }
     
-    public func exit(block: Block)
+    public func visit(returnStatement: ReturnStatement)
         {
         
         }
     
-    public func enter(statement: Statement)
+    public func visit(selectStatement: SelectStatement)
         {
         
         }
     
-    public func exit(statement: Statement)
+    public func visit(signalStatement: SignalStatement)
         {
         
         }
     
-    public func enter(forStatement: ForStatement)
+    public func visit(timesStatement: TimesStatement)
         {
         
         }
     
-    public func exit(forStatement: ForStatement)
-        {
-        
-        }
-        
-    public func enter(loopStatement: LoopStatement)
+    public func visit(whileStatement: WhileStatement)
         {
         
         }
     
-    public func exit(loopStatement: LoopStatement)
-        {
-        
-        }
-        
-    public func enter(assignmentStatement: AssignmentStatement)
-        {
-        
-        }
-    
-    public func exit(assignmentStatement: AssignmentStatement)
-        {
-        
-        }
-    
-    public func enter(forkStatement: ForkStatement)
-        {
-        
-        }
-    
-    public func exit(forkStatement: ForkStatement)
-        {
-        
-        }
-    
-    public func enter(handleStatement: HandleStatement)
-        {
-        
-        }
-    
-    public func exit(handleStatement: HandleStatement)
-        {
-        
-        }
-    
-    public func enter(ifStatement: IfStatement)
-        {
-        
-        }
-    
-    public func exit(ifStatement: IfStatement)
-        {
-        
-        }
-    
-    public func enter(letStatement: LetStatement)
-        {
-        
-        }
-    
-    public func exit(letStatement: LetStatement)
-        {
-        
-        }
-    
-    public func enter(repeatStatement: RepeatStatement)
-        {
-        
-        }
-    
-    public func exit(repeatStatement: RepeatStatement)
-        {
-        
-        }
-    
-    public func enter(returnStatement: ReturnStatement)
-        {
-        
-        }
-    
-    public func exit(returnStatement: ReturnStatement)
-        {
-        
-        }
-    
-    public func enter(selectStatement: SelectStatement)
-        {
-        
-        }
-    
-    public func exit(selectStatement: SelectStatement)
-        {
-        
-        }
-    
-    public func enter(selectBlock: SelectBlock)
-        {
-        
-        }
-    
-    public func exit(selectBlock: SelectBlock)
-        {
-        
-        }
-    
-    public func enter(signalStatement: SignalStatement)
-        {
-        
-        }
-    
-    public func exit(signalStatement: SignalStatement)
-        {
-        
-        }
-    
-    public func enter(timesStatement: TimesStatement)
-        {
-        
-        }
-    
-    public func exit(timesStatement: TimesStatement)
-        {
-        
-        }
-    
-    public func enter(whileStatement: WhileStatement)
-        {
-        
-        }
-    
-    public func exit(whileStatement: WhileStatement)
-        {
-        
-        }
-    
-    public func enter(staticStatement: StaticStatement)
-        {
-        
-        }
-    
-    public func exit(staticStatement: StaticStatement)
+    public func visit(staticStatement: StaticStatement)
         {
         
         }

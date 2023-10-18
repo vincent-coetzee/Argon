@@ -128,6 +128,7 @@ public enum TokenType: Int
     case plusAssign
     case power
     case POOL
+    case point
     
     case rightArrow
     case rightBrace
@@ -212,7 +213,7 @@ public class Token: NSObject,NSCoding
         
     public var styleElement: StyleElement
         {
-        fatalError()
+        .colorText
         }
         
     public var isCommentToken: Bool

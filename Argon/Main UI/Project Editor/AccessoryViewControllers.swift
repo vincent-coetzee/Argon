@@ -119,7 +119,7 @@ class LowerTitleController: NSTitlebarAccessoryViewController,Dependent
             {
             return
             }
-        guard let node = self.selectedNodeModel?.value as? SourceFileNode else
+        guard let node = self.selectedNodeModel?.value as? IDESourceFileNode else
             {
             return
             }

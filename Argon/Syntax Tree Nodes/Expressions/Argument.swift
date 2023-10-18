@@ -33,7 +33,6 @@ public class Argument: NSObject,NSCoding
         
     public func accept(visitor: Visitor)
         {
-        visitor.visit(argument: self)
         }
     }
 

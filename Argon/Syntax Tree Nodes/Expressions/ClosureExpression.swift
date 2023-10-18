@@ -35,8 +35,7 @@ public class ClosureExpression: Expression
         
     public override func accept(visitor: Visitor)
         {
-        visitor.enter(closureExpression: self)
+        visitor.visit(closureExpression: self)
         self.block.accept(visitor: visitor)
-        visitor.exit(closureExpression: self)
         }
     }

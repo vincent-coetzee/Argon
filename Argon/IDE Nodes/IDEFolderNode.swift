@@ -7,8 +7,13 @@
 
 import AppKit
 
-public class SourceFolderNode: SourceCompositeNode
-    {        
+public class IDEFolderNode: IDECompositeNode
+    {
+    public override var nodeType: IDENodeType
+        {
+        .folderNode
+        }
+        
     public override var projectViewImage: NSImage
         {
         NSImage(named: "IconGroup")!

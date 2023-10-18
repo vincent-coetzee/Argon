@@ -11,6 +11,7 @@ import AppKit
 public enum StyleElement
     {
     case colorArray
+    case colorAtom
     
     case colorBitSet
     case colorBarBackground
@@ -68,7 +69,6 @@ public enum StyleElement
     case colorSet
     case colorSlot
     case colorString
-    case colorSymbol
     case colorSystemEnumeration
     case colorSystemAliasedType
     case colorSystemClass
@@ -79,6 +79,7 @@ public enum StyleElement
     case colorToolbarBackground
     case colorToolbarText
     case colorType
+    case colorTuple
     
     case fontDefault
     case fontText
@@ -140,7 +141,7 @@ public class StyleTheme
 
 //        self.styles[.colorTint] = NSColor.argonLivingCoral
 
-        self.styles[.colorIdentifier] = NSColor.argonThemePink
+        self.styles[.colorIdentifier] = NSColor.argonNeonGreen
         self.styles[.colorInteger] = NSColor.argonGreenSea
         self.styles[.colorIssue] = NSColor.argonBrightYellowCrayola
         self.styles[.colorIssueLine] = NSColor.argonBrightYellowCrayola
@@ -170,17 +171,18 @@ public class StyleTheme
         self.styles[.colorSystemClass] = NSColor.argonBrightYellowCrayola
         self.styles[.colorSlot] = NSColor.argonCoral
         self.styles[.colorString] = NSColor.argonLivingCoral
-        self.styles[.colorSymbol] = NSColor.argonSalmonPink
+        self.styles[.colorAtom] = NSColor.argonSalmonPink
         self.styles[.colorSystemEnumeration] = NSColor.argonDeepOrange
         self.styles[.colorSystemAliasedType] = NSColor.argonPomelo
         self.styles[.colorSeparator] = NSColor.argonAnnotationOrange
 
-        self.styles[.colorText] = NSColor.argonLime
+        self.styles[.colorText] = NSColor.argonThemePink
         self.styles[.colorTint] = NSColor.controlAccentColor
         self.styles[.colorToolbarText] = NSColor.argonWhite50
         self.styles[.colorToolbarImage] = NSColor.controlAccentColor
         self.styles[.colorToolbarBackground] = NSColor.argonWhite25
         self.styles[.colorType] = NSColor.argonXIvory
+        self.styles[.colorTuple] = NSColor.argonPomelo
 
 //        self.styles[.colorWarning] = NSColor.argonBrightYellowCrayola
 //        self.styles[.colorWarning] = NSColor.argonSunglow

@@ -48,10 +48,9 @@ public class BinaryExpression: Expression
         
     public override func accept(visitor: Visitor)
         {
-        visitor.enter(binaryExpression: self)
+        visitor.visit(binaryExpression: self)
         self.left.accept(visitor: visitor)
         self.right.accept(visitor: visitor)
-        visitor.exit(binaryExpression: self)
         }
         
     public func setMethod(_ method: MultimethodType?)

@@ -16,14 +16,18 @@ class ProjectInspectorViewController: NSViewController
     public var projectModel: ValueHolder!
     public var selectedNodeModel: ValueHolder!
     
-    
-//    public func saveContents()
-//        {
-//        }
-        
     override func viewDidLoad()
         {
         super.viewDidLoad()
-        self.outlineView.reloadData()
+        }
+        
+    public func handleMenuItem(_ menuItem: NSMenuItem) -> Bool
+        {
+        return(false)
+        }
+        
+    public func validateMenuItem(_ menuItem: NSMenuItem) -> Bool
+        {
+        return(false)
         }
     }

@@ -66,7 +66,7 @@ public class Expression: Symbol
         
     public override func accept(visitor: Visitor)
         {
-        visitor.visit(expression: self)
+        fatalError("This methods should have been overridden in a subclass")
         }
     }
 

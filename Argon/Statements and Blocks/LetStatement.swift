@@ -70,8 +70,7 @@ public class LetStatement: Statement
         
     public override func accept(visitor: Visitor)
         {
-        visitor.enter(letStatement: self)
+        visitor.visit(letStatement: self)
         self.expression.accept(visitor: visitor)
-        visitor.exit(letStatement: self)
         }
     }

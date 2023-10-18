@@ -31,7 +31,7 @@ public class AtomToken: Token
         
     public override var styleElement: StyleElement
         {
-        .colorSymbol
+        .colorAtom
         }
         
     public override var tokenType: TokenType

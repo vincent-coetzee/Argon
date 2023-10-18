@@ -57,7 +57,6 @@ public class Parameter: Variable
         
     public override func accept(visitor: Visitor)
         {
-        visitor.visit(parameter: self)
         }
     }
 

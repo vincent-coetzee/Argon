@@ -1,22 +1,17 @@
 //
-//  ArgonSemanticChecker.swift
+//  ArgonTypeAssigner.swift
 //  Argon
 //
-//  Created by Vincent Coetzee on 14/08/2023.
+//  Created by Vincent Coetzee on 15/10/2023.
 //
 
 import Foundation
 
-public class ArgonSemanticChecker: Visitor
+public class ArgonTypeAssigner: Visitor, IssueReporter
     {
     internal var compilerIssues = CompilerIssues()
-    internal var hasMainMethod = false
     internal var visitedSymbols = Set<Int>()
-    
-    public var processingFlag: ProcessingFlags
-        {
-        .semanticsChecked
-        }
+    internal var substitutionSet = TypeSubstitutionSet()
         
     public func wasNotVisited(_ symbol: Symbol) -> Bool
         {
@@ -28,63 +23,59 @@ public class ArgonSemanticChecker: Visitor
         self.visitedSymbols.insert(symbol.index)
         }
         
-    public func lodgeError(code: IssueCode,location: Location,message: String? = nil)
+    public var processingFlag: ProcessingFlags
         {
-        let error = CompilerError(code: code, message: message,location: location)
-        self.compilerIssues.append(error)
+        .typesChecked
         }
         
-    public func lodgeWarning(code: IssueCode,location: Location,message: String? = nil)
+    public func assignTypes(to rootModule: RootModule)
         {
-        let error = CompilerWarning(code: code, message: message,location: location)
-        self.compilerIssues.append(error)
+        rootModule.accept(visitor: self)
         }
         
     public func enter(rootModule: RootModule)
         {
+        guard self.wasNotVisited(rootModule) else
+            {
+            return
+            }
+        self.markAsVisited(rootModule)
+        for symbol in rootModule.symbols
+            {
+            symbol.accept(visitor: self)
+            }
+        self.substitutionSet.addConstraint(issueReporter: self,lhs: rootModule.symbolType,.equal,rhs: ModuleType(name: "Root"),origin: .symbol(rootModule))
         }
     
+    public func appendIssue(_ issue: CompilerIssue)
+        {
+        self.compilerIssues.append(issue)
+        }
+        
     public func exit(rootModule: RootModule)
         {
         }
         
-    public func enter(module: ModuleType)
-        {
-        print("Entering module \(module.name)")
-        }
-    
-    public func exit(module: ModuleType)
-        {
-        module.validateMethodUniqueness(semanticChecker: self)
-        }
-        
     public func enter(method: MethodType)
         {
-        
         }
         
     public func exit(method: MethodType)
         {
         }
     
-    public func enter(class someClass: ClassType)
+    public func enter(module: ModuleType)
         {
-        guard self.wasNotVisited(someClass) else
-            {
-            return
-            }
-        self.markAsVisited(someClass)
-        let parentSlots = someClass.superclassSlots()
-        for slot in someClass.slots
-            {
-            for parentSlot in parentSlots
-                {
-                if parentSlot.name == slot.name
-                    {
-                    self.lodgeError(code: .duplicateSlot, location: slot.location,message: "Class '\(someClass.name)' defines slot with name '\(slot.name)' which is already defined in '\(someClass.name)''s superclasses.")
-                    }
-                }
-            }
+        }
+    
+    public func exit(module: ModuleType)
+        {
+        
+        }
+    
+    public func enter(class: ClassType)
+        {
+        
         }
     
     public func exit(class: ClassType)
@@ -116,10 +107,6 @@ public class ArgonSemanticChecker: Visitor
         {
         
         }
-        
-    public func visit(block: Block)
-        {
-        }
     
     public func enter(function: FunctionType)
         {
@@ -146,16 +133,19 @@ public class ArgonSemanticChecker: Visitor
         
         }
         
+    public func visit(block: Block)
+        {
+        }
+        
+    public func visit(selectBlock: SelectBlock)
+        {
+        }
+    
     public func visit(tupleExpression: TupleExpression)
         {
         
         }
-    
-    public func visit(expression: Expression)
-        {
-        
-        }
-    
+
     public func visit(arrayAccessExpression: ArrayAccessExpression)
         {
         
@@ -193,30 +183,11 @@ public class ArgonSemanticChecker: Visitor
     
     public func visit(makeExpression: MakeExpression)
         {
-        guard self.wasNotVisited(makeExpression) else
-            {
-            return
-            }
-        self.markAsVisited(makeExpression)
-        if makeExpression.typeNode.isErrorType
-            {
-            self.lodgeError(code: .makeExpectsTypeToMake,location: makeExpression.location!,message: "MAKE expects a type to make but found '\(makeExpression.typeNode.name)'.")
-            return
-            }
-        guard makeExpression.typeNode.isMakeable else
-            {
-            self.lodgeError(code: .makeableTypeExpected,location: makeExpression.location!,message: "The type '\(makeExpression.typeNode.name)' is not makeable.")
-            return
-            }
+        
         }
     
     public func visit(memberAccessExpression: MemberAccessExpression)
         {
-        guard self.wasNotVisited(memberAccessExpression) else
-            {
-            return
-            }
-        self.markAsVisited(memberAccessExpression)
         
         }
     
@@ -229,7 +200,7 @@ public class ArgonSemanticChecker: Visitor
         {
         
         }
-
+    
     public func visit(prefixExpression: PrefixExpression)
         {
         
@@ -239,17 +210,7 @@ public class ArgonSemanticChecker: Visitor
         {
         
         }
-
-    public func visit(assignmentStatement: AssignmentStatement)
-        {
-        
-        }
-
-    public func visit(forkStatement: ForkStatement)
-        {
-        
-        }
-        
+    
     public func visit(forStatement: ForStatement)
         {
         
@@ -259,18 +220,28 @@ public class ArgonSemanticChecker: Visitor
         {
         
         }
+        
+    public func visit(letStatement: LetStatement)
+        {
+        
+        }
+        
+    public func visit(assignmentStatement: AssignmentStatement)
+        {
+        
+        }
     
+    public func visit(forkStatement: ForkStatement)
+        {
+        
+        }
+
     public func visit(handleStatement: HandleStatement)
         {
         
         }
     
     public func visit(ifStatement: IfStatement)
-        {
-        
-        }
-
-    public func visit(letStatement: LetStatement)
         {
         
         }
@@ -286,11 +257,6 @@ public class ArgonSemanticChecker: Visitor
         }
     
     public func visit(selectStatement: SelectStatement)
-        {
-        
-        }
-    
-    public func visit(selectBlock: SelectBlock)
         {
         
         }
@@ -315,14 +281,15 @@ public class ArgonSemanticChecker: Visitor
         
         }
         
-    public func checkPrimaryModules(_ modules: Modules)
+    public func lodgeWarning(code: IssueCode, location: Location, message: String?)
         {
-        let uniqueModules = Array(Set<ModuleType>(modules))
-        let mainMethodCount = uniqueModules.reduce(0) { $0 + ($1.hasMainMethod ? 1 : 0) }
-        if mainMethodCount > 1
-            {
-            self.lodgeError(code: .multipleMainMethodsFound,location: Location(nodeKey: -1, line: -1, start: 0, stop: 0))
-            }
-        self.hasMainMethod = mainMethodCount == 1
+        }
+    
+    public func lodgeError(code: IssueCode, location: Location, message: String?)
+        {
+        }
+    
+    public func setNodeKey(_ key: Int?)
+        {
         }
     }

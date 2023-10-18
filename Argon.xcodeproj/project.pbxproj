@@ -17,6 +17,13 @@
 		BF0D32112A649D89002A2D8D /* ValueBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0D32102A649D89002A2D8D /* ValueBox.swift */; };
 		BF0E84E02A5D4EA8003BCC49 /* Weather.argon in Resources */ = {isa = PBXBuildFile; fileRef = BF0E84DF2A5D4EA8003BCC49 /* Weather.argon */; };
 		BF0E84E42A5D612E003BCC49 /* Path+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0E84E32A5D612E003BCC49 /* Path+Extensions.swift */; };
+		BF12316D2ADAD2D000DE5750 /* ProjectEditorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF12316C2ADAD2D000DE5750 /* ProjectEditorState.swift */; };
+		BF12316F2ADB722A00DE5750 /* TypeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF12316E2ADB722A00DE5750 /* TypeConstraint.swift */; };
+		BF1231712ADB735B00DE5750 /* IssueReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF1231702ADB735B00DE5750 /* IssueReporter.swift */; };
+		BF1231732ADB8D4800DE5750 /* ArgonTypeAssigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF1231722ADB8D4800DE5750 /* ArgonTypeAssigner.swift */; };
+		BF1231752ADC603700DE5750 /* IDEVisualDesignNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF1231742ADC603700DE5750 /* IDEVisualDesignNode.swift */; };
+		BF1231772ADC606400DE5750 /* IDEVisualInterfaceNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF1231762ADC606400DE5750 /* IDEVisualInterfaceNode.swift */; };
+		BF12317B2ADC64E000DE5750 /* IDEEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF12317A2ADC64E000DE5750 /* IDEEditorView.swift */; };
 		BF1279A72A261BA300855760 /* MacroExpander.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF1279A62A261BA300855760 /* MacroExpander.swift */; };
 		BF174B55294CC7BD0094A6D4 /* KeywordToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF174B54294CC7BD0094A6D4 /* KeywordToken.swift */; };
 		BF174B57294CC7D30094A6D4 /* FloatToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF174B56294CC7D30094A6D4 /* FloatToken.swift */; };
@@ -58,9 +65,9 @@
 		BF3676CE2972DE4400E1A5B9 /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3676CD2972DE4400E1A5B9 /* Expression.swift */; };
 		BF3676D0297329F800E1A5B9 /* NSCoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3676CF297329F800E1A5B9 /* NSCoder+Extensions.swift */; };
 		BF39BA7F2A9906950037FB79 /* ArgonScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF39BA7E2A9906950037FB79 /* ArgonScanner.swift */; };
-		BF3B42FF29A14C9E009C269F /* SourceNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3B42FE29A14C9D009C269F /* SourceNode.swift */; };
-		BF3B430129A14CC6009C269F /* SourceCompositeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3B430029A14CC6009C269F /* SourceCompositeNode.swift */; };
-		BF3B430329A14D47009C269F /* SourceFileNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3B430229A14D47009C269F /* SourceFileNode.swift */; };
+		BF3B42FF29A14C9E009C269F /* IDENode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3B42FE29A14C9D009C269F /* IDENode.swift */; };
+		BF3B430129A14CC6009C269F /* IDECompositeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3B430029A14CC6009C269F /* IDECompositeNode.swift */; };
+		BF3B430329A14D47009C269F /* IDESourceFileNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3B430229A14D47009C269F /* IDESourceFileNode.swift */; };
 		BF3B430729A1515F009C269F /* SourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3B430629A1515F009C269F /* SourceView.swift */; };
 		BF3B430929A15319009C269F /* StyleTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3B430829A15319009C269F /* StyleTheme.swift */; };
 		BF3DBC6A2AB845A9009612B8 /* NSRulerMarker+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3DBC692AB845A9009612B8 /* NSRulerMarker+Extensions.swift */; };
@@ -96,7 +103,7 @@
 		BF6B053129620CF10097C9A9 /* ErrorToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6B053029620CF10097C9A9 /* ErrorToken.swift */; };
 		BF6B053329620E2D0097C9A9 /* EndToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6B053229620E2D0097C9A9 /* EndToken.swift */; };
 		BF71EEC829F02F96009356E0 /* ProjectViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF71EEC729F02F96009356E0 /* ProjectViewCell.swift */; };
-		BF71EECA29F03531009356E0 /* SourceFolderNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF71EEC929F03531009356E0 /* SourceFolderNode.swift */; };
+		BF71EECA29F03531009356E0 /* IDEFolderNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF71EEC929F03531009356E0 /* IDEFolderNode.swift */; };
 		BF71EECC29F06E33009356E0 /* BrowserActionSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF71EECB29F06E33009356E0 /* BrowserActionSet.swift */; };
 		BF738C0B2ABE3EC000FE269C /* BracketMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF738C0A2ABE3EC000FE269C /* BracketMatcher.swift */; };
 		BF7749FC29899259003250CB /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7749FB29899259003250CB /* Array+Extensions.swift */; };
@@ -163,7 +170,7 @@
 		BFCD39712A3444EB00E84B5F /* CustomTextStyleAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCD39702A3444EB00E84B5F /* CustomTextStyleAttributes.swift */; };
 		BFCDC3EE2A8559E000C20746 /* AccessoryViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCDC3ED2A8559E000C20746 /* AccessoryViewControllers.swift */; };
 		BFCDC3F22A8579FE00C20746 /* NSImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCDC3F12A8579FE00C20746 /* NSImage+Extensions.swift */; };
-		BFD0B50D2968758B00E9ABBD /* SourceProjectNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD0B50C2968758B00E9ABBD /* SourceProjectNode.swift */; };
+		BFD0B50D2968758B00E9ABBD /* IDEProjectNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD0B50C2968758B00E9ABBD /* IDEProjectNode.swift */; };
 		BFD223242AC7C2CF00F0C614 /* SourceNodeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD223232AC7C2CF00F0C614 /* SourceNodeState.swift */; };
 		BFD223262AC7F73300F0C614 /* NSView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD223252AC7F73300F0C614 /* NSView+Extensions.swift */; };
 		BFD87E982954A3D200298094 /* CompilerIssue.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD87E972954A3D200298094 /* CompilerIssue.swift */; };
@@ -187,6 +194,7 @@
 		BFEF43622ABC5E940016BD51 /* MethodType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEF43612ABC5E940016BD51 /* MethodType.swift */; };
 		BFEF43642ABC5F6B0016BD51 /* FunctionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEF43632ABC5F6B0016BD51 /* FunctionType.swift */; };
 		BFF0CD442A1E9EBD00F99EC3 /* ArgonTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF0CD432A1E9EBD00F99EC3 /* ArgonTypes.swift */; };
+		BFF266902AE00DCC0004116C /* VisualDesignEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF2668F2AE00DCC0004116C /* VisualDesignEditorView.swift */; };
 		BFF7B53329857CE80075F011 /* RootModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF7B53229857CE80075F011 /* RootModule.swift */; };
 		BFF7B53529857CF60075F011 /* ArgonModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF7B53429857CF60075F011 /* ArgonModule.swift */; };
 		BFFB59222A95E77400E80995 /* NSFont+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB59212A95E77400E80995 /* NSFont+Extensions.swift */; };
@@ -234,6 +242,13 @@
 		BF0D32102A649D89002A2D8D /* ValueBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueBox.swift; sourceTree = "<group>"; };
 		BF0E84DF2A5D4EA8003BCC49 /* Weather.argon */ = {isa = PBXFileReference; lastKnownFileType = text; path = Weather.argon; sourceTree = "<group>"; };
 		BF0E84E32A5D612E003BCC49 /* Path+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Path+Extensions.swift"; sourceTree = "<group>"; };
+		BF12316C2ADAD2D000DE5750 /* ProjectEditorState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectEditorState.swift; sourceTree = "<group>"; };
+		BF12316E2ADB722A00DE5750 /* TypeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeConstraint.swift; sourceTree = "<group>"; };
+		BF1231702ADB735B00DE5750 /* IssueReporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssueReporter.swift; sourceTree = "<group>"; };
+		BF1231722ADB8D4800DE5750 /* ArgonTypeAssigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgonTypeAssigner.swift; sourceTree = "<group>"; };
+		BF1231742ADC603700DE5750 /* IDEVisualDesignNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDEVisualDesignNode.swift; sourceTree = "<group>"; };
+		BF1231762ADC606400DE5750 /* IDEVisualInterfaceNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDEVisualInterfaceNode.swift; sourceTree = "<group>"; };
+		BF12317A2ADC64E000DE5750 /* IDEEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDEEditorView.swift; sourceTree = "<group>"; };
 		BF1279A62A261BA300855760 /* MacroExpander.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacroExpander.swift; sourceTree = "<group>"; };
 		BF174B54294CC7BD0094A6D4 /* KeywordToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordToken.swift; sourceTree = "<group>"; };
 		BF174B56294CC7D30094A6D4 /* FloatToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatToken.swift; sourceTree = "<group>"; };
@@ -274,9 +289,9 @@
 		BF3676CD2972DE4400E1A5B9 /* Expression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expression.swift; sourceTree = "<group>"; };
 		BF3676CF297329F800E1A5B9 /* NSCoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSCoder+Extensions.swift"; sourceTree = "<group>"; };
 		BF39BA7E2A9906950037FB79 /* ArgonScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgonScanner.swift; sourceTree = "<group>"; };
-		BF3B42FE29A14C9D009C269F /* SourceNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceNode.swift; sourceTree = "<group>"; };
-		BF3B430029A14CC6009C269F /* SourceCompositeNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceCompositeNode.swift; sourceTree = "<group>"; };
-		BF3B430229A14D47009C269F /* SourceFileNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceFileNode.swift; sourceTree = "<group>"; };
+		BF3B42FE29A14C9D009C269F /* IDENode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDENode.swift; sourceTree = "<group>"; };
+		BF3B430029A14CC6009C269F /* IDECompositeNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDECompositeNode.swift; sourceTree = "<group>"; };
+		BF3B430229A14D47009C269F /* IDESourceFileNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDESourceFileNode.swift; sourceTree = "<group>"; };
 		BF3B430629A1515F009C269F /* SourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceView.swift; sourceTree = "<group>"; };
 		BF3B430829A15319009C269F /* StyleTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleTheme.swift; sourceTree = "<group>"; };
 		BF3DBC692AB845A9009612B8 /* NSRulerMarker+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSRulerMarker+Extensions.swift"; sourceTree = "<group>"; };
@@ -312,7 +327,7 @@
 		BF6B053029620CF10097C9A9 /* ErrorToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorToken.swift; sourceTree = "<group>"; };
 		BF6B053229620E2D0097C9A9 /* EndToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndToken.swift; sourceTree = "<group>"; };
 		BF71EEC729F02F96009356E0 /* ProjectViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectViewCell.swift; sourceTree = "<group>"; };
-		BF71EEC929F03531009356E0 /* SourceFolderNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceFolderNode.swift; sourceTree = "<group>"; };
+		BF71EEC929F03531009356E0 /* IDEFolderNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDEFolderNode.swift; sourceTree = "<group>"; };
 		BF71EECB29F06E33009356E0 /* BrowserActionSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserActionSet.swift; sourceTree = "<group>"; };
 		BF738C0A2ABE3EC000FE269C /* BracketMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BracketMatcher.swift; sourceTree = "<group>"; };
 		BF7749FB29899259003250CB /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
@@ -383,7 +398,7 @@
 		BFCD39702A3444EB00E84B5F /* CustomTextStyleAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextStyleAttributes.swift; sourceTree = "<group>"; };
 		BFCDC3ED2A8559E000C20746 /* AccessoryViewControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessoryViewControllers.swift; sourceTree = "<group>"; };
 		BFCDC3F12A8579FE00C20746 /* NSImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage+Extensions.swift"; sourceTree = "<group>"; };
-		BFD0B50C2968758B00E9ABBD /* SourceProjectNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceProjectNode.swift; sourceTree = "<group>"; };
+		BFD0B50C2968758B00E9ABBD /* IDEProjectNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDEProjectNode.swift; sourceTree = "<group>"; };
 		BFD223232AC7C2CF00F0C614 /* SourceNodeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceNodeState.swift; sourceTree = "<group>"; };
 		BFD223252AC7F73300F0C614 /* NSView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSView+Extensions.swift"; sourceTree = "<group>"; };
 		BFD87E972954A3D200298094 /* CompilerIssue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompilerIssue.swift; sourceTree = "<group>"; };
@@ -408,6 +423,7 @@
 		BFEF43612ABC5E940016BD51 /* MethodType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MethodType.swift; sourceTree = "<group>"; };
 		BFEF43632ABC5F6B0016BD51 /* FunctionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionType.swift; sourceTree = "<group>"; };
 		BFF0CD432A1E9EBD00F99EC3 /* ArgonTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgonTypes.swift; sourceTree = "<group>"; };
+		BFF2668F2AE00DCC0004116C /* VisualDesignEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualDesignEditorView.swift; sourceTree = "<group>"; };
 		BFF6B38B2ACAE86B0099A852 /* Argon.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Argon.entitlements; sourceTree = "<group>"; };
 		BFF7B53229857CE80075F011 /* RootModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootModule.swift; sourceTree = "<group>"; };
 		BFF7B53429857CF60075F011 /* ArgonModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgonModule.swift; sourceTree = "<group>"; };
@@ -577,49 +593,35 @@
 			path = "LLVM Support";
 			sourceTree = "<group>";
 		};
-		BF3B42FD29A14C82009C269F /* Source Nodes */ = {
+		BF3B42FD29A14C82009C269F /* IDE Nodes */ = {
 			isa = PBXGroup;
 			children = (
-				BF3B430029A14CC6009C269F /* SourceCompositeNode.swift */,
-				BF3B430229A14D47009C269F /* SourceFileNode.swift */,
-				BF71EEC929F03531009356E0 /* SourceFolderNode.swift */,
-				BF3B42FE29A14C9D009C269F /* SourceNode.swift */,
-				BFD0B50C2968758B00E9ABBD /* SourceProjectNode.swift */,
+				BF3B430029A14CC6009C269F /* IDECompositeNode.swift */,
+				BF71EEC929F03531009356E0 /* IDEFolderNode.swift */,
+				BF3B42FE29A14C9D009C269F /* IDENode.swift */,
+				BFD0B50C2968758B00E9ABBD /* IDEProjectNode.swift */,
+				BF3B430229A14D47009C269F /* IDESourceFileNode.swift */,
+				BF1231742ADC603700DE5750 /* IDEVisualDesignNode.swift */,
+				BF1231762ADC606400DE5750 /* IDEVisualInterfaceNode.swift */,
 			);
-			path = "Source Nodes";
+			path = "IDE Nodes";
 			sourceTree = "<group>";
 		};
 		BF3B430429A14F87009C269F /* Main UI */ = {
 			isa = PBXGroup;
 			children = (
-				BFCDC3ED2A8559E000C20746 /* AccessoryViewControllers.swift */,
+				BF28BB602AD341E700985F2E /* ArgonDocumentController.swift */,
 				BFCD39702A3444EB00E84B5F /* CustomTextStyleAttributes.swift */,
 				BF2FBFC42A87779000CB6145 /* CustomView.swift */,
 				BF2FBFC62A8777C600CB6145 /* IconLabelView.swift */,
 				BF789A752AB5DE150022ED48 /* IconTabView.swift */,
-				BF96903B29F55BF400A7ED65 /* LineNumberRulerView.swift */,
 				BFA93E46291678B00001F05D /* Main.storyboard */,
-				BF19C1E02AA39BC6005DE1A8 /* MessageLayer.swift */,
 				BFC6C0712A69990600BC424D /* ModuleBundle.swift */,
 				BF47CD612A68729B00C63D1E /* ModuleBundleDocument.swift */,
 				BF47CD632A68749700C63D1E /* ModuleBundleViewController.swift */,
-				BF95CD4D2AB784B500792BD6 /* PathControl.swift */,
-				BFA93E42291678AF0001F05D /* ProjectDocument.swift */,
-				BF789A7B2AB634160022ED48 /* ProjectHierarchyViewController.swift */,
-				BF95CD4F2AB7880500792BD6 /* ProjectInspectorView.swift */,
-				BF789A812AB6364E0022ED48 /* ProjectInspectorViewController.swift */,
-				BF789A7F2AB6362C0022ED48 /* ProjectSourceViewController.swift */,
-				BF8CB1852A8FE8380056F145 /* ProjectState.swift */,
-				BF71EEC729F02F96009356E0 /* ProjectViewCell.swift */,
-				BFA93E40291678AF0001F05D /* ProjectViewController.swift */,
-				BF789A7D2AB635660022ED48 /* ProjectWindowController.swift */,
-				BF96903D29F57FA200A7ED65 /* SourceCodeEditingView.swift */,
+				BFF266912AE010310004116C /* Project Editor */,
 				BFD223232AC7C2CF00F0C614 /* SourceNodeState.swift */,
-				BF3B430629A1515F009C269F /* SourceView.swift */,
-				BF3B430829A15319009C269F /* StyleTheme.swift */,
-				BFC779F72AC771EB00756140 /* TitlebarView.swift */,
 				BFAB87712A8671B30048B20E /* ToggleState.swift */,
-				BF28BB602AD341E700985F2E /* ArgonDocumentController.swift */,
 			);
 			path = "Main UI";
 			sourceTree = "<group>";
@@ -686,6 +688,7 @@
 			isa = PBXGroup;
 			children = (
 				BFD87E972954A3D200298094 /* CompilerIssue.swift */,
+				BF1231702ADB735B00DE5750 /* IssueReporter.swift */,
 			);
 			path = "Error Handling";
 			sourceTree = "<group>";
@@ -736,20 +739,20 @@
 		BFA93E3D291678AF0001F05D /* Argon */ = {
 			isa = PBXGroup;
 			children = (
-				BF3DBC6B2AB84696009612B8 /* Debugging */,
 				BFBD0E4529E08510002873C9 /* Compilation and Parsing */,
+				BF3DBC6B2AB84696009612B8 /* Debugging */,
 				BF6B052F29620C3E0097C9A9 /* Error Handling */,
-				BFD87E962954A34200298094 /* Plumbing */,
+				BF3B42FD29A14C82009C269F /* IDE Nodes */,
 				BF174B66294CC9D50094A6D4 /* Lexical Analysis */,
 				BF2C0AE929FB213300CCC384 /* LLVM Support */,
 				BF86786929EEE79E00DFF03C /* LLVMC */,
 				BF3B430429A14F87009C269F /* Main UI */,
-				BF3B42FD29A14C82009C269F /* Source Nodes */,
+				BFD87E962954A34200298094 /* Plumbing */,
+				BF3B430529A14FAD009C269F /* Resources */,
 				BF1F4AEA2A5548B700C1F977 /* Statements and Blocks */,
 				BFCA9340296F431B0049B39A /* Syntax Tree Nodes */,
 				BF6B052A2962096D0097C9A9 /* System Extensions */,
 				BF54B99929F5C7AD00A755DC /* Value Models */,
-				BF3B430529A14FAD009C269F /* Resources */,
 			);
 			path = Argon;
 			sourceTree = "<group>";
@@ -778,10 +781,12 @@
 				BF9076342969803B00995CB8 /* ArgonParser.swift */,
 				BF39BA7E2A9906950037FB79 /* ArgonScanner.swift */,
 				BFE1AD0F2A8A7CD200402294 /* ArgonSemanticChecker.swift */,
+				BF1231722ADB8D4800DE5750 /* ArgonTypeAssigner.swift */,
 				BFE6BDA82AA6738800614F71 /* ArgonTypeChecker.swift */,
 				BFF0CD432A1E9EBD00F99EC3 /* ArgonTypes.swift */,
 				BFDC80162A7D5CFF008118FF /* NodeChangeSet.swift */,
 				BFE6BDA62AA670BA00614F71 /* ProcessingFlags.swift */,
+				BF12316E2ADB722A00DE5750 /* TypeConstraint.swift */,
 				BFE1AD0D2A8A78BF00402294 /* Visitor + Visitable.swift */,
 			);
 			path = "Compilation and Parsing";
@@ -810,6 +815,33 @@
 				BF5EB1442AC590B6002A4E4B /* SymbolTreeNode.swift */,
 			);
 			path = Plumbing;
+			sourceTree = "<group>";
+		};
+		BFF266912AE010310004116C /* Project Editor */ = {
+			isa = PBXGroup;
+			children = (
+				BF12317A2ADC64E000DE5750 /* IDEEditorView.swift */,
+				BFCDC3ED2A8559E000C20746 /* AccessoryViewControllers.swift */,
+				BF96903B29F55BF400A7ED65 /* LineNumberRulerView.swift */,
+				BF19C1E02AA39BC6005DE1A8 /* MessageLayer.swift */,
+				BF95CD4D2AB784B500792BD6 /* PathControl.swift */,
+				BFA93E42291678AF0001F05D /* ProjectDocument.swift */,
+				BF12316C2ADAD2D000DE5750 /* ProjectEditorState.swift */,
+				BF789A7B2AB634160022ED48 /* ProjectHierarchyViewController.swift */,
+				BF95CD4F2AB7880500792BD6 /* ProjectInspectorView.swift */,
+				BF789A812AB6364E0022ED48 /* ProjectInspectorViewController.swift */,
+				BF789A7F2AB6362C0022ED48 /* ProjectSourceViewController.swift */,
+				BF8CB1852A8FE8380056F145 /* ProjectState.swift */,
+				BF71EEC729F02F96009356E0 /* ProjectViewCell.swift */,
+				BFA93E40291678AF0001F05D /* ProjectViewController.swift */,
+				BF789A7D2AB635660022ED48 /* ProjectWindowController.swift */,
+				BF96903D29F57FA200A7ED65 /* SourceCodeEditingView.swift */,
+				BF3B430629A1515F009C269F /* SourceView.swift */,
+				BF3B430829A15319009C269F /* StyleTheme.swift */,
+				BFC779F72AC771EB00756140 /* TitlebarView.swift */,
+				BFF2668F2AE00DCC0004116C /* VisualDesignEditorView.swift */,
+			);
+			path = "Project Editor";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -957,6 +989,7 @@
 				BF2D01E62A7C0E2A00887DD7 /* InvokableType.swift in Sources */,
 				BFB5E60E2A2664DA0018824E /* String+Extensions.swift in Sources */,
 				BF1F4AFE2A554A2700C1F977 /* Block.swift in Sources */,
+				BF1231712ADB735B00DE5750 /* IssueReporter.swift in Sources */,
 				BF47CD642A68749700C63D1E /* ModuleBundleViewController.swift in Sources */,
 				BF8CB1882A8FF90B0056F145 /* MakeExpression.swift in Sources */,
 				BFE99B432A711A3B0056E700 /* PrefixExpression.swift in Sources */,
@@ -978,7 +1011,7 @@
 				BF92E2C92AC0CAC200D1FDE2 /* TupleType.swift in Sources */,
 				BF174B57294CC7D30094A6D4 /* FloatToken.swift in Sources */,
 				BFE99B392A710A8A0056E700 /* MethodInvocationExpression.swift in Sources */,
-				BF3B430129A14CC6009C269F /* SourceCompositeNode.swift in Sources */,
+				BF3B430129A14CC6009C269F /* IDECompositeNode.swift in Sources */,
 				BF47CD622A68729B00C63D1E /* ModuleBundleDocument.swift in Sources */,
 				BF54B9A429F5C7C600A755DC /* DependentSet.swift in Sources */,
 				BFCDC3EE2A8559E000C20746 /* AccessoryViewControllers.swift in Sources */,
@@ -1014,7 +1047,7 @@
 				BFA9DA96292D5C1A00C6859D /* IdentifierToken.swift in Sources */,
 				BF54B9A929F5C7C600A755DC /* ValueModel.swift in Sources */,
 				BFDC80192A7D8058008118FF /* PathToken.swift in Sources */,
-				BF3B42FF29A14C9E009C269F /* SourceNode.swift in Sources */,
+				BF3B42FF29A14C9E009C269F /* IDENode.swift in Sources */,
 				BF27FCFC2A76821C000C78F1 /* NodeReference.swift in Sources */,
 				BF3DBC6D2AB846A6009612B8 /* Breakpoint.swift in Sources */,
 				BFE99B3B2A710AB30056E700 /* FunctionInvocationExpression.swift in Sources */,
@@ -1027,7 +1060,7 @@
 				BF0D320F2A642EC4002A2D8D /* ModuleNode.swift in Sources */,
 				BFF0CD442A1E9EBD00F99EC3 /* ArgonTypes.swift in Sources */,
 				BF54B9A629F5C7C600A755DC /* AspectAdaptor.swift in Sources */,
-				BF71EECA29F03531009356E0 /* SourceFolderNode.swift in Sources */,
+				BF71EECA29F03531009356E0 /* IDEFolderNode.swift in Sources */,
 				BF174B55294CC7BD0094A6D4 /* KeywordToken.swift in Sources */,
 				BF2FBFC52A87779000CB6145 /* CustomView.swift in Sources */,
 				BF789A7E2AB635660022ED48 /* ProjectWindowController.swift in Sources */,
@@ -1038,7 +1071,8 @@
 				BFBA84942A8E80BA009D488A /* StaticVariable.swift in Sources */,
 				BFE89DF32AAF11E300985186 /* LoopStatement.swift in Sources */,
 				BFE89DF12AAF0C1200985186 /* ForStatement.swift in Sources */,
-				BFD0B50D2968758B00E9ABBD /* SourceProjectNode.swift in Sources */,
+				BF12316F2ADB722A00DE5750 /* TypeConstraint.swift in Sources */,
+				BFD0B50D2968758B00E9ABBD /* IDEProjectNode.swift in Sources */,
 				BFAC059B2AB34FE9004C3823 /* ErrorType.swift in Sources */,
 				BF1F4AF82A5549D400C1F977 /* SignalStatement.swift in Sources */,
 				BF53D1332A72D8D400C2777D /* PostfixExpression.swift in Sources */,
@@ -1067,6 +1101,8 @@
 				BF789A762AB5DE150022ED48 /* IconTabView.swift in Sources */,
 				BFCDC3F22A8579FE00C20746 /* NSImage+Extensions.swift in Sources */,
 				BFAD0C142A7FCEA800FB45B9 /* MemberAccessExpression.swift in Sources */,
+				BF1231732ADB8D4800DE5750 /* ArgonTypeAssigner.swift in Sources */,
+				BF1231772ADC606400DE5750 /* IDEVisualInterfaceNode.swift in Sources */,
 				BF0D32112A649D89002A2D8D /* ValueBox.swift in Sources */,
 				BFEF43642ABC5F6B0016BD51 /* FunctionType.swift in Sources */,
 				BF92E2CB2AC0CC3A00D1FDE2 /* PrimitiveType.swift in Sources */,
@@ -1088,13 +1124,16 @@
 				BF3676CE2972DE4400E1A5B9 /* Expression.swift in Sources */,
 				BF9BAD482965F33500608266 /* ArgonTests.swift in Sources */,
 				BFE6BDA92AA6738800614F71 /* ArgonTypeChecker.swift in Sources */,
-				BF3B430329A14D47009C269F /* SourceFileNode.swift in Sources */,
+				BF3B430329A14D47009C269F /* IDESourceFileNode.swift in Sources */,
+				BF12317B2ADC64E000DE5750 /* IDEEditorView.swift in Sources */,
 				BFA93E43291678AF0001F05D /* ProjectDocument.swift in Sources */,
 				BFCB438C29845DDA001D1CFD /* CompositeSyntaxTreeNode.swift in Sources */,
 				BF6B053329620E2D0097C9A9 /* EndToken.swift in Sources */,
 				BF2C0AEB29FB215500CCC384 /* LLVMModule.swift in Sources */,
+				BF12316D2ADAD2D000DE5750 /* ProjectEditorState.swift in Sources */,
 				BF19C1E32AA3A55A005DE1A8 /* NSBezierPath+Extensions.swift in Sources */,
 				BF3B430729A1515F009C269F /* SourceView.swift in Sources */,
+				BFF266902AE00DCC0004116C /* VisualDesignEditorView.swift in Sources */,
 				BFCD396F2A3442FF00E84B5F /* AttributeScopes+Extensions.swift in Sources */,
 				BFE1AD102A8A7CD200402294 /* ArgonSemanticChecker.swift in Sources */,
 				BF1279A72A261BA300855760 /* MacroExpander.swift in Sources */,
@@ -1112,6 +1151,7 @@
 				BF96903C29F55BF400A7ED65 /* LineNumberRulerView.swift in Sources */,
 				BF54B9A729F5C7C600A755DC /* AspectModel.swift in Sources */,
 				BFA9DA98292D5C3900C6859D /* Symbol.swift in Sources */,
+				BF1231752ADC603700DE5750 /* IDEVisualDesignNode.swift in Sources */,
 				BF0711672A78381B00981DD1 /* AssignmentStatement.swift in Sources */,
 				BFA9DA9A292D60A800C6859D /* Location.swift in Sources */,
 				BF1F4AF42A5549B100C1F977 /* WhileStatement.swift in Sources */,

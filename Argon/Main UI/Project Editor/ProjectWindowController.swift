@@ -5,7 +5,7 @@
 //  Created by Vincent Coetzee on 16/09/2023.
 //
 
-import Cocoa
+import AppKit
 
 internal class ProjectWindowController: NSWindowController,Dependent
     {
@@ -25,6 +25,10 @@ internal class ProjectWindowController: NSWindowController,Dependent
     private var issueCountIconLabelView: IconLabelView!
     private var leftSidebarState = ToggleState.expanded
     private var rightSidebarState = ToggleState.expanded
+    
+    private var editorState = ProjectEditorState(rawValue: 0)
+    @IBOutlet weak var mainMenu: NSMenu!
+    
     
     public func initWindowController(projectModel: ValueHolder,selectedNodeModel: ValueHolder)
         {
@@ -46,6 +50,7 @@ internal class ProjectWindowController: NSWindowController,Dependent
         self.splitViewController = self.window?.contentViewController as? NSSplitViewController
         self.hierarchyViewController = self.splitViewController?.splitViewItems.first?.viewController as? ProjectHierarchyViewController
         self.sourceViewController = self.splitViewController?.splitViewItems.second?.viewController as? ProjectSourceViewController
+        self.hierarchyViewController.sourceViewController = self.sourceViewController
         self.inspectorViewController = self.splitViewController?.splitViewItems.last?.viewController as? ProjectInspectorViewController
         self.leftSidebarController.target = self
         self.window!.addTitlebarAccessoryViewController(self.leftSidebarController)
@@ -151,26 +156,54 @@ internal class ProjectWindowController: NSWindowController,Dependent
 //                }
 //            }
         }
-    }
-
-
-extension ProjectWindowController: NSToolbarDelegate
-    {
-    }
-
-extension ProjectWindowController: NSToolbarItemValidation
-    {
-    @objc func validateToolbarItem(_ item: NSToolbarItem) -> Bool
+        
+    @IBAction func handleMenuEvent(_ sender: Any?)
         {
-        let node = self.selectedNodeModel.value as? SourceNode
-        if node.isNil
+        guard let menuItem = sender as? NSMenuItem else
             {
-            return(BrowserActionSet.default.isActionEnabled(label: item.itemIdentifier.rawValue))
+            return
             }
-        else
+        if self.hierarchyViewController.handleMenuItem(menuItem)
             {
-            return(node!.actionSet.isActionEnabled(label: item.itemIdentifier.rawValue))
+            return
             }
+        if self.sourceViewController.handleMenuItem(menuItem)
+            {
+            return
+            }
+        if self.inspectorViewController.handleMenuItem(menuItem)
+            {
+            return
+            }
+        }
+    }
+    
+extension ProjectWindowController: NSMenuItemValidation
+    {
+    func validateMenuItem(_ menuItem: NSMenuItem) -> Bool
+        {
+        switch(menuItem.identifier!.rawValue)
+            {
+            case("buildProject"):
+                return(true)
+            case("runProject"):
+                return(true)
+            case("debugProject"):
+                return(true)
+            case("cleanProject"):
+                return(true)
+            default:
+                break
+            }
+        if self.hierarchyViewController.validateMenuItem(menuItem)
+            {
+            return(true)
+            }
+        if self.sourceViewController.validateMenuItem(menuItem)
+            {
+            return(true)
+            }
+        return(self.inspectorViewController.validateMenuItem(menuItem))
         }
     }
     
@@ -180,39 +213,97 @@ extension ProjectWindowController
     {
     @IBAction public func onBuildClicked(_ sender: Any?)
         {
-        guard let sourceFiles = (self.projectModel.value as? SourceProjectNode)?.allSourceFiles else
+        guard let sourceFiles = (self.projectModel.value as? IDEProjectNode)?.allSourceFiles else
             {
             return
             }
         let compiler = ArgonCompiler.build(nodes: sourceFiles)
-        guard let node = self.selectedNodeModel.value as? SourceNode,node.isSourceFileNode else
+        guard let node = self.selectedNodeModel.value as? IDENode,node.isSourceFileNode else
             {
             return
             }
-        self.sourceViewController.resetCompilerIssues(newIssues: node.compilerIssues)
-        let count = compiler.compilerIssueCount
-        self.issueCountIconLabelView.iconTintColorElement = count > 0 ? .colorIssue : .colorToolbarText
-        self.issueCountIconLabelView.text = count > 0 ? "\(count) issues" : ""
-        self.issueCountIconLabelView.textColorElement  = count > 0 ? .colorIssue : .colorToolbarText
+//        self.sourceViewController.resetCompilerIssues(newIssues: node.compilerIssues)
+//        let count = compiler.compilerIssueCount
+//        self.issueCountIconLabelView.iconTintColorElement = count > 0 ? .colorIssue : .colorToolbarText
+//        self.issueCountIconLabelView.text = count > 0 ? "\(count) issues" : ""
+//        self.issueCountIconLabelView.textColorElement  = count > 0 ? .colorIssue : .colorToolbarText
         }
         
-    @IBAction public func onShowIssuesClicked(_ sender: Any?)
+    @IBAction public func onToggleIssuesClicked(_ sender: Any?)
         {
-        let item = sender as! NSToolbarItem
-        item.image = NSImage(systemSymbolName: "eye.slash", accessibilityDescription: "")
-        item.toolTip = "Hide all compiler issues"
-        item.label = "Hide"
-        item.action = #selector(self.onHideIssuesClicked)
-        self.sourceViewController.showAllCompilerIssues()
+        if self.editorState.contains(.kShowIssues)
+            {
+            self.replace(menuItemTitled: "Hide Issues",with: "Show Issues")
+            self.editorState.remove(.kShowIssues)
+//            self.sourceViewController.toggleCompilerIssues(on: true)
+            }
+        else
+            {
+            self.replace(menuItemTitled: "Show Issues",with: "Hide Issues")
+            self.editorState.insert(.kShowIssues)
+//            self.sourceViewController.toggleCompilerIssues(on: false)
+            }
         }
         
-    @IBAction public func onHideIssuesClicked(_ sender: Any?)
+    @IBAction public func onToggleTypesClicked(_ sender: Any?)
         {
-        let item = sender as! NSToolbarItem
-        item.image = NSImage(systemSymbolName: "eye", accessibilityDescription: "")
-        item.toolTip = "Show all compiler issues"
-        item.label = "Show"
-        item.action = #selector(self.onShowIssuesClicked)
-        self.sourceViewController.hideAllCompilerIssues()
+        if self.editorState.contains(.kShowTypes)
+            {
+            self.replace(menuItemTitled: "Hide Inferred Types",with: "Show Inferred Types")
+            self.editorState.remove(.kShowTypes)
+//            self.sourceViewController.toggleInferredTypes(on: true)
+            }
+        else
+            {
+            self.replace(menuItemTitled: "Show Inferred Types",with: "Hide Inferred Types")
+            self.editorState.insert(.kShowTypes)
+//            self.sourceViewController.toggleInferredTypes(on: false)
+            }
+        }
+        
+    private func replace(menuItemTitled oldTitle: String,with newTitle: String)
+        {
+        if let menuItem = NSApplication.shared.mainMenu?.firstMenuItem(withTitle: oldTitle)
+            {
+            menuItem.title = newTitle
+            }
+        }
+        
+    @IBAction public func onToggleComments(_ sender: Any?)
+        {
+//        guard !self.sourceViewController.selectionIsEmpty() else
+//            {
+//            NSSound.beep()
+//            return
+//            }
+//        self.sourceViewController.toggleComments()
+        }
+    }
+
+
+extension NSMenu
+    {
+    public func firstMenuItem(withTitle aTitle: String) -> NSMenuItem?
+        {
+        for item in self.items
+            {
+            if aTitle == item.title
+                {
+                return(item)
+                }
+            if let anItem = item.firstMenuItem(withTitle: aTitle)
+                {
+                return(anItem)
+                }
+            }
+        return(nil)
+        }
+    }
+
+extension NSMenuItem
+    {
+    func firstMenuItem(withTitle aTitle: String) -> NSMenuItem?
+        {
+        return(nil)
         }
     }

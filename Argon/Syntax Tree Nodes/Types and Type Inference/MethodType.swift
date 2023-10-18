@@ -106,8 +106,7 @@ public class MethodType: InvokableType
     public override func accept(visitor: Visitor)
         {
         visitor.enter(method: self)
-        visitor.enter(block: self.block)
-        visitor.exit(block: self.block)
+        visitor.visit(block: self.block)
         visitor.exit(method: self)
         }
         

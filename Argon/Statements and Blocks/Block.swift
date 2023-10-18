@@ -143,11 +143,10 @@ public class Block: Statement
         
     public override func accept(visitor: Visitor)
         {
-        visitor.enter(block: self)
+        visitor.visit(block: self)
         for statement in self.statements
             {
             statement.accept(visitor: visitor)
             }
-        visitor.exit(block: self)
         }
     }

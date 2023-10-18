@@ -33,7 +33,7 @@ public class RootModule: ModuleType
         self.container as! ArgonModule
         }
 
-    private var globallyInitialisedNodes = Symbols()
+    private var globallyInitialisedSymbols = Symbols()
     
     public init(argonModule: ArgonModule)
         {
@@ -107,11 +107,16 @@ public class RootModule: ModuleType
         
     public func addGloballyInitialisedSymbol(_ node: Symbol)
         {
-        self.globallyInitialisedNodes.append(node)
+        self.globallyInitialisedSymbols.append(node)
         }
         
     public override func accept(visitor: Visitor)
         {
+        guard visitor.wasNotVisited(self) else
+            {
+            return
+            }
+        visitor.markAsVisited(self)
         visitor.enter(rootModule: self)
         for symbol in self.symbols
             {

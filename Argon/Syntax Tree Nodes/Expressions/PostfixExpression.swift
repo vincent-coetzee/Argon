@@ -37,9 +37,8 @@ public class PostfixExpression: Expression
         
     public override func accept(visitor: Visitor)
         {
-        visitor.enter(postfixExpression: self)
+        visitor.visit(postfixExpression: self)
         self.left.accept(visitor: visitor)
-        visitor.exit(postfixExpression: self)
         }
         
     public func setMethod(_ method: MultimethodType?)

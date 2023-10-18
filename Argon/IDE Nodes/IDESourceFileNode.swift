@@ -8,8 +8,13 @@
 import AppKit
 import Path
 
-public class SourceFileNode: SourceNode
+public class IDESourceFileNode: IDENode
     {
+    public override var nodeType: IDENodeType
+        {
+        .fileNode
+        }
+        
     public var hasErrors: Bool
         {
         self.compilerIssues.detect { $0.isError }
@@ -123,6 +128,11 @@ public class SourceFileNode: SourceNode
         self.compilerIssues.append(contentsOf: issues)
         self._hasUnsavedChanges = true
         }
+        
+    public override func configureEditor(in controller: ProjectSourceViewController)
+        {
+        controller.configureEditor(for: self)
+        }
     }
     
-public typealias SourceFileNodes = Array<SourceFileNode>
+public typealias SourceFileNodes = Array<IDESourceFileNode>

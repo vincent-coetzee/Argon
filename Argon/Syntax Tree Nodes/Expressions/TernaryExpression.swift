@@ -39,9 +39,8 @@ public class TernaryExpression: Expression
         
     public override func accept(visitor: Visitor)
         {
-        visitor.enter(ternaryExpression: self)
+        visitor.visit(ternaryExpression: self)
         self.thenArm.accept(visitor: visitor)
         self.elseArm.accept(visitor: visitor)
-        visitor.exit(ternaryExpression: self)
         }
     }

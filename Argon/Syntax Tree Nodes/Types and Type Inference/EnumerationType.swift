@@ -51,6 +51,7 @@ public class EnumerationType: StructuredType
         let location = parser.token.location
         parser.nextToken()
         var baseType: ArgonType?
+        parser.token.setStyleElement(.colorEnumeration)
         let name = parser.parseIdentifier(errorCode: .identifierExpected).lastPart
         let enumeration = EnumerationType(name: name)
         parser.currentScope.addSymbol(enumeration.typeConstructor())

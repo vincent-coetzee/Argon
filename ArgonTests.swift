@@ -279,7 +279,7 @@ public struct ArgonTests
                 }
             """
         KeywordToken.initKeywords()
-        let sourceFile = SourceFileNode(name: "",path: Path(Path.root))
+        let sourceFile = IDESourceFileNode(name: "",path: Path(Path.root))
         sourceFile.setSource(source)
         let scanner = ArgonScanner(source: source)
         let tokens = scanner.allTokens()
@@ -294,7 +294,7 @@ public struct ArgonTests
         {
 //        let entry1 = SourceFileNode(name: "",path: Path(Path.root))
 //        let entry2 = SourceFileNode(name: "",path: Path(Path.root))
-        let project = SourceProjectNode(name: "",path: Path(Path.root))
+        let project = IDEProjectNode(name: "",path: Path(Path.root))
         let data = try? NSKeyedArchiver.archivedData(withRootObject: project, requiringSecureCoding: false)
         if data.isNil
             {
@@ -302,7 +302,7 @@ public struct ArgonTests
             }
         else
             {
-            let newProject = NSKeyedUnarchiver.unarchiveObject(with: data!) as? SourceProjectNode
+            let newProject = NSKeyedUnarchiver.unarchiveObject(with: data!) as? IDEProjectNode
             if newProject.isNil
                 {
                 fatalError("Decoding of project failed")

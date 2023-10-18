@@ -8,8 +8,13 @@
 import AppKit
 import Path
 
-public class SourceProjectNode: SourceCompositeNode
+public class IDEProjectNode: IDECompositeNode
     {
+    public override var nodeType: IDENodeType
+        {
+        .projectNode
+        }
+        
     public var containerFileWrapper: FileWrapper
         {
         let allWrappers = self.nodes.map{$0.fileWrapper}
@@ -26,7 +31,7 @@ public class SourceProjectNode: SourceCompositeNode
         fatalError()
         }
         
-    public override var pathToProject: Array<SourceNode>
+    public override var pathToProject: Array<IDENode>
         {
         [self]
         }
@@ -63,9 +68,9 @@ public class SourceProjectNode: SourceCompositeNode
         super.encode(with: coder)
         }
         
-    public var allSourceFiles: Array<SourceFileNode>
+    public var allSourceFiles: Array<IDESourceFileNode>
         {
-        return(self.allNodes.filter({$0.isSourceFileNode}).map({$0 as! SourceFileNode}))
+        return(self.allNodes.filter({$0.isSourceFileNode}).map({$0 as! IDESourceFileNode}))
         }
         
     public override var isProjectNode: Bool

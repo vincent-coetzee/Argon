@@ -51,7 +51,6 @@ public class ForStatement: Block
     
     public override func accept(visitor: Visitor)
         {
-        visitor.enter(forStatement: self)
-        visitor.exit(forStatement: self)
+        visitor.visit(forStatement: self)
         }
     }

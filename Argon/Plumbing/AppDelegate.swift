@@ -13,6 +13,7 @@ class AppDelegate: NSObject, NSApplicationDelegate
     func applicationWillFinishLaunching(_ notification: Notification)
         {
         let _ = ArgonDocumentController()
+        UserDefaults.standard.set(true, forKey: "NSConstraintBasedLayoutVisualizeMutuallyExclusiveConstraints")
         }
     
     func applicationDidFinishLaunching(_ aNotification: Notification)

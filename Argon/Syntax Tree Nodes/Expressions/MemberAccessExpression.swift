@@ -16,8 +16,7 @@ public class MemberAccessExpression: BinaryExpression
         
     public override func accept(visitor: Visitor)
         {
-        visitor.enter(memberAccessExpression: self)
+        visitor.visit(memberAccessExpression: self)
         self.left.accept(visitor: visitor)
-        visitor.exit(memberAccessExpression: self)
         }
     }

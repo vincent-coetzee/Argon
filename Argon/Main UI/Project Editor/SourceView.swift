@@ -7,35 +7,12 @@
 
 import AppKit
 
-public protocol TextFocusDelegate
-    {
-    func textDidGainFocus(_ textView: NSTextView)
-    func textDidLoseFocus(_ textView: NSTextView)
-    }
-    
-public protocol SourceEditorDelegate
-    {
-    func sourceEditorKeyPressed(_ editor: NSTextView)
-    func sourceEditor(_ editor: NSTextView,changedLine: Int,offset: Int)
-    func sourceEditor(_ editor: NSTextView,changedSource: String,tokens: Tokens)
-    }
-    
+
 class SourceView: NSTextView
     {
     public var matchBrackets: Bool = true
         
-    public var sourceString: String
-        {
-        get
-            {
-            self.textStorage?.string ?? ""
-            }
-        set
-            {
-            self.string = newValue
-            self.textDidChange(self)
-            }
-        }
+    public var editorDelegate: IDEEditorViewDelegate?
         
     public var compilerIssues: CompilerIssues
         {
@@ -50,12 +27,8 @@ class SourceView: NSTextView
             }
         }
         
-    public let theme = StyleTheme.shared
-    
     private var _tokens = Tokens()
     public private(set) var rulerView: LineNumberRulerView!
-    public var textFocusDelegate: TextFocusDelegate?
-    public var sourceEditorDelegate: SourceEditorDelegate?
     private var _compilerIssues = CompilerIssues()
     private var activeAnnotations = Dictionary<Int,CALayer>()
     private var bracketMatcher: BracketMatcher!
@@ -64,22 +37,19 @@ class SourceView: NSTextView
         {
         super.init(frame: frame)
         self.initSourceView()
-        self.configureScrollView()
         }
         
     public required init?(coder: NSCoder)
         {
         super.init(coder: coder)
         self.initSourceView()
-        self.configureScrollView()
         }
         
     public override init(frame: NSRect,textContainer: NSTextContainer?)
         {
-//        super.init(frame: frame,textContainer: textContainer)
+        super.init(frame: frame,textContainer: textContainer)
 //        self.initSourceView()
 //        self.configureScrollView()
-        fatalError("Unimplemented")
         }
         
     private func initSourceView()
@@ -105,7 +75,7 @@ class SourceView: NSTextView
         self.textContainer?.containerSize = NSSize(width: 1000,height: CGFloat.infinity)
         self.textContainer?.widthTracksTextView = true
         self.autoresizingMask = [.width]
-        self.rulerView = LineNumberRulerView(withTextView: self, foregroundColorStyleElement: .colorLineNumber, backgroundColorStyleElement: .colorEditorBackground)
+        self.rulerView = LineNumberRulerView(withTextView: self, foregroundColorStyleElement: .colorLineNumber, backgroundColorStyleElement: .colorText)
         self.rulerView.clientView = self
         NotificationCenter.default.addObserver(self, selector: #selector(self.textDidEndEditing), name: NSText.didEndEditingNotification, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(self.textDidBeginEditing), name: NSText.didBeginEditingNotification, object: self)
@@ -114,6 +84,7 @@ class SourceView: NSTextView
         
     public func configureScrollView()
         {
+        assert(self.enclosingScrollView.isNotNil,"Should not be nil")
         self.enclosingScrollView?.backgroundColor = StyleTheme.shared.color(for: .colorEditorBackground)
         self.enclosingScrollView?.drawsBackground = true
         self.enclosingScrollView?.borderType = .noBorder
@@ -123,6 +94,28 @@ class SourceView: NSTextView
         self.enclosingScrollView?.autohidesScrollers = true
         self.enclosingScrollView?.verticalRulerView = self.rulerView
         self.enclosingScrollView?.rulersVisible = true
+        self.backgroundColor = NSColor.argonNeonGreen
+        }
+        
+    public func beginEditing(node: IDENode?)
+        {
+        if let sourceNode = node as? IDESourceFileNode
+            {
+            self.string = sourceNode.expandedSource
+            self.compilerIssues = sourceNode.compilerIssues
+            self.updateFromSource()
+            }
+        }
+
+    
+    public func endEditing(node: IDENode?)
+        {
+        if let sourceNode = node as? IDESourceFileNode
+            {
+            sourceNode.tokens = self._tokens
+            sourceNode.expandedSource = self.string
+            sourceNode.compilerIssues = self._compilerIssues
+            }
         }
         
     public func resetCompilerIssues(newIssues: CompilerIssues)
@@ -206,6 +199,85 @@ class SourceView: NSTextView
             }
         }
         
+    public func showInferredTypes()
+        {
+        }
+        
+    public func hideInferredTypes()
+        {
+        }
+        
+    public func selectionIsEmpty() -> Bool
+        {
+        self.selectedRanges.isEmpty
+        }
+        
+    public func toggleCommentsOfCurrentSelection()
+        {
+        self.textStorage?.beginEditing()
+        let newString = self.textStorage!.mutableString
+        for value in self.selectedRanges
+            {
+            let offsets = self.lineStartOffsets(inRange: value.rangeValue)
+            var adjustment = 0
+            for offset in offsets
+                {
+                let range = NSRange(location: offset + adjustment,length: 2)
+                let substring = newString.substring(with: range)
+                if substring == ";;"
+                    {
+                    newString.deleteCharacters(in: range)
+                    adjustment -= 2
+                    }
+                else
+                    {
+                    newString.insert(";;",at: offset + adjustment)
+                    adjustment += 2
+                    }
+                }
+            }
+        self.textStorage?.setAttributedString(NSAttributedString(string: newString as String,attributes: [:]))
+        self.textStorage?.endEditing()
+        self.updateFromSource()
+        }
+        
+    //
+    //
+    // Starting at the start location of the range move backward in the
+    // character array until a new line is encountered, mark that then
+    // from that location move forward until the end of the range marking
+    // every new line encountered while doing so, then return
+    // all the marked locations.
+    //
+    //
+    private func lineStartOffsets(inRange: NSRange) -> Array<Int>
+        {
+        var offset = inRange.location
+        let newString = self.textStorage!.string
+        while offset > 0 && newString.character(at: offset) != "\n"
+            {
+            offset -= 1
+            }
+        var lines = Array<Int>()
+        if newString.character(at: offset) == "\n"
+            {
+            lines.append(offset + 1)
+            offset += 1
+            }
+        offset += 1
+        let endOffset = inRange.location + inRange.length
+        while offset < self.string.count && offset < endOffset
+            {
+            if newString.character(at: offset) == "\n"
+                {
+                lines.append(offset + 1)
+                offset += 1
+                }
+            offset += 1
+            }
+        return(lines)
+        }
+        
     private func refreshIssueDisplay()
         {
         self.rulerView.removeAllIssues()
@@ -224,12 +296,16 @@ class SourceView: NSTextView
     //
     @objc func textDidChange(_ sender: Any?)
         {
+        self.updateFromSource()
+        }
+        
+    private func updateFromSource()
+        {
         let theString = self.string
         let scanner = ArgonScanner(source: theString)
         let someTokens = scanner.allTokens()
         self.bracketMatcher = scanner.bracketMatcher
         self._tokens = someTokens
-        self.sourceEditorDelegate?.sourceEditor(self, changedSource: theString,tokens: someTokens)
         self.refresh()
         }
         
@@ -259,13 +335,11 @@ class SourceView: NSTextView
         
     public override func becomeFirstResponder() -> Bool
         {
-        self.textFocusDelegate?.textDidGainFocus(self)
         return(true)
         }
         
     public override func resignFirstResponder() -> Bool
         {
-        self.textFocusDelegate?.textDidLoseFocus(self)
         super.resignFirstResponder()
         return(true)
         }
@@ -345,7 +419,7 @@ class SourceView: NSTextView
                 self.highlightCharacters(atLocations: locations,forMilliseconds: 1000,inColor: StyleTheme.shared.color(for: .colorBracketHighlight))
                 }
             }
-        self.sourceEditorDelegate?.sourceEditor(self,changedLine: line + 1,offset: location - offset)
+        self.editorDelegate?.editorView(self.superview as! SourceCodeEditingView, changed: .location(line + 1, location - offset))
         }
         
     public override func mouseDown(with event: NSEvent)

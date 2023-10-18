@@ -8,11 +8,27 @@
 import AppKit
 import Path
 
-public class SourceNode: NSObject,NSCoding,Comparable,Dependent
+public enum IDENodeType
     {
-    public static func < (lhs: SourceNode, rhs: SourceNode) -> Bool
+    case node
+    case compositeNode
+    case fileNode
+    case folderNode
+    case projectNode
+    case visualDesignNode
+    case visualInterfaceNode
+    }
+    
+public class IDENode: NSObject,NSCoding,Comparable,Dependent
+    {
+    public static func < (lhs: IDENode, rhs: IDENode) -> Bool
         {
         lhs.name < rhs.name
+        }
+        
+    public var nodeType: IDENodeType
+        {
+        .node
         }
         
     public var hasUnsavedChanges: Bool
@@ -75,14 +91,14 @@ public class SourceNode: NSObject,NSCoding,Comparable,Dependent
         fatalError()
         }
 
-    public var pathToProject: Array<SourceNode>
+    public var pathToProject: Array<IDENode>
         {
-        var someNodes: Array<SourceNode> = [self]
+        var someNodes: Array<IDENode> = [self]
         someNodes.append(contentsOf: self.parent?.pathToProject ?? [])
         return(someNodes)
         }
         
-    public var allNodes: Array<SourceNode>
+    public var allNodes: Array<IDENode>
         {
         []
         }
@@ -102,7 +118,7 @@ public class SourceNode: NSObject,NSCoding,Comparable,Dependent
     public private(set) var name: String
     public private(set) var path: Path
     public private(set) var nodeKey: Int = 0
-    public private(set) weak var parent: SourceNode?
+    public private(set) weak var parent: IDENode?
     public private(set) var isNewFile = false
     
     public init(name: String,path: Path)
@@ -114,7 +130,7 @@ public class SourceNode: NSObject,NSCoding,Comparable,Dependent
         
     public required init?(coder: NSCoder)
         {
-        self.parent = coder.decodeObject(forKey: "parent") as? SourceNode
+        self.parent = coder.decodeObject(forKey: "parent") as? IDENode
         self.name = coder.decodeObject(forKey: "name") as! String
         self.path = coder.decodePath(forKey: "path")!
         self.nodeKey = coder.decodeInteger(forKey: "nodeKey")
@@ -137,7 +153,7 @@ public class SourceNode: NSObject,NSCoding,Comparable,Dependent
         self.isNewFile = boolean
         }
         
-    public func setParent(_ parent: SourceNode)
+    public func setParent(_ parent: IDENode)
         {
         self.parent = parent
         }
@@ -164,12 +180,12 @@ public class SourceNode: NSObject,NSCoding,Comparable,Dependent
         fatalError("setSource called on SourceNode and should not be.")
         }
         
-    public func child(atIndex: Int) -> SourceNode?
+    public func child(atIndex: Int) -> IDENode?
         {
         return(nil)
         }
         
-    public func addNode( _ element: SourceNode)
+    public func addNode( _ element: IDENode)
         {
         }
         
@@ -182,6 +198,14 @@ public class SourceNode: NSObject,NSCoding,Comparable,Dependent
         }
         
     public func visit(visitor: Visitor)
+        {
+        }
+        
+    public func installEditor(in view: NSView)
+        {
+        }
+        
+    public func configureEditor(in controller: ProjectSourceViewController)
         {
         }
     }

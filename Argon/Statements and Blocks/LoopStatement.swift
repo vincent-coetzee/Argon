@@ -111,7 +111,6 @@ public class LoopStatement: Block
     
     public override func accept(visitor: Visitor)
         {
-        visitor.enter(loopStatement: self)
-        visitor.exit(loopStatement: self)
+        visitor.visit(loopStatement: self)
         }
     }

@@ -61,9 +61,8 @@ public class RepeatStatement: Block
         
     public override func accept(visitor: Visitor)
         {
-        visitor.enter(repeatStatement: self)
+        visitor.visit(repeatStatement: self)
         self.block.accept(visitor: visitor)
         self.expression.accept(visitor: visitor)
-        visitor.exit(repeatStatement: self)
         }
     }

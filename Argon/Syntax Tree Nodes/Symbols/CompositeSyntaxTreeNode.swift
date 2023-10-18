@@ -83,6 +83,11 @@ public class CompositeSyntaxTreeNode: Symbol
         
     public override func accept(visitor: Visitor)
         {
+        guard visitor.wasNotVisited(self) else
+            {
+            return
+            }
+        visitor.markAsVisited(self)
         for symbol in self.symbols
             {
             symbol.accept(visitor: visitor)

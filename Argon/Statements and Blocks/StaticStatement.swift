@@ -82,8 +82,7 @@ public class StaticStatement: Statement
         
     public override func accept(visitor: Visitor)
         {
-        visitor.enter(staticStatement: self)
+        visitor.visit(staticStatement: self)
         self.expression?.accept(visitor: visitor)
-        visitor.exit(staticStatement: self)
         }
     }

@@ -15,6 +15,7 @@ public class TypeSubstitutionSet
     
     private var typeVariables = Dictionary<String,TypeVariable>()
     private var bindings = Dictionary<Int,ArgonType>()
+    private var constraints = TypeConstraints()
     
     public func bindValue(_ value: ArgonType,to variable: TypeVariable)
         {
@@ -24,5 +25,11 @@ public class TypeSubstitutionSet
     public func setTypeVariable(_ typeVariable: TypeVariable,atName: String)
         {
         self.typeVariables[atName] = typeVariable
+        }
+        
+    public func addConstraint(issueReporter: IssueReporter,lhs: ArgonType,_ relationship: TypeConstraint.Relationship,rhs: ArgonType,origin: TypeConstraint.Origin)
+        {
+        let constraint = TypeConstraint(issueReporter: issueReporter, lhs: lhs, relationship, rhs: rhs, origin: origin)
+        self.constraints.append(constraint)
         }
     }

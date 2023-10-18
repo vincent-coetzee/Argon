@@ -45,7 +45,7 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
         
     public var styleElement: StyleElement
         {
-        .colorSymbol
+        .colorAtom
         }
     //
     //
@@ -150,7 +150,7 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
     public private(set) var container: Symbol?
     public var isSystemNode: Bool = false
     public private(set) var processingFlags = ProcessingFlags()
-    public var location: Location?
+    public var location: Location!
     
     init(name: String,index: Int)
         {
@@ -281,6 +281,16 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
         false
         }
         
+    public var diagnosticString: String
+        {
+        "\(Swift.type(of: self))(\(self.name))"
+        }
+        
+    public override var description: String
+        {
+        "\(Swift.type(of: self))(\(self.name))"
+        }
+        
     public var module: ModuleType
         {
         self.container!.module
@@ -288,6 +298,11 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
         
     public func accept(visitor: Visitor)
         {
+        guard visitor.wasNotVisited(self) else
+            {
+            return
+            }
+        visitor.markAsVisited(self)
         self.processingFlags.insert(visitor.processingFlag)
         }
 

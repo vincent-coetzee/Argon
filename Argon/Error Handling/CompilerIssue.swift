@@ -28,6 +28,7 @@ public enum IssueCode: String
     
     case discreteClassExpected                                      = "discrete class expected."
     case deformAlreadyDefined                                       = "'DEFORM' already defined."
+    case duplicateSlot                                              = "Duplicate slot, slot already defined in superclasses."
     
     case enumerationCaseExpected                                    = "enumeration case expected."
     

@@ -14,7 +14,7 @@ public class ArgonParser
     {
     private var tokens: Tokens = Tokens()
     private var lastIdentifierToken = Token(location: .zero)
-    private var tokenIndex = 0
+    public var tokenIndex = 0
     public private(set) var token: Token
     private var scopeStack = Stack<Scope>()
     public private(set) var currentScope: Scope
@@ -97,7 +97,7 @@ public class ArgonParser
         self.prefix(tokenType: .minus,precedence: Precedence.prefix)
         }
         
-    public func setModule(forNode node: SourceFileNode)
+    public func setModule(forNode node: IDESourceFileNode)
         {
         node.module = self.initialModule
         }
@@ -153,17 +153,30 @@ public class ArgonParser
         self.register(tokenType: tokenType,parser: BinaryOperatorParser(precedence: precedence, isRightAssociative: true))
         }
         
-    public func parse(sourceFileNode: SourceFileNode)
+    public func parse(sourceFileNode: IDESourceFileNode)
         {
         sourceFileNode.compilerIssues = CompilerIssues()
         self.scopeStack = Stack<Scope>()
         self.currentScope = self.rootModule
         self.tokens = sourceFileNode.tokens.filter{!$0.isCommentToken}
+        guard !tokens.isEmpty else
+            {
+            return
+            }
         self.tokenIndex = 0
         self.token = self.tokens[self.tokenIndex]
         self.parseInitialModule()
         sourceFileNode.compilerIssues = self.tokens.reduce(CompilerIssues()) { $0 + $1.issues }
         sourceFileNode.module = self.initialModule
+        }
+        
+    public func token(atIndex: Int) -> Token?
+        {
+        guard atIndex < self.tokens.count else
+            {
+            return(nil)
+            }
+        return(self.tokens[atIndex])
         }
         
     public func nextToken(atOffset offset: Int) -> Token

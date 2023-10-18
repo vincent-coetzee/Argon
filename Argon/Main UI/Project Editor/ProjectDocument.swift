@@ -9,7 +9,7 @@ import Cocoa
 
 class ProjectDocument: NSDocument
     {
-    private let projectModel = ValueHolder(value: SourceProjectNode(name: "Untitled",path: .homePath(withFileNamed: "Untitled.argonp")))
+    private let projectModel = ValueHolder(value: IDEProjectNode(name: "Untitled",path: .homePath(withFileNamed: "Untitled.argonp")))
     private let selectedNodeModel = ValueHolder(value: nil)
     
     override init()
@@ -33,7 +33,7 @@ class ProjectDocument: NSDocument
         
     override func fileWrapper(ofType typeName: String) throws -> FileWrapper
         {
-        guard let project = self.projectModel.value as? SourceProjectNode else
+        guard let project = self.projectModel.value as? IDEProjectNode else
             {
             fatalError()
             }
@@ -60,7 +60,7 @@ class ProjectDocument: NSDocument
             throw(CompilerError(code: .fileDataIsCorrupt, message: "The file at \(dataWrapper.filename!) is corrupt amd can not be read."))
             }
         unarchiver.requiresSecureCoding = false
-        guard let project = unarchiver.decodeObject(of: SourceProjectNode.self, forKey: NSKeyedArchiveRootObjectKey) else
+        guard let project = unarchiver.decodeObject(of: IDEProjectNode.self, forKey: NSKeyedArchiveRootObjectKey) else
             {
             throw(CompilerError(code: .fileDataIsCorrupt, message: "The project \(dataWrapper.filename!) is corrupt amd can not be read."))
             }
