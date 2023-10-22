@@ -9,9 +9,15 @@ import Foundation
 
 public class MakeExpression: Expression
     {
-    public override var symbolType: ArgonType
+    public override var symbolType: ArgonType!
         {
-        self.typeNode.baseType
+        get
+            {
+            self.typeNode.baseType
+            }
+        set
+            {
+            }
         }
         
     public let typeNode: ArgonType

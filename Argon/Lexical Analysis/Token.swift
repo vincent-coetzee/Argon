@@ -208,12 +208,12 @@ public class Token: NSObject,NSCoding
         
     public func setStyleElement(_ element: StyleElement)
         {
-        fatalError("This should not happen.")
+        self._styleElement = element
         }
         
     public var styleElement: StyleElement
         {
-        .colorText
+        self._styleElement ?? .colorText
         }
         
     public var isCommentToken: Bool
@@ -469,6 +469,7 @@ public class Token: NSObject,NSCoding
     public private(set) var location: Location = .zero
     public var matchString: String = ""
     public var issues = CompilerIssues()
+    internal var _styleElement: StyleElement?
     
     public required init(coder: NSCoder)
         {

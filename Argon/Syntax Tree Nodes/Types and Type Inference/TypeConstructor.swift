@@ -60,9 +60,15 @@ public class TypeConstructor: ArgonType
             }
         }
         
-    public override var symbolType: ArgonType
+    public override var symbolType: ArgonType!
         {
-        self.constructedType.constructedTypeType
+        get
+            {
+            self.constructedType.constructedTypeType
+            }
+        set
+            {
+            }
         }
         
     public override var styleElement: StyleElement
@@ -109,6 +115,19 @@ public class TypeConstructor: ArgonType
             newType.addGenericType(typeValue)
             }
         return(newType)
+        }
+        
+    public override var children: Symbols
+        {
+        switch(self.constructedType)
+            {
+            case .class(let someClass):
+                return([someClass])
+            case .enumeration(let someEnumeration):
+                return([someEnumeration])
+            case .tuple(let tuple):
+                return([tuple])
+            }
         }
     }
     

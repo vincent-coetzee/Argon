@@ -14,12 +14,12 @@ public class TypeSubstitutionSet
     public let index = Argon.nextIndex
     
     private var typeVariables = Dictionary<String,TypeVariable>()
-    private var bindings = Dictionary<Int,ArgonType>()
+    private var bindings = Dictionary<Identifier,ArgonType>()
     private var constraints = TypeConstraints()
     
     public func bindValue(_ value: ArgonType,to variable: TypeVariable)
         {
-        self.bindings[variable.index] = value
+        self.bindings[variable.identifier] = value
         }
         
     public func setTypeVariable(_ typeVariable: TypeVariable,atName: String)

@@ -69,7 +69,7 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
         false
         }
         
-    public var parentModules: Modules
+    public var parentModules: ModuleTypes
         {
         self.container!.parentModules
         }
@@ -139,35 +139,25 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
     // MUST ONLY be accessed through this pseudo-variable.
     //
     //
-    public var symbolType: ArgonType
-        {
-        fatalError("symbolType invoked on Symbol and it should have been overriden.")
-        }
-        
+    public var symbolType: ArgonType!
     public private(set) var references = NodeReferences()
     public private(set) var name: String
-    public private(set) var index: Int
+//    public private(set) var index: Int!
     public private(set) var container: Symbol?
     public var isSystemNode: Bool = false
     public private(set) var processingFlags = ProcessingFlags()
     public var location: Location!
     
-    init(name: String,index: Int)
+    init(name: String)
         {
         self.name = name
-        self.index = index
-        }
-    
-    public init(name: String)
-        {
-        self.name = name
-        self.index = Argon.nextIndex
         }
         
     public required init(coder: NSCoder)
         {
+        self.symbolType = coder.decodeObject(forKey: "symbolType") as? ArgonType
         self.name = coder.decodeObject(forKey: "name") as! String
-        self.index = coder.decodeInteger(forKey: "index")
+//        self.index = coder.decodeInteger(forKey: "index")
         self.container = coder.decodeObject(forKey: "parent") as? Symbol
         self.references = coder.decodeNodeReferences(forKey: "references")
         self.isSystemNode = coder.decodeBool(forKey: "isSystemNode")
@@ -187,8 +177,9 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
         
     public func encode(with coder: NSCoder)
         {
+        coder.encode(self.symbolType,forKey: "symbolType")
         coder.encode(self.name,forKey: "name")
-        coder.encode(self.index,forKey: "indeX")
+//        coder.encode(self.index,forKey: "indeX")
         coder.encode(self.container,forKey: "parent")
         coder.encode(self.references,forKey: "references")
         coder.encode(self.isSystemNode,forKey: "isSystemNode")
@@ -230,11 +221,11 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
         {
         self.container = node
         }
-        
-    public func setIndex(_ index: Int)
-        {
-        self.index = index
-        }
+//        
+//    public func setIndex(_ index: Int)
+//        {
+//        self.index = index
+//        }
         
     public func dump(indent: String)
         {
@@ -394,9 +385,15 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
         "\(Swift.type(of: self)): \(self.name)"
         }
         
-    public var astChildSymbols: Symbols
+    public var children: Symbols
         {
         []
+        }
+        
+    public func configure(nodeView: SymbolViewCell)
+        {
+        nodeView.leftPane.stringValue = "\(Swift.type(of: self))(\(self.name))"
+        nodeView.imageName = "IconNodeElement"
         }
     }
 

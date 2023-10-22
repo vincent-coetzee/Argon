@@ -9,6 +9,11 @@ import Foundation
 
 public class CompositeSyntaxTreeNode: Symbol
     {
+    public override var children: Symbols
+        {
+        self.symbols
+        }
+        
     internal var symbols = Symbols()
     
     init(name: String,parent: Symbol? = nil)

@@ -16,6 +16,10 @@ public class LetStatement: Statement
         let location = parser.token.location
         parser.nextToken()
         let expression = parser.parseExpression()
+        if !expression.isAssignmentExpression
+            {
+            parser.lodgeError(code: .assignmentExpressionExpected, location: location)
+            }
         let statement = LetStatement(expression: expression)
         block.addStatement(statement)
         if let lValue = expression.lValue,let rValue = expression.rValue
@@ -35,6 +39,10 @@ public class LetStatement: Statement
         let location = parser.token.location
         parser.nextToken()
         let expression = parser.parseExpression()
+        if !expression.isAssignmentExpression
+            {
+            parser.lodgeError(code: .assignmentExpressionExpected, location: location)
+            }
         let statement = LetStatement(expression: expression)
         statement.location = location
         parser.currentScope.addSymbol(statement)

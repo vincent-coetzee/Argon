@@ -22,7 +22,6 @@ public class IdentifierToken: Token
         }
         
     private let _identifier: Identifier
-    private var _styleElement: StyleElement?
     
     public override var styleElement: StyleElement
         {

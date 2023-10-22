@@ -286,7 +286,7 @@ public class ArgonScanner
             {
             self.nextCharacter()
             }
-        return([StringToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.startOffset + string.count),string: string)])
+        return([StringToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.startOffset + string.count + 2),string: string)])
         }
         
     private func scanNumber() -> Tokens

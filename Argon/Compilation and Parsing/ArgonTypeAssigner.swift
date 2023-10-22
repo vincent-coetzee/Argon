@@ -10,17 +10,17 @@ import Foundation
 public class ArgonTypeAssigner: Visitor, IssueReporter
     {
     internal var compilerIssues = CompilerIssues()
-    internal var visitedSymbols = Set<Int>()
+    internal var visitedSymbols = Set<Identifier>()
     internal var substitutionSet = TypeSubstitutionSet()
         
     public func wasNotVisited(_ symbol: Symbol) -> Bool
         {
-        !self.visitedSymbols.contains(symbol.index)
+        !self.visitedSymbols.contains(symbol.identifier)
         }
         
     public func markAsVisited(_ symbol: Symbol)
         {
-        self.visitedSymbols.insert(symbol.index)
+        self.visitedSymbols.insert(symbol.identifier)
         }
         
     public var processingFlag: ProcessingFlags
@@ -40,10 +40,6 @@ public class ArgonTypeAssigner: Visitor, IssueReporter
             return
             }
         self.markAsVisited(rootModule)
-        for symbol in rootModule.symbols
-            {
-            symbol.accept(visitor: self)
-            }
         self.substitutionSet.addConstraint(issueReporter: self,lhs: rootModule.symbolType,.equal,rhs: ModuleType(name: "Root"),origin: .symbol(rootModule))
         }
     

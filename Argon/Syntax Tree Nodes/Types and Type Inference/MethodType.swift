@@ -24,6 +24,7 @@ public class MethodType: InvokableType
     public override class func parse(using parser: ArgonParser)
         {
         let location = parser.token.location
+        parser.nextToken()
         let name = parser.parseIdentifier(errorCode: .identifierExpected).lastPart
         var parameters = Parameters()
         parser.parseParentheses
@@ -115,9 +116,10 @@ public class MethodType: InvokableType
         "MethodType \(self.name) \(self.signature.description)"
         }
         
-    public override var astChildSymbols: Symbols
+    public override func configure(nodeView: SymbolViewCell)
         {
-        []
+        nodeView.leftPane.stringValue = "\(Swift.type(of: self))(\(self.name))"
+        nodeView.imageName = "IconMethod"
         }
     }
 

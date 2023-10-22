@@ -356,7 +356,6 @@ public struct ArgonTests
         
     public static func testRootModule()
         {
-        let _ = ArgonModule()
         assert(RootModule.shared.lookupMethod(atName: "string").isNotNil,"There should be a string multimethod but there is not.")
         }
     }

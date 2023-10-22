@@ -34,7 +34,7 @@ public struct ArgonCompiler
         return(compiler)
         }
         
-    private var rootModule: RootModule
+    internal var rootModule: RootModule
     private var macroExpander: MacroExpander!
     private var sourceFileNodes: SourceFileNodes
     private var compilerIssues = CompilerIssues()
@@ -66,7 +66,7 @@ public struct ArgonCompiler
         
     public mutating func parse() // STEP 3
         {
-        let parser = ArgonParser(rootModule: RootModule.shared)
+        let parser = ArgonParser()
         for node in self.sourceFileNodes
             {
             parser.resetParser()
@@ -103,7 +103,8 @@ public struct ArgonCompiler
     public mutating func checkSemantics()
         {
         let checker = ArgonSemanticChecker()
-        checker.checkPrimaryModules(self.sourceFileNodes.map{$0.module!})
+        let modules = self.rootModule.subModules
+        checker.checkPrimaryModules(modules)
         self.rootModule.accept(visitor: checker)
         self.compilerIssues.append(contentsOf: checker.compilerIssues)
         }

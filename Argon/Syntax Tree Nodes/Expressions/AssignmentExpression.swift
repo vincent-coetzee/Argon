@@ -9,6 +9,16 @@ import Foundation
 
 public class AssignmentExpression: Expression
     {
+    public override var children: Symbols
+        {
+        [self.left,self.right]
+        }
+        
+    public override var isAssignmentExpression: Bool
+        {
+        true
+        }
+        
     public override var lValue: Expression?
         {
         self.left.lValue

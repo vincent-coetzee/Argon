@@ -11,7 +11,7 @@ public class ArgonSemanticChecker: Visitor
     {
     internal var compilerIssues = CompilerIssues()
     internal var hasMainMethod = false
-    internal var visitedSymbols = Set<Int>()
+    internal var visitedSymbols = Set<Identifier>()
     
     public var processingFlag: ProcessingFlags
         {
@@ -20,12 +20,12 @@ public class ArgonSemanticChecker: Visitor
         
     public func wasNotVisited(_ symbol: Symbol) -> Bool
         {
-        !self.visitedSymbols.contains(symbol.index)
+        !self.visitedSymbols.contains(symbol.identifier)
         }
         
     public func markAsVisited(_ symbol: Symbol)
         {
-        self.visitedSymbols.insert(symbol.index)
+        self.visitedSymbols.insert(symbol.identifier)
         }
         
     public func lodgeError(code: IssueCode,location: Location,message: String? = nil)
@@ -315,7 +315,7 @@ public class ArgonSemanticChecker: Visitor
         
         }
         
-    public func checkPrimaryModules(_ modules: Modules)
+    public func checkPrimaryModules(_ modules: ModuleTypes)
         {
         let uniqueModules = Array(Set<ModuleType>(modules))
         let mainMethodCount = uniqueModules.reduce(0) { $0 + ($1.hasMainMethod ? 1 : 0) }

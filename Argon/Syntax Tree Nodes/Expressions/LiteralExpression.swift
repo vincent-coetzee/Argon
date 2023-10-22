@@ -11,9 +11,15 @@ public class LiteralExpression: Expression
     {
     private var value: ValueBox = .none
     
-    public override var symbolType: ArgonType
+    public override var symbolType: ArgonType!
         {
-        self.value.symbolType
+        get
+            {
+            self.value.symbolType
+            }
+        set
+            {
+            }
         }
         
     public required init(coder: NSCoder)

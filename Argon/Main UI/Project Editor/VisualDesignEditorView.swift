@@ -33,7 +33,7 @@ public class VisualDesignEditorView: NSView,IDEEditorView
         false
         }
     
-    public func endEditing(node: IDENode?)
+    public func endEditing()
         {
         
         }

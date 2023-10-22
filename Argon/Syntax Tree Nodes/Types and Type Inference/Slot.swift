@@ -33,18 +33,6 @@ public class Slot: Symbol
         return(hasher.finalize())
         }
         
-    public override var symbolType: ArgonType
-        {
-        get
-            {
-            self._symbolType
-            }
-        set
-            {
-            self._symbolType = newValue
-            }
-        }
-        
     public var slotFlags = SlotFlags(rawValue: 0)
     
     public private(set) var initialExpression: Expression?

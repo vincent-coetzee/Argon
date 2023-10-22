@@ -277,7 +277,7 @@ public class ClassType: StructuredType
             {
             return
             }
-        let location = parser.token.location
+//        let location = parser.token.location
         parser.nextToken()
         var names = Identifiers()
         parser.parseParentheses
@@ -554,9 +554,15 @@ public class ClassType: StructuredType
         return(TypeConstructor(name: self.name,constructedType: .class(self)))
         }
         
-    public override var astChildSymbols: Symbols
+    public override var children: Symbols
         {
         self.slots
+        }
+        
+    public override func configure(nodeView: SymbolViewCell)
+        {
+        nodeView.leftPane.stringValue = "\(Swift.type(of: self))(\(self.name))"
+        nodeView.imageName = "IconClass"
         }
     }
 

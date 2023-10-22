@@ -44,6 +44,11 @@ public class Expression: Symbol
         nil
         }
         
+    public var isAssignmentExpression: Bool
+        {
+        false
+        }
+        
     public required init(coder: NSCoder)
         {
         super.init(coder: coder)
@@ -71,3 +76,20 @@ public class Expression: Symbol
     }
 
 public typealias Expressions = Array<Expression>
+
+extension Expressions
+    {
+    public init(_ expression: Expression)
+        {
+        self.init()
+        self.append(expression)
+        }
+        
+    public func accept(visitor: Visitor)
+        {
+        for expression in self
+            {
+            expression.accept(visitor: visitor)
+            }
+        }
+    }

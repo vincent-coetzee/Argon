@@ -105,7 +105,7 @@ public class StyleTheme
         {
         self.styles = [:]
         self.styles[.fontDefault] = NSFont(name: "SunSans-Demi",size: 12)!
-        self.styles[.fontOutliner] = self.styles[.fontDefault]
+        self.styles[.fontOutliner] = NSFont(name: "SunSans-Demi",size: 13)!
         self.styles[.fontToolbarText] = NSFont(name: "SunSans-Regular",size: 10)!
         self.styles[.fontText] = NSFont(name: "SunSans-Regular",size: 11)!
         self.styles[.fontEditor] = NSFont(name: "Menlo-Regular",size: 11)
@@ -163,7 +163,7 @@ public class StyleTheme
         
         self.styles[.colorOperator] = NSColor.argonFulvous
         self.styles[.colorOutlinerBackground] = NSColor.windowBackgroundColor
-        self.styles[.colorOutlinerText] = NSColor.argonWhite50
+        self.styles[.colorOutlinerText] = NSColor.argonWhite80
         
         self.styles[.colorProjectControls] = NSColor.argonWhite40
         

@@ -28,6 +28,16 @@ import Foundation
 
 public class ModuleType: StructuredType
     {
+    public override var children: Symbols
+        {
+        self.symbols
+        }
+        
+    public var subModules: ModuleTypes
+        {
+        self.symbols.compactMap{$0 as? ModuleType}
+        }
+        
     public var hasMainMethod: Bool
         {
         self.mainMethod.isNotNil
@@ -52,14 +62,20 @@ public class ModuleType: StructuredType
         true
         }
         
-    public override var symbolType: ArgonType
+    public override var symbolType: ArgonType!
         {
-        self
+        get
+            {
+            self
+            }
+        set
+            {
+            }
         }
         
-    public override var parentModules: Modules
+    public override var parentModules: ModuleTypes
         {
-        self.container?.parentModules.appending(self) ?? Modules()
+        self.container?.parentModules.appending(self) ?? ModuleTypes()
         }
         
     public class func parseModuleDependency(using parser: ArgonParser) -> ModuleNode?
@@ -152,8 +168,13 @@ public class ModuleType: StructuredType
                 }
             }
         }
-        
-    internal var symbols = Symbols()
+    //
+    // Instance variable declarations, they act as a
+    // separator between static methods above and
+    // regular methods below.
+    //
+    private var symbols = Symbols()
+    private var localIndex: Int = 1000
     
     public override func addSymbol(_ symbol: Symbol)
         {
@@ -172,6 +193,13 @@ public class ModuleType: StructuredType
             }
         self.symbols.append(symbol)
         symbol.setContainer(self)
+        }
+        
+    private func localIndexValue() -> Int
+        {
+        let number = self.localIndex
+        self.localIndex += 1
+        return(number)
         }
         
     public override func lookupSymbol(atName: String) -> Symbol?
@@ -248,6 +276,12 @@ public class ModuleType: StructuredType
             module.validateMethodUniqueness(semanticChecker: semanticChecker)
             }
         }
+        
+    public override func configure(nodeView: SymbolViewCell)
+        {
+        nodeView.leftPane.stringValue = "\(Swift.type(of: self))(\(self.name))"
+        nodeView.imageName = "IconModule"
+        }
     }
 
-public typealias Modules = Array<ModuleType>
+public typealias ModuleTypes = Array<ModuleType>

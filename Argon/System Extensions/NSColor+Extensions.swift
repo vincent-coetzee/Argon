@@ -201,6 +201,7 @@ extension NSColor
     
     public static let argonWhite95 = NSColor(hex: 0xF2F2F2)
     public static let argonWhite90 = NSColor(hex: 0xE5E5E5)
+    public static let argonWhite80 = NSColor(hex: 0xCFCFCF)
     public static let argonWhite70 = NSColor(hex: 0xB2B2B2)
     public static let argonWhite50 = NSColor(hex: 0x7F7F7F)
     public static let argonWhite40 = NSColor(hex: 0x5D5D5D)

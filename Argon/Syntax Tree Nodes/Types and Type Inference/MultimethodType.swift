@@ -47,6 +47,12 @@ public class MultimethodType: StructuredType
         coder.encode(self.methods,forKey: "methods")
         }
         
+    public override func configure(nodeView: SymbolViewCell)
+        {
+        nodeView.leftPane.stringValue = "\(Swift.type(of: self))(\(self.name))"
+        nodeView.imageName = "IconMethod"
+        }
+        
     public func addMethod(_ method: MethodType)
         {
         self.methods.append(method)
@@ -90,7 +96,7 @@ public class MultimethodType: StructuredType
         "MultimethodType \(self.name)"
         }
         
-    public override var astChildSymbols: Symbols
+    public override var children: Symbols
         {
         self.methods
         }

@@ -10,47 +10,6 @@ import Foundation
 public class ArgonModule: ModuleType
     {
     public private(set) static var shared: ArgonModule!
-    
-//    public static var classType: ArgonType { ArgonModule.shared.lookupType(atName: "Class")! }
-//    public static var voidType: ArgonType { ArgonModule.shared.lookupType(atName: "Void")!}
-//    public static var objectType: ArgonType { ArgonModule.shared.lookupType(atName: "Object")!}
-//    public static var stringType: ArgonType { ArgonModule.shared.lookupType(atName: "String")!}
-//    public static var floatType: ArgonType { ArgonModule.shared.lookupType(atName: "Float")!}
-//    public static var integerType: ArgonType { ArgonModule.shared.lookupType(atName: "Integer")!}
-//    public static var booleanType: ArgonType { ArgonModule.shared.lookupType(atName: "Boolean")!}
-//    public static var arrayType: ArgonType { ArgonModule.shared.lookupType(atName: "Array")!}
-//    public static var byteType: ArgonType { ArgonModule.shared.lookupType(atName: "Byte")!}
-//    public static var characterType: ArgonType { ArgonModule.shared.lookupType(atName: "Character")!}
-//    public static var atomType: ArgonType { ArgonModule.shared.lookupType(atName: "Atom")!}
-//    public static var uIntegerType: ArgonType { ArgonModule.shared.lookupType(atName: "UInteger")!}
-//    public static var tupleType: ArgonType { ArgonModule.shared.lookupType(atName: "TupleType")!}
-    
-//    private static func systemClass(named name: String,superclassesNamed: Array<String> = [],slots: Slots = Slots(),generics: ArgonTypes = ArgonTypes()) -> ClassType
-//        {
-//        guard let aClass = self.lookupSymbol(atName: name) else
-//            {
-//            let classes = superclassesNamed.map{self.lookupNode(atName: $0) as! ClassType}
-//            let aClass = ClassType(name: name,superclasses: classes)
-//            self._systemTypes[name] = aClass
-//            return(aClass)
-//            }
-//        return(aClass as! ClassType)
-//        }
-//        
-//    private static func systemAliasedType(named name: String,toTypeNamed typeName: String) -> AliasedType
-//        {
-//        guard let anAlias = self.lookupSymbol(atName: name) as? AliasedType else
-//            {
-//            guard let baseType = self.lookupSymbol(atName: typeName) else
-//                {
-//                fatalError()
-//                }
-//            let typeAlias = AliasedType(name: name,baseType: baseType)
-//            self._systemTypes[typeName] = typeAlias
-//            return(typeAlias)
-//            }
-//        return(anAlias)
-//        }
         
     public override var argonModule: ArgonModule
         {
@@ -83,7 +42,14 @@ public class ArgonModule: ModuleType
         super.init(name: name)
         self.setGenericTypes(genericTypes)
         }
-        
+    //
+    //
+    //
+    // Covenience methods for accessing system types from
+    // external to this module.
+    //
+    //
+    //
     public var errorType: ArgonType
         {
         Self._errorType
@@ -273,7 +239,19 @@ public class ArgonModule: ModuleType
         {
         return(self.lookupType(atName: "Module")!)
         }
-    
+        
+    //
+    //
+    //
+    // MARK: Standard Type Initialisation
+    //
+    // The standard system types are declared and loaded into
+    // the Argon module for use by the compiler and the developer's
+    // code. These types are used to provide access to basic state and
+    // functionality for the compiler.
+    //
+    //
+    //
     private func initializeSystemClasses()
         {
         let theObjectType = self.addSystemClass(named: "Object",superclassesNamed: [])
@@ -377,6 +355,17 @@ public class ArgonModule: ModuleType
 //            }
         }
         
+    //
+    // MARK: Placeholder and intrinsic methods for the ASL.
+    //
+    // Define placeholder methods for the thousands of system defined methods in the Argon Standard Library ( the ASL )
+    // Some of these are placeholders in that they provide an interface for the methods that are actually defined
+    // in the ASL others are marked as "intrinsic" methods whihc means the compiler inlines them and replaces them
+    // with machine code that is generated on the fly by the compiler. Intrinsic methods contain instructions on
+    // how the method must be compiler away.
+    //
+    //
+    //
     public func initializeSystemMethods()
         {
         self.addSystemOperator(notation: .infix,named: "+").parameter(.stringType).parameter(.stringType).returnType(.stringType)
@@ -535,16 +524,16 @@ public class ArgonModule: ModuleType
         self.addSystemMethod(named: "read").parameter("bufferFrom",.fileType).parameter("ofLength",.integerType).returnType(.bufferType)
         }
         
-    public func dumpMethods()
-        {
-        for symbol in self.symbols
-            {
-            if symbol.isMethod
-                {
-                print(symbol.description)
-                }
-            }
-        }
+//    public func dumpMethods()
+//        {
+//        for symbol in self.symbols
+//            {
+//            if symbol.isMethod
+//                {
+//                print(symbol.description)
+//                }
+//            }
+//        }
         
     @discardableResult
     private func addSubType(named name: String,baseType: ArgonType,minimum: ValueBox,maximum: ValueBox) -> ArgonType

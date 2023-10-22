@@ -376,7 +376,7 @@ class ProjectViewController: NSViewController,NSTextViewDelegate
 //        self.sourceView.addDependent(sourceNode)
         if sourceNode.isSourceFileNode
             {
-            let sourceFileNode = sourceNode as! IDESourceFileNode
+//            let sourceFileNode = sourceNode as! IDESourceFileNode
 //            self.sourceView.string = sourceFileNode.expandedSource
 //            self.sourceView.tokens = ArgonScanner(source: sourceFileNode.expandedSource).allTokens()
             }

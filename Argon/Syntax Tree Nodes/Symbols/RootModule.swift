@@ -79,9 +79,9 @@ public class RootModule: ModuleType
         self
         }
         
-    public override var parentModules: Modules
+    public override var parentModules: ModuleTypes
         {
-        Modules()
+        ModuleTypes()
         }
         
 //    @discardableResult
@@ -112,16 +112,6 @@ public class RootModule: ModuleType
         
     public override func accept(visitor: Visitor)
         {
-        guard visitor.wasNotVisited(self) else
-            {
-            return
-            }
-        visitor.markAsVisited(self)
-        visitor.enter(rootModule: self)
-        for symbol in self.symbols
-            {
-            symbol.accept(visitor: visitor)
-            }
-        visitor.exit(rootModule: self)
+        
         }
     }

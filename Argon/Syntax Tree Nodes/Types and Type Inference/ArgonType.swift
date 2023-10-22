@@ -209,9 +209,15 @@ public class ArgonType: Symbol
         false
         }
         
-    public override var symbolType: ArgonType
+    public override var symbolType: ArgonType!
         {
-        self
+        get
+            {
+            return(self)
+            }
+        set
+            {
+            }
         }
         
     public var typeHash: Int
@@ -249,10 +255,6 @@ public class ArgonType: Symbol
     
 //    public private(set) var instanceType: GenericInstanceType.Type?
     
-    public override init(name: String,index: Int)
-        {
-        super.init(name: name,index: index)
-        }
         
     public override init(name: String)
         {
@@ -268,10 +270,16 @@ public class ArgonType: Symbol
         {
         super.init(coder: coder)
         }
-        
+
     public override func encode(with coder: NSCoder)
         {
         super.encode(with: coder)
+        }
+        
+    public override func configure(nodeView: SymbolViewCell)
+        {
+        nodeView.leftPane.stringValue = "\(Swift.type(of: self))(\(self.name))"
+        nodeView.imageName = "IconType"
         }
         
     public static func <(lhs: ArgonType,rhs: ArgonType) -> Bool

@@ -38,7 +38,7 @@ public class TypeVariable: ArgonType
             }
         }
         
-    public override var symbolType: ArgonType
+    public override var symbolType: ArgonType!
         {
         get
             {

@@ -188,6 +188,12 @@ public class EnumerationType: StructuredType
         self.lookupSymbol(atName: atom) as? EnumerationCase
         }
         
+    public override func configure(nodeView: SymbolViewCell)
+        {
+        nodeView.leftPane.stringValue = "\(Swift.type(of: self))(\(self.name))"
+        nodeView.imageName = "IconEnumeration"
+        }
+        
     public override func dump(indent: String)
         {
         print("\(indent)Enumeration(\(self.name))")
@@ -248,7 +254,7 @@ public class EnumerationType: StructuredType
         return(someClass as! Self)
         }
         
-    public override var astChildSymbols: Symbols
+    public override var children: Symbols
         {
         self.cases
         }

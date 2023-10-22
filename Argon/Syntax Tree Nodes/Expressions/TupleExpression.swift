@@ -9,16 +9,23 @@ import Foundation
 
 public class TupleExpression: Expression
     {
-    public override var symbolType: ArgonType
+    public override var symbolType: ArgonType!
         {
-        guard let someType = self._symbolType else
+        get
             {
-            let tupleType = TupleType()
-            tupleType.setGenericTypes(self.expressions.map{$0.symbolType})
-            self._symbolType = tupleType
-            return(tupleType)
+            guard let someType = self._symbolType else
+                {
+                let tupleType = TupleType()
+                tupleType.setGenericTypes(self.expressions.map{$0.symbolType})
+                self._symbolType = tupleType
+                return(tupleType)
+                }
+            return(someType)
             }
-        return(someType)
+        set
+            {
+            fatalError()
+            }
         }
         
     private let expressions: Expressions

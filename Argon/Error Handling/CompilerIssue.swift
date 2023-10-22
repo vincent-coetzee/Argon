@@ -17,6 +17,7 @@ public enum IssueCode: String
     case assignExpected                                             = "'=' expected."
     case argumentNameExpected                                       = "argument name expected."
     case atomExpected                                               = "atom expected."
+    case assignmentExpressionExpected                               = "assignment expression expected."
     
     case constantMustBeInitialised                                  = "a constant must be initialised."
     case classNameExpected                                          = "class name expected."

@@ -25,9 +25,9 @@ public class ArgonParser
     private var infixParsers = Dictionary<TokenType,InfixParser>()
     private var issues = CompilerIssues()
     
-    init(rootModule: RootModule)
+    init()
         {
-        self.rootModule = rootModule
+        self.rootModule = RootModule.shared
         self.currentScope = self.rootModule
         self.token = EndToken(location: .zero)
         self.initParsers()

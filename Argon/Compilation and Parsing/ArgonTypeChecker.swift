@@ -17,18 +17,18 @@ public class ArgonTypeChecker: Visitor
         }
         
     internal var compilerIssues = CompilerIssues()
-    internal var visitedSymbols = Set<Int>()
+    internal var visitedSymbols = Set<Identifier>()
     internal var currentStep: Step!
 
         
     public func wasNotVisited(_ symbol: Symbol) -> Bool
         {
-        !self.visitedSymbols.contains(symbol.index)
+        !self.visitedSymbols.contains(symbol.identifier)
         }
         
     public func markAsVisited(_ symbol: Symbol)
         {
-        self.visitedSymbols.insert(symbol.index)
+        self.visitedSymbols.insert(symbol.identifier)
         }
         
     public var processingFlag: ProcessingFlags

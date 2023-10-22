@@ -38,7 +38,7 @@ public class TypeParameter: ArgonType
         self.scope!.name + "+" + self.name + "+VALUE"
         }
         
-    public override var symbolType: ArgonType
+    public override var symbolType: ArgonType!
         {
         get
             {
