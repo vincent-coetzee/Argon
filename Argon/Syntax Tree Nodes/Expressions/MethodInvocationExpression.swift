@@ -9,6 +9,11 @@ import Foundation
 
 public class MethodInvocationExpression: Expression
     {
+    public override var description: String
+        {
+        self.methodName.lastPart + "( )"
+        }
+        
     private var method: MultimethodType!
     private let methodName: Identifier
     private let arguments: Arguments

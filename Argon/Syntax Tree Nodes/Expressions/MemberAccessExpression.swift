@@ -9,6 +9,11 @@ import Foundation
 
 public class MemberAccessExpression: BinaryExpression
     {
+    public override var description: String
+        {
+        self.left.description + "->" + self.right.description
+        }
+        
     public override var lValue: Expression?
         {
         self.left.lValue

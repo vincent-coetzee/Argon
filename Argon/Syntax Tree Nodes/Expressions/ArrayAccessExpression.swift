@@ -9,6 +9,11 @@ import Foundation
 
 public class ArrayAccessExpression: BinaryExpression
     {
+    public override var description: String
+        {
+        self.left.description + "[\(self.right.description)]"
+        }
+        
     public var array: Expression
         {
         self.left

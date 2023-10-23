@@ -11,6 +11,11 @@ public class IdentifierExpression: Expression
     {
     public private(set) var identifierValue = ValueBox.none
     
+    public override var description: String
+        {
+        self._identifier.lastPart
+        }
+        
     public override var identifier: Identifier
         {
         self._identifier

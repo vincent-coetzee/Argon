@@ -9,6 +9,11 @@ import Foundation
 
 public class PostfixExpression: Expression
     {
+    public override var description: String
+        {
+        self.left.description + "\(self.operator)"
+        }
+        
     public let `operator`: TokenType
     public let left: Expression
     public var method: MultimethodType?

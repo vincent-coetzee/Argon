@@ -76,8 +76,6 @@ public enum ValueBox: Hashable
                 return(integer1 == integer2)
             case(.string(let integer1),.string(let integer2)):
                 return(integer1 == integer2)
-            case(.path(let integer1),.path(let integer2)):
-                return(integer1 == integer2)
             case(.boolean(let integer1),.boolean(let integer2)):
                 return(integer1 == integer2)
             case(.character(let integer1),.character(let integer2)):
@@ -117,12 +115,49 @@ public enum ValueBox: Hashable
             }
         }
     
+    public var description: String
+        {
+        switch(self)
+            {
+            case .none:
+                return("none")
+            case .integer(let anInteger):
+                return("\(anInteger)")
+            case .uInteger(let anInteger):
+                return("\(anInteger)")
+            case .string(let string):
+                return("'\(string)'")
+            case .boolean(let string):
+                return("\(string)")
+            case .void:
+                return("void")
+            case .character(let character):
+                return("\(character)")
+            case .byte(let byte):
+                return("\(byte)")
+            case .atom(let byte):
+                return("\(byte)")
+            case .float(let byte):
+                return("\(byte)")
+            case .method(let byte):
+                return("\(byte.name)")
+            case .class(let byte):
+                return("\(byte.name)")
+            case .enumeration(let byte):
+                return("\(byte.name)")
+            case .identifier(let byte):
+                return("\(byte.description)")
+            case .variable(let byte):
+                return("\(byte.name)")
+            default:
+                return("unhandled value type.")
+            }
+        }
+        
     case none
     case integer(Int64)
     case uInteger(UInt64)
     case string(String)
-    case path(String)
-//    case enumerationInstance(EnumerationType,EnumerationCase)
     case boolean(Bool)
     case void
     case character(UInt16)
@@ -206,9 +241,6 @@ public enum ValueBox: Hashable
             case(.string(let integer1)):
                 hasher.combine("STRING")
                 hasher.combine(integer1)
-            case(.path(let integer1)):
-                hasher.combine("PATH")
-                hasher.combine(integer1)
             case(.boolean(let integer1)):
                 hasher.combine("BOOLEAN")
                 hasher.combine(integer1)
@@ -281,9 +313,6 @@ extension NSCoder
             case(.text(let text)):
                 self.encode(2,forKey: "\(key)_index")
                 self.encode(text,forKey: "\(key)_text")
-            case(.path(let string)):
-                self.encode(3,forKey: "\(key)_index")
-                self.encode(string,forKey: "\(key)_path")
             case(.float(let float)):
                 self.encode(4,forKey: "\(key)_index")
                 self.encode(float,forKey: "\(key)_float")
@@ -368,8 +397,6 @@ extension NSCoder
                 return(.integer(self.decodeInt64(forKey: "\(key)_integer")))
             case(2):
                 return(.text(self.decodeObject(forKey: "\(key)_text") as! String))
-            case(3):
-                return(.path(self.decodeObject(forKey: "\(key)_path") as! String))
             case(4):
                 return(.float(self.decodeDouble(forKey: "\(key)_float")))
             case(5):

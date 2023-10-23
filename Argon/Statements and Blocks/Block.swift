@@ -110,6 +110,13 @@ public class Block: Statement
         return(false)
         }
         
+    public override var children: Symbols
+        {
+        var kids = self.symbols
+        kids.append(contentsOf: self.statements)
+        return(kids)
+        }
+        
     private var statements = Statements()
     private var symbols = Symbols()
 

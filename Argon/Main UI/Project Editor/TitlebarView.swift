@@ -29,6 +29,8 @@ public class TitlebarView: NSView
         super.init(frame: .zero)
         self.initPathControl()
         self.initIssueControl()
+        self.wantsLayer = true
+        self.layer?.backgroundColor = NSColor.argonNeonPink.cgColor
         }
         
     private func initPathControl()

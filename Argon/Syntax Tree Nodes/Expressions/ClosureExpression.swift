@@ -9,6 +9,11 @@ import Foundation
 
 public class ClosureExpression: Expression
     {
+    public override var description: String
+        {
+        "CLOSURE"
+        }
+        
     private let block: Block
     private let parameters: Parameters
     

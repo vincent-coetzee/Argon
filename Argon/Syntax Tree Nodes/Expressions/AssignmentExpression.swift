@@ -9,9 +9,9 @@ import Foundation
 
 public class AssignmentExpression: Expression
     {
-    public override var children: Symbols
+    public override var description: String
         {
-        [self.left,self.right]
+        self.left.description + "=" + self.right.description
         }
         
     public override var isAssignmentExpression: Bool

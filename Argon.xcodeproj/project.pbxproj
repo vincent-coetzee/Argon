@@ -194,7 +194,7 @@
 		BFE99B3B2A710AB30056E700 /* FunctionInvocationExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE99B3A2A710AB30056E700 /* FunctionInvocationExpression.swift */; };
 		BFE99B412A7117300056E700 /* IdentifierExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE99B402A7117300056E700 /* IdentifierExpression.swift */; };
 		BFE99B432A711A3B0056E700 /* PrefixExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE99B422A711A3B0056E700 /* PrefixExpression.swift */; };
-		BFEBF6B22AACD3FB00CF56EC /* SymbolExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEBF6B12AACD3FB00CF56EC /* SymbolExpression.swift */; };
+		BFEBF6B22AACD3FB00CF56EC /* AtomExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEBF6B12AACD3FB00CF56EC /* AtomExpression.swift */; };
 		BFEE2AE8298EF7960060EE74 /* TypeVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEE2AE7298EF7960060EE74 /* TypeVariable.swift */; };
 		BFEF43622ABC5E940016BD51 /* MethodType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEF43612ABC5E940016BD51 /* MethodType.swift */; };
 		BFEF43642ABC5F6B0016BD51 /* FunctionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEF43632ABC5F6B0016BD51 /* FunctionType.swift */; };
@@ -428,7 +428,7 @@
 		BFE99B3A2A710AB30056E700 /* FunctionInvocationExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionInvocationExpression.swift; sourceTree = "<group>"; };
 		BFE99B402A7117300056E700 /* IdentifierExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifierExpression.swift; sourceTree = "<group>"; };
 		BFE99B422A711A3B0056E700 /* PrefixExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefixExpression.swift; sourceTree = "<group>"; };
-		BFEBF6B12AACD3FB00CF56EC /* SymbolExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolExpression.swift; sourceTree = "<group>"; };
+		BFEBF6B12AACD3FB00CF56EC /* AtomExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomExpression.swift; sourceTree = "<group>"; };
 		BFEE2AE7298EF7960060EE74 /* TypeVariable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeVariable.swift; sourceTree = "<group>"; };
 		BFEF43612ABC5E940016BD51 /* MethodType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MethodType.swift; sourceTree = "<group>"; };
 		BFEF43632ABC5F6B0016BD51 /* FunctionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionType.swift; sourceTree = "<group>"; };
@@ -511,7 +511,7 @@
 				BF53D1322A72D8D400C2777D /* PostfixExpression.swift */,
 				BF53D13C2A72FDBB00C2777D /* Precedence.swift */,
 				BFE99B422A711A3B0056E700 /* PrefixExpression.swift */,
-				BFEBF6B12AACD3FB00CF56EC /* SymbolExpression.swift */,
+				BFEBF6B12AACD3FB00CF56EC /* AtomExpression.swift */,
 				BF53D1362A72DDA700C2777D /* TernaryExpression.swift */,
 				BF02380F2AB0566A001DE9F9 /* TupleExpression.swift */,
 			);
@@ -1143,7 +1143,7 @@
 				BF3676C92972DBFC00E1A5B9 /* Identifier.swift in Sources */,
 				BF54B9A829F5C7C600A755DC /* SelectionInListModel.swift in Sources */,
 				BFC4B6CA2A934A1C0098FBB1 /* TypeSubstitutionSet.swift in Sources */,
-				BFEBF6B22AACD3FB00CF56EC /* SymbolExpression.swift in Sources */,
+				BFEBF6B22AACD3FB00CF56EC /* AtomExpression.swift in Sources */,
 				BFAD2C2B2A75509000565B6B /* Parameter.swift in Sources */,
 				BFE99B372A710A690056E700 /* BinaryExpression.swift in Sources */,
 				BF9FB7B02A275D28008F8A75 /* Macro.swift in Sources */,

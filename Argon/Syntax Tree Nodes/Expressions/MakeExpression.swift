@@ -9,6 +9,11 @@ import Foundation
 
 public class MakeExpression: Expression
     {
+    public override var description: String
+        {
+        "MAKE(\(self.arguments[0].description))"
+        }
+        
     public override var symbolType: ArgonType!
         {
         get

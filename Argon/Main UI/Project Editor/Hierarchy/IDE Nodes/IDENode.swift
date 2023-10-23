@@ -145,7 +145,7 @@ public class IDENode: NSObject,NSCoding,Comparable,Dependent
         coder.encode(self.name,forKey: "name")
         coder.encode(self.path,forKey: "path")
         coder.encode(self.nodeKey,forKey: "nodeKey")
-        coder.encode(self.sourceItemState.rawValue)
+        coder.encode(self.sourceItemState.rawValue,forKey: "sourceItemState")
         }
     
     public func clearUnsavedChanges()

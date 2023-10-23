@@ -9,6 +9,11 @@ import Foundation
 
 public class PrefixExpression: Expression
     {
+    public override var description: String
+        {
+        "\(self.operator)" + self.right.description
+        }
+        
     public let `operator`: TokenType
     public let right: Expression
     public var method: MultimethodType?

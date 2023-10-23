@@ -9,6 +9,11 @@ import Foundation
 
 public class LiteralExpression: Expression
     {
+    public override var description: String
+        {
+        return(self.value.description)
+        }
+        
     private var value: ValueBox = .none
     
     public override var symbolType: ArgonType!

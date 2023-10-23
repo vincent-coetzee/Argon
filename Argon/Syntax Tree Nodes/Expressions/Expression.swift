@@ -9,6 +9,16 @@ import Foundation
 
 public class Expression: Symbol
     {
+    public override var children: Symbols
+        {
+        []
+        }
+        
+    public override var description: String
+        {
+        "expression"
+        }
+        
     public var isRValue: Bool
         {
         false
@@ -72,6 +82,12 @@ public class Expression: Symbol
     public override func accept(visitor: Visitor)
         {
         fatalError("This methods should have been overridden in a subclass")
+        }
+        
+    public override func configure(nodeView: SymbolViewCell)
+        {
+        nodeView.leftPane.stringValue = self.description
+        nodeView.imageName = "IconNodeElement"
         }
     }
 

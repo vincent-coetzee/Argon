@@ -121,6 +121,11 @@ public class MethodType: InvokableType
         nodeView.leftPane.stringValue = "\(Swift.type(of: self))(\(self.name))"
         nodeView.imageName = "IconMethod"
         }
+        
+    public override var children: Symbols
+        {
+        self.block.children
+        }
     }
 
 public typealias Methods = Array<MethodType>

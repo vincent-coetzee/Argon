@@ -9,9 +9,9 @@ import Foundation
 
 public class BinaryExpression: Expression
     {
-    public override var children: Symbols
+    public override var description: String
         {
-        [self.left,self.right]
+        self.left.description + "\(self.operator)" + self.right.description
         }
         
     public let left: Expression

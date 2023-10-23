@@ -110,7 +110,8 @@ internal class ProjectWindowController: NSWindowController,Dependent
     private func resizeLeftAccessoryView()
         {
         let windowWidth = self.window!.frame.size.width
-        self.leftSidebarController.setViewWidth(windowWidth - 80)
+        let size = CGSize(width: windowWidth - 80,height: 50)
+        self.leftSidebarController.setViewSize(size)
         }
         
     @objc public func onToggleLeftSidebar(_ sender: Any?)
