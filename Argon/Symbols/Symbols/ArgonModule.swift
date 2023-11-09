@@ -30,6 +30,7 @@ public class ArgonModule: ModuleType
         RootModule.initializeRootModule(argonModule: self)
         self.initializeSystemClasses()
         self.initializeSystemMethods()
+        self.initializeSystemMetaclasses()
         }
         
     public required init(coder: NSCoder)
@@ -212,12 +213,12 @@ public class ArgonModule: ModuleType
         
     public var primitiveType: ArgonType
         {
-        return(self.lookupType(atName: "PrimitiveType")!)
+        return(self.lookupType(atName: "Primitive")!)
         }
         
     public var tupleType: ArgonType
         {
-        return(self.lookupType(atName: "TupleType")!)
+        return(self.lookupType(atName: "Tuple")!)
         }
         
     public var numberType: ArgonType
@@ -255,19 +256,23 @@ public class ArgonModule: ModuleType
     private func initializeSystemClasses()
         {
         let theObjectType = self.addSystemClass(named: "Object",superclassesNamed: [])
-        self.addSystemClass(named: "Type",superclassesNamed: ["Object"])
-        self.addSystemClass(named: "Class",superclassesNamed: ["Type"])
-        self.addSystemClass(named: "Module",superclassesNamed: ["Type"])
+        theObjectType.classFlags.insert(.root)
+//        self.addSystemClass(named: "Type",superclassesNamed: ["Object"])
+        self.addSystemClass(named: "Class",superclassesNamed: ["Object"])
+        self.addSystemClass(named: "Tuple",superclassesNamed: ["Class"])
+        self.addSystemClass(named: "Module",superclassesNamed: ["Class"])
         self.addSystemClass(named: "Metaclass",superclassesNamed: ["Class"])
-        self.addSystemClass(named: "PrimitiveType",superclassesNamed: ["Type"])
-        self.addSystemClass(named: "InvokableType",superclassesNamed: ["Type"])
-        self.addSystemClass(named: "Function",superclassesNamed: ["InvokableType"])
-        self.addSystemClass(named: "Method",superclassesNamed: ["InvokableType"])
-        self.addSystemClass(named: "Multimethod",superclassesNamed: ["InvokableType"])
-        self.addSystemClass(named: "DiscreteType",superclassesNamed: ["Object"])
-        self.addSystemClass(named: "String",superclassesNamed: ["Object","DiscreteType"])
+        self.addSystemClass(named: "Primitive",superclassesNamed: ["Class"])
+        self.addSystemClass(named: "Invokable",superclassesNamed: ["Class"])
+        self.addSystemClass(named: "Function",superclassesNamed: ["Invokable"])
+        self.addSystemClass(named: "Method",superclassesNamed: ["Invokable"])
+        self.addSystemClass(named: "Multimethod",superclassesNamed: ["Invokable"])
+        self.addSystemClass(named: "Discrete",superclassesNamed: ["Object"])
+        self.addSystemClass(named: "String",superclassesNamed: ["Object","Discrete"])
         self.addSystemClass(named: "Atom",superclassesNamed: ["Object"])
         self.addSystemClass(named: "Boolean",superclassesNamed:["Object"])
+        self.addSystemClass(named: "True",superclassesNamed:["Boolean"])
+        self.addSystemClass(named: "False",superclassesNamed:["Boolean"])
         self.addPrimitiveType(named: "Void",superclassesNamed:["Type"])
         self.addSystemClass(named: "Stream",superclassesNamed: ["Object"])
         self.addSystemClass(named: "ReadStream",superclassesNamed: ["Stream"])
@@ -278,7 +283,7 @@ public class ArgonModule: ModuleType
         self.addSystemClass(named: "ReadWriteFile",superclassesNamed: ["ReadFile","WriteFile"])
         self.addSystemClass(named: "Magnitude",superclassesNamed:["Object"])
         self.addSystemClass(named: "Number",superclassesNamed:["Magnitude"])
-        self.addSystemClass(named: "FixedPointNumber",superclassesNamed:["Number","DiscreteType"])
+        self.addSystemClass(named: "FixedPointNumber",superclassesNamed:["Number","Discrete"])
         self.addSystemClass(named: "FloatingPointNumber",superclassesNamed:["Number"])
         self.addPrimitiveType(named: "Integer8",superclassesNamed:["FixedPointNumber"])
         self.addPrimitiveType(named: "Integer16",superclassesNamed:["FixedPointNumber"])
@@ -297,7 +302,7 @@ public class ArgonModule: ModuleType
         self.addSystemClass(named: "Slot",superclassesNamed: ["Object"]).slot("name",self.stringType)
         self.addSystemClass(named: "Constant",superclassesNamed: ["Slot"])
         self.addSystemClass(named: "EnumerationCase",superclassesNamed: ["Object"],genericTypes: [.newTypeVariable(named: "Base")]).slot("name",self.stringType)
-        self.addSystemClass(named: "Enumeration",superclassesNamed: ["Type"],genericTypes: [.newTypeVariable(named: "Base")])
+        self.addSystemClass(named: "Enumeration",superclassesNamed: ["Class"],genericTypes: [.newTypeVariable(named: "Base")])
         self.addSystemClass(named: "Collection",superclassesNamed: ["Object"],genericTypes: [.newTypeVariable(named: "Element")]).slot("count",self.integer64Type).slot("size",self.integer64Type)
         self.addSystemTypeConstructor(named: "Array",superclassesNamed: ["Collection"],typeParameters: "Element","Index")
         self.addSystemTypeConstructor(named: "Vector",superclassesNamed: ["Collection"],typeParameters: "Element","Index")
@@ -312,8 +317,8 @@ public class ArgonModule: ModuleType
         self.addSystemAliasedType(named: "Integer",toTypeNamed: "Integer64")
         self.addSystemAliasedType(named: "UInteger",toTypeNamed: "UInteger64")
         self.addSystemAliasedType(named: "Float",toTypeNamed: "Float64")
-        self.lookupType(atName: "Type")?.slot("name",.stringType).slot("bitWidth",.integerType).slot("strideBitWidth",.integerType)
-        theObjectType.slot("type",.typeType).slot("hasBits",.booleanType).slot("class",.classType).slot("hash",.integerType).slot("flipCount",.integerType).slot("sizeInBytes",.integerType)
+        self.lookupType(atName: "Class")?.slot("name",.stringType).slot("bitWidth",.integerType).slot("strideBitWidth",.integerType).intrinsicSlot("hasBits",.booleanType).slot("sizeInBytes",.integerType)
+        theObjectType.slot("class",.classType).slot("hash",.integerType).intrinsicSlot("flipCount",.integerType)
         //
         // Date and Time related types
         //
@@ -333,26 +338,11 @@ public class ArgonModule: ModuleType
         
     public func initializeSystemMetaclasses()
         {
-//        self.symbolTable?.forEach
-//            {
-//            symbol in
-//            if let aClass = symbol as? ClassType,aClass.symbolType.isNil
-//                {
-//                let metaclass = MetaclassType(name: aClass.name,superclasses: [
-//                metaclass.setType(self.metaclassType)
-//                aClass.setType(metaclass)
-//                }
-//            else if let enumeration = symbol as? EnumerationType,enumeration.symbolType.isNil
-//                {
-//                let metaclass = MetaclassType(class: self.enumerationType)
-//                metaclass.setType(self.metaclassType)
-//                enumeration.setType(metaclass)
-//                }
-//            else if let primitiveType = symbol as? PrimitiveType
-//                {
-//                let metaclass = Metaclass(name: symbol.name
-//                }
-//            }
+        for someClass in self.allClassTypes
+            {
+            someClass.symbolType = MetaclassType(forClass: someClass)
+            someClass.symbolType.symbolType = someClass
+            }
         }
         
     //

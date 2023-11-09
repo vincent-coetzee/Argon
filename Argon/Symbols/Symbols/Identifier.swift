@@ -132,6 +132,17 @@ public class Identifier: NSObject,NSCoding
                     return(string.polynomialRollingHash)
                 }
             }
+            
+        public var mangled: String
+            {
+            switch(self)
+                {
+                case .root:
+                    return("0_")
+                case .part(let string):
+                    return(string + "_")
+                }
+            }
         }
     
     public static func +(lhs: Identifier,rhs: String) -> Identifier
@@ -152,9 +163,14 @@ public class Identifier: NSObject,NSCoding
             }
         if self.parts.first!.isRoot
             {
-            return("//")
+            return("\\")
             }
         return(self.parts.first!.stringPart)
+        }
+        
+    public var mangled: String
+        {
+        self.parts.map{$0.mangled}.joined(separator: "")
         }
         
     public var isRooted: Bool

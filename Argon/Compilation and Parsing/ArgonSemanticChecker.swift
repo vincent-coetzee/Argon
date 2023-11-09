@@ -7,6 +7,14 @@
 
 import Foundation
 
+//
+//
+// Semantic Checks that need to be done
+//
+// 1. Check that subclasses don't contain slots with the same name and different types. Slots with the same name are allowed ( only one is actually created ) but their types must be the same.
+// 2. Check that names used in expressions for slots are correct, i.e. that the specified class has a slot with the given name
+//
+//
 public class ArgonSemanticChecker: Visitor
     {
     internal var compilerIssues = CompilerIssues()

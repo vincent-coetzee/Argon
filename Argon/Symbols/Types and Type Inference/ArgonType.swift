@@ -364,6 +364,12 @@ public class ArgonType: Symbol
 //        self.instanceType = instanceType
 //        }
         
+    @discardableResult
+    public func intrinsicSlot(_ name: String,_ type: ArgonType) -> ArgonType
+        {
+        fatalError("This should not be invoked on ArgonType.")
+        }
+        
     public func setGenericTypes(_ types: ArgonTypes)
         {
         fatalError("Should not be invoked on a TypeNode")

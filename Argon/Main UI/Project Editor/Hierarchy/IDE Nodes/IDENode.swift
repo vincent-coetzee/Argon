@@ -136,7 +136,7 @@ public class IDENode: NSObject,NSCoding,Comparable,Dependent
         self.name = coder.decodeObject(forKey: "name") as! String
         self.path = coder.decodePath(forKey: "path")!
         self.nodeKey = coder.decodeInteger(forKey: "nodeKey")
-        self.sourceItemState = IDESourceItemState(rawValue: UInt8(coder.decodeInteger(forKey: "sourceItemState")))
+        self.sourceItemState = IDESourceItemState(rawValue: coder.decodeInteger(forKey: "sourceItemState"))
         }
         
     public func encode(with coder: NSCoder)

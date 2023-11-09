@@ -21,6 +21,26 @@ import Foundation
 //
 public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
     {
+    //
+    //
+    // The symbolType is the primary indicator of the type of a symbol.
+    // This value is accessed via a layer of indirection to allow subclasses
+    // of Symbol to tailor what they return because some of the subclasses
+    // may act as proxies for other typws and the layer of indirection allows
+    // them to substitute something different for what they return. symbolType
+    // MUST ONLY be accessed through this pseudo-variable.
+    //
+    //
+    public var symbolType: ArgonType!
+    public private(set) var references = NodeReferences()
+    public private(set) var name: String
+//    public private(set) var index: Int!
+    public private(set) var container: Symbol?
+    public var isSystemNode: Bool = false
+    public private(set) var processingFlags = ProcessingFlags()
+    public var location: Location!
+    
+    
     public static func ==(lhs: Symbol,rhs: Symbol) -> Bool
         {
         lhs.container == rhs.container && lhs.name == rhs.name
@@ -129,25 +149,7 @@ public class Symbol: NSObject,NSCoding,Scope,Visitable,Comparable
         {
         self.identifier.description
         }
-    //
-    //
-    // The symbolType is the rpimary indicator of the type of a symbol.
-    // This value is accessed via a layer of indirection to allow subclasses
-    // of Symbol to tailor what they return because some of the subclasses
-    // may act as proxies for other typws and the layer of indirection allows
-    // them to substitute something different for what they return. symbolType
-    // MUST ONLY be accessed through this pseudo-variable.
-    //
-    //
-    public var symbolType: ArgonType!
-    public private(set) var references = NodeReferences()
-    public private(set) var name: String
-//    public private(set) var index: Int!
-    public private(set) var container: Symbol?
-    public var isSystemNode: Bool = false
-    public private(set) var processingFlags = ProcessingFlags()
-    public var location: Location!
-    
+
     init(name: String)
         {
         self.name = name

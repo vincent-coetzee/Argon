@@ -11,8 +11,8 @@ public class TypeConstraint
     {
     public enum Relationship
         {
-        case lessThan
-        case greaterThan
+        case subclassOf
+        case superclassOf
         case equal
         }
         
@@ -26,25 +26,23 @@ public class TypeConstraint
                     return(symbol.diagnosticString)
                 case .expression(let expression):
                     return(expression.diagnosticString)
-                case .block(let block):
-                    return(block.diagnosticString)
+                case .statement(let statement):
+                    return(statement.diagnosticString)
                 }
             }
             
         case symbol(Symbol)
         case expression(Expression)
-        case block(Block)
+        case statement(Statement)
         }
         
     public let lhs: ArgonType
     public let rhs: ArgonType
     public let relationship: Relationship
     private let origin: Origin
-    public let issueReporter: IssueReporter
     
-    public init(issueReporter: IssueReporter,lhs: ArgonType,_ relationship: Relationship,rhs: ArgonType,origin: Origin)
+    public init(lhs: ArgonType,_ relationship: Relationship,rhs: ArgonType,origin: Origin)
         {
-        self.issueReporter = issueReporter
         self.lhs = lhs
         self.relationship = relationship
         self.rhs = rhs
@@ -53,7 +51,6 @@ public class TypeConstraint
         
     public func lodgeError(code: IssueCode,message: String? = nil,location: Location)
         {
-        self.issueReporter.lodgeError(code: code, message: message, location: location)
         }
     }
 

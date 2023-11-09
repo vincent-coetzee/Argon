@@ -28,6 +28,21 @@ import Foundation
 
 public class ModuleType: StructuredType
     {
+    public var allChildren: Symbols
+        {
+        let modules = self.symbols.compactMap{$0 as? ModuleType}
+        var children = Symbols()
+        for someModule in modules
+            {
+            children.append(contentsOf: someModule.allChildren)
+            }
+        for element in self.symbols
+            {
+            children.append(element)
+            }
+        return(children)
+        }
+        
     public override var children: Symbols
         {
         self.symbols
@@ -50,6 +65,11 @@ public class ModuleType: StructuredType
             return(method)
             }
         return(nil)
+        }
+        
+    public var allClassTypes: ClassTypes
+        {
+        self.allChildren.compactMap{$0 as? ClassType}
         }
         
     public override var module: ModuleType

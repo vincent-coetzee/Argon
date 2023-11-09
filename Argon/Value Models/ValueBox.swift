@@ -177,6 +177,7 @@ public enum ValueBox: Hashable
     case dateTime(Argon.DateTime)
     case text(String)
     case tuple(Argon.Tuple)
+    case array(Array<ValueBox>)
     
     public var isAtom: Bool
         {
@@ -294,6 +295,8 @@ public enum ValueBox: Hashable
                 hasher.combine(integer1)
             case(.tuple(let tuple)):
                 hasher.combine(tuple)
+            case(.array(let array)):
+                hasher.combine(array)
             }
         }
     }
@@ -383,6 +386,15 @@ extension NSCoder
             case(.tuple(let tuple)):
                 self.encode(23,forKey: "\(key)_index")
                 self.encode(tuple,forKey: "\(key)_tuple")
+            case(.array(let array)):
+                self.encode(24,forKey: "\(key)_index")
+                self.encode(array.count,forKey: "\(key)_count")
+                var index = 0
+                for valueBox in array
+                    {
+                    self.encode(valueBox,forKey: "\(key)_element_\(index)")
+                    index += 1
+                    }
             }
         }
 
@@ -452,6 +464,13 @@ extension NSCoder
                 return(.function(self.decodeObject(forKey: "\(key)_function") as! FunctionType))
             case(23):
                 return(.tuple(self.decodeTuple(forKey: "\(key)_tuple")))
+            case(24):
+                var array = Array<ValueBox>()
+                for index in 0..<self.decodeInteger(forKey: "\(key)_count")
+                    {
+                    array.append(self.decodeValueBox(forKey: "\(key)_element_\(index)"))
+                    }
+                return(.array(array))
             default:
                 fatalError()
             }

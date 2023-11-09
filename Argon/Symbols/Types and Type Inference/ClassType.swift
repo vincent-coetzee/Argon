@@ -25,6 +25,11 @@ public struct ClassFlags: OptionSet
     
 public class ClassType: StructuredType
     {
+    public var classFlags = ClassFlags(rawValue: 0)
+    private var poolVariables = Dictionary<String,Variable>()
+    private var symbols = SymbolDictionary()
+    private var superclasses = ArgonTypes()
+    
     public override var styleElement: StyleElement
         {
         .colorClass
@@ -33,6 +38,11 @@ public class ClassType: StructuredType
     public override var isMakeable: Bool
         {
         true
+        }
+        
+    public var isRoot: Bool
+        {
+        self.classFlags.contains(.root)
         }
         
     public var isAbstract: Bool
@@ -49,11 +59,7 @@ public class ClassType: StructuredType
         {
         self.slots.map{ $0.symbolType }
         }
-        
-    public var classFlags = ClassFlags(rawValue: 0)
-    private var poolVariables = Dictionary<String,Variable>()
-    private var symbols = SymbolDictionary()
-    private var superclasses = ArgonTypes()
+
     
     public init(name: String,slots: Slots = [],superclasses: ClassTypes = [],genericTypes: ArgonTypes = ArgonTypes())
         {
@@ -107,6 +113,15 @@ public class ClassType: StructuredType
     public override func slot(_ name: String,_ type: ArgonType) -> ArgonType
         {
         let slot = Slot(name: name,type: type)
+        self.symbols[slot.name] = slot
+        slot.setContainer(self)
+        return(self)
+        }
+        
+    @discardableResult
+    public override func intrinsicSlot(_ name: String,_ type: ArgonType) -> ArgonType
+        {
+        let slot = IntrinsicSlot(name: name,type: type)
         self.symbols[slot.name] = slot
         slot.setContainer(self)
         return(self)
@@ -191,6 +206,8 @@ public class ClassType: StructuredType
             self.parseSection(in: scope,using: parser)
             }
         scope.setSlots(slots)
+        scope.symbolType = MetaclassType(forClass: scope)
+        scope.symbolType.symbolType = scope
         }
     //
     //

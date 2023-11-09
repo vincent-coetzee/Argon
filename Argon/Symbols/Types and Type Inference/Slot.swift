@@ -24,6 +24,13 @@ public struct SlotFlags: OptionSet
     
 public class Slot: Symbol
     {
+    public var value: ValueBox = .none
+    
+    public var isIntrinsicSlot: Bool
+        {
+        false
+        }
+        
     public override var hash: Int
         {
         var hasher = Hasher()
@@ -53,6 +60,7 @@ public class Slot: Symbol
         self.readBlock = coder.decodeObject(forKey: "readBlock") as? Block
         self.writeBlock = coder.decodeObject(forKey: "writeBlock") as? Block
         self._symbolType = coder.decodeObject(forKey: "_symbolType") as! ArgonType
+        self.value = coder.decodeValueBox(forKey: "value")
         super.init(coder: coder)
         }
         
@@ -63,6 +71,7 @@ public class Slot: Symbol
         coder.encode(self.initialExpression,forKey: "initialExpression")
         coder.encode(self.readBlock,forKey: "readBlock")
         coder.encode(self.writeBlock,forKey: "writeBlock")
+        coder.encode(self.value,forKey: "value")
         super.encode(with: coder)
         }
         
@@ -101,3 +110,12 @@ public class Slot: Symbol
     }
 
 public typealias Slots = Array<Slot>
+
+public class IntrinsicSlot: Slot
+    {
+    public override var isIntrinsicSlot: Bool
+        {
+        true
+        }
+    }
+

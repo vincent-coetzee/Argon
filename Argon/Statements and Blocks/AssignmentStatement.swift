@@ -65,10 +65,20 @@ public class AssignmentStatement: Statement
         self.left.accept(visitor: visitor)
         self.right.accept(visitor: visitor)
         }
+    
+    public override var description: String
+        {
+        self.left.description + "=" + self.right.description
+        }
     }
 
 public class AssignmentExpressionStatement: Statement
     {
+    public override var description: String
+        {
+        self.expression.description
+        }
+        
     private let expression: Expression
     
     public init(expression: Expression)

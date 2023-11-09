@@ -27,9 +27,9 @@ public class TypeSubstitutionSet
         self.typeVariables[atName] = typeVariable
         }
         
-    public func addConstraint(issueReporter: IssueReporter,lhs: ArgonType,_ relationship: TypeConstraint.Relationship,rhs: ArgonType,origin: TypeConstraint.Origin)
+    public func addConstraint(lhs: ArgonType,_ relationship: TypeConstraint.Relationship,rhs: ArgonType,origin: TypeConstraint.Origin)
         {
-        let constraint = TypeConstraint(issueReporter: issueReporter, lhs: lhs, relationship, rhs: rhs, origin: origin)
+        let constraint = TypeConstraint(lhs: lhs, relationship, rhs: rhs, origin: origin)
         self.constraints.append(constraint)
         }
     }

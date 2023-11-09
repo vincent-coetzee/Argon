@@ -46,7 +46,8 @@ public class Block: Statement
         switch(parser.token.tokenType)
             {
             case(.identifier):
-                AssignmentStatement.parse(into: block,using: parser)
+                let expression = parser.parseExpression()
+                block.addStatement(ExpressionStatement(expression: expression))
             case(.WHILE):
                 WhileStatement.parse(into: block,using: parser)
             case(.TIMES):

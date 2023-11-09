@@ -47,6 +47,7 @@
 		BF1F4B002A557CBB00C1F977 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF1F4AFF2A557CBB00C1F977 /* Constant.swift */; };
 		BF1F4B032A5616B000C1F977 /* StructuredType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF1F4B022A5616B000C1F977 /* StructuredType.swift */; };
 		BF1F4DE32AE598A20078EB69 /* SymbolViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF1F4DE22AE598A20078EB69 /* SymbolViewCell.swift */; };
+		BF20BCB62AED7A99008B3833 /* ExpressionStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF20BCB52AED7A99008B3833 /* ExpressionStatement.swift */; };
 		BF2281CF2AAA1EB200417FCD /* Unicode.Scalar+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2281CE2AAA1EB200417FCD /* Unicode.Scalar+Extensions.swift */; };
 		BF2393FD29EB25980011B4C8 /* Path in Frameworks */ = {isa = PBXBuildFile; productRef = BF2393FC29EB25980011B4C8 /* Path */; };
 		BF2423DA2A7948C100C5D4E4 /* ForkStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2423D92A7948C100C5D4E4 /* ForkStatement.swift */; };
@@ -277,6 +278,7 @@
 		BF1F4AFF2A557CBB00C1F977 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		BF1F4B022A5616B000C1F977 /* StructuredType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StructuredType.swift; sourceTree = "<group>"; };
 		BF1F4DE22AE598A20078EB69 /* SymbolViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolViewCell.swift; sourceTree = "<group>"; };
+		BF20BCB52AED7A99008B3833 /* ExpressionStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressionStatement.swift; sourceTree = "<group>"; };
 		BF2281CE2AAA1EB200417FCD /* Unicode.Scalar+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Unicode.Scalar+Extensions.swift"; sourceTree = "<group>"; };
 		BF2423D92A7948C100C5D4E4 /* ForkStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForkStatement.swift; sourceTree = "<group>"; };
 		BF2423DB2A798AC000C5D4E4 /* ClosureExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosureExpression.swift; sourceTree = "<group>"; };
@@ -537,6 +539,7 @@
 				BFBA84952A8E81F0009D488A /* StaticStatement.swift */,
 				BF1F4AEF2A55499400C1F977 /* TimesStatement.swift */,
 				BF1F4AF32A5549B100C1F977 /* WhileStatement.swift */,
+				BF20BCB52AED7A99008B3833 /* ExpressionStatement.swift */,
 			);
 			path = "Statements and Blocks";
 			sourceTree = "<group>";
@@ -806,7 +809,7 @@
 				BFD87E962954A34200298094 /* Plumbing */,
 				BF3B430529A14FAD009C269F /* Resources */,
 				BF1F4AEA2A5548B700C1F977 /* Statements and Blocks */,
-				BFCA9340296F431B0049B39A /* Syntax Tree Nodes */,
+				BFCA9340296F431B0049B39A /* Symbols */,
 				BF6B052A2962096D0097C9A9 /* System Extensions */,
 				BF54B99929F5C7AD00A755DC /* Value Models */,
 			);
@@ -848,14 +851,14 @@
 			path = "Compilation and Parsing";
 			sourceTree = "<group>";
 		};
-		BFCA9340296F431B0049B39A /* Syntax Tree Nodes */ = {
+		BFCA9340296F431B0049B39A /* Symbols */ = {
 			isa = PBXGroup;
 			children = (
 				BF1F4AE62A553C5200C1F977 /* Expressions */,
 				BF27FCFA2A7681EE000C78F1 /* Symbols */,
 				BF1F4B012A56121500C1F977 /* Types and Type Inference */,
 			);
-			path = "Syntax Tree Nodes";
+			path = Symbols;
 			sourceTree = "<group>";
 		};
 		BFD87E962954A34200298094 /* Plumbing */ = {
@@ -1104,6 +1107,7 @@
 				BFAD0C162A8001AD00FB45B9 /* MethodSignature.swift in Sources */,
 				BFA9DA94292D5BF900C6859D /* Token.swift in Sources */,
 				BF3DBC6A2AB845A9009612B8 /* NSRulerMarker+Extensions.swift in Sources */,
+				BF20BCB62AED7A99008B3833 /* ExpressionStatement.swift in Sources */,
 				BFAB87722A8671B30048B20E /* ToggleState.swift in Sources */,
 				BF53D1392A72DEE700C2777D /* AssignmentExpression.swift in Sources */,
 				BF0D320F2A642EC4002A2D8D /* ModuleNode.swift in Sources */,

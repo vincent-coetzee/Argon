@@ -11,7 +11,7 @@ public class ArgonTypeAssigner: Visitor, IssueReporter
     {
     internal var compilerIssues = CompilerIssues()
     internal var visitedSymbols = Set<Identifier>()
-    internal var substitutionSet = TypeSubstitutionSet()
+    internal var typeConstraints = Array<TypeConstraint>()
         
     public func wasNotVisited(_ symbol: Symbol) -> Bool
         {
@@ -28,6 +28,11 @@ public class ArgonTypeAssigner: Visitor, IssueReporter
         .typesChecked
         }
         
+    private func addConstraint(lhs: ArgonType,_ relationship: TypeConstraint.Relationship,rhs: ArgonType,origin: TypeConstraint.Origin)
+        {
+        self.typeConstraints.append(TypeConstraint(lhs: lhs,relationship,rhs: rhs,origin: origin))
+        }
+        
     public func assignTypes(to rootModule: RootModule)
         {
         rootModule.accept(visitor: self)
@@ -40,7 +45,7 @@ public class ArgonTypeAssigner: Visitor, IssueReporter
             return
             }
         self.markAsVisited(rootModule)
-        self.substitutionSet.addConstraint(issueReporter: self,lhs: rootModule.symbolType,.equal,rhs: ModuleType(name: "Root"),origin: .symbol(rootModule))
+        self.addConstraint(lhs: rootModule.symbolType,.equal,rhs: ModuleType(name: "Root"),origin: .symbol(rootModule))
         }
     
     public func appendIssue(_ issue: CompilerIssue)

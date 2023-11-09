@@ -13,9 +13,9 @@ public struct IDESourceItemState: OptionSet
     public static let kAdded = IDESourceItemState(rawValue: 1 << 1)
     public static let kModified = IDESourceItemState(rawValue: 1 << 2)
     
-    public var rawValue: UInt8
+    public var rawValue: Int
     
-    public init(rawValue: UInt8)
+    public init(rawValue: Int)
         {
         self.rawValue = rawValue
         }

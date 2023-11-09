@@ -55,6 +55,7 @@ public class MultimethodType: StructuredType
         
     public func addMethod(_ method: MethodType)
         {
+        method.setContainer(self)
         self.methods.append(method)
         }
         
