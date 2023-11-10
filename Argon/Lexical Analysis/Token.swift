@@ -118,6 +118,7 @@ public enum TokenType: Int
     case none
     case notAssign
     case notEquals
+    case null
     
     case `operator`
     case OTHERWISE
@@ -142,6 +143,7 @@ public enum TokenType: Int
     case RETURN
     
     case SELECT
+    case `self`
     case SECTION
     case separator
     case semicolon
@@ -155,6 +157,7 @@ public enum TokenType: Int
     case shiftLeftAssign
     case shiftRightAssign
     case STATIC
+    case `super`
     
     case text
     case ternary

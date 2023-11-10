@@ -226,7 +226,7 @@ public class ArgonScanner
             {
             self.nextCharacter()
             }
-        return([CalendricalToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.startOffset + string.count),string: string)])
+        return([CalendricalToken(location: Location(nodeKey: 0, line: self.sourceLine, start: self.startOffset, stop: self.startOffset + string.count + 3),string: string)])
         }
         
     private func scanBracket() -> Tokens
