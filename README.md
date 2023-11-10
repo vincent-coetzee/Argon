@@ -40,6 +40,7 @@ MODULE Entities
        {
        READ SLOT entityType = EntityType->none
        READWRITE SLOT registrationDate = @(1900,01,01)
+       READWRITE SLOT wasTouched = FALSE
        }
        
     CLASS Individual :: Entity
@@ -66,11 +67,13 @@ MODULE Entities
     METHOD print(-entity::Entity)
       {
       print("ENTITY \\entity->entityType")
+      entity->entityType = #entity
       }
 
     METHOD print(-individual::Individual)
       {
       print("INDIVIDUAL \\individual->entityType")
+      individual->wasTouched = TRUE
       }
 
     METHOD print(entityType::EntityType)
