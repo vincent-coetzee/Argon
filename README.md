@@ -14,7 +14,7 @@ define just state not behaviour.
 
 Sample Argon Module
 
-`MODULE Entities
+``` MODULE Entities
     {
     ABSTRACT CLASS Named :: Object
       {
@@ -71,4 +71,5 @@ Sample Argon Module
       {
       print("INDIVIDUAL \\individual->entityType")
       }
-    }`
+    }
+```
