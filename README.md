@@ -9,5 +9,5 @@ Argon is an object oriented programming language which does things in a slightly
 resembles Dylan in how it functions. Argon allows for multiple inheritance of state ONLY. "ONLY" means that behavior is not attached 
 to classes as in most OO languages, instead, Argon offers multimethods where the methods selected for execution depend entirely on
 the types of parameters being passed to the method. The compiler chooses the method that is most specific for the types of the parameters. 
-Given this functionality it is not necessary for methods to be attached to classes, classes and their instances, in this situation 
+Given this functionality it is not necessary for methods to be attached to classes. Classes and their instances, in this language 
 define just state not behaviour.
