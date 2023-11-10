@@ -10,6 +10,12 @@ import Path
 
 public class IDESourceFileNode: IDENode
     {
+    public var source: String
+    public var expandedSource: String
+    private var _compilerIssues = CompilerIssues()
+    public var module: ModuleType!
+    private var _hasUnsavedChanges = false
+    
     public override var nodeType: IDENodeType
         {
         .fileNode
@@ -57,14 +63,7 @@ public class IDESourceFileNode: IDENode
         {
         (self.title,FileWrapper(regularFileWithContents: self.source.data(using: .utf8)!))
         }
-        
-    public private(set) var source: String
-    public var expandedSource: String
-    private var _compilerIssues = CompilerIssues()
-    public var tokens = Tokens()
-    public var module: ModuleType!
-    private var _hasUnsavedChanges = false
-    
+
     public init(name: String,path: Path,source: String = "")
         {
         self.source = source
@@ -76,7 +75,6 @@ public class IDESourceFileNode: IDENode
         {
         self.source = coder.decodeObject(forKey: "source") as! String
         self.expandedSource = coder.decodeObject(forKey: "expandedSource") as! String
-        self.tokens = coder.decodeObject(forKey: "tokens") as! Tokens
         self._compilerIssues = coder.decodeObject(forKey: "compilerIssues") as! CompilerIssues
         self.module = coder.decodeObject(forKey: "module") as? ModuleType
         super.init(coder: coder)
@@ -87,7 +85,6 @@ public class IDESourceFileNode: IDENode
         {
         coder.encode(self.source,forKey: "source")
         coder.encode(self.expandedSource,forKey: "expandedSource")
-        coder.encode(self.tokens,forKey: "tokens")
         coder.encode(self._compilerIssues,forKey: "compilerIssues")
         coder.encode(self.module,forKey: "module")
         super.encode(with: coder)
@@ -117,11 +114,11 @@ public class IDESourceFileNode: IDENode
         self._hasUnsavedChanges = true
         }
         
-    public override func setTokens(_ tokens: Tokens)
-        {
-        self.tokens = tokens
-        self._hasUnsavedChanges = true
-        }
+//    public override func setTokens(_ tokens: Tokens)
+//        {
+//        self.tokens = tokens
+//        self._hasUnsavedChanges = true
+//        }
         
     public func append(compilerIssues issues: CompilerIssues)
         {

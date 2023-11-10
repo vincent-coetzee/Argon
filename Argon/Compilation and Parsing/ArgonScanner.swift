@@ -9,12 +9,7 @@ import Foundation
 
 public class ArgonScanner
     {
-    public var atEnd: Bool
-        {
-        self.offset >= self.sourceCharacterCount
-        }
-
-    private let source:String
+    private var source:String
     private var offset = 0
     private var startOffset = 0
     private var sourceCharacterCount: Int
@@ -43,6 +38,19 @@ public class ArgonScanner
         self.sourceIndex = self.source.startIndex
         self.sourceCharacterCount = self.source.count
         self.nextCharacter()
+        }
+
+    public func resetScanner(source: String)
+        {
+        self.source = source
+        self.sourceIndex = self.source.startIndex
+        self.sourceCharacterCount = self.source.count
+        self.nextCharacter()
+        }
+        
+    public var atEnd: Bool
+        {
+        self.offset >= self.sourceCharacterCount
         }
 
     public func sourcePrefix(length: Int) -> String

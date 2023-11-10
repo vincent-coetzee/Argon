@@ -9,78 +9,73 @@ import Foundation
 
 public struct ArgonCompiler
     {
+    internal var rootModule: RootModule
+    private var macroExpander: MacroExpander!
+    private var sourceFileNodes: SourceFileNodes
+    private var sourceRecords = Strings()
+    private var compilerIssues = CompilerIssues()
+    
     public var compilerIssueCount: Int
         {
         self.compilerIssues.count
         }
-        
-    public static func parse(nodes: SourceFileNodes)
-        {
-        var compiler = Self.init(nodes: nodes)
-        compiler.initialize()
-        compiler.scan()
-        compiler.parse()
-        }
-        
+
     public static func build(nodes: SourceFileNodes) -> ArgonCompiler
         {
         var compiler = Self.init(nodes: nodes)
         compiler.initialize()
-        compiler.scan()
         compiler.parse()
         compiler.checkSemantics()
         compiler.checkTypes()
         compiler.emitCode()
         return(compiler)
         }
-        
-    internal var rootModule: RootModule
-    private var macroExpander: MacroExpander!
-    private var sourceFileNodes: SourceFileNodes
-    private var compilerIssues = CompilerIssues()
-//    private var abstractSyntaxTree: SyntaxTreeNode?
-//    private var wereIssues = false
     
     public init(nodes: SourceFileNodes)
         {
+        self.sourceRecords = nodes.map{$0.source}
         self.sourceFileNodes = nodes
         RootModule.reset()
         self.rootModule = RootModule.shared
         }
         
-    public mutating func initialize() // STEP 1
+    //
+    // STEP 1 in the compilation process
+    //
+    public mutating func initialize()
         {
-//        self.wereIssues = false
-//        self.abstractSyntaxTree = nil
         self.macroExpander = MacroExpander()
-        self.macroExpander.processMacros(in: self.sourceFileNodes)
-        }
-        
-    public func scan() // STEP 2
-        {
-        for node in self.sourceFileNodes
+        for record in self.sourceRecords
             {
-            node.tokens = ArgonScanner(source: node.expandedSource).allTokens()
+            macroExpander.extractMacros(from: record)
             }
+        var newSource = Strings()
+        for record in self.sourceRecords
+            {
+            newSource.append(self.macroExpander.expandMacros(in: record))
+            }
+        self.sourceRecords = newSource
         }
-        
-    public mutating func parse() // STEP 3
+    //
+    // STEP 2 in the compilation process
+    //
+    public mutating func parse() // STEP 2
         {
         let parser = ArgonParser()
-        for node in self.sourceFileNodes
+        let scanner = ArgonScanner(source: "")
+        var index = 0
+        for record in self.sourceRecords
             {
             parser.resetParser()
+            scanner.resetScanner(source: record)
+            let node = self.sourceFileNodes[index]
             node.compilerIssues = CompilerIssues()
             parser.nodeKey = node.nodeKey
-            parser.parse(sourceFileNode: node)
-            node.compilerIssues = parser.compilerIssues(forNodeKey: node.nodeKey)
-            parser.setModule(forNode: node)
-            if node.compilerIssues.count != parser.allCompilerIssues().count
+            if let issues = parser.parse(tokens: scanner.allTokens())
                 {
-                print("halt")
+                node.compilerIssues = issues
+                self.compilerIssues.append(contentsOf: issues)
                 }
-//            self.wereIssues = node.compilerIssues.count > 0 || self.wereIssues
-            self.compilerIssues.append(contentsOf: node.compilerIssues)
             }
         }
         

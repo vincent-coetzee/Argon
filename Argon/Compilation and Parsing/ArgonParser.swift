@@ -153,21 +153,19 @@ public class ArgonParser
         self.register(tokenType: tokenType,parser: BinaryOperatorParser(precedence: precedence, isRightAssociative: true))
         }
         
-    public func parse(sourceFileNode: IDESourceFileNode)
+    public func parse(tokens: Tokens) -> CompilerIssues?
         {
-        sourceFileNode.compilerIssues = CompilerIssues()
         self.scopeStack = Stack<Scope>()
         self.currentScope = self.rootModule
-        self.tokens = sourceFileNode.tokens.filter{!$0.isCommentToken}
+        self.tokens = tokens.filter{!$0.isCommentToken}
         guard !tokens.isEmpty else
             {
-            return
+            return(nil)
             }
         self.tokenIndex = 0
         self.token = self.tokens[self.tokenIndex]
         self.parseInitialModule()
-        sourceFileNode.compilerIssues = self.tokens.reduce(CompilerIssues()) { $0 + $1.issues }
-        sourceFileNode.module = self.initialModule
+        return(self.issues)
         }
         
     public func token(atIndex: Int) -> Token?
@@ -281,11 +279,11 @@ public class ArgonParser
         let name = self.token.identifier.lastPart
         if let someModule = RootModule.shared.lookupSymbol(atName: name) as? ModuleType
             {
-            initialModule = someModule
+            self.initialModule = someModule
             }
         else
             {
-            initialModule = ModuleType(name: name)
+            self.initialModule = ModuleType(name: name)
             self.currentScope.addSymbol(initialModule)
             }
         self.nextToken()
@@ -639,14 +637,14 @@ public class ArgonParser
                 AssignmentExpression.parse(using: self)
             case(.STATIC):
                 StaticStatement.parse(using: self)
-            case(.METHOD):
-                MethodType.parse(using: self)
-            case(.FUNCTION):
-                FunctionType.parse(using: self)
-            case(.CLASS):
-                ClassType.parse(using: self)
-            case(.ENUMERATION):
-                EnumerationType.parse(using: self)
+//            case(.METHOD):
+//                MethodType.parse(using: self)
+//            case(.FUNCTION):
+//                FunctionType.parse(using: self)
+//            case(.CLASS):
+//                ClassType.parse(using: self)
+//            case(.ENUMERATION):
+//                EnumerationType.parse(using: self)
             case(.LET):
                 LetStatement.parse(using: self)
             case(.SELECT):

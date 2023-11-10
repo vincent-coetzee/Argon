@@ -7,7 +7,6 @@
 
 import AppKit
 
-
 class SourceView: NSTextView
     {
     public var matchBrackets: Bool = true
@@ -114,7 +113,6 @@ class SourceView: NSTextView
         {
         if let sourceNode = self.editedNode
             {
-            sourceNode.tokens = self._tokens
             sourceNode.setSource(self.string)
             sourceNode.compilerIssues = self._compilerIssues
             }
@@ -322,6 +320,7 @@ class SourceView: NSTextView
         
     private func refresh()
         {
+        self.editedNode.source = self.string
         self.textStorage?.beginEditing()
         let sourceTheme = StyleTheme.shared
         let font = sourceTheme.font(for: .fontEditor)
@@ -401,6 +400,11 @@ class SourceView: NSTextView
             let newEvent = NSEvent.keyEvent(with: event.type, location: event.locationInWindow, modifierFlags: event.modifierFlags, timestamp: event.timestamp, windowNumber: event.windowNumber, context: nil, characters: newCharacters, charactersIgnoringModifiers: event.charactersIgnoringModifiers!, isARepeat: event.isARepeat, keyCode: event.keyCode)
             self.interpretKeyEvents([newEvent!])
             }
+        else if event.modifierFlags == .command && event.characters == "d"
+            {
+            self.deleteCurrentLine()
+            return
+            }
         else
             {
             self.interpretKeyEvents([event])
@@ -423,6 +427,30 @@ class SourceView: NSTextView
                 }
             }
         self.editorDelegate?.editorView(self.superview as! SourceCodeEditingView, changed: .location(line + 1, location - offset))
+        }
+        
+    private func deleteCurrentLine()
+        {
+        let range = self.selectedRange
+        var startIndex = range.location
+        while startIndex > 0 && self.string.character(at: startIndex) != "\n"
+            {
+            startIndex -= 1
+            }
+        if self.string.character(at: startIndex) == "\n"
+            {
+            startIndex += 1
+            }
+        var endIndex = range.location
+        while startIndex < self.string.count && self.string.character(at: startIndex) != "\n"
+            {
+            endIndex += 1
+            }
+        if self.string.character(at: endIndex) == "\n"
+            {
+            endIndex -= 1
+            }
+        self.delete(NSRange(location: startIndex, length: endIndex - startIndex))
         }
         
     public override func mouseDown(with event: NSEvent)

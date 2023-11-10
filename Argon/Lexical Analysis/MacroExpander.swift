@@ -46,28 +46,10 @@ public class MacroExpander
             }
         return(source)
         }
-        
-    public func processMacros(in node: IDESourceFileNode)
-        {
-        self.extractMacros(from: node)
-        node.expandedSource = self.expandMacros(in: node.source)
-        }
-        
-    public func processMacros(in nodes: SourceFileNodes)
-        {
-        for node in nodes
-            {
-            self.extractMacros(from: node)
-            }
-        for node in nodes
-            {
-            node.expandedSource = self.expandMacros(in: node.source)
-            }
-        }
                 
-    private func extractMacros(from node: IDESourceFileNode)
+    public func extractMacros(from someSource: String)
         {
-        var source = node.source
+        var source = someSource
         var range = source.range(of: "MACRO")
         while range.isNotNil
             {

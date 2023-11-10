@@ -11,7 +11,7 @@ public class ProjectSourceViewController: NSViewController,Dependent
     {
     public  let dependentKey = DependentSet.nextDependentKey
     public  var editorView: IDEEditorView?
-    
+        
     public  var projectModel: ValueHolder!
         {
         didSet

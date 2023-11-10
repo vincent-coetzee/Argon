@@ -624,11 +624,6 @@ extension ProjectViewController
         {
         }
         
-    @IBAction public func onParseClicked(_ sender: Any?)
-        {
-        ArgonCompiler.parse(nodes: self._project.allSourceFiles)
-        }
-        
     @IBAction public func onRunClicked(_ sender: Any?)
         {
         }
