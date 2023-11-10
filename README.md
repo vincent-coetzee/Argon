@@ -72,5 +72,10 @@ MODULE Entities
       {
       print("INDIVIDUAL \\individual->entityType")
       }
+
+    METHOD print(entityType::EntityType)
+        {
+        print("ENTITY-TYPE \\entityType")
+        }
     }
 ```
