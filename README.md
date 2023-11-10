@@ -12,7 +12,7 @@ the types of parameters being passed to the method. The compiler chooses the met
 Given this functionality it is not necessary for methods to be attached to classes. Classes and their instances, in this language 
 define just state not behaviour.
 
-![Sample Module](https://github.com/vincent-coetzee/Argon/SampleModule.png "Sample Module")
+![Sample Module](https://github.com/vincent-coetzee/Argon/Images/SampleModule.png "Sample Module")
 
 Sample Argon Module
 
