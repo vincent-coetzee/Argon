@@ -14,7 +14,7 @@ define just state not behaviour.
 
 Sample Argon Module
 
-``` Argon
+```argon
 MODULE Entities
     {
     ABSTRACT CLASS Named :: Object
