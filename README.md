@@ -12,7 +12,9 @@ the types of parameters being passed to the method. The compiler chooses the met
 Given this functionality it is not necessary for methods to be attached to classes. Classes and their instances, in this language 
 define just state not behaviour.
 
-![Sample Module](https://github.com/vincent-coetzee/Argon/SampleModule.png "Sample Module")
+A sample Argon Module is shown below ( modules form the basis of composition for methods, classes and enumerations ).
+
+![Sample Module](https://github.com/vincent-coetzee/Argon/blob/main/Images/SampleModule.png "Sample Module")
 
 Sample Argon Module
 
