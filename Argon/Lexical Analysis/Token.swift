@@ -12,6 +12,7 @@ public typealias Tokens = Array<Token>
 
 public enum TokenType: Int
     {
+    case ABSTRACT
     case andAssign
     case andAndAssign
     case assign
@@ -136,6 +137,7 @@ public enum TokenType: Int
     case rightBrocket
     case rightParenthesis
     case READ
+    case READWRITE
     case REPEAT
     case RETURN
     

@@ -7,9 +7,9 @@
 
 import Foundation
 
-fileprivate let _Keywords = ["CLASS","CONSTANT","DEFORM","DYNAMIC","ELSE","ENTRY","ENUMERATION","EXIT",
+fileprivate let _Keywords = ["ABSTRACT","CLASS","CONSTANT","DEFORM","DYNAMIC","ELSE","ENTRY","ENUMERATION","EXIT",
                             "FALSE","FOR","FROM","FREE","FORM","FUNCTION","IF","IN","HANDLE","IMPORT",
-                            "IS","KEY","LET","LOOP","MAKE","METHOD","MODULE","OTHERWISE","POOL","READ","REPEAT",
+                            "IS","KEY","LET","LOOP","MAKE","METHOD","MODULE","OTHERWISE","POOL","READ","READWRITE","REPEAT",
                             "RETURN","SECTION","SELECT","SLOT","SIGNAL","THEN","TIMES","TRUE","TYPE","USES",
                             "VIRTUAL","WHEN","WHILE","WITH","WRAPPER","WRITE"]
                             
@@ -136,6 +136,8 @@ public class KeywordToken: Token
         {
         switch(self.matchString)
             {
+            case "ABSTRACT":
+                return(.ABSTRACT)
             case "STATIC":
                 return(.STATIC)
             case "ENTRY":
@@ -190,6 +192,8 @@ public class KeywordToken: Token
                 return(.POOL)
             case "READ":
                 return(.READ)
+            case "READWRITE":
+                return(.READWRITE)
             case "REPEAT":
                 return(.REPEAT)
             case "RETURN":

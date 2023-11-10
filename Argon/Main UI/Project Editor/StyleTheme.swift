@@ -148,7 +148,8 @@ public class StyleTheme
         self.styles[.colorIssueText] = NSColor.black
         self.styles[.colorInvocation] = NSColor.argonWhite90
         
-        self.styles[.colorKeyword] = NSColor(red: 63,green: 149,blue: 116)
+//        self.styles[.colorKeyword] = NSColor(red: 63,green: 149,blue: 116)
+        self.styles[.colorKeyword] = NSColor.argonNeonPink
         
         self.styles[.colorLowlight] = NSColor.argonWhite50
         self.styles[.colorLine] = NSColor.argonWhite50
