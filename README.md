@@ -11,3 +11,64 @@ to classes as in most OO languages, instead, Argon offers multimethods where the
 the types of parameters being passed to the method. The compiler chooses the method that is most specific for the types of the parameters. 
 Given this functionality it is not necessary for methods to be attached to classes. Classes and their instances, in this language 
 define just state not behaviour.
+
+Sample Argon Module
+
+` MODULE Entities
+    {
+    ABSTRACT CLASS Named :: Object
+      {
+      SLOT name :: String = ""
+      }
+
+    ABSTRACT CLASS Registered :: Object
+      {
+      SLOT registrationNumber :: String = ""
+      }
+
+    ENUMERATION EntityType
+        {
+        #abstract
+        #none
+        #entity
+        #individual
+        #corporate
+        }
+        
+    CLASS Entity :: Named,Registered
+       {
+       READ SLOT entityType = EntityType->none
+       READWRITE SLOT registrationDate = @(1900,01,01)
+       }
+       
+    CLASS Individual :: Entity
+      {
+      READ SLOT firstName = ""
+      WRITE SLOT lastName = ""
+      WRAPPER SLOT dateOfBirth 
+        { 
+        SELF->registrationDate 
+        } 
+      VIRTUAL SLOT age :: Integer
+        {
+        READ
+          {
+          @(TODAY) - SELF->dateOfBirth
+          }
+        WRITE(newValue)
+          {
+          SELF->dateOfBirth = @(TODAY) - newValue
+          }
+        }
+      }
+
+    METHOD print(-entity::Entity)
+      {
+      print("ENTITY \\entity->entityType")
+      }
+
+    METHOD print(-individual::Individual)
+      {
+      print("INDIVIDUAL \\individual->entityType")
+      }
+    }`
