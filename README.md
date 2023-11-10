@@ -35,7 +35,9 @@ MODULE Entities
         #individual
         #corporate
         }
-        
+
+    TYPE GroupType IS EntityType
+
     CLASS Entity :: Named,Registered
        {
        READ SLOT entityType = EntityType->none
