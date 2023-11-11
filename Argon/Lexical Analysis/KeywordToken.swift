@@ -9,7 +9,7 @@ import Foundation
 
 fileprivate let _Keywords = ["ABSTRACT","CLASS","CONSTANT","DEFORM","DYNAMIC","ELSE","ENTRY","ENUMERATION","EXIT",
                             "FALSE","FOR","FROM","FREE","FORM","FUNCTION","IF","IN","HANDLE","IMPORT",
-                            "IS","KEY","LET","LOOP","MAKE","METHOD","MODULE","null","OTHERWISE","POOL","READ","READWRITE","REPEAT",
+                            "IS","KEY","LET","LOOP","MAKE","METHOD","MODULE","null","OTHERWISE","POOL","READ","REPEAT",
                             "RETURN","SECTION","SELECT","self","SLOT","SIGNAL","super","THEN","TIMES","TRUE","TYPE","USES",
                             "VIRTUAL","WHEN","WHILE","WITH","WRAPPER","WRITE"]
                             
@@ -23,6 +23,11 @@ public class KeywordToken: Token
     public override var styleElement: StyleElement
         {
         .colorKeyword
+        }
+        
+    public override var isType: Bool
+        {
+        self.matchString == "TYPE"
         }
         
     public override var isWhen: Bool
@@ -85,19 +90,14 @@ public class KeywordToken: Token
         self.matchString == "WHILE"
         }
         
-    public override var isForm: Bool
-        {
-        self.matchString == "FORM"
-        }
-        
-    public override var isDeform: Bool
-        {
-        self.matchString == "DEFORM"
-        }
-        
     public override var isDefault: Bool
         {
         self.matchString == "DEFAULT"
+        }
+        
+    public override var isAbstract: Bool
+        {
+        self.matchString == "ABSTRACT"
         }
         
     public override var isVirtual: Bool
@@ -194,8 +194,6 @@ public class KeywordToken: Token
                 return(.POOL)
             case "READ":
                 return(.READ)
-            case "READWRITE":
-                return(.READWRITE)
             case "REPEAT":
                 return(.REPEAT)
             case "RETURN":
@@ -281,6 +279,8 @@ public class KeywordToken: Token
         {
         switch(self.matchString)
             {
+            case "null":
+                return(.null)
             case "FALSE":
                 return(.boolean(false))
             case "TRUE":

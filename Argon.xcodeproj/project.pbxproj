@@ -15,6 +15,7 @@
 		BF0D320D2A6406EF002A2D8D /* InvocationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0D320C2A6406EF002A2D8D /* InvocationType.swift */; };
 		BF0D320F2A642EC4002A2D8D /* ModuleNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0D320E2A642EC4002A2D8D /* ModuleNode.swift */; };
 		BF0D32112A649D89002A2D8D /* ValueBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0D32102A649D89002A2D8D /* ValueBox.swift */; };
+		BF0E39CB2AFFC6FE007B3270 /* PseudoVariableExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0E39CA2AFFC6FE007B3270 /* PseudoVariableExpression.swift */; };
 		BF0E84E02A5D4EA8003BCC49 /* Weather.argon in Resources */ = {isa = PBXBuildFile; fileRef = BF0E84DF2A5D4EA8003BCC49 /* Weather.argon */; };
 		BF0E84E42A5D612E003BCC49 /* Path+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0E84E32A5D612E003BCC49 /* Path+Extensions.swift */; };
 		BF12316D2ADAD2D000DE5750 /* ProjectEditorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF12316C2ADAD2D000DE5750 /* ProjectEditorState.swift */; };
@@ -246,6 +247,7 @@
 		BF0D320C2A6406EF002A2D8D /* InvocationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvocationType.swift; sourceTree = "<group>"; };
 		BF0D320E2A642EC4002A2D8D /* ModuleNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleNode.swift; sourceTree = "<group>"; };
 		BF0D32102A649D89002A2D8D /* ValueBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueBox.swift; sourceTree = "<group>"; };
+		BF0E39CA2AFFC6FE007B3270 /* PseudoVariableExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PseudoVariableExpression.swift; sourceTree = "<group>"; };
 		BF0E84DF2A5D4EA8003BCC49 /* Weather.argon */ = {isa = PBXFileReference; lastKnownFileType = text; path = Weather.argon; sourceTree = "<group>"; };
 		BF0E84E32A5D612E003BCC49 /* Path+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Path+Extensions.swift"; sourceTree = "<group>"; };
 		BF12316C2ADAD2D000DE5750 /* ProjectEditorState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectEditorState.swift; sourceTree = "<group>"; };
@@ -500,6 +502,7 @@
 				BF53D13A2A72DFAF00C2777D /* Argument.swift */,
 				BFAD2C2C2A75986A00565B6B /* ArrayAccessExpression.swift */,
 				BF53D1382A72DEE700C2777D /* AssignmentExpression.swift */,
+				BFEBF6B12AACD3FB00CF56EC /* AtomExpression.swift */,
 				BFE99B362A710A690056E700 /* BinaryExpression.swift */,
 				BF2423DB2A798AC000C5D4E4 /* ClosureExpression.swift */,
 				BF3349242A7064040050F904 /* Expression Parsers.swift */,
@@ -513,7 +516,7 @@
 				BF53D1322A72D8D400C2777D /* PostfixExpression.swift */,
 				BF53D13C2A72FDBB00C2777D /* Precedence.swift */,
 				BFE99B422A711A3B0056E700 /* PrefixExpression.swift */,
-				BFEBF6B12AACD3FB00CF56EC /* AtomExpression.swift */,
+				BF0E39CA2AFFC6FE007B3270 /* PseudoVariableExpression.swift */,
 				BF53D1362A72DDA700C2777D /* TernaryExpression.swift */,
 				BF02380F2AB0566A001DE9F9 /* TupleExpression.swift */,
 			);
@@ -1047,6 +1050,7 @@
 				BF789A7C2AB634160022ED48 /* ProjectHierarchyViewController.swift in Sources */,
 				BFE731AB2AC8355D0081A042 /* Character+Extensions.swift in Sources */,
 				BF1F4B032A5616B000C1F977 /* StructuredType.swift in Sources */,
+				BF0E39CB2AFFC6FE007B3270 /* PseudoVariableExpression.swift in Sources */,
 				BFD87E982954A3D200298094 /* CompilerIssue.swift in Sources */,
 				BF6B052E296209F20097C9A9 /* Optional+Extensions.swift in Sources */,
 				BF19C1E12AA39BC6005DE1A8 /* MessageLayer.swift in Sources */,

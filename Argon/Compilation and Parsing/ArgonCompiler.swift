@@ -7,6 +7,11 @@
 
 import Foundation
 
+//
+//
+// TODO: FIX MACROS
+//
+//
 public struct ArgonCompiler
     {
     internal var rootModule: RootModule
@@ -44,17 +49,17 @@ public struct ArgonCompiler
     //
     public mutating func initialize()
         {
-        self.macroExpander = MacroExpander()
-        for record in self.sourceRecords
-            {
-            macroExpander.extractMacros(from: record)
-            }
-        var newSource = Strings()
-        for record in self.sourceRecords
-            {
-            newSource.append(self.macroExpander.expandMacros(in: record))
-            }
-        self.sourceRecords = newSource
+//        self.macroExpander = MacroExpander()
+//        for record in self.sourceRecords
+//            {
+//            macroExpander.extractMacros(from: record)
+//            }
+//        var newSource = Strings()
+//        for record in self.sourceRecords
+//            {
+//            newSource.append(self.macroExpander.expandMacros(in: record))
+//            }
+//        self.sourceRecords = newSource
         }
     //
     // STEP 2 in the compilation process

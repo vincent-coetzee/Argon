@@ -155,6 +155,7 @@ public enum ValueBox: Hashable
         }
         
     case none
+    case null
     case integer(Int64)
     case uInteger(UInt64)
     case string(String)
@@ -297,6 +298,8 @@ public enum ValueBox: Hashable
                 hasher.combine(tuple)
             case(.array(let array)):
                 hasher.combine(array)
+            case(.null):
+                hasher.combine(0)
             }
         }
     }
@@ -395,6 +398,8 @@ extension NSCoder
                     self.encode(valueBox,forKey: "\(key)_element_\(index)")
                     index += 1
                     }
+            case(.null):
+                self.encode(25,forKey: "\(key)_index")
             }
         }
 
@@ -471,6 +476,8 @@ extension NSCoder
                     array.append(self.decodeValueBox(forKey: "\(key)_element_\(index)"))
                     }
                 return(.array(array))
+            case(25):
+                return(.null)
             default:
                 fatalError()
             }

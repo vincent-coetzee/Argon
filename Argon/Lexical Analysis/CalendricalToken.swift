@@ -28,81 +28,17 @@ public class CalendricalToken: Token
 
     public var isTime: Bool
         {
-        let scanner = Scanner(string: self.matchString)
-//        let day = scanner.scanInt()
-        let delimeter = scanner.scanCharacter()
-        if delimeter == ":"
-            {
-            return(true)
-            }
-        return(false)
+        return(Argon.timeRegex.firstMatch(in: self.matchString, range: NSRange(location: 0,length: self.matchString.count)).isNotNil)
         }
         
     public var isDate: Bool
         {
-        let scanner = Scanner(string: self.matchString)
-//        let day = scanner.scanInt()
-        let delimeter = scanner.scanCharacter()
-        if delimeter == "/"
-            {
-            return(true)
-            }
-        return(false)
+        return(Argon.dateRegex.firstMatch(in: self.matchString, range: NSRange(location: 0,length: self.matchString.count)).isNotNil)
         }
         
     public var isDateTime: Bool
         {
-        let scanner = Scanner(string: self.matchString)
-//        let day = scanner.scanInt()
-        var delimeter = scanner.scanCharacter()
-        if delimeter == ":"
-            {
-            return(false)
-            }
-        guard delimeter == "/" else
-            {
-            return(false)
-            }
-//        let month = scanner.scanInt()
-        delimeter = scanner.scanCharacter()
-        guard delimeter == "/" else
-            {
-            return(false)
-            }
-//        let year = scanner.scanInt()
-        guard !scanner.isAtEnd else
-            {
-            return(false)
-            }
-//        delimeter = scanner.scanCharacter()
-        guard delimeter == " " else
-            {
-            return(false)
-            }
-//        let hour = scanner.scanInt()
-        delimeter = scanner.scanCharacter()
-        guard delimeter == ":" else
-            {
-            return(false)
-            }
-//        let minute = scanner.scanInt()
-        delimeter = scanner.scanCharacter()
-        guard delimeter == ":" else
-            {
-            return(false)
-            }
-//        let second = scanner.scanInt()
-        delimeter = scanner.scanCharacter()
-        if delimeter == ":"
-            {
-//            let milliseconds = scanner.scanInt()
-            delimeter = scanner.scanCharacter()
-            }
-        guard delimeter == ")" else
-            {
-            return(false)
-            }
-        return(true)
+        return(Argon.dateTimeRegex.firstMatch(in: self.matchString, range: NSRange(location: 0,length: self.matchString.count)).isNotNil)
         }
         
     public override var styleElement: StyleElement

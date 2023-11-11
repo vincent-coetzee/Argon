@@ -15,13 +15,13 @@ public class ArgonScanner
     private var sourceCharacterCount: Int
     private var sourceIndex: String.Index
     private var sourceLine: Int = 1
-    private let operatorCharacters = CharacterSet(charactersIn: "!$%^&*-+=:;|<>?/.,~@")
+    private let operatorCharacters = CharacterSet(charactersIn: "!%^&*-+=:;|<>?/.,~@")
     private let brackets = CharacterSet(charactersIn: "()[]{}")
     private let decimalCharacters = CharacterSet(charactersIn: "0123456789_")
     private let binaryCharacters = CharacterSet(charactersIn: "01_")
     private let octalCharacters = CharacterSet(charactersIn: "01234567_")
     private let hexadecimalCharacters = CharacterSet(charactersIn: "0123456789ABCDEFabcdef_")
-    private let identifierStartCharacters = CharacterSet.letters.union(CharacterSet(charactersIn: "\\"))
+    private let identifierStartCharacters = CharacterSet.letters.union(CharacterSet(charactersIn: "\\\\$"))
     private let identifierCharacters = CharacterSet.letters.union(CharacterSet.decimalDigits).union(CharacterSet(charactersIn: "\\_"))
     private let identifierEndCharacters = CharacterSet(charactersIn: "!?")
     private let symbolCharacters = CharacterSet.letters.union(.decimalDigits).union(CharacterSet(charactersIn: "-_"))

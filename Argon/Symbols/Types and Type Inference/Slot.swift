@@ -10,7 +10,7 @@ import Foundation
 public struct SlotFlags: OptionSet
     {
     public static let virtual = SlotFlags(rawValue: 1 << 0)
-    public static let dynmaic = SlotFlags(rawValue: 1 << 1)
+    public static let dynamic = SlotFlags(rawValue: 1 << 1)
     public static let read = SlotFlags(rawValue: 1 << 2)
     public static let write = SlotFlags(rawValue: 1 << 3)
     
@@ -119,3 +119,26 @@ public class IntrinsicSlot: Slot
         }
     }
 
+
+public class SlotWrapper: Slot
+    {
+    private let expression: Expression
+    
+    init(name: String,expression: Expression)
+        {
+        self.expression = expression
+        super.init(name: name)
+        }
+        
+    required init(coder: NSCoder)
+        {
+        self.expression = coder.decodeObject(forKey: "expression") as! Expression
+        super.init(coder: coder)
+        }
+        
+    public override func encode(with coder: NSCoder)
+        {
+        coder.encode(self.expression,forKey: "expression")
+        super.encode(with: coder)
+        }
+    }

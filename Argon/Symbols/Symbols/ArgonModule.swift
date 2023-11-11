@@ -256,7 +256,7 @@ public class ArgonModule: ModuleType
     private func initializeSystemClasses()
         {
         let theObjectType = self.addSystemClass(named: "Object",superclassesNamed: [])
-        theObjectType.classFlags.insert(.root)
+        theObjectType.isRoot = true
 //        self.addSystemClass(named: "Type",superclassesNamed: ["Object"])
         self.addSystemClass(named: "Class",superclassesNamed: ["Object"])
         self.addSystemClass(named: "Tuple",superclassesNamed: ["Class"])

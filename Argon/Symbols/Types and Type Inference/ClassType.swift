@@ -30,6 +30,38 @@ public class ClassType: StructuredType
     private var symbols = SymbolDictionary()
     private var superclasses = ArgonTypes()
     
+    public var isRoot: Bool
+        {
+        get
+            {
+            return(self.classFlags.contains(.root))
+            }
+        set
+            {
+            self.classFlags.remove(.root)
+            if newValue
+                {
+                self.classFlags.insert(.root)
+                }
+            }
+        }
+        
+    public var isAbstract: Bool
+        {
+        get
+            {
+            return(self.classFlags.contains(.abstract))
+            }
+        set
+            {
+            self.classFlags.remove(.abstract)
+            if newValue
+                {
+                self.classFlags.insert(.abstract)
+                }
+            }
+        }
+    
     public override var styleElement: StyleElement
         {
         .colorClass
@@ -38,16 +70,6 @@ public class ClassType: StructuredType
     public override var isMakeable: Bool
         {
         true
-        }
-        
-    public var isRoot: Bool
-        {
-        self.classFlags.contains(.root)
-        }
-        
-    public var isAbstract: Bool
-        {
-        self.classFlags.contains(.abstract)
         }
         
     public override var isClassType: Bool
@@ -151,8 +173,21 @@ public class ClassType: StructuredType
     public override class func parse(using parser: ArgonParser)
         {
         let location = parser.token.location
-        parser.nextToken()
         var name = ""
+        var isAbstract = false
+        if parser.token.tokenType == .ABSTRACT
+            {
+            isAbstract = true
+            parser.nextToken()
+            }
+        if parser.token.tokenType != .CLASS
+            {
+            parser.lodgeError(code: .classExpected,location: location)
+            }
+        else
+            {
+            parser.nextToken()
+            }
         if !parser.token.isIdentifier
             {
             name = Argon.nextIndex(named: "CLASS")
@@ -169,6 +204,7 @@ public class ClassType: StructuredType
             parser.nextToken()
             }
         let scope = ClassType(name: name)
+        scope.isAbstract = isAbstract
         let constructor = scope.typeConstructor()
         parser.currentScope.addSymbol(constructor)
         var superclasses = ClassTypes()
@@ -196,11 +232,20 @@ public class ClassType: StructuredType
             }
         scope.setSuperclasses(superclasses)
         var slots = Slots()
+        var aliases = Array<SlotWrapper>()
         parser.parseBraces
             {
-            while parser.token.isSlotRelatedKeyword
+            while parser.token.isSlotRelatedKeyword || parser.token.isType
                 {
-                slots.append(self.parseSlotDeclaration(using: parser))
+                if parser.token.isType
+                    {
+                    let wrapper = self.parseSlotWrapper(parser: parser)
+                    aliases.append(wrapper)
+                    }
+                else
+                    {
+                    slots.append(self.parseSlotDeclaration(using: parser))
+                    }
                 }
             self.parsePool(in: scope,using: parser)
             self.parseSection(in: scope,using: parser)
@@ -208,6 +253,27 @@ public class ClassType: StructuredType
         scope.setSlots(slots)
         scope.symbolType = MetaclassType(forClass: scope)
         scope.symbolType.symbolType = scope
+        }
+    //
+    //
+    // Parse a slot wrapper in a CLASS
+    //
+    //
+    private static func parseSlotWrapper(parser: ArgonParser) -> SlotWrapper
+        {
+        let location = parser.token.location
+        parser.nextToken()
+        let name = parser.parseIdentifier()
+        if !parser.token.isIs
+            {
+            parser.lodgeError(code: .isExpected, location: location)
+            }
+        else
+            {
+            parser.nextToken()
+            }
+        let expression = parser.parseExpression()
+        return(SlotWrapper(name: name.lastPart,expression: expression))
         }
     //
     //
@@ -330,7 +396,7 @@ public class ClassType: StructuredType
             }
         if parser.token.isDynamic
             {
-            slot.slotFlags.insert(.dynmaic)
+            slot.slotFlags.insert(.dynamic)
             parser.nextToken()
             }
         if parser.token.isRead
@@ -340,8 +406,14 @@ public class ClassType: StructuredType
             }
         else if parser.token.isWrite
             {
+            slot.slotFlags.insert(.read)
             slot.slotFlags.insert(.write)
             parser.nextToken()
+            }
+        if slot.slotFlags.contains(.virtual) && !(slot.slotFlags.contains(.read) || slot.slotFlags.contains(.write))
+            {
+            slot.slotFlags.insert(.read)
+            slot.slotFlags.insert(.write)
             }
         if !parser.token.isSlot
             {
@@ -384,25 +456,28 @@ public class ClassType: StructuredType
         var writeBlock: Block?
         if slot.slotFlags.contains(.virtual)
             {
-            if parser.token.isRead
+            parser.parseBraces
                 {
-                parser.nextToken()
-                readBlock = self.parseReadBlock(using: parser)
-                }
-            else
-                {
-                parser.lodgeError(code: .readBlockExpectedForVirtualSlot,location: location)
-                }
-            if slot.slotFlags.contains(.write)
-                {
-                if parser.token.isWrite
+                if parser.token.isRead
                     {
                     parser.nextToken()
-                    writeBlock = self.parseWriteBlock(slotType: type,using: parser)
+                    readBlock = self.parseReadBlock(using: parser)
                     }
                 else
                     {
-                    parser.lodgeError(code: .writeBlockExpectedForVirtualSlot,location: location)
+                    parser.lodgeError(code: .readBlockExpectedForVirtualSlot,location: location)
+                    }
+                if slot.slotFlags.contains(.write)
+                    {
+                    if parser.token.isWrite
+                        {
+                        parser.nextToken()
+                        writeBlock = self.parseWriteBlock(slotType: type,using: parser)
+                        }
+                    else
+                        {
+                        parser.lodgeError(code: .writeBlockExpectedForVirtualSlot,location: location)
+                        }
                     }
                 }
             }

@@ -13,7 +13,7 @@ import Foundation
 //
 // 1. Check that subclasses don't contain slots with the same name and different types. Slots with the same name are allowed ( only one is actually created ) but their types must be the same.
 // 2. Check that names used in expressions for slots are correct, i.e. that the specified class has a slot with the given name
-//
+// 3. Check that the expression held by a SlotWrapper evaluates to a slot.
 //
 public class ArgonSemanticChecker: Visitor
     {

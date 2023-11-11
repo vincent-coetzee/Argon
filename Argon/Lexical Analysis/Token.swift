@@ -138,7 +138,6 @@ public enum TokenType: Int
     case rightBrocket
     case rightParenthesis
     case READ
-    case READWRITE
     case REPEAT
     case RETURN
     
@@ -219,6 +218,16 @@ public class Token: NSObject,NSCoding
     public var styleElement: StyleElement
         {
         self._styleElement ?? .colorText
+        }
+        
+    public var isType: Bool
+        {
+        false
+        }
+        
+    public var isAbstract: Bool
+        {
+        false
         }
         
     public var isCommentToken: Bool

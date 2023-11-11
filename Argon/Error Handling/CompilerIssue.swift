@@ -22,6 +22,7 @@ public enum IssueCode: String
     case constantMustBeInitialised                                  = "a constant must be initialised."
     case classNameExpected                                          = "class name expected."
     case classExpectedButOtherSymbolFound                           = "class expected but other symbol encountered."
+    case classExpected                                              = "'CLASS' expected."
     case colonExpected                                              = "':' expected."
     case commaExpected                                              = "',' expected."
     case couldNotReadFile                                           = "could not read file."

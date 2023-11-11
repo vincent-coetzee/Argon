@@ -38,6 +38,9 @@ public class ArgonParser
         self.register(tokenType: .identifier,parser: IdentifierParser())
         self.register(tokenType: .assign,parser: AssignmentParser())
         self.register(tokenType: .ternary,parser: TernaryParser())
+        self.register(tokenType: .null,parser: LiteralParser())
+        self.register(tokenType: .self,parser: PseudoVariableParser())
+        self.register(tokenType: .super,parser: PseudoVariableParser())
         self.register(tokenType: .literalInteger,parser: LiteralParser())
         self.register(tokenType: .literalFloat,parser: LiteralParser())
         self.register(tokenType: .literalString,parser: LiteralParser())
@@ -603,6 +606,8 @@ public class ArgonParser
         {
         switch(self.token.tokenType)
             {
+            case(.ABSTRACT):
+                ClassType.parse(using: self)
             case(.IMPORT):
                 ImportedModuleType.parse(using: self)
             case(.STATIC):

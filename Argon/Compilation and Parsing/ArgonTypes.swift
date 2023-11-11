@@ -24,6 +24,10 @@ public struct Argon
     public static let projectExtension = "argonp"
     public static let stateExtension = "argons"
     
+    public static let dateRegex = try! NSRegularExpression(pattern: "^[0-3]?[0-9]/[0-1]?[0-9]/[0-9]{4}$")
+    public static let timeRegex = try! NSRegularExpression(pattern: "^[0-2]?[0-9]:[0-5]?[0-9]:[0-5]?[0-9](\\.[0-9]{1,4})?$")
+    public static let dateTimeRegex = try! NSRegularExpression(pattern: "^[0-3]?[0-9]/[0-1]?[0-9]/[0-9]{4} [0-2]?[0-9]:[0-5]?[0-9]:[0-5]?[0-9](\\.[0-9]{1,4})?$")
+    
     private static var _nextIndex = 1
     
     public static var nextIndex: Int

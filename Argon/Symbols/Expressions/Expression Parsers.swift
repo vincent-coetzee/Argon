@@ -110,6 +110,20 @@ public class LiteralParser: PrefixParser
         }
     }
 
+public class PseudoVariableParser: PrefixParser
+    {
+    public func parse(parser: ArgonParser,token: Token) -> Expression
+        {
+        let location = parser.token.location
+        parser.nextToken()
+        if parser.token.tokenType == .self
+            {
+            return(PseudoVariableExpression(pseudoVariable: .self))
+            }
+        return(PseudoVariableExpression(pseudoVariable: .super))
+        }
+    }
+    
 public class PostfixOperatorParser: InfixParser
     {
     public let precedence: Int
